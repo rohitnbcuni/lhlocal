@@ -1,0 +1,26 @@
+[production]
+mvc.exceptions      =   "1"
+basecamp.host = nbcudps.basecamphq.com
+basecamp.username = ward.welch@nbcuni.com
+basecamp.password = beaver1
+basecamp.port = 443
+basecamp.que_mgr = 2680172
+basecamp.nbcuxd_id = 707029
+
+database.adapter = Pdo_Mysql
+database.params.host = lighthousedb
+database.params.dbname = LIGQWS01
+database.params.username = ligqwsusr
+database.params.password = q21cygGyGo
+database.params.dbport = 3306
+
+[development : production]
+mvc.exceptions      =   "1"
+database.adapter = pdo_mysql
+database.params.host = lighthousedb
+database.params.dbname = LIGQWS01
+database.params.username = ligqwsusr
+database.params.password = q21cygGyGo
+database.params.dbport = 3306
+
+[testing : production]
