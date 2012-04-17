@@ -1,0 +1,66 @@
+<?PHP
+	/*
+	App environment
+	*/
+	define('APPLICATION_ENVIRONMENT', 'production');
+	/*
+	Include paths. Only add the $includePaths ZENDINCUBATOR if 
+	Zend incubator code is supected to be used
+	*/
+	define('ZENDLIB', '/var/www/lighthouse_beta/ZendFramework/library/');
+	define('ZENDINCUBATOR', '/var/www/lighthouse_beta/ZendFramework/laboratory/');
+	
+	//define('APPLIB',"/home/nbclh/www/lighthouse/");
+	define('APPPATH', '/var/www/lighthouse_beta/application/');
+	define('APPLIB', '/var/www/lighthouse_beta/application/library/');
+	define('WEBPATH', '/var/www/lighthouse_beta/html');
+	define('FCKPATH', '/var/www/lighthouse_beta/html');
+	define('FPDF_FONTPATH', '/var/www/lighthouse_beta/application/font/');
+	
+	//Basecamp vars
+	define ('BASECAMP_HOST', 'https://nbcuxd.grouphub.com');
+	define ('BASECAMP_PORT', 443);
+	define ('BASECAMP_USER', '');
+	define ('BASECAMP_PASS', '');
+	
+	/**************************************************/
+	//Old Paths
+	define( 'FS_BASE_PATH', '/var/www/tools/');
+	//define('BASECAMP_HOST', 'https://nbcuxd.grouphub.com');
+	define('BASECAMP_USERNAME', 'resourceplanner@nbcuxd.com');
+	define('BASECAMP_PASSWORD', 'r3s0urc3');
+	//define( 'FS_BASE_PATH', '/var/www/phpframework/');
+
+	define( 'LOCAL_TEMPLATE_DIR', '/var/www/tools/templates/');
+
+	define('DB_TYPE', 'mysql');
+	define('DB_SERVER', 'localhost');
+	define('DB_USERNAME', 'nbclh');
+	define('DB_PASSWORD', 'gnbclh634');
+	define('DB_DATABASE', 'tools');
+
+	//define('BASECAMP_HOST', 'https://nbcuxd.grouphub.com');
+	//define('BASECAMP_USERNAME', 'zeb.holt@nbcuni.com');
+	//define('BASECAMP_PASSWORD', 'zebzeb007');
+
+	$GLOBALS['DB_DEBUG'] = 0;
+	
+	
+	
+	
+	
+	
+	/*******************************************************
+	*Global query strings
+	*******************************************************/
+	//define('',"");
+	define('QRY_PROJECT_SECTIONS_ASC',"SELECT * FROM `lnk_project_brief_section_types` ORDER BY `sort_order` ASC");
+	define('QRY_COMPANIES_ASC',"SELECT * FROM `companies` ORDER BY `name` ASC");
+	define('QRY_USERS_ASC',"SELECT * FROM `users` WHERE `active`='1' AND `deleted`='0' ORDER BY `first_name` ASC");
+	define('QRY_PROJECTS_ASC',"SELECT * FROM `projects` WHERE `archived` = '0' AND `active` = '1' AND `deleted` = '0' ORDER BY `project_name` ASC");
+	define('QRY_PROJECTS_ARCHIVE_ASC',"SELECT * FROM `projects` WHERE `active` = '1' AND `deleted` = '0' ORDER BY `project_name` ASC");
+	define('QRY_ROLES_SO_ASC', "SELECT * FROM `resource_types` WHERE `active`='1' AND `deleted`='0' ORDER BY `sort_order` ASC, `editable` ASC");
+	define('QRY_TIMELINE_SO_ASC', "SELECT * FROM `lnk_project_phase_types` WHERE `active`='1' AND `deleted`='0' ORDER BY `sort_order` ASC");
+	define('QRY_WO_PRIORITY_ASC', "SELECT * FROM `lnk_workorder_priority_types` WHERE `active`='1' AND `deleted`='0' ORDER BY `name` ASC");
+	define('QRY_WO_STATUS_ASC', "SELECT * FROM `lnk_workorder_status_types` WHERE `active`='1' AND `deleted`='0' ORDER BY `name` ASC");
+?>
