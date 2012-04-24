@@ -1,0 +1,222 @@
+<?PHP
+
+	defined('APPLICATION_PATH')
+    or define('APPLICATION_PATH', '../../application');
+
+	defined('APPLICATION_ENVIRONMENT')
+    or define('APPLICATION_ENVIRONMENT', 'development');
+
+
+	define('ZENDLIB', APPLICATION_PATH.'/../ZendFramework/library');
+	define('ZENDINCUBATOR', ZENDLIB.'/../laboratory');
+	
+	//define('APPLIB',"/home/nbclh/www/lighthouse/");
+	define('APPPATH', APPLICATION_PATH);
+	define('APPLIB', APPPATH.'/library');
+	define('WEBPATH', APPPATH.'/..');
+	define('FCKPATH', WEBPATH.'/_fckeditor');
+	define('FPDF_FONTPATH', APPPATH.'/font/');
+	if(isset($_SERVER['HTTP_HOST']))
+	{
+		define('BASE_URL', 'http://' .$_SERVER['HTTP_HOST']);
+		define('BASE_URL_secure', 'https://' .$_SERVER['HTTP_HOST']);
+	}else{
+		define('BASE_URL', 'http://qa.lighthouse.nbcuots.com');
+		define('BASE_URL_secure', 'https://qa.lighthouse.nbcuots.com');
+	}
+
+	 define('BASE_URL_FILE_PATH',BASE_URL."/_ajaxphp/download.php?path=");
+	// current year
+	define('current_year','2012');
+        //date_default_timezone_set('America/New_York');
+/*
+
+	//App environment
+	define('APPLICATION_ENVIRONMENT', 'development');
+	//Include paths. Only add the $includePaths ZENDINCUBATOR if 
+	//Zend incubator code is supected to be used
+	define('ZENDLIB', '/var/www/lighthouse_v2/ZendFramework/library/');
+	define('ZENDINCUBATOR', '/var/www/lighthouse_v2/ZendFramework/laboratory/');
+	
+	//define('APPLIB',"/home/nbclh/www/lighthouse/");
+	define('APPPATH', '/var/www/lighthouse_v2/application/');
+	define('APPLIB', '/var/www/lighthouse_v2/application/library/');
+	define('WEBPATH', '/var/www/lighthouse_v2/html/');
+	define('FCKPATH', '/var/www/lighthouse_v2/html/_fckeditor');
+	define('FPDF_FONTPATH', '/var/www/lighthouse_v2/application/font/');
+	define('BASE_URL', 'http://' .$_SERVER['HTTP_HOST']);
+	define('BASE_URL_secure', 'https://' .$_SERVER['HTTP_HOST']);
+	
+*/
+	
+
+	//Basecamp vars
+	define ('BASECAMP_HOST', 'https://nbcudps.basecamphq.com');
+	define ('BASECAMP_PORT', 443);
+	define ('BASECAMP_USER', '');
+	define ('BASECAMP_PASS', '');
+	define ('BASECAMP_HOST_URL', 'nbcudps.basecamphq.com');
+	define ('BASECAMP_COOKIE', '/var/www/lighthouse-uxd/qa/html/cookie/nbcudps.basecamphq.com.cookie');
+	define ('WO_EMAIL_FROM', 'lighthouse@nbcuots.com');
+	
+	/**************************************************/
+	//Old Paths
+	define( 'FS_BASE_PATH', '/var/www/tools/');
+	//define('BASECAMP_HOST', 'https://nbcuxd.grouphub.com');
+	define('BASECAMP_USERNAME', 'resourceplanner@nbcuxd.com');
+	define('BASECAMP_PASSWORD', 'r3s0urc3');
+	//define( 'FS_BASE_PATH', '/var/www/phpframework/');
+	define('BASECAMP_RALLY_USERNAME', 'PlatformUser');
+	define('BASECAMP_RALLY_PASSWORD', 'password');
+
+	define( 'LOCAL_TEMPLATE_DIR', '/var/www/tools/templates/');
+
+	 define('DB_TYPE', 'mysql');
+	 define('DB_SERVER', 'lighthousedb');
+ define('DB_USERNAME', 'ligqwsusr');
+ define('DB_PASSWORD', 'q21cygGyGo');
+ define('DB_DATABASE', 'LIGQWS01');
+ define('DB_PORT', '3306');
+ define('LIGHTHOUSE_VERSION', 'Version 2.5.11');
+	//Rally
+	define('RALLY_USERNAME', 'lighthouse@nbcuni.com');
+	define('RALLY_PASSWORD', 'lighthouse');
+	define('DEV_TEAM_NAME', 'NBCU O&TS'); 
+
+	//define('BASECAMP_HOST', 'https://nbcuxd.grouphub.com');
+	//define('BASECAMP_USERNAME', 'zeb.holt@nbcuni.com');
+	//define('BASECAMP_PASSWORD', 'zebzeb007');
+
+	$GLOBALS['DB_DEBUG'] = 0;
+	
+	// workorder maintainance user
+	
+	define('SUPPORT_TEAM_ITOC_ID', '2429');
+	define('SUPPORT_TEAM_ITOC_NAME', 'OTS Support');
+	define('SUPPORT_TEAM_ID', '2429');
+	define('SUPPORT_TEAM_NAME', 'OTS Support');
+	define('MAINTENANCE_TEAM_ID', '97');
+	define('MAINTENANCE_TEAM_NAME', 'Maintenance, UXD');
+	define('WO_CREATE_OUTAGE', '[{"id":"2429","name":"OTS Support","selected":" selected "}]');
+	define('WO_CREATE_CHANGE', '[{"id":"97","name":"Maintenance, UXD","selected":" selected "},{"id":"1369","name":"MPAT Hosting DB team","selected":""},{"id":"1206","name":"MPAT Hosting Web Team","selected":""},{"id":"2433","name":"OTS Release Team","selected":""}]');
+	define('WO_CREATE_PROBLEM', '[{"id":"2429","name":"OTS Support","selected":" selected "},{"id":"1369","name":"MPAT Hosting DB team","selected":""},{"id":"1206","name":"MPAT Hosting Web Team","selected":""}]');
+
+	// Control Tower 
+	define('UNASSIGNED_PHASE', '8');
+	define('UNASSIGNED_PHASE_RATE', '100');
+	define('DEFAULT_INTERNAL_GROUP', '1');
+	/*******************************************************
+	*Global query strings
+	*******************************************************/
+	//define('',"");
+	define('QRY_PROJECT_SECTIONS_ASC',"SELECT * FROM `lnk_project_brief_section_types` ORDER BY `sort_order` ASC");
+	define('QRY_COMPANIES_ASC',"SELECT * FROM `companies` ORDER BY `name` ASC");
+	define('QRY_USERS_ASC',"SELECT * FROM `users` WHERE `active`='1' AND `deleted`='0' ORDER BY `first_name`,`last_name` ASC");
+	define('QRY_USERS_LAST_ASC',"SELECT * FROM `users` WHERE `active`='1' AND `deleted`='0' ORDER BY `last_name` ASC");
+	define('QRY_PROJECTS_ASC',"SELECT * FROM `projects` WHERE `archived` = '0' AND `active` = '1' AND `deleted` = '0' ORDER BY `project_name` ASC");
+	define('QRY_PROJECTS_ARCHIVE_ASC',"SELECT * FROM `projects` WHERE `active` = '1' AND `deleted` = '0' ORDER BY `project_name` ASC");
+	define('QRY_ROLES_SO_ASC', "SELECT * FROM `resource_types` WHERE `active`='1' AND `deleted`='0' ORDER BY `sort_order` ASC, `editable` ASC");
+	define('QRY_TIMELINE_SO_ASC', "SELECT * FROM `lnk_project_phase_types` WHERE `active`='1' AND `deleted`='0' ORDER BY `sort_order` ASC");
+	define('QRY_WO_PRIORITY_ASC', "SELECT * FROM `lnk_workorder_priority_types` WHERE `active`='1'AND `deleted`='0' ORDER BY `id` ASC");
+	define('QRY_WO_STATUS_ASC', "SELECT * FROM `lnk_workorder_status_types` WHERE `active`='1' AND `deleted`='0' ORDER BY `name` ASC");
+	define('QRY_DPS_USERS_ASC',"SELECT * FROM `users` WHERE `company` =2 AND `active` = '1' AND `deleted` = '0' ORDER BY `first_name`,`last_name` ASC");
+
+	if(isset($_COOKIE["lh_user"]) && AJAX_CALL != '0'){
+		session_start();
+		if(!isset($_SESSION["loggedin"])){
+			$login = $_COOKIE["lh_user"];
+			$login = base64_decode($login);
+			$login_user_array = unserialize($login);
+			foreach($login_user_array as $key => $value){
+				$_SESSION[$key] = $value;
+			}
+		}
+	}
+
+	$USER_ACCESS = array (
+		'RESOURCE_PLANNER' => '1',
+		'CONTROL_TOWER' => '1',
+		'WORKORDERS' => '1',
+		'QUALITY' => '1',
+		'ADMIN' => '1',
+		'LAUNCHCALENDAR' => '0',
+		'UNASSIGNED1' => '0',
+		'UNASSIGNED2' => '0'
+	);
+
+	$USER_ACCESS_MENU['RESOURCE_PLANNER'] = array (
+		'name' => 'Resource Planner',
+		'url' => 'resourceplanner'
+	);
+
+	$USER_ACCESS_MENU['CONTROL_TOWER'] = array (
+		'name' => 'Control Tower',
+		'url' => 'controltower'
+	);
+
+	$USER_ACCESS_MENU['WORKORDERS'] = array (
+		'name' => 'Work Orders',
+		'url' => 'workorders'
+	);
+
+	$USER_ACCESS_MENU['QUALITY'] = array (
+		'name' => 'Quality',
+		'url' => 'quality'
+	);
+
+	$USER_ACCESS_MENU['ADMIN'] = array (
+		'name' => 'Admin',
+		'url' => 'admin'
+	);
+
+	$USER_ACCESS_MENU['LAUNCHCALENDAR'] = array (
+		'name' => 'Launch Calendar',
+		'url' => 'launchcalendar'
+	);
+
+	$USER_ACCESS = array (
+		'RESOURCE_PLANNER' => '1',
+		'CONTROL_TOWER' => '1',
+		'WORKORDERS' => '1',
+		'QUALITY' => '1',
+		'ADMIN' => '1',
+		'LAUNCHCALENDAR' => '0',
+		'EVENTS' => '1',
+		'UNASSIGNED2' => '0'
+	);
+
+	$USER_ACCESS_MENU['RESOURCE_PLANNER'] = array (
+		'name' => 'Resource Planner',
+		'url' => 'resourceplanner'
+	);
+
+	$USER_ACCESS_MENU['CONTROL_TOWER'] = array (
+		'name' => 'Control Tower',
+		'url' => 'controltower'
+	);
+
+	$USER_ACCESS_MENU['WORKORDERS'] = array (
+		'name' => 'Work Orders',
+		'url' => 'workorders'
+	);
+
+	$USER_ACCESS_MENU['QUALITY'] = array (
+		'name' => 'Quality',
+		'url' => 'quality'
+	);
+
+	$USER_ACCESS_MENU['ADMIN'] = array (
+		'name' => 'Admin',
+		'url' => 'admin'
+	);
+
+	$USER_ACCESS_MENU['LAUNCHCALENDAR'] = array (
+		'name' => 'Launch Calendar',
+		'url' => 'launchcalendar'
+	);
+$USER_ACCESS_MENU['EVENTS'] = array (
+  'name' => 'Event Planner',
+  'url' => 'events'
+ );
+
+?>
