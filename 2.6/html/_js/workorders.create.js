@@ -181,6 +181,7 @@ function getRequestType(reqType) {
 			$('#li_INFRA_TYPE').css({display:'block'});
 			$('#li_CRITICAL').css({display:'block'});
 			$('#li_DRAFT').css({display:'block'});
+			$('#currentMinute').val('00');
 //			document.getElementById("wo_assigned_user").options[0].value = MAINTENANCE_TEAM_ID; 
 //			document.getElementById("wo_assigned_user").options[0].text = MAINTENANCE_TEAM_NAME;
 			buildAssignedToList(WO_CREATE_CHANGE);
@@ -205,10 +206,7 @@ function getRequestTypeNew(reqType) {
 			 saveWorkOrder();
 			 return false;
 		});
-		$('#estimated_completion_date').val('');
-		$('#time_sensitive_date').val('');
-		$('#time_sensitive_time').val('');
-		$('#ampm').val('');
+		
 		
 		
 		if(reqType==RT_OUTAGE)
@@ -236,6 +234,10 @@ function getRequestTypeNew(reqType) {
 		}
 		else if(reqType==RT_PROBLEM)
 		{
+			$('#estimated_completion_date').val('');
+			$('#time_sensitive_date').val('');
+			$('#time_sensitive_time').val('');
+			$('#ampm').val('');
 			$('#li_SEVERITY').css({display:'block'});
 			$('#li_REQ_DATE').css({display:'block'});
 			$('#li_INFRA_TYPE').css({display:'none'});
@@ -249,16 +251,25 @@ function getRequestTypeNew(reqType) {
 		}
 		else if(reqType==RT_CHANGE)
 		{
+			$('#estimated_completion_date').val('');
+			$('#time_sensitive_date').val('');
+			$('#time_sensitive_time option:selected').removeAttr('selected');
+			$('#time_sensitive_time option').each(function() {
+				  $(this).prevAll('option[value="' + this.value + '"]').remove();
+				});
+			//set by default 05:00 PM
+			$('#time_sensitive_time').val('05:00 PM');
+			$('#ampm').val('');
 			$('#li_SEVERITY').css({display:'none'});
 			$('#wo_time_fade').css({display:'none'});
 			$('#li_REQ_DATE').css({display:'block'});
 			$('#li_INFRA_TYPE').css({display:'block'});
 			$('#li_CRITICAL').css({display:'block'});
 			$('#li_DRAFT').css({display:'block'});
+			$('#currentMinute').val('00');
 //			document.getElementById("wo_assigned_user").options[0].value = MAINTENANCE_TEAM_ID; 
 //			document.getElementById("wo_assigned_user").options[0].text = MAINTENANCE_TEAM_NAME;
 			buildAssignedToList(WO_CREATE_CHANGE);
-			$('#currentMinute').val('00');
 			document.getElementById("SEVERITY").options[0].value = 'disable'; 
 		}
 		else 
@@ -326,25 +337,34 @@ function severityChange(severity) {
 			document.getElementById('time_sensitive_date').value = launchMonth +"/"+launchDay+"/"+launchDate.getFullYear();
 
 			var Hrs12Frt = ((launchDate.getHours() % 12 || 12) < 10 ? '0' : '') + (launchDate.getHours() % 12 || 12); 
-
+			
 			if(parseInt(launchDate.getHours(),10)>11)
-			{
+			{	var am_pm_val = "PM";
+			
 				document.getElementById('ampm').value =  'pm';
 			}
 			else
-			{
+			{	var am_pm_val = "AM";
 				document.getElementById('ampm').value =  'am';
 			}
-			document.getElementById('time_sensitive_time').value =  Hrs12Frt;
+			
+			var full_time = Hrs12Frt+":"+splitcurrTime[1]+" "+am_pm_val; 
+			$('#time_sensitive_time option:selected').removeAttr('selected');
+			
+			
+			$('#time_sensitive_time').append('<option selected="selected" value="'+full_time+'">'+full_time+'</option>');
+			
+		//	document.getElementById('time_sensitive_time').value =  Hrs12Frt;
 			//document.getElementById('estimated_completion_date').value =  document.getElementById('time_sensitive_date').value+" "+$("#time_sensitive_time").val()+":"+splitcurrTime[1]+" "+($("#ampm").val()).toUpperCase();			
 	
-var wo_ser = '';
+			var wo_ser = '';
 			if($('#woesd')){
 				wo_ser = $('#woesd').val();
 				}
 				if((wo_ser == 'undefined')||(!wo_ser)){
 				
-			document.getElementById('estimated_completion_date').value =  document.getElementById('time_sensitive_date').value+" "+$("#time_sensitive_time").val()+":"+splitcurrTime[1]+" "+($("#ampm").val()).toUpperCase();			
+			//document.getElementById('estimated_completion_date').value =  document.getElementById('time_sensitive_date').value+" "+$("#time_sensitive_time").val()+":"+splitcurrTime[1]+" "+($("#ampm").val()).toUpperCase();			
+			document.getElementById('estimated_completion_date').value =  document.getElementById('time_sensitive_date').value+" "+full_time;		
 		}
 
 	}
@@ -467,10 +487,11 @@ function updateEstimatedDate() {
 	var launchDate = document.getElementById('time_sensitive_date');
 	
 	var currentDate = new Date();
-
+	//alert($("#time_sensitive_time").val());	
 	//if(timeSens.checked) {
 
-		estDate.value = launchDate.value+" "+$("#time_sensitive_time").val()+":"+$('#currentMinute').val()+" "+($("#ampm").val()).toUpperCase();
+		//estDate.value = launchDate.value+" "+$("#time_sensitive_time").val()+":"+$('#currentMinute').val()+" "+($("#ampm").val()).toUpperCase();
+		estDate.value = launchDate.value+" "+$("#time_sensitive_time").val();
 		checkDateRange(startDate.id, launchDate.id);
 
 }
@@ -625,12 +646,12 @@ function saveWorkOrder(from) {
 		} else {
 			$("label[for='time_sensitive_time']").css({'color':'#34556C'});
 		}
-		if(ampm == "0" || ampm == "") {
+		/*if(ampm == "0" || ampm == "") {
 			valid = false;
 			$("label[for='ampm']").css({'color':'#FF0000'});
 		} else {
 			$("label[for='ampm']").css({'color':'#34556C'});
-		}
+		}*/
 		var timeSensDateReg = /^(\d{2})\/(\d{2})\/(\d{4})$/;
 		if(!timeSensDateReg.test(timeSensDate))
 		{
@@ -651,12 +672,12 @@ function saveWorkOrder(from) {
   		  } else {
   			 $("label[for='time_sensitive_time_draft']").css({'color':'#34556C'});
   		  }
-  		  if(ampm_draft == "0" || ampm_draft == "") {
+  		 /* if(ampm_draft == "0" || ampm_draft == "") {
   			 valid = false;
   			 $("label[for='ampm_draft']").css({'color':'#FF0000'});
   		  } else {
   			 $("label[for='ampm_draft']").css({'color':'#34556C'});
-  		  }
+  		  }*/
   		  if(!timeSensDateReg.test(timeSensDate_draft))
   		  {
   			 valid = false;
@@ -682,10 +703,10 @@ function saveWorkOrder(from) {
 			$("label[for='time_sensitive_date']").css({'color':'#FF0000'});
 		}
 		else
-		{
+		{	
 			var requestDate = timeSensDate.split("/");
-		
-			if(ampm != "0" && ampm != "")
+			//alert("timeSensTime"+timeSensTime);
+			/*if(ampm != "0" && ampm != "")
 			{
 				if(ampm == "pm" && timeSensTime !='12'){
 					timeSensTime = parseInt(timeSensTime,10)+ 12;				
@@ -694,10 +715,16 @@ function saveWorkOrder(from) {
 				{
 					timeSensTime = 0;
 				}
+			}*/
+			if(timeSensTime.indexOf("PM") > 0){
+				timeSensTime_new = parseInt(timeSensTime,10)+ 12;
+			}else{
+				timeSensTime_new = timeSensTime;
 			}
-
-			var launchDate = new Date(parseInt(requestDate[2],10),(parseInt(requestDate[0],10)-1),parseInt(requestDate[1],10),parseInt(timeSensTime,10),0,0); // yyyy - mm- dd hh - mm - ss
-		
+			//alert("timeSensTime"+timeSensTime);
+			var launchDate = new Date(parseInt(requestDate[2],10),(parseInt(requestDate[0],10)-1),parseInt(requestDate[1],10),parseInt(timeSensTime_new,10),0,0); // yyyy - mm- dd hh - mm - ss
+			
+			
 			if(launchDate < currentDate){
 			
 				$('.message_required p').html('Please enter current or future time for required time.');
@@ -707,7 +734,7 @@ function saveWorkOrder(from) {
 			if(wo_draft == true) {
 
 				var draftDate = timeSensDate_draft.split("/");
-				if(ampm_draft != "0" && ampm_draft != "")
+				/*if(ampm_draft != "0" && ampm_draft != "")
 				{
 					if(ampm_draft == "pm" && timeSensTime_draft !='12'){
 						timeSensTime_draft = parseInt(timeSensTime_draft,10)+ 12;				
@@ -716,8 +743,13 @@ function saveWorkOrder(from) {
 					{
 						timeSensTime_draft = 0;
 					}
+				}*/
+				if(timeSensTime_draft.indexOf("PM") > 0){
+					timeSensTime_draft_new = parseInt(timeSensTime_draft,10)+ 12;
+				}else{
+					timeSensTime_draft_new = timeSensTime_draft;
 				}
-				var draftDt = new Date(parseInt(draftDate[2],10),(parseInt(draftDate[0],10)-1),parseInt(draftDate[1],10),parseInt(timeSensTime_draft,10),0,0); // yyyy - mm- dd hh - mm - ss			
+				var draftDt = new Date(parseInt(draftDate[2],10),(parseInt(draftDate[0],10)-1),parseInt(draftDate[1],10),parseInt(timeSensTime_draft_new,10),0,0); // yyyy - mm- dd hh - mm - ss			
 				if(draftDt < currentDate) {
 					$('.message_required p').html('Please enter current or future time for draft time.');
 					$('.message_required').css({display:'block'});

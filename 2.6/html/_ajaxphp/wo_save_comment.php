@@ -198,12 +198,7 @@
 				
 				//End Code
 
-
-
-
-
-
-                $msg .="<hr><b>Description:</b> " .$desc_string."<br><br>"; 
+              $msg .="<hr><b>Description:</b> " .$desc_string."<br><br>"; 
 				if(!empty($to)) {
 					sendEmail($to, $subject, $msg, $headers);
 				}
@@ -215,7 +210,9 @@
 
 	function sendEmail($to, $subject, $msg, $headers){
 		$msg = nl2br($msg);
-		$subject='=?UTF-8?B?'.base64_encode($subject).'?=';	
+		$subject='=?UTF-8?B?'.base64_encode($subject).'?=';	-
+		$headers .= "\r\n" .
+    				"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";
 		mail($to, $subject, $msg, $headers);
 	}
 

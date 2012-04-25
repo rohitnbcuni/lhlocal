@@ -36,7 +36,7 @@ class commentServices {
 	 		$uid = $userResult['id'];
 	 		$comment = $mysql->real_escape_string($this->escapewordquotes($Workorder->comment));
 	 		$curDateTime = date("Y-m-d H:i:s");
-	 		$bc_id_query = "SELECT  `bcid`, `project_id`, `title`,requested_by, `priority`,`status`,`assigned_to`,`body`,cclist FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($wid) ."' LIMIT 1";
+	 		$bc_id_query = "SELECT  `bcid`, `project_id`, `title`,requested_by, `priority`,`status`,`assigned_to`,`body`,cclist FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($wid) ."' AND status <> '1' LIMIT 1";
 			$bc_id_result = $mysql->query($bc_id_query);
 			$bc_id_row = $bc_id_result->fetch_assoc();
 			if(count($bc_id_row) > 0){
@@ -204,7 +204,7 @@ public static function escapewordquotes ($text) {
 			//$headers  = 'MIME-Version: 1.0' . "\r\n";
 			$headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
 			$headers .= 'From:'.$from . "\r\n" .
- 			   'Reply-To: lighthouse.comments@nbcuni.com' . "\r\n" .
+ 			   "Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";
 			    'X-Mailer: PHP/' . phpversion();
 			//$headers = " From: ".$from."\nMIME-Version: 1.0\nContent-type: text/html; ";
 			$msg = nl2br($msg);
@@ -230,12 +230,12 @@ public static function escapewordquotes ($text) {
 }
 		
 		if($_POST['lh_submit']){
-		 /*	$handle = fopen('comment_service.log', 'a');
+		 	/* $handle = fopen('comment_service.log', 'a');
 	   		 // Write $somecontent to our opened file.
-	   		 if (fwrite($handle, $_POST['lh_comment'] ) === FALSE) {
+	   		if (fwrite($handle, $_POST['lh_comment'] ) === FALSE) {
 	     			   echo "Cannot write to file ($filename)";
 	       			 exit;
-	    	} */
+	    	}*/
 	    	//End
 			define("SALT",'lighthouse');
 			require_once('../_inc/config.inc');
