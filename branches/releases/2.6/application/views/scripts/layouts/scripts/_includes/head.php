@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<?PHP	$randNum = "20120413"; ?>
+<?PHP	$randNum = "20120120"; ?>
 <title><?echo DEV_TEAM_NAME?>: Lighthouse</title>
 	<link rel="stylesheet" href="/_css/style.css?<?PHP echo $randNum; ?>" type="text/css" />
 	<link rel="stylesheet" href="/_css/ui.datepicker.css" type="text/css" />
@@ -144,7 +144,10 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						echo "<script src=\"/_js/ui/jquery.ui.all.js\" type=\"text/javascript\"></script>\n"
 							."\t<script src=\"/_js/workorders.create.js?" . $randNum . "\" type=\"text/javascript\"></script>\n"
 							."\t<script src=\"/_js/ajaxfileupload.js\" type=\"text/javascript\"></script>\n"
-							."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
+							."\t<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>"
+							."\t<script src=\"/_js/jquery-ui-1.8.19.custom.min.js\" type=\"text/javascript\"></script>"
+							. "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
+							
 						break;
 					}//Ticket #7927 Add new js file for calender view :wo_calender_view.js
 					case 'calendarview':{
@@ -152,7 +155,7 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						echo "<script src=\"/_js/workorders.filter.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
 						echo "\t<script src=\"/_js/jqueryMultiSelect.js\" type=\"text/javascript\"></script>\n";
 						echo "\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
-						break;
+					    break;
 					}//End
                                          //Ticket #14012
 					case 'search':{

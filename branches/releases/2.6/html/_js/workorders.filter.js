@@ -892,11 +892,13 @@ function buildWorkordersHTML() {
 						
 						
 						html_body += '<dd style="height: 27px;" class="assigned" id="assigned_' + workorderList[i]['workorders'][e]['id'] + '">';
-						html_body += '<span title="'+workorderList[i]['workorders'][e]['assigned_to']+'" id="assigned_a_' + workorderList[i]['workorders'][e]['id'] + '" onClick="woShowAssigned(' + workorderList[i]['workorders'][e]['id'] + ');">';
-						if(workorderList[i]['workorders'][e]['assigned_to'].length > 22){
-							var shortText = jQuery.trim(workorderList[i]['workorders'][e]['assigned_to']).substring(0, 22).split(" ").slice(0, 4).join(" ") + "...";
-						}else{
-							shortText = workorderList[i]['workorders'][e]['assigned_to'];
+						if(workorderList[i]['workorders'][e]['assigned_to'] != null){
+							html_body += '<span title="'+workorderList[i]['workorders'][e]['assigned_to']+'" id="assigned_a_' + workorderList[i]['workorders'][e]['id'] + '" onClick="woShowAssigned(' + workorderList[i]['workorders'][e]['id'] + ');">';
+							if(workorderList[i]['workorders'][e]['assigned_to'].length > 22){
+								var shortText = jQuery.trim(workorderList[i]['workorders'][e]['assigned_to']).substring(0, 22).split(" ").slice(0, 4).join(" ") + "...";
+							}else{
+								shortText = workorderList[i]['workorders'][e]['assigned_to'];
+							}
 						}
 						html_body += shortText;
 						html_body += '</span><select id="assigned_select_' + workorderList[i]['workorders'][e]['id'] + '" style="display: none;" onChange="changeAssigned(this.value, ' + workorderList[i]['workorders'][e]['id'] + ');">';
