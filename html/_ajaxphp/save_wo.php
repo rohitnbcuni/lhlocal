@@ -69,10 +69,10 @@
 
 		if($timeSens == "true") {
 
-		$sql_date = dateTimeToSql($timeSensDate,$timeSensTime,$ampm,$min);
+		$sql_date = dateTimeToSql_new($timeSensDate,$timeSensTime,$ampm,$min);
 		if($isActive == 0){
-			$updatesql_draft_date = "`draft_date`='".dateTimeToSql($timeSensDate_draft,$timeSensTime_draft,$ampm_draft,'00')."', ";
-			$insertsql_draft_date = dateTimeToSql($timeSensDate_draft,$timeSensTime_draft,$ampm_draft,'00');
+			$updatesql_draft_date = "`draft_date`='".dateTimeToSql_new($timeSensDate_draft,$timeSensTime_draft,$ampm_draft,'00')."', ";
+			$insertsql_draft_date = dateTimeToSql_new($timeSensDate_draft,$timeSensTime_draft,$ampm_draft,'00');
 		} 
 		$select_wo_old = "SELECT * FROM `workorders` WHERE `id`='" .$woId ."'";
 		$wo_old_res = $mysql->query($select_wo_old);
@@ -479,7 +479,8 @@
 				$fileCount = 1;
 				while($file_row = $file_res->fetch_assoc()){
 					//$file_list .= "" . $fileCount . ". <a href='".BASE_URL . "/files/" . $file_row['directory'] . "/" .$file_row['file_name']."'>" . $file_row['file_name'] . "</a><br>";
-				$file_list .= "" . $fileCount . ". <a target='_blank' href='".BASE_URL_FILE_PATH . "files/" . $file_row['directory'] . "/" .$file_row['file_name']."'>" . $file_row['file_name'] . "</a><br>";	
+				$file_list .= "" . $fileCount . ". <a target='_blank' href='".BASE_URL_FILE_PATH . "files/" . $file_row['directory'] . "/" .$file_row['file_name']."'>" . $file_row['file_name'] . "</a><br>";
+	
 				$fileCount += 1;
 				}
 			}
@@ -634,6 +635,8 @@
 	function sendEmail($to, $subject, $msg, $headers){
 		$msg = nl2br($msg);
 		$subject='=?UTF-8?B?'.base64_encode($subject).'?=';
+		$headers .= "\r\n" .
+    					"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";
 		mail($to, $subject, $msg, $headers);
 	}
 
@@ -722,6 +725,31 @@
 			$sql_date = "null";
 		}
 		$sql_date = @date("Y-n-j G:i:s", @mktime(@$tm_part[0]+$tmAdd , @$tm_part[1]+$min, @$tm_part[2], @$dt_part[0], @$dt_part[1], @$dt_part[2]));
+		return $sql_date;
+  }
+  
+  function dateTimeToSql_new($date,$time,$ampm,$min)
+	{
+		$dt_part = @explode("/", $date);
+		$tm_part = @explode(":", $time);
+		
+		if(strpos($tm_part[1]," PM") > 1){
+			if($tm_part[0] < 12) {
+				$tmAdd = 12;
+			} else {
+				$tmAdd = 0;
+			}
+			$tm_part[1] = str_replace(" PM","",$tm_part[1]);
+		}else{
+			if($tm_part[0] == 12) {
+				$tmAdd = -12;
+			} else {
+				$tmAdd = 0;
+			} 
+			$tm_part[1] = str_replace(" AM","",$tm_part[1]);
+		}
+	
+		$sql_date = @date("Y-n-j G:i:s", @mktime(@$tm_part[0]+$tmAdd , @$tm_part[1], @$tm_part[2], @$dt_part[0], @$dt_part[1], @$dt_part[2]));
 		return $sql_date;
   }
 ?>

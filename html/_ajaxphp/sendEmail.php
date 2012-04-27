@@ -1,6 +1,5 @@
 <?PHP
 	// to send email
-	//define('BASE_URL_FILE_PATH',BASE_URL."/_ajaxphp/download.php?path=");
 	function sendEmail_newRequest($mysql, $wo_row)
 	{	
 
@@ -479,6 +478,8 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 	function lh_sendEmail($to, $subject, $msg, $headers){
 		$msg = nl2br($msg);
 		$subject='=?UTF-8?B?'.base64_encode($subject).'?=';
+		$headers .= "\r\n" .
+    					"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";
 		mail($to, $subject, $msg, $headers);
 	}
 ?>

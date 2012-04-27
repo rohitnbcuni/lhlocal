@@ -117,8 +117,10 @@
 
                     $msg .="<hr><b>Description:</b> " . $desc_string ."<br><br>";
 					if(!empty($to)){
-								$msg = nl2br($msg);
-								
+						$msg = nl2br($msg);
+						$headers .= "\r\n" .
+    					"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";	
+						$subject='=?UTF-8?B?'.base64_encode($subject).'?=';	
 						mail($to, $subject, $msg, $headers);
 					}
 			 }

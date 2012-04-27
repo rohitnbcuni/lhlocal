@@ -8,9 +8,9 @@
 		return $mtime;
 	}
 //	$starttime = getTime();
-
+	include "cron.config.php";
 //	Production
-	$rootPath = '/var/www/lighthouse-uxd/lighthouse';
+	//$rootPath = '/var/www/lighthouse-uxd/lighthouse';
 //	dev
 	//$rootPath = "E:/lighthouse/";
 	//$rootPath = '/var/www/lighthouse-uxd/qa';
