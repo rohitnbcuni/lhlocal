@@ -6,8 +6,9 @@ function getTime(){
 		$mtime = $mtime[1] + $mtime[0];
 		return $mtime;
 	}
+	include "cron.config.php";
 	//Production
-	$rootPath = '/var/www/lighthouse-uxd/lighthouse';
+	//$rootPath = '/var/www/lighthouse-uxd/lighthouse';
 	//dev
 	//$rootPath = str_replace("/html",'',$_SERVER['DOCUMENT_ROOT']);
 
