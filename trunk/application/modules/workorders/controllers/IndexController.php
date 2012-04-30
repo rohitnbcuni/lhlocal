@@ -458,7 +458,8 @@
 										$launch_date = @date("m/d/Y", mktime(0,0,0,$launch_date_part[1],$launch_date_part[2],$launch_date_part[0]));
 
 										
-										$launch_time = @date("h:i", mktime($launch_time_part[0],$launch_time_part[1],$launch_time_part[2],0,0,0));
+										$launch_time = @date("h:i ", mktime($launch_time_part[0],$launch_time_part[1],$launch_time_part[2],0,0,0));
+										$launch_time_new = @date("h:i A", mktime($launch_time_part[0],$launch_time_part[1],$launch_time_part[2],0,0,0));
 
 										if(@date("a", mktime($launch_time_part[0],$launch_time_part[1],$launch_time_part[2],0,0,0)) == "am") {
 											$launch_am = ' SELECTED ';
@@ -487,7 +488,8 @@
 										}
 										
 										$draft_time = @date("h:i", mktime($draft_time_part[0],$draft_time_part[1],$draft_time_part[2],0,0,0));
-
+										$draft_time_new = @date("h:i A", mktime($draft_time_part[0],$draft_time_part[1],$draft_time_part[2],0,0,0));
+										
 										if(@date("a", mktime($draft_time_part[0],$draft_time_part[1],$draft_time_part[2],0,0,0)) == "am") {
 											$draft_am = ' SELECTED ';
 											$draft_pm = '';
@@ -563,21 +565,22 @@
 									}else {
 									echo '<input "'.$closed_wo_style.'" name="time_sensitive_date" id="time_sensitive_date" readonly value="' .$launch_date .'" id="basics" class="date_picker field_small " type="text" onchange="updateEstimatedDate();" /></span>';
 									}
-									
+								//	echo p($launch_date_time_part);
 								echo '<label for="time_sensitive_time" class="inside_label">Required Time:</label>';
 								if(isset($_REQUEST['wo_id'])) {
 									echo '<select "'.$closed_wo_style.'" name="time_sensitive_time" id="time_sensitive_time" class="small">';
 									}else{
 									echo '<select "'.$closed_wo_style.'" name="time_sensitive_time" id="time_sensitive_time" class="small" onchange="updateEstimatedDate();" >';
 									}
+									
 									if(isset($_REQUEST['wo_id'])) {
-										echo WoDisplay::getDailyHours($launch_time_part[0]);
+										echo WoDisplay::getDailyHours($launch_time_new);
 									} else {
 
 										echo WoDisplay::getDailyHours();
 									}
-									echo '</select>
-									<label for="ampm" class="inside_label_small">AM/PM:</label>';
+									echo '</select><div style="display:none;">
+									<label  for="ampm" class="inside_label_small">AM/PM:</label>';
 									if(isset($_REQUEST['wo_id'])) {
 									
 									echo '<select "'.$closed_wo_style.'" name="ampm" id="ampm" class="small" style="">';
@@ -592,7 +595,7 @@
 										<option value="am"' .$launch_am .'>AM</option>
 										<option value="pm"' .$launch_pm .'>PM</option>
 										
-									</select>									
+									</select></div>									
 								</div>
 							</li>
 							<li id="li_DRAFT" '.$li_DRAFT.' >
@@ -606,17 +609,17 @@
 										<label for="time_sensitive_time_draft" class="inside_label" style="width:60px;">Start Time:</label>
 										<select name="time_sensitive_time_draft" id="time_sensitive_time_draft" class="small" >';
 										if(isset($_REQUEST['wo_id'])) {
-											echo WoDisplay::getDailyHours($draft_time_part[0]);
+											echo WoDisplay::getDailyHours($draft_time_new);
 										} else {
 											echo WoDisplay::getDailyHours();
 										}
-										echo '</select>
+										echo '</select><div style="display:none;">
 										<label for="ampm_draft" class="inside_label_small">AM/PM:</label>
 										<select  name="ampm_draft" id="ampm_draft" class="small" onchange="" style="">
 											<option value="0" selected="selected"> -- </option>
 											<option value="am"' .$draft_am .'>AM</option>
 											<option value="pm"' .$draft_pm .'>PM</option>
-										</select> 		         
+										</select></div> 		         
 									</div>
 								</div>
 							</li>
@@ -801,22 +804,30 @@
 										$launch_date_time = '';
 									}
 									if(isset($_REQUEST['wo_id']) && !empty($_REQUEST['wo_id'])){
-    									if($wo_data[0]['estimated_date']==null){$estimated_date=$launch_date_time;}else{
-                                                                                        $estimated_date =  date('m/d/Y h:i A', strtotime($wo_data[0]['estimated_date']));
-                                                                                }
+    									if($wo_data[0]['estimated_date']==null)
+    										{
+    											$estimated_date=$launch_date_time;
+    										}else{
+    											$estimated_date =  date('m/d/Y h:i A', strtotime($wo_data[0]['estimated_date']));
+                                            }
 
 											//$estimated_date =  date('m/d/Y h:i', strtotime($wo_data[0]['estimated_date']))." ".$am_pm_string;
 										} else {
 											$estimated_date = '';
 										}
-									echo '<li><label for="start_date">Opened Date:</label><input name="start_date" id="start_date" readonly="readonly" class="readonly" type="text" value="' .$start_date .'"></li>';
+									if (isset($_REQUEST['wo_id'])){
+										$create_wo_date_display = "style='display:block;'";
+									}else{
+										$create_wo_date_display = "style='display:none;'";
+									}	
+									echo '<li '.$create_wo_date_display.'><label for="start_date">Opened Date:</label><input name="start_date" id="start_date" readonly="readonly" class="readonly" type="text" value="' .$start_date .'"></li>';
 									if (isset($_REQUEST['wo_id'])){
 									echo '<li><label for="estimated_completion_date">Estimated Completion Date:</label><input name="estimated_completion_date" id="estimated_completion_date" value="'.$estimated_date.'" readonly="readonly" class="readonly" type="text"></li>';
 									}
 									else {
 									echo '<li><label for="estimated_completion_date">Estimated Completion Date:</label><input name="estimated_completion_date" id="estimated_completion_date" value="'.$launch_date_time.'" readonly="readonly" class="readonly" type="text"></li>';
 							          }
-									echo '<li><label for="close_date">Close Date:</label><input name="close_date" id="close_date" value="' .$close_date .'" readonly="readonly" class="readonly" type="text"></li>
+									echo '<li '.$create_wo_date_display.'><label for="close_date">Close Date:</label><input name="close_date" id="close_date" value="' .$close_date .'" readonly="readonly" class="readonly" type="text"></li>
 								</ul>
 								<div class="clearer"></div>
 							</div>
@@ -991,12 +1002,13 @@
 					</body>
 				<script>
 					$(function() {
-                        $("input[name=time_sensitive]").attr("checked", true);
+					   $("input[name=time_sensitive]").attr("checked", true);
                         showHideTime();
-                        $(".date_picker").datepicker({ 
-							showOn: "both",
-							buttonImage: "/_images/date_picker_trigger.gif", 
-							buttonImageOnly: true 
+                        $(".date_picker").datepicker({
+                        numberOfMonths: 2,
+                        showOn: "both",
+						buttonImage: "/_images/date_picker_trigger.gif", 
+						buttonImageOnly: true ,
 						});
                     });
 				</script>

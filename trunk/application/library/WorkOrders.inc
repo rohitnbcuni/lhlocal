@@ -608,25 +608,59 @@
 		}
 
 		public function getDailyHours($hour_saved="") {
-			if($hour_saved=='00')
+			if($hour_saved == '')
 			{
-				$hour_saved='12';
+				$hour_saved = '05:00 PM';
 			}
-			$hours_array = array("01","02","03","04","05","06","07","08","09","10","11","12");
+			//$hour_saved = trim($hour_saved);
+			$hours_array = array(
+								"12:00 AM"=>"12:00 AM",
+								"01:00 AM" =>"1:00 AM",
+								"02:00 AM"=>"2:00 AM",
+								"03:00 AM"=>"3:00 AM",
+								"04:00 AM"=>"4:00 AM",
+								"05:00 AM"=>"5:00 AM",
+								"06:00 AM"=>"6:00 AM",
+								"07:00 AM"=>"7:00 AM",
+								"08:00 AM"=>"8:00 AM",
+								"09:00 AM"=>"9:00 AM",
+								"10:00 AM"=>"10:00 AM",
+								"11:00 AM"=>"11:00 AM",
+								"12:00 PM"=>"12:00 PM",
+								"01:00 PM"=>"1:00 PM",
+								"02:00 PM"=>"2:00 PM",
+								"03:00 PM"=>"3:00 PM",
+								"04:00 PM"=>"4:00 PM",
+								"05:00 PM"=>"5:00 PM",
+								"06:00 PM"=>"6:00 PM",
+								"07:00 PM"=>"7:00 PM",
+								"08:00 PM"=>"8:00 PM",
+								"09:00 PM"=>"9:00 PM",
+								"10:00 PM"=>"10:00 PM",
+								"11:00 PM"=>"11:00 PM"
+								);
+			
+			
 			if($hour_saved > 12){
 				$hour_saved = $hour_saved - 12;
 			}
-			print("hours saved ".$hour_saved);
+			if($hour_saved != ''){
+				if(array_key_exists($hour_saved, $hours_array) == false){
+					$hours_array[$hour_saved] = $hour_saved;
+				}
+			}
 			$html = '';
 			
 			$html .= '<option value="">--</option>';
-			for($i = 0; $i < sizeof($hours_array); $i++) {
+			//for($i = 0; $i < sizeof($hours_array); $i++) {
+			foreach($hours_array as $hours_array_key => $hours_array_val){
 				$selected = "";
-				if($hour_saved == $hours_array[$i]){
-					$selected = " SELECTED";
+				
+				if($hour_saved == $hours_array_key){
+					$selected = " selected='selected'";
 				}
-                $html .= '<option value="' .$hours_array[$i] .'"' .$selected .'>' 
-    					.$hours_array[$i]
+                $html .= '<option value="' .$hours_array_key.'"' .$selected .'>' 
+    					.$hours_array_val
     				.'</option>';
             }
 			

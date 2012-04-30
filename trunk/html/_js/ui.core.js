@@ -376,7 +376,7 @@ $.ui.mouse = {
 	
 	_mouseMove: function(e) {
 		// IE mouseup check - mouseup happened when mouse was out of window
-		if ($.browser.msie && !e.button) {
+		if ($.browser.msie && document.documentMode < 9 && !e.button) {
 			return this._mouseUp(e);
 		}
 		
