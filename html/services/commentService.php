@@ -36,7 +36,7 @@ class commentServices {
 	 		$uid = $userResult['id'];
 	 		$comment = $mysql->real_escape_string($this->escapewordquotes($Workorder->comment));
 	 		$curDateTime = date("Y-m-d H:i:s");
-	 		$bc_id_query = "SELECT  `bcid`, `project_id`, `title`,requested_by, `priority`,`status`,`assigned_to`,`body`,cclist FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($wid) ."' AND status <> '1' LIMIT 1";
+	 		$bc_id_query = "SELECT  `bcid`, `project_id`, `title`,requested_by, `priority`,`status`,`assigned_to`,`body`,cclist,archived FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($wid) ."'  LIMIT 1";
 			$bc_id_result = $mysql->query($bc_id_query);
 			$bc_id_row = $bc_id_result->fetch_assoc();
 			if(count($bc_id_row) > 0){
@@ -56,6 +56,13 @@ class commentServices {
 						//}
 					}
 				}
+				//Fixed the issue if ticket is closed as well as archived
+				//If WO is archived then change it to unarchive
+				if($bc_id_row['archived'] == '1'){
+					$update_wo_comment2 = "UPDATE  `workorders` SET  `archived` =  '0' WHERE  `id` = ".$wid." LIMIT 1 ";
+					$mysql->query($update_wo_comment2);
+				}
+				//End
 		 		$update_wo_comment = "INSERT INTO `workorder_comments` (`workorder_id`,`user_id`,`comment`,`date`) "
 					."VALUES ('$wid','$uid','$comment','$curDateTime')";
 				$mysql->query($update_wo_comment);
