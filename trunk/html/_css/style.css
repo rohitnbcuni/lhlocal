@@ -537,7 +537,7 @@ a:hover { text-decoration: underline; }
 				.project_results_details ul.details_actions li.work_order_button { float: right; }
 
 				.project_results_details ul li.project_detail { width: 450px; }
-				.project_results_details ul li.dates { width: 65px; }
+				.project_results_details ul li.dates { width: 70px; }
 				.project_results_details ul li.actual { width: 60px; }
 				.project_results_details ul li.budget { width: 60px; }
 				.project_results_details ul li.completeness { width: 220px; }
