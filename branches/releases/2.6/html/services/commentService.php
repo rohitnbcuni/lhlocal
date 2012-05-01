@@ -59,9 +59,8 @@ class commentServices {
 				//Fixed the issue if ticket is closed as well as archived
 				//If WO is archived then change it to unarchive
 				if($bc_id_row['archived'] == '1'){
-					$update_wo_comment = "INSERT INTO `workorder_comments` (`workorder_id`,`user_id`,`comment`,`date`) "
-					."VALUES ('$wid','$uid','$comment','$curDateTime')";
-					$mysql->query($update_wo_comment);
+					$update_wo_comment2 = "UPDATE  `workorders` SET  `archived` =  '0' WHERE  `id` = ".$wid." LIMIT 1 ";
+					$mysql->query($update_wo_comment2);
 				}
 				//End
 		 		$update_wo_comment = "INSERT INTO `workorder_comments` (`workorder_id`,`user_id`,`comment`,`date`) "
