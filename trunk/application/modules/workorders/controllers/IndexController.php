@@ -920,8 +920,8 @@
 											$comment_date_part = explode("-", $comment_date_time_part[0]);
 											$comment_time_part = explode(":", $comment_date_time_part[1]);											
 											$comment_user_data = WoDisplay::getQuery("SELECT * FROM `users` WHERE `id`='" .$comment_data[$cx]['user_id'] ."' LIMIT 1");
-											 
-											 echo '<li>
+											$comment_id = $comment_data[$cx]["id"]; 
+											 echo '<li id="comment_id_li_'.$comment_id.'">
 												<img src="'.$comment_user_data[0]['user_img'].'" class="comment_photo" />
 												<div class="comment_body">
 													<p><strong>' .ucfirst($comment_user_data[0]['first_name']) .' ' .ucfirst($comment_user_data[0]['last_name']) .'</strong><br>
@@ -934,13 +934,17 @@
 											</li>';
 										}
 									}
-									
-								echo '</ul>
+								echo '<li style="border-bottom:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$comment_id.'"></li></ul>
 								<ul class="comment_field_container">
 									<li><label for="comment">New Comment:</label><textarea name="comment" id="comment" class="field_large ' . $wo_archive_text . '" ' . $wo_archive_text . '></textarea></li>
 								</ul>
-
-									
+								<div id="new_comment_notification" style="display:none;">
+										<div id="sticky">
+											<a class="ui-notify-close ui-notify-cross" href="#">x</a>
+											<h1>#{title}</h1>
+											<p>#{text}</p>
+										</div>
+									</div>
 								<div class="new_comment_actions ' . $wo_archive_status . '"><button class="secondary" onClick="submitComment(); return false;"><span>Submit Comment</span></button></div>
 								<div class="clearer"></div>
 							</div>
@@ -1008,7 +1012,7 @@
                         numberOfMonths: 2,
                         showOn: "both",
 						buttonImage: "/_images/date_picker_trigger.gif", 
-						buttonImageOnly: true ,
+						buttonImageOnly: true 
 						});
                     });
 				</script>
