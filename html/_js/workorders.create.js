@@ -47,41 +47,7 @@ $(document).ready(function() {
 		$('#prompt_save').val(2);
 	});
 	
-	/**
-	 * Add Private Comment Block
-	 * Task Id 14007
-	 */
-	/* $('#p_comment').click(function(){
-		if($('#p_comment').is(":checked") == true)
-		{
-			var p_new_wo_id = $('#p_wo_cc_id').val();
-			$.ajax({
-				type: "POST",
-				url: "/_ajaxphp/get_wo_pri_comments.php",
-				data: "wo_id="+p_new_wo_id,
-				success: function(msg) {
-				//alert(msg);
-					$('#p_comment_cc_list').html(msg);
-				}
-			});
-			$('.message_workorder_private').css("display","inline");
-		}
-		if($('#p_comment').is(":checked") == false)
-		{
-			$('.message_workorder_private').css("display","none");
-		}
-	
-	}); */
-	
-
-//	$("input:checkbox").focus(function() {
-//		$('#prompt_save').val(2);
-//	});
-//	$('body').bind('beforeunload',function(){
-//		if($('#prompt_save').val() == 2){	
-//			return "You have not saved this workorder! If you leave this form all information you have entered will be lost. Are you sure you want to leave this page without saving?";
-//		}
-//	});	
+	setInterval("showNewComment()", 5000);
 });
 function showHideTime() {
 	//var checkBox = document.getElementById('time_sensitive');
@@ -1244,7 +1210,7 @@ function openAnimated(comment_id){
 	//$('#comment_id_li_'+comment_id).slideToggle('medium'); 
 	$('html,body').animate({scrollTop: $('#comment_id_li_'+comment_id).offset().top},'slow');
 }
-setInterval("showNewComment()", 5000);
+
 
 
 function showNewComment() {
@@ -1252,46 +1218,48 @@ function showNewComment() {
 	updateComments();
 	var wid = $('#workorder_id').val();
 	var last_wid = $('#last_comment_id').val(); 
-	$.ajax({
-		type: "POST",
-		url: "/_ajaxphp/next_new_comment.php",
-		data: 'wid='+wid+'&last_wid='+last_wid,
-		success: function(comment_msg) {
-			
-				if($.trim(comment_msg) != ''){
-					//alert("comment_msg"+comment_msg);
-					var last_comment = comment_msg.split("##");
-					last_comment_id = last_comment[0];
-					last_comment_username = last_comment[1];
-					//alert("last_comment_id"+last_comment_username);
-					$('#last_comment_id').val(last_comment_id); 
-					$.ajax({
-						type: "POST",
-						url: "/_ajaxphp/check_new_wo.php",
-						data: 'wid='+wid+'&last_wid='+last_comment_id,
-						success: function(msg) {
-								if($.trim(msg) !=''){
-								$('#comments_list').append(msg);
-								//$("#new_comment_notification").css("display","none")
-								$container = $("#new_comment_notification").notify();
-								
-								create("sticky", { title:'New Comment Notification', text:'<strong><span onclick="openAnimated('+last_comment_id+');" id="span_'+last_comment_id+'" >'+last_comment_username+' posted a comment</span></strong>'});
-								//create("default", { title:'Default Notification', text:'Example of a default notification.  I will fade out after 5 seconds'});
+	//alert("last_wid"+last_wid);
+		//if($.trim(last_wid) != ''){
+		$.ajax({
+			type: "POST",
+			url: "/_ajaxphp/next_new_comment.php",
+			data: 'wid='+wid+'&last_wid='+last_wid,
+			success: function(comment_msg) {
+				
+					if($.trim(comment_msg) != ''){
+						//alert("comment_msg"+comment_msg);
+						var last_comment = comment_msg.split("##");
+						last_comment_id = last_comment[0];
+						last_comment_username = last_comment[1];
+						//alert("last_comment_id"+last_comment_username);
+						$('#last_comment_id').val(last_comment_id); 
+						$.ajax({
+							type: "POST",
+							url: "/_ajaxphp/check_new_wo.php",
+							data: 'wid='+wid+'&last_wid='+last_comment_id,
+							success: function(msg) {
+									if($.trim(msg) !=''){
+									$('#comments_list').append(msg);
+									//$("#new_comment_notification").css("display","none")
+									$container = $("#new_comment_notification").notify();
+									
+									create("sticky", { title:'New Comment Notification', text:'<strong><span onclick="openAnimated('+last_comment_id+');" id="span_'+last_comment_id+'" >'+last_comment_username+' posted a comment</span></strong>'});
+									//create("default", { title:'Default Notification', text:'Example of a default notification.  I will fade out after 5 seconds'});
 
-								// $("#BeeperBox").html('<strong><span onclick="openAnimated('+last_comment_id+');" id="span_'+last_comment_id+'" >'+last_comment_username+' posted a <a title="notifications panel"  hef="javascrip:void(null);">comment</a>.');
-								// showTip();
-								
-								
+									// $("#BeeperBox").html('<strong><span onclick="openAnimated('+last_comment_id+');" id="span_'+last_comment_id+'" >'+last_comment_username+' posted a <a title="notifications panel"  hef="javascrip:void(null);">comment</a>.');
+									// showTip();
+									
+									
+								}
 							}
-						}
-						});
+							});
+						
+					}
 					
 				}
-				
-			}
-		});
+			});
 			
-	
+	//}
 }
 function create( template, vars, opts ){
 	return $container.notify("create", template, vars, opts);
