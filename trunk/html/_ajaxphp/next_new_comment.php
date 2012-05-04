@@ -8,7 +8,12 @@
 		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 		$woId = $mysql->real_escape_string($_POST['wid']);
 		$last_wid = $mysql->real_escape_string($_POST['last_wid']);
-		$select_comments = "SELECT id, user_id FROM `workorder_comments` WHERE `workorder_id`='$woId' AND id > $last_wid order by id LIMIT 0, 1";
+		if($last_wid == ''){
+			$select_comments = "SELECT id, user_id FROM `workorder_comments` WHERE `workorder_id`='$woId' order by id LIMIT 0, 1";
+
+		}else{
+			$select_comments = "SELECT id, user_id FROM `workorder_comments` WHERE `workorder_id`='$woId' AND id > $last_wid order by id LIMIT 0, 1";
+		}
 		$comm_result = @$mysql->query($select_comments);
 		$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";	
 		$comment_id =0;
