@@ -73,11 +73,12 @@
 			$comment_id = $newNumPart2[0];
 			curl_close($session); */
 		}
-		
+		$comment_id =0;
 		$select_comments = "SELECT * FROM `workorder_comments` WHERE `workorder_id`='$woId' order by date";
 		$comm_result = @$mysql->query($select_comments);
 		$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";	
 		while($comRow = $comm_result->fetch_assoc()) {
+			$comment_id = $comRow["id"]; 
 			$select_user = "SELECT * FROM `users` WHERE `id`='" .$comRow['user_id'] ."' LIMIT 1";
 			$user_result = @$mysql->query($select_user);
 			$user_row = $user_result->fetch_assoc();
@@ -96,7 +97,7 @@
 			 $text_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",str_replace('&#129;','&#153;',htmlentities($cmnt,ENT_NOQUOTES, 'UTF-8')));
 			//$text_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",str_replace('&#129;','&#153;',html_entity_decode($cmnt,ENT_QUOTES,'ISO-8859-1')));
 			$text_string=nl2br($text_string);
-			$comment_html .= '<li>
+			$comment_html .= '<li id="comment_id_li_'.$comment_id.'">
 				<img src="'.$user_row['user_img'].'" class="comment_photo" />
 				<div class="comment_body">
 					<p><strong>' .ucfirst($user_row['first_name']) ." " .ucfirst($user_row['last_name']) .'</strong><br><em>' .$date .'</em></p>
@@ -104,6 +105,7 @@
 				</div>
 			</li>';
 		}
+		$comment_html .= '<li style="border-bottom:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$comment_id.'"></li>';
 		
 		$select_email_users = "SELECT * FROM `workorders` WHERE `id`='$woId' LIMIT 1";
 		$email_res = $mysql->query($select_email_users);
