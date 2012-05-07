@@ -46,8 +46,10 @@ $(document).ready(function() {
 	$('input:text , textarea').keydown(function(event) {
 		$('#prompt_save').val(2);
 	});
-	
-	setInterval("showNewComment()", 5000);
+	document.getElementById('workorder_id').value;
+	if($('#workorder_id').val() != ''){
+		setInterval("showNewComment()", 5000);
+	}
 });
 function showHideTime() {
 	//var checkBox = document.getElementById('time_sensitive');
