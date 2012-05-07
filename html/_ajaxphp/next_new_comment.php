@@ -7,6 +7,7 @@
 	if(isset($_SESSION['user_id'])) {
 		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 		$woId = $mysql->real_escape_string($_POST['wid']);
+		if(trim($woId) != ''){
 		$last_wid = $mysql->real_escape_string($_POST['last_wid']);
 		if($last_wid == ''){
 			$select_comments = "SELECT id, user_id FROM `workorder_comments` WHERE `workorder_id`='$woId' order by id LIMIT 0, 1";
@@ -24,5 +25,6 @@
 			$user_row = $user_result->fetch_assoc();
 			echo $comment_id = $comRow["id"]."##".$user_row['fullname']; 
 			}
+	}
 	}
 	
