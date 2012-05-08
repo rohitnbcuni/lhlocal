@@ -154,8 +154,9 @@ class RpDisplay extends ResourcePlanner {
 				} else {
 					$class='even';
 				}
-
-				$html .= '<li class="'.$class.'"><div class="inside rp_rightarrow"><div class="arrow_right" style="padding-top: 2px;"></div>' .$comp[$i]['name'] .'</div>
+				$company_name = (strlen($comp[$i]['name']) > 34)?substr($comp[$i]['name'],0,32)."..":$comp[$i]['name'];	
+				
+				$html .= '<li class="'.$class.'"><div class="inside rp_rightarrow" title="'.$comp[$i]['name'].'"><div class="arrow_right"  style="padding-top: 2px;"></div>' .$company_name .'</div>
 							<ul id="drop'.$i.'">';
 				for($p = 0; $p < sizeof($projs); $p++) {
 					if(strlen($projs[$p]['project_name']) > 45) {
