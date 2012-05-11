@@ -744,7 +744,8 @@ $(document).ready(function()
 								
 								?>
 								<li>
-									<input type="checkbox" id="affected_brand"  name="affected_brand" value="<?php echo $compVal['id'] ?>" <?php echo $checked ?>  <?php echo $this->affectedBrand?>> <span class="event_brand_text"><?php echo $compVal['name'] ?></span>
+								<?php $compay_trunc_name = (@strlen($compVal['name'])> 32)?substr($compVal['name'],0,32)."..":$compVal['name']; ?>
+									<input type="checkbox" id="affected_brand"  name="affected_brand" value="<?php echo $compVal['id'] ?>" <?php echo $checked ?>  <?php echo $this->affectedBrand?>> <span class="event_brand_text" title="<?php echo $compVal['name'] ?>"><?php echo $compay_trunc_name ?></span>
 								</li>
 								<?php 
 								if($count%5 == 0):?>
