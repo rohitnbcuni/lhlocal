@@ -159,8 +159,8 @@ class Basecamp{
 					return false;
 				}
 
-				$this->_session->lh_username = $_POST['lh_username'];
-				$_SESSION['lh_username'] = $_POST['lh_username'];
+				$this->_session->lh_username = $row['user_name'];
+				$_SESSION['lh_username'] = $row['user_name'];
 				$this->_session->lh_password = $_POST['lh_password'];
 				$_SESSION['lh_password'] = $_POST['lh_password'];
 				$this->_session->user_id = $row['id'];
@@ -180,8 +180,8 @@ class Basecamp{
 				$this->_session->user_access_bits = $row['user_access'];
 				$_SESSION['user_access_bits'] = $row['user_access'];
 
-				$user_session['lh_username'] = $_POST['lh_username'];
-				$user_session['lh_password'] = $_POST['lh_password'];
+				$user_session['lh_username'] = $row['user_name'];
+				$user_session['lh_password'] = $row['user_name'];
 				$user_session['user_id'] = $row['id'];
 				$user_session['first'] = $row['first_name'];
 				$user_session['last'] = $row['last_name'];
