@@ -105,7 +105,7 @@
 				</div>
 			</li>';
 		}
-		$comment_html .= '<li style="border-bottom:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$comment_id.'"></li>';
+		$comment_html .= '<li style="border-bottom:none;display:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$comment_id.'"></li>';
 		
 		$select_email_users = "SELECT * FROM `workorders` WHERE `id`='$woId' LIMIT 1";
 		$email_res = $mysql->query($select_email_users);

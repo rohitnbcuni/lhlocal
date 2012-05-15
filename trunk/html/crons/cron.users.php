@@ -186,11 +186,11 @@
 
 								if($uData['company'] == '2' || $uData['company'] == '136' || $uData['company'] == '141')
 								{
-									$user_access_bits = "11110000"; // Client Access
+									$user_access_bits = "11110010"; // Client Access
 								}
 								else
 								{
-									$user_access_bits = "01100000"; // Client Access
+									$user_access_bits = "00100010"; // Client Access
 								}
 							}
 						$insert_user_query .= "'" .$uData['bc_uuid'] ."', '" .$uData['im_handle'] 

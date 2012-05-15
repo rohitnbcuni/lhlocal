@@ -934,7 +934,7 @@
 											</li>';
 										}
 									}
-								echo '<li style="border-bottom:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$comment_id.'"></li></ul>
+								echo '<li style="border-bottom:none;display:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$comment_id.'"></li></ul>
 								<ul class="comment_field_container">
 									<li><label for="comment">New Comment:</label><textarea name="comment" id="comment" class="field_large ' . $wo_archive_text . '" ' . $wo_archive_text . '></textarea></li>
 								</ul>
