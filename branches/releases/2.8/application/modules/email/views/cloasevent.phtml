@@ -1,0 +1,17 @@
+<html>
+<body>
+<?php 
+$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+$desc =  $this->eventInfo['desc'];
+$desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($desc,ENT_NOQUOTES, 'UTF-8'));
+$desc_string = nl2br($desc_string);
+?>
+<b>Requestor:</b> <?php echo $this->eventInfo['requestedBy'] ?><br/><br/>
+<b>Brand:</b> <?php echo $this->eventInfo['brand'] ?><br/><br/>
+<b>Event:</b> <a href="<?php echo BASE_URL ?>/events/index/create/?eId=<?php echo $this->eventInfo['eventid'] ?>"><?php echo $this->eventInfo['eventid'] ?></a> has been created and is awaiting approval. <br />
+<hr>
+<br/>
+<b>Event Description:</b> <?php echo $desc_string ?><br />
+
+</body>
+</html>
