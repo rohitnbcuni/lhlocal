@@ -46,7 +46,7 @@ $(document).ready(function() {
 	$('input:text , textarea').keydown(function(event) {
 		$('#prompt_save').val(2);
 	});
-	document.getElementById('workorder_id').value;
+	//document.getElementById('workorder_id').value;
 	if($('#workorder_id').val() != ''){
 		setInterval("showNewComment()", 5000);
 	}

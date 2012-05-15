@@ -1,32 +1,26 @@
 jQuery.extend({
-
 	createUploadIframe: function(id, uri)
 	{
 			//create frame
-			var frameId = 'jUploadFrame' + id;
-			
-			if(window.ActiveXObject) {
-				var io = document.createElement('<iframe id="' + frameId + '" name="' + frameId + '" />');
-				if(typeof uri== 'boolean'){
-					io.src = 'javascript:false';
-				}
-				else if(typeof uri== 'string'){
-					io.src = uri;
-				}
-			}
-			else {
-				var io = document.createElement('iframe');
-				io.id = frameId;
-				io.name = frameId;
-			}
-			io.style.position = 'absolute';
-			io.style.top = '-1200px';
-			io.style.left = '-1200px';
+            var frameId = 'jUploadFrame' + id;
+            var iframeHtml = '<iframe id="' + frameId + '" name="' + frameId + '" style="position:absolute; top:-9999px; left:-9999px"';
+			if(window.ActiveXObject)
+			{
+                if(typeof uri== 'boolean'){
+					iframeHtml += ' src="' + 'javascript:false' + '"';
 
-			document.body.appendChild(io);
+                }
+                else if(typeof uri== 'string'){
+					iframeHtml += ' src="' + uri + '"';
 
-			return io			
-	},
+                }	
+			}
+			iframeHtml += ' />';
+			jQuery(iframeHtml).appendTo(document.body);
+
+            return jQuery('#' + frameId).get(0);			
+    },
+	
 	createUploadForm: function(id, fileElementId,data)
 	{
 		//create form

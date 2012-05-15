@@ -432,7 +432,7 @@ function displayWorkorders() {
 	{
 		statusActiveArray["Feedback Provided"] = "Feedback Provided";
 		statusActiveArray["Fixed"] = "Fixed";
-		statusActiveArray["Hold"] = "Hold";
+		//statusActiveArray["Hold"] = "Hold";
 		statusActiveArray["In Progress"] = "In Progress";
 		statusActiveArray["Need More Info"] = "Need More Info";
 		statusActiveArray["New"] = "New";
