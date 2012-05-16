@@ -25,7 +25,7 @@ $(document).ready(function() {
 	statusLookup[2] = "Closed";
 	$('#wo_dimmer_ajax').css({display:'block'});
 
-	jQuery.getJSON('/_ajaxphp/quality_json.php', function(json) {
+	jQuery.getJSON('/_ajaxphp/qualityfilter_json.php', function(json) {
 		qualityList = json;
 		cookie_date = getCookie("lighthouse_qa_data");
 		var lh_qa_project_cookie = getCookie("lh_qa_project_cookie");
@@ -319,7 +319,7 @@ function unarchiveWo(theId) {
 }
 function changeCompany(){
 	loadProjectList();
-	displayWorkorders();
+	//displayWorkorders();
 }
 
 // To Load the project list dynamically with the projects of the selected company
@@ -663,7 +663,7 @@ var displayedOrder="asc";
 
 function sortQuality(sortType){
   $('#wo_dimmer_ajax').css({display:'block'});
-//  jQuery.getJSON('/_ajaxphp/quality_json.php', function(json) {
+//  jQuery.getJSON('/_ajaxphp/qualityfilter_json.php', function(json) {
 //  	qualityList = json;
 //  	if(isOnPageload && sortType!="title" ){
 //        displayedOrder="asc";
@@ -847,7 +847,7 @@ function generateWOReport(){
 	var rp_severity_filter =  $("#severity_filter :selected").text();
 	var rp_assigned_filter =  $("#assigned_filter").val();
 
-	window.open('/_ajaxphp/quality_json.php?report=excel&rp_client_filter='+rp_client_filter+'&rp_project_filter='+rp_project_filter+'&rp_status_filter='+rp_status_filter+'&rp_severity_filter='+rp_severity_filter+'&rp_assigned_filter='+rp_assigned_filter);
+	window.open('/_ajaxphp/qualityfilter_json.php?report=excel&rp_client_filter='+rp_client_filter+'&rp_project_filter='+rp_project_filter+'&rp_status_filter='+rp_status_filter+'&rp_severity_filter='+rp_severity_filter+'&rp_assigned_filter='+rp_assigned_filter);
 }
 
 function gotoWorkorder(){
@@ -875,6 +875,58 @@ function CreateDefect()
 	projectId = document.getElementById("project_filter").value;
 	Set_Cookie( "lh_qa_project_cookie", projectId , "7", "/", "", "");
 	window.location = '/quality/index/create/';
+}
+
+
+function qulaityFilterJson(){
+	var exp = /((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	clientId = $("#client_filter").val();
+	projectId = $("#project_filter").val();
+	statusId = $("#status_filter").val();
+	assignedTo = $("#assigned_filter").val();
+	severityID = $("#severity_filter").val();
+	var statusActiveArray = [];
+	var qaStatusStatus = [];
+	if(statusId=='99')
+	{
+		statusActiveArray["Feedback Provided"] = "Feedback Provided";
+		statusActiveArray["Fixed"] = "Fixed";
+		//statusActiveArray["Hold"] = "Hold";
+		statusActiveArray["In Progress"] = "In Progress";
+		statusActiveArray["Need More Info"] = "Need More Info";
+		statusActiveArray["New"] = "New";
+		statusActiveArray["Rejected"] = "Rejected";
+		statusActiveArray["Reopened"] = "Reopened";
+	}else{
+		statusActiveArray[statusId] = statusId;
+	}
+	
+	privacyLookup[0] = "Low";
+	privacyLookup[1] = "Medium";
+	privacyLookup[2] = "High";
+	
+	statusLookup[0] = "Open";
+	statusLookup[1] = "Assigned";
+	statusLookup[2] = "Closed";
+	$('#wo_dimmer_ajax').css({display:'block'});
+
+	jQuery.getJSON('/_ajaxphp/qualityfilter_json.php',{severityID:severityID,statusId:statusId,projectId:projectId,clientId:clientId,assignedTo:assignedTo}, function(json) {
+		qualityList = json;
+		cookie_date = getCookie("lighthouse_qa_data");
+		var lh_qa_project_cookie = getCookie("lh_qa_project_cookie");
+
+		$("#wo_containter .title_small").css({display:"none"});
+		$("#wo_containter .quality_rows").css({display:"none"});		
+		//loadAllProjectList();
+		//loadAllAssignedList();
+		displayWorkorders();
+		$('#wo_dimmer_ajax').css({display:'none'});
+		// If the cookie is present(with previous selection), then load that filtered list sorted with ID descending.
+		if(cookie_date != ""){
+		}
+			//	$('#wo_dimmer_ajax').css({display:'none'});
+	});
+	
 }
 
 
