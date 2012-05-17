@@ -7,11 +7,11 @@ include('_inc/config.inc');
 	if (!$link) {
 	    die('Could not connect: ' . mysql_error());
 	}else{
-		echo 'Connected successfully';
+		echo 'GOOD';
 	}
 	
 	
-	// make foo the current db
+	// make DB_DATABASE the current db
 	$db_selected = mysql_select_db(DB_DATABASE, $link);
 	if (!$db_selected) {
 	    die ('Can\'t use Database : ' . mysql_error());
