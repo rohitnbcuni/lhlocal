@@ -719,7 +719,7 @@
 								<ul class="comments" id="comments_list">';
 									
 									if(isset($_GET['defect_id'])) {
-										$comment_data = QaDisplay::getQuery("SELECT * FROM `qa_comments` WHERE `defect_id`='" .$wo_data[0]['id'] ."' order by date");
+										$comment_data = QaDisplay::getQuery("SELECT * FROM `qa_comments` WHERE `defect_id`='" .$wo_data[0]['id'] ."' order by date desc");
 										$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 										for($cx = 0; $cx < sizeof($comment_data); $cx++) {
 											$text=$comment_data[$cx]["comment"];
