@@ -23,118 +23,118 @@ $(document).ready(function() {
 	statusLookup[0] = "Open";
 	statusLookup[1] = "Assigned";
 	statusLookup[2] = "Closed";
+	var clientId = '-1';
+	var statusId = '-1';
+	var assignedTo = '-1';
+	var severityID = '-1';
+	var projectId = '-1';
+	var cookie_date = getCookie("lighthouse_qa_data");
 	$('#wo_dimmer_ajax').css({display:'block'});
+	var lh_qa_project_cookie = getCookie("lh_qa_project_cookie");
+	$("#wo_containter .title_small").css({display:"block"});
+	$("#wo_containter .quality_rows").css({display:"block"});
+	
 
-	jQuery.getJSON('/_ajaxphp/quality_json.php', function(json) {
-		qualityList = json;
-		cookie_date = getCookie("lighthouse_qa_data");
-		var lh_qa_project_cookie = getCookie("lh_qa_project_cookie");
-
-		$("#wo_containter .title_small").css({display:"none"});
-		$("#wo_containter .quality_rows").css({display:"none"});		
-		loadAllProjectList();
-		loadAllAssignedList();
-		// If the cookie is present(with previous selection), then load that filtered list sorted with ID descending.
-		if(cookie_date != ""){
+	if(cookie_date != ""){
 		if(lh_qa_project_cookie!='')
 		{
-			$("#project_filter").val(lh_qa_project_cookie);
+			projectId = lh_qa_project_cookie;
 			if(cookie_date!=null)
 			{
 				if(cookie_date!='')
 				{
 					data = cookie_date.split('~');
-					$("#status_filter").val(data[2]);
-					$("#assigned_filter").val(data[3]);
-					$("#severity_filter").val(data[4]);					
+					clientId = data[0];
+					statusId = data[2];
+					assignedTo = data[3];
+					severityID = data[4];					
 				}
 			}
-		}
-		else
-		{			
+		}else{
 			data = cookie_date.split('~');
+			projectId = data[1];
+			clientId = data[0];
+			statusId = data[2];
+			assignedTo = data[3];
+			severityID = data[4];					
 
-			$("#client_filter").val(data[0]);
-			if(data[0] != "-1"){
-				loadProjectList();
-			}
-
-
-			$("#project_filter").val(data[1]);
-			$("#status_filter").val(data[2]);
-			$("#assigned_filter").val(data[3]);
-			$("#severity_filter").val(data[4]);			
 		}
+	}else{
+		projectId = '-1';
+		clientId = '-1';
+		statusId = '-1';
+		assignedTo = '-1';
+		severityID = '-1';
+	}
 			
-			if(getCookie("selectedSortOption")==""){
-				sortDir = 1;
-        sortQuality("id");
-				}else{
-				previousSortSelection = getCookie("selectedSortOption");
-				previousSortSelection = previousSortSelection.split(":");
-				sortDir = previousSortSelection[1];
-				sortQuality(previousSortSelection[0]);
-			}
+	jQuery.getJSON('/_ajaxphp/qualityfilter_json.php',{severityID:severityID,statusId:statusId,projectId:projectId,clientId:clientId,assignedTo:assignedTo}, function(json) {
+		qualityList = json;
+		if(clientId == '-1'){
+			loadAllProjectList();
+			loadAllAssignedList();
 
-		}else{
-		//////////////////////changes for 18593
-		var cookie_filter;
-        	cookie_filter = getCookie("mycookie");
-		if(cookie_filter==''){		
-		$("#status_filter").val(99);
-		Set_Cookie( 'mycookie', '1', 7, '/', '', '' );
 		}
-		//////////////////////////////////
-         if(getCookie("selectedSortOption")==""){
-      sortDir = 1;   
-			sortQuality("title");
-		}else{
-			previousSortSelection = getCookie("selectedSortOption");
-			previousSortSelection = previousSortSelection.split(":");
-			sortDir = previousSortSelection[1];
-			sortQuality(previousSortSelection[0]);
-		}
-          
-		}
-		$("#wo_containter .title_small").css({display:"block"});
-		$("#wo_containter .workorders_rows").css({display:"block"});
-	//	$('#wo_dimmer_ajax').css({display:'none'});
+		displayWorkorders();
+		//alert("lh_qa_project_cookie"+lh_qa_project_cookie);
+		//alert("cookie_date"+cookie_date);
+		if(cookie_date != ""){
+			if(lh_qa_project_cookie!='')
+			{	
+				
+				loadProjectList();
+				loadAssignedList();
+				$("#project_filter").val(lh_qa_project_cookie);
+				if(cookie_date!=null)
+				{
+					if(cookie_date!='')
+					{
+						data = cookie_date.split('~');
+						$("#status_filter").val(data[2]);
+						$("#assigned_filter").val(data[3]);
+						$("#severity_filter").val(data[4]);					
+					}
+				}
+			}
+			else
+			{			
+				data = cookie_date.split('~');
+					
+				$("#client_filter").val(data[0]);
+				if(data[0] != "-1"){
+					loadProjectList();
+					loadAssignedList();
+				}
+				$("#project_filter").val(data[1]);
+				$("#status_filter").val(data[2]);
+				$("#assigned_filter").val(data[3]);
+				$("#severity_filter").val(data[4]);			
+			}
+		
+			if(getCookie("selectedSortOption")==""){
+					sortDir = 1;
+					sortQuality("id");
+					}else{
+					previousSortSelection = getCookie("selectedSortOption");
+					previousSortSelection = previousSortSelection.split(":");
+					sortDir = previousSortSelection[1];
+					sortQuality(previousSortSelection[0]);
+				}
+
+			}
 	});
+	// If the cookie is present(with previous selection), then load that filtered list sorted with ID descending.
+	
+	
+	
+	
+
+		//$('#wo_dimmer_ajax').css({display:'block'});
+		
+		//$('#wo_dimmer_ajax').css({display:'none'});
+	//});
 
 });
 
-function getWO_On_Status(){
-	typeFilter = document.getElementById("project_status_filter").value;
-	if(typeFilter == 1)
-	{	
-		$('#archiveBTN').html('<span>archive</span>');
-		$('#archiveBTN').unbind('click');
-		$('#archiveBTN').attr('onclick','');
-		$('#archiveBTN').bind('click', function() {
-			 archiveWO_CheckList();
-		});
-	}
-	else
-	{
-		$('#archiveBTN').html('<span>Unarchive</span>');
-		$('#archiveBTN').unbind('click');
-		$('#archiveBTN').attr('onclick','');		
-		$('#archiveBTN').bind('click', function() {
-			 unarchiveWO_CheckList();
-		});
-	}
-	$('#wo_dimmer_ajax').css({display:'block'});
-	
-	jQuery.getJSON('/_ajaxphp/workorder_json.php?status='+typeFilter, function(json) {
-		qualityList = json;
-		sortDir = 1;
-		sortQuality("title");
-		loadAllProjectList();
-		loadProjectList();
-		loadAllAssignedList();
-		$('#wo_dimmer_ajax').css({display:'none'});
-	});
-}
 function qaShowSeverity(theId,theValue) {
 		$.ajax({
 			type: "GET",
@@ -319,7 +319,8 @@ function unarchiveWo(theId) {
 }
 function changeCompany(){
 	loadProjectList();
-	displayWorkorders();
+	loadAssignedList();
+	//displayWorkorders();
 }
 
 // To Load the project list dynamically with the projects of the selected company
@@ -423,6 +424,7 @@ function displayWorkorders() {
 	var exp = /((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 	clientId = document.getElementById("client_filter").value;
 	projectId = document.getElementById("project_filter").value;
+	
 	statusId = document.getElementById("status_filter").value;
 	assignedTo = document.getElementById("assigned_filter").value;
 	severityID = document.getElementById("severity_filter").value;
@@ -582,12 +584,9 @@ function displayWorkorders() {
 				html += '<input type=hidden id="active_wo" value=5>'; 
 			}
 	}		
-  severity_value = $('#severity_filter').val();
-	Set_Cookie( "lighthouse_qa_data", clientId + '~' + projectId + '~' + statusId + '~' + assignedTo + '~' + severity_value, "7", "/", "", "");
-	Set_Cookie( "lh_qa_project_cookie", "", "7", "/", "", "");	
-
+	
 	$("#wo_containter").html(html);
-	loadAssignedList(assignedTo);
+	//loadAssignedList(assignedTo);
 }
 
 function qastatsDefaultValue(qaStatusStatus)
@@ -663,7 +662,7 @@ var displayedOrder="asc";
 
 function sortQuality(sortType){
   $('#wo_dimmer_ajax').css({display:'block'});
-//  jQuery.getJSON('/_ajaxphp/quality_json.php', function(json) {
+//  jQuery.getJSON('/_ajaxphp/qualityfilter_json.php', function(json) {
 //  	qualityList = json;
 //  	if(isOnPageload && sortType!="title" ){
 //        displayedOrder="asc";
@@ -847,7 +846,7 @@ function generateWOReport(){
 	var rp_severity_filter =  $("#severity_filter :selected").text();
 	var rp_assigned_filter =  $("#assigned_filter").val();
 
-	window.open('/_ajaxphp/quality_json.php?report=excel&rp_client_filter='+rp_client_filter+'&rp_project_filter='+rp_project_filter+'&rp_status_filter='+rp_status_filter+'&rp_severity_filter='+rp_severity_filter+'&rp_assigned_filter='+rp_assigned_filter);
+	window.open('/_ajaxphp/qualityfilter_json.php?report=excel&rp_client_filter='+rp_client_filter+'&rp_project_filter='+rp_project_filter+'&rp_status_filter='+rp_status_filter+'&rp_severity_filter='+rp_severity_filter+'&rp_assigned_filter='+rp_assigned_filter);
 }
 
 function gotoWorkorder(){
@@ -875,6 +874,73 @@ function CreateDefect()
 	projectId = document.getElementById("project_filter").value;
 	Set_Cookie( "lh_qa_project_cookie", projectId , "7", "/", "", "");
 	window.location = '/quality/index/create/';
+}
+
+
+function qulaityFilterJson(){
+	$('#wo_dimmer_ajax').css({display:'block'});
+	var exp = /((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	clientId = $("#client_filter").val();
+	projectId = $("#project_filter").val();
+	
+	statusId = $("#status_filter").val();
+	assignedTo = $("#assigned_filter").val();
+	severityID = $("#severity_filter").val();
+	//$("#wo_containter .title_small").css({display:"block"});
+	//$("#wo_containter .quality_rows").css({display:"block"});
+
+	var statusActiveArray = [];
+	var qaStatusStatus = [];
+	if(statusId=='99')
+	{
+		statusActiveArray["Feedback Provided"] = "Feedback Provided";
+		statusActiveArray["Fixed"] = "Fixed";
+		//statusActiveArray["Hold"] = "Hold";
+		statusActiveArray["In Progress"] = "In Progress";
+		statusActiveArray["Need More Info"] = "Need More Info";
+		statusActiveArray["New"] = "New";
+		statusActiveArray["Rejected"] = "Rejected";
+		statusActiveArray["Reopened"] = "Reopened";
+	}else{
+		statusActiveArray[statusId] = statusId;
+	}
+	privacyLookup[0] = "Low";
+	privacyLookup[1] = "Medium";
+	privacyLookup[2] = "High";
+	statusLookup[0] = "Open";
+	statusLookup[1] = "Assigned";
+	statusLookup[2] = "Closed";
+	jQuery.getJSON('/_ajaxphp/qualityfilter_json.php',{severityID:severityID,statusId:statusId,projectId:projectId,clientId:clientId,assignedTo:assignedTo}, function(json) {
+	qualityList = json;
+	//alert("projectId"+projectId);
+	displayWorkorders();
+	severity_value = $('#severity_filter').val();
+	Set_Cookie( "lighthouse_qa_data", clientId + '~' + projectId + '~' + statusId + '~' + assignedTo + '~' + severity_value, "7", "/", "", "");
+	Set_Cookie( "lh_qa_project_cookie", "", "7", "/", "", "");
+	if(clientId == '-1'){
+		loadAllProjectList();
+		loadAllAssignedList();
+
+	}else{
+		loadProjectList();
+		loadAssignedList();
+
+	}
+	cookie_date = getCookie("lighthouse_qa_data");
+	if(cookie_date != '-1'){
+		data = cookie_date.split('~');
+
+		$("#client_filter").val(data[0]);
+		$("#project_filter").val(data[1]);
+		$("#status_filter").val(data[2]);
+		$("#assigned_filter").val(data[3]);
+		$("#severity_filter").val(data[4]);
+	}
+//	projectId = $("#project_filter").val('14832');
+
+	$('#wo_dimmer_ajax').css({display:'none'});
+});
+	
 }
 
 
