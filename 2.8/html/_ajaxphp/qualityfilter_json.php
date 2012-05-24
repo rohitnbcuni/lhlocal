@@ -51,6 +51,10 @@ if($_GET['statusId'] == '99'){
 	//closed and Hold
 	$WHERE[] = "  status NOT IN ('7','8')";
 }
+if($_GET['statusId'] == '-1'){
+	//closed and Hold
+	$WHERE[] = "  status IN ('1','2','3','4','5','6','7','8','10')";
+}
 if(ISSET($_GET['projectId']) && $_GET['projectId'] != '-1'){
 	$WHERE[] = " project_id = ".$_GET['projectId'];
 }
