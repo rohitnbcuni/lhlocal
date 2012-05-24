@@ -62,7 +62,7 @@ $(document).ready(function() {
 	}else{
 		projectId = '-1';
 		clientId = '-1';
-		statusId = '-1';
+		statusId = '99';
 		assignedTo = '-1';
 		severityID = '-1';
 	}
