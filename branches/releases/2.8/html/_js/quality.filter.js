@@ -120,7 +120,11 @@ $(document).ready(function() {
 					sortQuality(previousSortSelection[0]);
 				}
 
+			}else{
+			
+				$("#status_filter").val(99);
 			}
+			$('#wo_dimmer_ajax').css({display:'none'});
 	});
 	// If the cookie is present(with previous selection), then load that filtered list sorted with ID descending.
 	
@@ -130,7 +134,7 @@ $(document).ready(function() {
 
 		//$('#wo_dimmer_ajax').css({display:'block'});
 		
-		//$('#wo_dimmer_ajax').css({display:'none'});
+		
 	//});
 
 });
