@@ -302,6 +302,7 @@ function saveWorkOrder(savebtn) {
 				{
 					Set_Cookie( "lighthouse_quality_create_defect", projectId, "7", "/", "", "");
 					Set_Cookie( "lighthouse_quality_list", projectId , "7", "/", "", "");
+					Set_Cookie( "lh_qa_project_cookie", projectId , "7", "/", "", "");
 					$('.message_required p').html('New defect created successfully.');
 					$('.message_required').css({display:'block'});
 					$('.message_required button').click(function(){

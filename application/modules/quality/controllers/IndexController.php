@@ -27,30 +27,32 @@
 
 				<div class="title_med workorders_filter">
 					<label for="client_filter" id="client_filter_label">Client</label>
-					<select id="client_filter" style="width:140px" onchange="changeCompany();">
+					<select id="client_filter" style="width:115px" onchange="changeCompany();">
 						<option value="-1">Show All</option>
 					'.QaDisplay::getCompanyHTML().'
 					</select>
 					<label for="project_filter" id="project_filter_label">Project</label>
-					<select id="project_filter" onchange="displayWorkorders();">
+					<select id="project_filter" >
 						<option value="-1">Show All</option>
 					</select>
 
 					<label for="status_filter" id="status_filter_label">Status</label>
-					<select id="status_filter" onchange="displayWorkorders();">
+					<select id="status_filter" >
 						<option value="-1">Show All</option>
 						<option value="99">Not Closed</option>
 						'.QaDisplay::getAllStatusOptionHTML().'
 					</select>
 					<label for="project_severity_filter" id="project_status_filter_label">Severity</label>
-					<select id="severity_filter" onchange="displayWorkorders();"> 
+					<select id="severity_filter" > 
 						<option value="-1">Show All</option>
 						'.QaDisplay::getcustomDropDown("QA_SEVERITY").'
 					</select>
 					<label for="assigned_filter" id="assigned_filter_label">Assigned To</label>
-					<select id="assigned_filter" onchange="displayWorkorders();" style="width:100px;">
+					<select id="assigned_filter"  style="width:100px;">
 						<option value="-1">Show All</option>
 					</select>
+					
+					<a href="javascript:void(null);" onclick="qulaityFilterJson();"><img src="../_images/quality_refresh.png" alt="refresh" title="refresh" style="vertical-align:middle;margin-top:9px;" /></a>
 
 				</div>
 
@@ -717,7 +719,7 @@
 								<ul class="comments" id="comments_list">';
 									
 									if(isset($_GET['defect_id'])) {
-										$comment_data = QaDisplay::getQuery("SELECT * FROM `qa_comments` WHERE `defect_id`='" .$wo_data[0]['id'] ."' order by date");
+										$comment_data = QaDisplay::getQuery("SELECT * FROM `qa_comments` WHERE `defect_id`='" .$wo_data[0]['id'] ."' order by date desc");
 										$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 										for($cx = 0; $cx < sizeof($comment_data); $cx++) {
 											$text=$comment_data[$cx]["comment"];
