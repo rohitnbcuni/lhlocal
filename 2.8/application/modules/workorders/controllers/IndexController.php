@@ -899,6 +899,9 @@
 						<div class="main_bucket_container">
 							<div class="main_bucket_title"><h4 id="number_of_comments">Comments (0)</h4></div>
 							<div class="main_bucket_content">
+							<ul class="comment_field_container">
+									<li><label for="comment">New Comment:</label><textarea name="comment" id="comment" class="field_large ' . $wo_archive_text . '" ' . $wo_archive_text . '></textarea></li>
+								</ul>
 								<ul class="comments" id="comments_list">';
 									
 									if(isset($_REQUEST['wo_id'])) {
@@ -942,9 +945,7 @@
 										$largest_comment_id = $comment_id_row[0];
 									}
 								echo '<li style="border-bottom:none;display:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$largest_comment_id.'"></li></ul>
-								<ul class="comment_field_container">
-									<li><label for="comment">New Comment:</label><textarea name="comment" id="comment" class="field_large ' . $wo_archive_text . '" ' . $wo_archive_text . '></textarea></li>
-								</ul>
+								
 								<div id="new_comment_notification" style="display:none;">
 										<div id="sticky">
 											<a class="ui-notify-close ui-notify-cross" href="#">x</a>
