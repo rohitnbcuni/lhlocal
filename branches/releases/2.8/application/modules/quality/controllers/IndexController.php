@@ -719,6 +719,7 @@
 							<ul class="comment_field_container">
 									<li><label for="comment">New Comment:</label><textarea name="comment" id="comment" class="field_large ' . $wo_archive_text . '" ' . $wo_archive_text . '></textarea></li>
 								</ul>
+								<div class="new_comment_actions ' . $wo_archive_status . '"><button class="secondary" onClick="submitComment(); return false;"><span>Submit Comment</span></button></div>
 								<ul class="comments" id="comments_list">';
 									
 									if(isset($_GET['defect_id'])) {
@@ -747,7 +748,7 @@
 								echo '</ul>
 								
 
-								<div class="new_comment_actions ' . $wo_archive_status . '"><button class="secondary" onClick="submitComment(); return false;"><span>Submit Comment</span></button></div>
+								
 								<div class="clearer"></div>
 							</div>
 						</div>
