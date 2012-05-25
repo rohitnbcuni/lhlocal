@@ -901,7 +901,14 @@
 							<div class="main_bucket_content">
 							<ul class="comment_field_container">
 									<li><label for="comment">New Comment:</label><textarea name="comment" id="comment" class="field_large ' . $wo_archive_text . '" ' . $wo_archive_text . '></textarea></li>
-								</ul>
+								</ul><div id="new_comment_notification" style="display:none;">
+										<div id="sticky">
+											<a class="ui-notify-close ui-notify-cross" href="#">x</a>
+											<h1>#{title}</h1>
+											<p>#{text}</p>
+										</div>
+									</div>
+								<div class="new_comment_actions ' . $wo_archive_status . '"><button class="secondary" onClick="submitComment(); return false;"><span>Submit Comment</span></button></div>
 								<ul class="comments" id="comments_list">';
 									
 									if(isset($_REQUEST['wo_id'])) {
@@ -946,14 +953,7 @@
 									}
 								echo '<li style="border-bottom:none;display:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$largest_comment_id.'"></li></ul>
 								
-								<div id="new_comment_notification" style="display:none;">
-										<div id="sticky">
-											<a class="ui-notify-close ui-notify-cross" href="#">x</a>
-											<h1>#{title}</h1>
-											<p>#{text}</p>
-										</div>
-									</div>
-								<div class="new_comment_actions ' . $wo_archive_status . '"><button class="secondary" onClick="submitComment(); return false;"><span>Submit Comment</span></button></div>
+								
 								<div class="clearer"></div>
 							</div>
 						</div>
