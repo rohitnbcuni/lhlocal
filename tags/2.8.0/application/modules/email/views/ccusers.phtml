@@ -1,0 +1,15 @@
+<html>
+<body>
+<?php 
+
+?>
+<b>Requestor:</b> <?php echo $this->eventInfo['requestedBy'] ?><br/><br/>
+<b>Brand:</b> <?php echo $this->eventInfo['brand'] ?><br/><br/>
+<b>Event:</b> <a href="<?php echo BASE_URL ?>/events/index/create/?eId=<?php echo $this->eventInfo['event_id'] ?>"><?php echo $this->eventInfo['event_id'] ?></a>&nbsp;&nbsp;
+You have been added to the CC list of this event.<br />
+<hr>
+<br/>
+<b>Event Description:</b> <?php echo Util::escapeString($this->eventInfo['desc']) ?><br />
+
+</body>
+</html>
