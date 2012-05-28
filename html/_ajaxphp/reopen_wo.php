@@ -54,10 +54,11 @@
 	$user_res = $mysql->query($select_user);
 	$assigned_user_row = $user_res->fetch_assoc();
 	//LH 20679 #remove special characters from title
+	 $subject = "WO ".$woId.": reopen - ".$req_type_row['field_name']." - ".$wo_row['title']. "";
 
-	$subject = "WO ".$woId.": reopen - ".$req_type_row['field_name']." - " . html_entity_decode($wo_row['title'],ENT_NOQUOTES,'UTF-8') . "";
+	//$subject = "WO ".$woId.": reopen - ".$req_type_row['field_name']." - " . html_entity_decode($wo_row['title'],ENT_NOQUOTES,'UTF-8') . "";
 	//$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1";
-	$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
+	
 	$to = $user_row['email'];
 	$user_keys = array_keys($users_email);
 
@@ -117,12 +118,18 @@
 
                     $msg .="<hr><b>Description:</b> " . $desc_string ."<br><br>";
 					if(!empty($to)){
-						$msg = nl2br($msg);
-						$headers .= "\r\n" .
-    					"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";	
-						$subject='=?UTF-8?B?'.base64_encode($subject).'?=';	
-						mail($to, $subject, $msg, $headers);
+						lh_sendEmail($to,$subject,$msg,$headers);
 					}
 			 }
+	}
+	
+	
+	function lh_sendEmail($to, $subject, $msg, $headers){
+		$msg = nl2br($msg);
+		$subject='=?UTF-8?B?'.base64_encode($subject).'?=';
+		$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
+		$headers .= "\r\n" .
+    					"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";
+		mail($to, $subject, $msg, $headers);
 	}
 ?>

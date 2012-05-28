@@ -1241,7 +1241,7 @@ function showNewComment() {
 							data: 'wid='+wid+'&last_wid='+last_comment_id,
 							success: function(msg) {
 									if($.trim(msg) !=''){
-									$('#comments_list').append(msg);
+									$('#comments_list').prepend(msg);
 									//$("#new_comment_notification").css("display","none")
 									$container = $("#new_comment_notification").notify();
 									
