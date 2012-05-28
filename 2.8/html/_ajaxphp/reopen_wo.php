@@ -118,14 +118,17 @@
 
                     $msg .="<hr><b>Description:</b> " . $desc_string ."<br><br>";
 					if(!empty($to)){
-						$msg = nl2br($msg);
-						 $subject='=?UTF-8?B?'.base64_encode($subject).'?=';
-
-						$headers .= "\r\n" .
-    					"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";	
-					//	$subject='=?UTF-8?B?'.base64_encode($subject).'?=';	
-						mail($to, $subject, $msg, $headers);
+						lh_sendEmail($to,$subject,$msg,$headers);
 					}
 			 }
+	}
+	
+	
+	function lh_sendEmail($to, $subject, $msg, $headers){
+		$msg = nl2br($msg);
+		$subject='=?UTF-8?B?'.base64_encode($subject).'?=';
+		$headers .= "\r\n" .
+    					"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";
+		mail($to, $subject, $msg, $headers);
 	}
 ?>
