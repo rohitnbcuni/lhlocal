@@ -899,10 +899,23 @@
 						<div class="main_bucket_container">
 							<div class="main_bucket_title"><h4 id="number_of_comments">Comments (0)</h4></div>
 							<div class="main_bucket_content">
+							<ul class="comment_field_container">
+									<li><label for="comment">New Comment:</label><textarea name="comment" id="comment" class="field_large ' . $wo_archive_text . '" ' . $wo_archive_text . '></textarea></li>
+								</ul><div id="new_comment_notification" style="display:none;">
+										<div id="sticky">
+											<a class="ui-notify-close ui-notify-cross" href="#">x</a>
+											<h1>#{title}</h1>
+											<p>#{text}</p>
+										</div>
+									</div>
+								<div class="new_comment_actions ' . $wo_archive_status . '"><button class="secondary" onClick="submitComment(); return false;"><span>Submit Comment</span></button></div>
 								<ul class="comments" id="comments_list">';
 									
 									if(isset($_REQUEST['wo_id'])) {
-										$comment_data = WoDisplay::getQuery("SELECT * FROM `workorder_comments` WHERE `workorder_id`='" .$wo_data[0]['id'] ."' order by date");
+										$comment_id =0;
+										$comment_id_row = array();
+										$largest_comment_id =0;
+										$comment_data = WoDisplay::getQuery("SELECT * FROM `workorder_comments` WHERE `workorder_id`='" .$wo_data[0]['id'] ."' order by date Desc");
 										$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 										for($cx = 0; $cx < sizeof($comment_data); $cx++) {
 											$text=$comment_data[$cx]["comment"];
@@ -921,6 +934,7 @@
 											$comment_time_part = explode(":", $comment_date_time_part[1]);											
 											$comment_user_data = WoDisplay::getQuery("SELECT * FROM `users` WHERE `id`='" .$comment_data[$cx]['user_id'] ."' LIMIT 1");
 											$comment_id = $comment_data[$cx]["id"]; 
+											$comment_id_row[] = $comment_id;
 											 echo '<li id="comment_id_li_'.$comment_id.'">
 												<img src="'.$comment_user_data[0]['user_img'].'" class="comment_photo" />
 												<div class="comment_body">
@@ -934,18 +948,12 @@
 											</li>';
 										}
 									}
-								echo '<li style="border-bottom:none;display:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$comment_id.'"></li></ul>
-								<ul class="comment_field_container">
-									<li><label for="comment">New Comment:</label><textarea name="comment" id="comment" class="field_large ' . $wo_archive_text . '" ' . $wo_archive_text . '></textarea></li>
-								</ul>
-								<div id="new_comment_notification" style="display:none;">
-										<div id="sticky">
-											<a class="ui-notify-close ui-notify-cross" href="#">x</a>
-											<h1>#{title}</h1>
-											<p>#{text}</p>
-										</div>
-									</div>
-								<div class="new_comment_actions ' . $wo_archive_status . '"><button class="secondary" onClick="submitComment(); return false;"><span>Submit Comment</span></button></div>
+									if(count($comment_id_row) > 0){
+										$largest_comment_id = $comment_id_row[0];
+									}
+								echo '<li style="border-bottom:none;display:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$largest_comment_id.'"></li></ul>
+								
+								
 								<div class="clearer"></div>
 							</div>
 						</div>

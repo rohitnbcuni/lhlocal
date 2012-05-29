@@ -30,8 +30,17 @@ class commentServices {
 	 	$usersSql = "SELECT id FROM `users` WHERE email = '$userName' AND active='1' and deleted ='0' LIMIT 0,1";
 	 	$userCheck = $mysql->query($usersSql);
 	 	$userResult = $userCheck->fetch_assoc();
-	 	$$email_users = array();
-	 	if(count($userResult) > 0){
+		 
+	 	$email_users = array();
+	 	if($userCheck->num_rows == 0){
+	 		$userName = str_replace("'", '',$userInfo->useremail);
+	 		$usersSql = "SELECT id FROM `users` WHERE email = '$userName' AND active='1' and deleted ='0' LIMIT 0,1";
+	 		$userCheck = $mysql->query($usersSql);
+	 		$userResult = $userCheck->fetch_assoc();
+			
+	 	}
+		//print_r($userResult);
+		if($userCheck->num_rows > 0){
 	 		$wid = $mysql->real_escape_string($Workorder->wid);
 	 		$uid = $userResult['id'];
 	 		$comment = $mysql->real_escape_string($this->escapewordquotes($Workorder->comment));
@@ -217,7 +226,7 @@ public static function escapewordquotes ($text) {
 			$msg = nl2br($msg);
 			$subject = '=?UTF-8?B?'.base64_encode($subject).'?=';
 			//$headers .= "\r\n".'Reply-To: lighthouse.comments@nbcuni.com' . "\r\n";
-			//	echo $headers."<br/>".$msg."<br/>".$subject."<br/>".$to;
+			//echo $headers."<br/>".$msg."<br/>".$subject."<br/>".$to;
 			try{
 			$result = mail($to, $subject, $msg, $headers);
 			if(!$result) {
@@ -257,7 +266,7 @@ public static function escapewordquotes ($text) {
 			//tokenInput =from+"|"+messageId+"|"+getHostName()+"|"+currentTime
 			$currentTime = $_POST['lh_utc_time'];
 			$tokenInput = $u->useremail.'|'.$w->wid.'|'.$hostname.'|'.$currentTime.'|'.SALT;
-			//echo $c->saveLHComment($u,$w); 
+			//echo $c->saveLHComment($u,$w); die;
 			//(ShobhitSingh.Bhadauria@nbcuni.com|27738|useclwslp033.nbcuni.ge.com|1333638181878|lighthouse)
 			$cs_token = md5($tokenInput);
             $lh_token = $_POST['lh_token'];
@@ -290,43 +299,7 @@ public static function escapewordquotes ($text) {
 			else{ echo "ERR0744"; };
 			}
 			else{ echo "ERR0745"; };
-			/*$token = urldecode($_POST['lh_token']);
-	     	$token = explode("|",$token);
-	     	//from+"|"+messageId+"|"+getHostName()+"|"+currentTime
-	     	if(count($token) > 0){
-	     		$token_fromid = $token[0]; 
-	     		$token_wid = $token[1];
-	     		$token_hostname = $token[2];
-	     		$token_time = $token[3];
-	     		$token_salt = $token[4];
-	     		if($token_fromid == $u->useremail ){
-	     			if($token_wid == $w->wid ){
-	     				if($token_hostname == $hostname){
-	     					if($token_salt == SALT){
-	     						echo $c->saveLHComment($u,$w);
-	     						
-	     					}else{
-	     						echo "ERR074";
-	     						//INVALID SALT
-	     					}
-	     				}else{
-	     					echo "ERR073";
-	     					//INVALID HOSTNAME
-	     				}
-	     			}else{
-	     				echo "ERR072";
-	     				//INVALID WORKORDER ID
-	     			}
-	     		}else{
-	     			echo "ERR071";
-	     			//INVALID USER EMAIL
-	     		}
-	     	}else{
-	     		echo "ERR070";
-	     			//INVALID Token
-	     	}*/
-		// for testing the conent those we receivd from java service	
-			
+				
 		}
 		else{
 			echo "ERR001";
