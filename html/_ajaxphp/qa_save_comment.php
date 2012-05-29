@@ -34,7 +34,7 @@
 			insertWorkorderAudit($mysql,$defectId, '4', $_SESSION['user_id'],$bc_id_row['assigned_to'],$bc_id_row['status']);
 		}
 		
-		$select_comments = "SELECT * FROM `qa_comments` WHERE `defect_id`='$defectId' order by date";
+		$select_comments = "SELECT * FROM `qa_comments` WHERE `defect_id`='$defectId' order by date desc";
 		$comm_result = @$mysql->query($select_comments);
 
 		

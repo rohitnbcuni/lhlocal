@@ -74,11 +74,14 @@
 			curl_close($session); */
 		}
 		$comment_id =0;
-		$select_comments = "SELECT * FROM `workorder_comments` WHERE `workorder_id`='$woId' order by date";
+		$comment_id_row = array();
+		$largest_comment_id =0;
+		$select_comments = "SELECT * FROM `workorder_comments` WHERE `workorder_id`='$woId' order by date Desc";
 		$comm_result = @$mysql->query($select_comments);
 		$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";	
 		while($comRow = $comm_result->fetch_assoc()) {
 			$comment_id = $comRow["id"]; 
+			$comment_id_row[] = $comment_id;
 			$select_user = "SELECT * FROM `users` WHERE `id`='" .$comRow['user_id'] ."' LIMIT 1";
 			$user_result = @$mysql->query($select_user);
 			$user_row = $user_result->fetch_assoc();
@@ -105,7 +108,11 @@
 				</div>
 			</li>';
 		}
-		$comment_html .= '<li style="border-bottom:none;display:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$comment_id.'"></li>';
+		if(count($comment_id_row) > 0){
+			//$comment_id_row = arsort($comment_id_row);
+			$largest_comment_id = $comment_id_row[0];
+		}
+		$comment_html .= '<li style="border-bottom:none;display:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$largest_comment_id.'"></li>';
 		
 		$select_email_users = "SELECT * FROM `workorders` WHERE `id`='$woId' LIMIT 1";
 		$email_res = $mysql->query($select_email_users);
