@@ -76,7 +76,7 @@
 		$comment_id =0;
 		$comment_id_row = array();
 		$largest_comment_id =0;
-		$select_comments = "SELECT * FROM `workorder_comments` WHERE `workorder_id`='$woId' order by date Desc";
+		$select_comments = "SELECT * FROM `workorder_comments` WHERE `workorder_id`='$woId' AND active ='1' AND deleted ='0' order by date Desc";
 		$comm_result = @$mysql->query($select_comments);
 		$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";	
 		while($comRow = $comm_result->fetch_assoc()) {
@@ -100,11 +100,32 @@
 			 $text_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",str_replace('&#129;','&#153;',htmlentities($cmnt,ENT_NOQUOTES, 'UTF-8')));
 			//$text_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",str_replace('&#129;','&#153;',html_entity_decode($cmnt,ENT_QUOTES,'ISO-8859-1')));
 			$text_string=nl2br($text_string);
+			$comment_delete = '';
+			$comment_update_box = '';
+			$date_diff = dateDiffComment($comRow['date']);
+			if($date_diff['years'] == 0 && $date_diff['days'] == 0 && $date_diff['months'] == 0 && $date_diff['hours'] == 0 && $date_diff['minuts'] <= 15){
+
+				if($comRow['user_id'] == $_SESSION['user_id']){
+					$comment_delete = "<div id='edit_pannel_".$comment_id."'> <span id='comment_edit' style='padding-left:10px;' onclick='displayCommentBox(".$comment_id.");'> Edit</span><span style='padding-left:10px;' id='comment_delete' onclick='deleteComment(".$comment_id.");'>Delete</span></div>";
+					$comment_update_box ='<div id="comment_id_li_body_'.$comment_id.'" class="panel" >
+							<form name="1" method="post" action="">
+							<textarea id="comment_id_li_textarea_'.$comment_id.'"  style="width:300px;height:23px">'.htmlentities($cmnt,ENT_NOQUOTES, 'UTF-8').'</textarea><br>
+							<button onclick="updateComment('.$comment_id.'); return false;" class="secondary">
+								<span>Update Comment</span>
+							</button>
+
+							</form>
+							<input type="hidden" class="comment_id_li_comment_id" name="comment_id_li_comment_id[]"  value="'.$comment_id.'">
+							<input type="hidden" id="comment_id_li_comment_time_'.$comment_id.'"  name="comment_id_li_comment_time_'.$comment_id.'"  value="'.$comRow['date'].'">
+							</div>';
+				}
+			}
 			$comment_html .= '<li id="comment_id_li_'.$comment_id.'">
 				<img src="'.$user_row['user_img'].'" class="comment_photo" />
 				<div class="comment_body">
-					<p><strong>' .ucfirst($user_row['first_name']) ." " .ucfirst($user_row['last_name']) .'</strong><br><em>' .$date .'</em></p>
-					<p>' . $text_string .'</p>
+					<p><strong>' .ucfirst($user_row['first_name']) ." " .ucfirst($user_row['last_name']) .'</strong><br><em>' .$date .' '.$comment_delete.'</em></p>
+					<p id="comment_id_li_msg_'.$comment_id.'">' . $text_string .'</p>
+					'.$comment_update_box.'
 				</div>
 			</li>';
 		}
@@ -219,10 +240,10 @@
 
 	function sendEmail($to, $subject, $msg, $headers){
 		$msg = nl2br($msg);
-		$subject='=?UTF-8?B?'.base64_encode($subject).'?=';	-
+		$subject='=?UTF-8?B?'.base64_encode($subject).'?=';	
 		$headers .= "\r\n" .
     				"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";
-		mail($to, $subject, $msg, $headers);
+		@mail($to, $subject, $msg, $headers);
 	}
 
 	function insertWorkorderAudit($mysql,$wo_id, $audit_id, $log_user_id,$assign_user_id,$status)
@@ -230,4 +251,30 @@
 		$insert_custom_feild = "INSERT INTO  `workorder_audit` (`workorder_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$wo_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
 		@$mysql->query($insert_custom_feild);
 	}
+	
+	function dateDiffComment($commentDate){ 
+				$dateDiff = array();
+				
+				
+
+				$diff = abs(strtotime($commentDate) - time()); 
+
+				$years   = floor($diff / (365*60*60*24)); 
+				$months  = floor(($diff - $years * 365*60*60*24) / (30*60*60*24)); 
+				$days    = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+
+				$hours   = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24)/ (60*60)); 
+
+				$minuts  = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24 - $hours*60*60)/ 60); 
+
+				$seconds = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24 - $hours*60*60 - $minuts*60));
+				$dateDiff['years'] = $years;
+				$dateDiff['months'] = $months;
+				$dateDiff['days'] = $days;	
+				$dateDiff['hours'] = $hours;
+				$dateDiff['minuts'] = $minuts;
+				$dateDiff['seconds'] = $seconds;		
+				return $dateDiff;
+						
+			}
 ?>
