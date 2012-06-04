@@ -1330,6 +1330,7 @@ function checkEditCommentTime(current_server_time){
 
 			hours %= 24;
 			if(parseInt(days) > 0 || parseInt(hours) > 0 || parseInt(minutes) >=15){
+				alert("days"+days+"hours"+hours+"minutes"+minutes);
 				$('#edit_pannel_'+commt_id).slideUp('slow');
 				$('#comment_id_li_body_'+commt_id).slideUp('slow');
 			
