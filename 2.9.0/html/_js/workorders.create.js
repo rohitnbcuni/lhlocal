@@ -51,6 +51,7 @@ $(document).ready(function() {
 		setInterval("showNewComment()", 5000);
 	}
 });
+
 function showHideTime() {
 	//var checkBox = document.getElementById('time_sensitive');
 	
@@ -1195,7 +1196,7 @@ function reOpenWorkOrder() {
 		success: function(msg) {
 			document.getElementById('close_date').value=msg;
 		         //Ticket no #18290
-                        window.location.href = '/workorders/index/edit/?wo_id='+woid;
+                  window.location.href = '/workorders/index/edit/?wo_id='+woid;
 		}
 	});
 }
@@ -1233,6 +1234,11 @@ function showNewComment() {
 						var last_comment = comment_msg.split("##");
 						last_comment_id = last_comment[0];
 						last_comment_username = last_comment[1];
+						current_server_time = last_comment[2];
+						if($.trim(current_server_time) != ''){
+							checkEditCommentTime(current_server_time);
+						}
+						if(($.trim(last_comment_id) !='') && ($.trim(last_comment_username) !='')){  
 						//alert("last_comment_id"+last_comment_username);
 						$('#last_comment_id').val(last_comment_id); 
 						$.ajax({
@@ -1255,6 +1261,7 @@ function showNewComment() {
 								}
 							}
 							});
+						}
 						
 					}
 					
@@ -1265,4 +1272,92 @@ function showNewComment() {
 }
 function create( template, vars, opts ){
 	return $container.notify("create", template, vars, opts);
+}
+
+
+function displayCommentBox(comment_id){
+	$('#comment_id_li_msg_'+comment_id).slideUp('slow');
+	$('#comment_id_li_body_'+comment_id).slideDown('slow');
+}
+
+
+function updateComment(comment_id){
+	var newCOmment = $('#comment_id_li_textarea_'+comment_id).val();
+	$('#comment_id_li_body_'+comment_id).slideUp('slow');
+	
+	$.ajax({
+			type: "POST",
+			url: "/_ajaxphp/update_wo_comment.php",
+			data: 'comment='+newCOmment+'&comment_id='+comment_id,
+			success: function(msg) {
+					$('#comment_id_li_msg_'+comment_id).html(msg);
+					$('#comment_id_li_msg_'+comment_id).slideDown('slow');		
+					
+				}
+			});
+
+}
+
+function checkEditCommentTime(current_server_time){
+		
+		$('.comment_id_li_comment_id').each(function ()
+		{
+			var oDiff = new Object();
+			var commt_id = $(this).val();
+			var time_id = $('#comment_id_li_comment_time_'+commt_id).val();
+			var t = time_id.split(/[- :]/);
+
+			// Apply each element to the Date function
+			var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+			myEpoch = d.getTime();
+			//var myEpoch = myDate.getTime();
+			var current_time =  new Date(current_server_time*1000);
+			current_time = current_time.getTime();
+			var nTotalDiff = current_time-myEpoch; // If diff comes minus value, then it is past date-time, otherwise it is future data-time
+			var milliseconds = nTotalDiff;
+
+			var seconds = milliseconds / 1000;
+
+			var minutes = seconds / 60;
+
+			seconds %= 60;
+
+			var hours = minutes / 60;
+
+			minutes %= 60;
+
+			var days = hours / 24;
+
+			hours %= 24;
+			if(parseInt(days) > 0 || parseInt(hours) > 0 || parseInt(minutes) >=15){
+				$('#edit_pannel_'+commt_id).slideUp('slow');
+				$('#comment_id_li_body_'+commt_id).slideUp('slow');
+			
+			}
+				// Your code here
+		});
+ 
+
+}
+
+function deleteComment(comment_id){
+	var r=confirm("You are about to delete this work order.Do you want to continue?");
+	if (r==true)
+	  {
+	  $.ajax({
+			type: "POST",
+			url: "/_ajaxphp/update_wo_comment.php",
+			data: 'comment_id='+comment_id+'&del=lhcommentdelete',
+			success: function(msg) {
+					if(msg == 'ok'){
+					//alert("ddd");
+						//$('#comment_id_li_msg_'+comment_id).html(msg);
+						$('#comment_id_li_'+comment_id).slideUp('slow');	
+					}	
+					
+				}
+			});
+	  }
+	
+	
 }
