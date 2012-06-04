@@ -151,7 +151,7 @@
 				$msg .="<b>Company: </b>" . $company_row['name'] . "<br><br>";
 				$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
 				$msg .="<b>Site: </b>" .$site_name_row['field_name'] ."<br><br>";				
-				$msg .="<b>".ucfirst($commenter_row['first_name']) ." " .ucfirst($commenter_row['last_name']) ."</b> commented on work order "."<b>[" . $link . "]</b><br><br>";
+				$msg .="<b>".ucfirst($commenter_row['first_name']) ." " .ucfirst($commenter_row['last_name']) ."</b> Updated his comment on work order "."<b>[" . $link . "]</b><br><br>";
 				$msg .="<b>Request Type: </b>" .$request_type_arr[$req_type_row['field_name']] ."<br>";
 
 //code for lh 18306		 
