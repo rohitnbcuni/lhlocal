@@ -1309,10 +1309,14 @@ function checkEditCommentTime(current_server_time){
 
 			// Apply each element to the Date function
 			var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+			//alert(d);
 			myEpoch = d.getTime();
-			//var myEpoch = myDate.getTime();
-			var current_time =  new Date(current_server_time*1000);
-			current_time = current_time.getTime();
+			var ct = current_server_time.split(/[- :]/);
+			//var current_time =  new Date(current_server_time*1000);
+			var current_time_new = new Date(ct[0], ct[1]-1, ct[2], ct[3], ct[4], ct[5]);
+			current_time = current_time_new.getTime();
+			//current_time = current_time1.getTime();
+			//alert(current_time_new);
 			var nTotalDiff = current_time-myEpoch; // If diff comes minus value, then it is past date-time, otherwise it is future data-time
 			var milliseconds = nTotalDiff;
 
@@ -1330,7 +1334,7 @@ function checkEditCommentTime(current_server_time){
 
 			hours %= 24;
 			if(parseInt(days) > 0 || parseInt(hours) > 0 || parseInt(minutes) >=15){
-				alert("days"+days+"hours"+hours+"minutes"+minutes);
+				//alert("days"+days+"hours"+hours+"minutes"+minutes);
 				$('#edit_pannel_'+commt_id).slideUp('slow');
 				$('#comment_id_li_body_'+commt_id).slideUp('slow');
 			
