@@ -23,9 +23,9 @@
 			$select_user = "SELECT CONCAT_WS(' ',first_name,last_name) as fullname FROM `users` WHERE `id`='" .$comRow['user_id'] ."' LIMIT 1";
 			$user_result = @$mysql->query($select_user);
 			$user_row = $user_result->fetch_assoc();
-			echo $comment_id = $comRow["id"]."##".$user_row['fullname'].'##'.time(); 
+			echo $comment_id = $comRow["id"]."##".$user_row['fullname'].'##'.date("Y-m-d H:i:s"); 
 			}else{
-			echo $comment_id = ' '."##".' '.'##'.time();
+			echo $comment_id = ' '."##".' '.'##'.date("Y-m-d H:i:s");
 			}
 	}
 	}
