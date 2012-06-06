@@ -35,7 +35,7 @@
 			$text_string=nl2br($text_string);
 			$comment_delete = '';
 			$comment_update_box = '';
-			$date_diff = dateDiffComment($comRow['date']);
+			$date_diff = Util::dateDiffComment($comRow['date']);
 			if($date_diff['years'] == 0 && $date_diff['days'] == 0 && $date_diff['months'] == 0 && $date_diff['hours'] == 0 && $date_diff['minuts'] <= 15){
 
 				if($comRow['user_id'] == $_SESSION['user_id']){
@@ -71,28 +71,3 @@
 		}
 	}
 	
-	function dateDiffComment($commentDate){ 
-				$dateDiff = array();
-				
-				
-
-				$diff = abs(strtotime($commentDate) - time()); 
-
-				$years   = floor($diff / (365*60*60*24)); 
-				$months  = floor(($diff - $years * 365*60*60*24) / (30*60*60*24)); 
-				$days    = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-
-				$hours   = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24)/ (60*60)); 
-
-				$minuts  = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24 - $hours*60*60)/ 60); 
-
-				$seconds = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24 - $hours*60*60 - $minuts*60));
-				$dateDiff['years'] = $years;
-				$dateDiff['months'] = $months;
-				$dateDiff['days'] = $days;	
-				$dateDiff['hours'] = $hours;
-				$dateDiff['minuts'] = $minuts;
-				$dateDiff['seconds'] = $seconds;		
-				return $dateDiff;
-						
-			}
