@@ -1235,7 +1235,7 @@ function showNewComment() {
 						last_comment_id = last_comment[0];
 						last_comment_username = last_comment[1];
 						current_server_time = last_comment[2];
-						if($.trim(current_server_time) != ''){
+						if($.trim(current_server_time) != '' && $.trim(last_comment_id) ==''){
 							checkEditCommentTime(current_server_time);
 						}
 						if(($.trim(last_comment_id) !='') && ($.trim(last_comment_username) !='')){  
@@ -1295,8 +1295,8 @@ function updateComment(comment_id){
 			data: 'comment='+newCOmment+'&comment_id='+comment_id,
 			success: function(msg) {
 					$('#comment_id_li_msg_'+comment_id).html(msg);
-					$('#comment_id_li_msg_'+comment_id).slideDown('slow');		
-					
+					$('#comment_id_li_msg_'+comment_id).slideDown('slow');
+										
 				}
 			});
 	}		
@@ -1351,7 +1351,7 @@ function checkEditCommentTime(current_server_time){
 }
 
 function deleteComment(comment_id){
-	var r=confirm("You are about to delete this work order.Do you want to continue?");
+	var r=confirm("You are about to delete this workorder comment.Do you want to continue?");
 	if (r==true)
 	  {
 	  $.ajax({
