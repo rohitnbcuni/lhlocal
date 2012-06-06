@@ -1283,8 +1283,12 @@ function displayCommentBox(comment_id){
 
 function updateComment(comment_id){
 	var newCOmment = $('#comment_id_li_textarea_'+comment_id).val();
-	$('#comment_id_li_body_'+comment_id).slideUp('slow');
 	
+	if($.trim(newCOmment) == ''){
+		alert('Please enter the comment');
+		return false;
+	}else{
+	$('#comment_id_li_body_'+comment_id).slideUp('slow');
 	$.ajax({
 			type: "POST",
 			url: "/_ajaxphp/update_wo_comment.php",
@@ -1295,6 +1299,7 @@ function updateComment(comment_id){
 					
 				}
 			});
+	}		
 
 }
 
