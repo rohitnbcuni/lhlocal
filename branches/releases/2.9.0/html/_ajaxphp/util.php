@@ -255,6 +255,32 @@ class Util {
 	public static function htmlEntityTitle($str){
 		return htmlentities($str,ENT_QUOTES,'UTF-8');
 	}
+	
+	public static function dateDiffComment($commentDate){ 
+				$dateDiff = array();
+				
+				
+
+				$diff = abs(strtotime($commentDate) - time()); 
+
+				$years   = floor($diff / (365*60*60*24)); 
+				$months  = floor(($diff - $years * 365*60*60*24) / (30*60*60*24)); 
+				$days    = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+
+				$hours   = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24)/ (60*60)); 
+
+				$minuts  = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24 - $hours*60*60)/ 60); 
+
+				$seconds = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24 - $hours*60*60 - $minuts*60));
+				$dateDiff['years'] = $years;
+				$dateDiff['months'] = $months;
+				$dateDiff['days'] = $days;	
+				$dateDiff['hours'] = $hours;
+				$dateDiff['minuts'] = $minuts;
+				$dateDiff['seconds'] = $seconds;		
+				return $dateDiff;
+						
+			}
        
        
 }
