@@ -10,10 +10,10 @@
 		if(trim($woId) != ''){
 		$last_wid = $mysql->real_escape_string($_POST['last_wid']);
 		if($last_wid == ''){
-			$select_comments = "SELECT id, user_id FROM `workorder_comments` WHERE `workorder_id`='$woId' AND `active` = '1' AND `deleted` = '0' order by id LIMIT 0, 1";
+			$select_comments = "SELECT id, user_id FROM `workorder_comments` WHERE `workorder_id`='$woId' AND `active` = '1' AND `deleted` = '0' order by date desc LIMIT 0, 1";
 
 		}else{
-			$select_comments = "SELECT id, user_id FROM `workorder_comments` WHERE `workorder_id`='$woId' AND `active` = '1' AND `deleted` = '0' AND id > $last_wid  order by id LIMIT 0, 1";
+			$select_comments = "SELECT id, user_id FROM `workorder_comments` WHERE `workorder_id`='$woId' AND `active` = '1' AND `deleted` = '0' AND id > $last_wid  AND date > (SELECT max(date) FROM  `workorder_comments` WHERE `workorder_id`='$woId' AND id = $last_wid AND `active` = '1' AND `deleted` = '0') order by date desc LIMIT 0, 1";
 		}
 		//echo $select_comments;
 		$comm_result = @$mysql->query($select_comments);
