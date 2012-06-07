@@ -914,7 +914,7 @@
 									if(isset($_REQUEST['wo_id'])) {
 										$comment_id =0;
 										$comment_id_row = array();
-										$largest_comment_id =0;
+										$largest_comment_id =array();
 										$comment_data = WoDisplay::getQuery("SELECT * FROM `workorder_comments` WHERE `workorder_id`='" .$wo_data[0]['id'] ."' AND active ='1' AND deleted ='0' order by date Desc");
 										$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 										for($cx = 0; $cx < sizeof($comment_data); $cx++) {
@@ -967,15 +967,19 @@
 												     <p id="comment_id_li_msg_'.$comment_id.'">'.$text_string.'</p>
 													 '.$comment_update_box.'
 											</li>';
-						
-
+											
+											
 
 										}
+										//P($comment_id_row);
+										if(count($comment_id_row) > 0){
+												@rsort($comment_id_row);
+												//p($comment_id_row);
+												$last_comment_id  = $comment_id_row[0]; 
+											}
 									}
-									if(count($comment_id_row) > 0){
-										$largest_comment_id = $comment_id_row[0];
-									}
-								echo '<li style="border-bottom:none;display:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$largest_comment_id.'"></li></ul>
+									
+								echo '<li style="border-bottom:none;display:none;"><input type="hidden" id="last_comment_id" name="last_comment_id" value="'.$last_comment_id.'"></li></ul>
 								
 								
 								<div class="clearer"></div>
