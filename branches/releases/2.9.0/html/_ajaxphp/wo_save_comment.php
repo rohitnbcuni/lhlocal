@@ -133,6 +133,7 @@
 			</li>';
 		}
 		if(count($comment_id_row) > 0){
+			@rsort($comment_id_row);
 			//$comment_id_row = arsort($comment_id_row);
 			$largest_comment_id = $comment_id_row[0];
 		}
