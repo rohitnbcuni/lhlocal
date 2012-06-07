@@ -1236,7 +1236,9 @@ function showNewComment() {
 						last_comment_username = last_comment[1];
 						current_server_time = last_comment[2];
 						if($.trim(current_server_time) != '' && $.trim(last_comment_id) ==''){
+							
 							checkEditCommentTime(current_server_time);
+							
 						}
 						if(($.trim(last_comment_id) !='') && ($.trim(last_comment_username) !='')){  
 						//alert("last_comment_id"+last_comment_username);
@@ -1289,16 +1291,18 @@ function updateComment(comment_id){
 		alert('Please enter the comment');
 		return false;
 	}else{
-	
-	$('#comment_id_li_'+comment_id).html('<p><center><img src="/_images/ajax-loader.gif"  /><br/>Please wait..</center></p>');
+	//$('#comment_id_li_'+comment_id).slideUp('slow');
+	//$('#comment_id_li_'+comment_id).remove();
+	$('#comment_id_li_'+comment_id).html('<p><center><img src="/_images/ajax-loader.gif" alt="loading.." ><br/>Please wait..</center></p>');
 	$.ajax({
 			type: "POST",
 			url: "/_ajaxphp/update_wo_comment.php",
-			data: 'comment='+newCOmment+'&comment_id='+comment_id,
+			data: { comment : newCOmment, comment_id : comment_id},
 			success: function(msg) {
 					//$('#comment_id_li_'+comment_id).slideUp('slow');
 					$('#comment_id_li_'+comment_id).html(msg);
-					
+					$('#comment_id_li_'+comment_id).slideDown('slow');
+					//$('#comments_list').prepend(msg);
 					//$('#comment_id_li_'+comment_id).load(msg);
 					//$('#comment_id_li_'+comment_id).slideDown('slow');
 										
@@ -1362,7 +1366,7 @@ function deleteComment(comment_id){
 	  $.ajax({
 			type: "POST",
 			url: "/_ajaxphp/update_wo_comment.php",
-			data: 'comment_id='+comment_id+'&del=lhcommentdelete',
+			data: { del : "lhcommentdelete", comment_id : comment_id},
 			success: function(msg) {
 					if(msg == 'ok'){
 					//alert("ddd");
