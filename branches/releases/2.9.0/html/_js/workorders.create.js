@@ -1356,7 +1356,7 @@ function checkEditCommentTime(current_server_time){
 }
 
 function deleteComment(comment_id){
-	var r=confirm("You are about to delete this workorder comment. Do you want to continue?");
+	var r=confirm("You are about to delete the comment. Do you want to continue?");
 	if (r==true)
 	  {
 	  $.ajax({
