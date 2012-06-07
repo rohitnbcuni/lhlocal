@@ -945,7 +945,7 @@
 												if($comment_data[$cx]['user_id'] == $_SESSION['user_id']){
 													$comment_delete = "<div id='edit_pannel_".$comment_id."'> <span id='comment_edit' style='padding-left:10px;' onclick='displayCommentBox(".$comment_id.");'><img src='/_images/b_edit.png' alt='Edit' title='Edit'></span><span style='padding-left:10px;' id='comment_delete' onclick='deleteComment(".$comment_id.");' ><img src='/_images/b_drop.png' alt='Delete' title='Delete'></span></div>";
 													$comment_update_box ='<div id="comment_id_li_body_'.$comment_id.'" class="panel" >
-															<form name="1" method="post" action="">
+															
 															<textarea id="comment_id_li_textarea_'.$comment_id.'"  class ="field_large" stle=" padding-bottom: 12px;">'.htmlentities($text,ENT_NOQUOTES, 'UTF-8').'</textarea>
 															<div class="new_comment_actions">
 															<br/>															
@@ -953,7 +953,7 @@
 																<span>Update Comment</span>
 															</button>
 															</div>
-															</form>
+															
 															<input type="hidden" class="comment_id_li_comment_id" name="comment_id_li_comment_id[]"  value="'.$comment_id.'">
 															<input type="hidden" id="comment_id_li_comment_time_'.$comment_id.'"  name="comment_id_li_comment_time_'.$comment_id.'"  value="'.$comment_data[$cx]['date'].'">
 															</div>';
