@@ -936,4 +936,9 @@ if($.trim($('#create_company2').val()) == ''){
 	
 }//End
 
+function generateallocationreport(){
+	alert();
+
+	window.open('/_ajaxphp/qualityfilter_json.php?report=excel&rp_client_filter='+rp_client_filter+'&rp_project_filter='+rp_project_filter+'&rp_status_filter='+rp_status_filter+'&rp_severity_filter='+rp_severity_filter+'&rp_assigned_filter='+rp_assigned_filter);
+}
 
