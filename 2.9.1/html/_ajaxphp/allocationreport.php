@@ -5,7 +5,7 @@ include('../_inc/config.inc');
 include("sessionHandler.php");
 $mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);	
 
-
+//$mysql = new mysqli('localhost', 'root','' , 'lhnew_db', '3306');
 
 $project_query = "Select com.name AS 'Company', 
 CONCAT(pjt.project_code, ' : ', pjt.project_name) AS 'Project',
@@ -60,17 +60,15 @@ Select rb.projectid, ppf.phase, rb.userid, ppf.rate from resource_blocks rb, use
 group by tab1.projectid) budget ON pjt.id=budget.projectid
 WHERE pjt.company <> '0' and pjt.archived='0' and pjt.deleted='0' and pjt.project_status IN (3,6)
 GROUP BY com.name, pjt.project_code, pjt.bc_id";
-echo "qry".$project_query;
+//echo "qry".$project_query;
 $project_result = $mysql->query($project_query) or die(mysql_error());
-$project_result->num_rows;
-$i=0;
-print_r($project_result);
+//$project_result->num_rows;
+
   $header = "Company\t Project\t Project Manager\t Engagement Lead\t Status\t Program\t Total Allocation\t Q1 Allocation\t Q2 Allocation\t Q3 Allocation\t Q4 Allocation\t Charge Code\n";
   $excel_body = '';
 
- 
-  foreach($project_result as $wo){
-    print_r($wo);exit();
+while($wo=$project_result->fetch_assoc()){ 
+  
           $excel_body .=  $wo['Company'] . "\t " .
           $wo['Project'] . "\t " .
           $wo['Project Manager'] . "\t " .
