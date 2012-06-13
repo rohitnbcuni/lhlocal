@@ -248,9 +248,25 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 			."</style>";
 			echo "<script src=\"/_js/jquery.validate.js\" type=\"text/javascript\"></script>\n";
 			echo "<script src=\"/_js/lh_login.js\" type=\"text/javascript\"></script>\n";
-		}
-	?>
+		}	
+?>
+<?php
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$checker = array(
+  'iphone'=>preg_match('/iPhone|iPod|iPad/', $ua),
+  'blackberry'=>preg_match('/BlackBerry/', $ua),
+  'android'=>preg_match('/Android/', $ua),
+);
 
+if ($checker['iphone']){
+
+echo "<style>"
+."body {-webkit-background-size:1590px}"
+."</style>";
+
+}
+
+?>
 	<script language="javascript">
 		var sBasePath = document.location.href;
 	</script>
