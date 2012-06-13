@@ -1,0 +1,21 @@
+<form action="<?php echo $this->escape($this->form->getAction(); ?>" method="<?php echo $this->escape($this->form->getMethod(); ?>">
+
+<fieldset>
+    <legend>Create a Workorder</legend>
+    <?php echo $this->form->id ?>
+    <?php echo $this->form->bcid ?>
+    <?php echo $this->form->category_id ?>
+    <?php echo $this->form->requested_by ?>
+    <?php echo $this->form->project_id ?>
+    <?php echo $this->form->type ?>
+    <?php echo $this->form->priority ?>
+    <?php echo $this->form->title ?>
+    <?php echo $this->form->body ?>    
+</fieldset>
+
+<fieldset>
+	<?php echo $this->form->submit ?>
+	<?php echo $this->form->cancel ?>
+	<?php echo $this->form->reset ?>
+</fieldset>
+</form>
