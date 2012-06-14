@@ -93,5 +93,4 @@ while($wo=$project_result->fetch_assoc()){
 	header("Content-Transfer-Encoding: binary ");
 	echo $header;
 	echo $excel_body;
-
 ?>
