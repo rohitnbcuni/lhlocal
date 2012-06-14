@@ -89,7 +89,7 @@ while($wo=$project_result->fetch_assoc()){
 	header("Content-Type: application/force-download");
 	header("Content-Type: application/octet-stream");
 	header("Content-Type: application/download");
-	header("Content-Disposition: attachment;filename=qa_report.xls"); 
+	header("Content-Disposition: attachment;filename=allocation_report.xls"); 
 	header("Content-Transfer-Encoding: binary ");
 	echo $header;
 	echo $excel_body;
