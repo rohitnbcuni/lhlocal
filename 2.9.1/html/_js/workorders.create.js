@@ -1242,7 +1242,7 @@ function showNewComment() {
 							
 						}
 						if(($.trim(last_comment_id) !='') && ($.trim(last_comment_username) !='')){  
-							checkEditCommentTimeDisable(current_server_time,last_comment_id);
+							checkEditCommentTimeDisable(last_comment_id);
 						$('#last_comment_id').val(last_comment_id); 
 						$.ajax({
 							type: "POST",
@@ -1351,7 +1351,9 @@ function checkEditCommentTime(current_server_time){
 			if(parseInt(days) > 0 || parseInt(hours) > 0 || parseInt(minutes) >=15){
 				//alert("days"+days+"hours"+hours+"minutes"+minutes);
 				$('#edit_pannel_'+commt_id).slideUp('slow');
+				$('#edit_pannel_'+commt_id).remove();
 				$('#comment_id_li_body_'+commt_id).slideUp('slow');
+				$('#comment_id_li_body_'+commt_id).remove();
 			
 			}
 				// Your code here
@@ -1383,47 +1385,18 @@ function deleteComment(comment_id){
 }
 
 
-function checkEditCommentTimeDisable(current_server_time, last_comment_id){
+function checkEditCommentTimeDisable(last_comment_id){
 		$('.comment_id_li_comment_id').each(function ()
 		{
-			var oDiff = new Object();
 			var commt_id = $(this).val();
-			var time_id = $('#comment_id_li_comment_time_'+commt_id).val();
-			var t = time_id.split(/[- :]/);
-
-			// Apply each element to the Date function
-			var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
-			//alert(d);
-			myEpoch = d.getTime();
-			var ct = current_server_time.split(/[- :]/);
-			//var current_time =  new Date(current_server_time*1000);
-			var current_time_new = new Date(ct[0], ct[1]-1, ct[2], ct[3], ct[4], ct[5]);
-			current_time = current_time_new.getTime();
-			//current_time = current_time1.getTime();
-			//alert(current_time_new);
-			var nTotalDiff = current_time-myEpoch; // If diff comes minus value, then it is past date-time, otherwise it is future data-time
-			var milliseconds = nTotalDiff;
-
-			var seconds = milliseconds / 1000;
-
-			var minutes = seconds / 60;
-
-			seconds %= 60;
-
-			var hours = minutes / 60;
-
-			minutes %= 60;
-
-			var days = hours / 24;
-
-			hours %= 24;
+			
 			//alert("last_comment_id"+last_comment_id+"commt_id"+commt_id);
 			if(last_comment_id != commt_id){
 				//if(parseInt(days) > 0 || parseInt(hours) > 0 || parseInt(minutes) >=15){
 				$('#edit_pannel_'+commt_id).slideUp('slow');
-				//$('#edit_pannel_'+commt_id).remove();
+				$('#edit_pannel_'+commt_id).remove();
 				$('#comment_id_li_body_'+commt_id).slideUp('slow');
-				//$('#comment_id_li_body_'+commt_id).remove();
+				$('#comment_id_li_body_'+commt_id).remove();
 			
 				
 			}
