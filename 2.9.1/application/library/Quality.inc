@@ -308,7 +308,7 @@
 			}
 			//Optomize the sql query
 			//$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a, `companies` com WHERE a.`company`=com.`id` AND a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1' ORDER BY com.`name`, a.`project_code` ASC");
-			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com ON (a.`company`=com.`id`) WHERE a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`qa_permission` = '1' ORDER BY com.`name`, a.`project_code` ASC");
+			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com ON (a.`company`=com.`id`) WHERE a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1' ORDER BY com.`name`, a.`project_code` ASC");
 
 			$html = '';
 			
@@ -358,9 +358,18 @@
 			} else {
 				$comp_query = "";
 			}
-
+		//	echo $itemId;
+			//$projects = array();
 			//$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a, `companies` com WHERE a.`company`=com.`id`   ORDER BY com.`name`, a.`project_code` ASC");
 			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com ON (a.`company`=com.`id`)  WHERE a.qa_permission ='1' ORDER BY com.`name`, a.`project_code` ASC");
+			//p($projects);
+			//return $projects;
+			//self::projectInArray($projects, $itemId );
+			if(!self::projectInArray($projects, $itemId )){
+			
+			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com ON (a.`company`=com.`id`)  WHERE a.qa_permission ='0' ORDER BY com.`name`, a.`project_code` ASC");
+
+			}
 			$html = '';
 			
 			$html .= '<option value="">--Select Project--</option>';
@@ -396,6 +405,23 @@
 			return $html;
 		}
 
+		
+		public static function projectInArray($parray,$itemid){
+			$flag = false;
+			echo $itemid;
+			p($parray);
+			if(is_array($parray)){
+				foreach($parray as $k => $val ){
+				
+					if($val['id'] ==  $itemid){
+						return $flag = true;	
+					}
+				}
+			
+			}
+		return $flag;
+		
+		}
 		public function getPriorityOptionEditHTML($itemId) {
 			$priorities = self::getQuery(QRY_WO_PRIORITY_ASC);
 			$html = '';
