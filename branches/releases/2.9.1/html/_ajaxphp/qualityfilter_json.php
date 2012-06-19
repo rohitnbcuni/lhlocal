@@ -225,7 +225,7 @@ if($project_result->num_rows > 0) {
 		{
 			 $dlClass = '';
 		}
-
+		$requested_by=$wo_user_list[$quality['requested_by']];
         $detectedby = $wo_user_list[$quality['detected_by']];
         $assigned = $wo_user_list[$quality['assigned_to']];
         	
@@ -291,7 +291,7 @@ if($project_result->num_rows > 0) {
 			$qa_last_action = $qa_last_audit_array[$quality['id']];
 			$log_date_val = $log_date_array[$quality['id']];
 		}
-        array_push($postingList[$i]['quality'],Array('id' => $quality['id'], 'title' => htmlentities(substr($quality['title'], 0, 37).$elipse,ENT_QUOTES,'UTF-8'), 'full_title' => htmlentities($quality['title'],ENT_QUOTES,'UTF-8'), 'status' => $wo_status_array[$quality['status']],'severity' => $custom_feild_arr['QA_SEVERITY'][$quality['severity']],'severity_id' => $quality['severity'],'category' => $custom_feild_arr['QA_CATEGORY'][$quality['category']],'version' => $qa_project_version[$quality['version']], 'detected_by' => $detectedby, 'assigned_to' => $assigned,'assigned_to_id' => $quality['assigned_to'],'creation_date' => $quality['creation_date'] ,'open_date' => format_date($quality['creation_date']), 'assigned_date' => format_date($quality['assigned_date']), 'completed' => format_date($quality['completed_date']),'launch_date' => format_date($quality['launch_date']), 'class' => $dlClass, 'overdue_flag' => $overdue_flag,'wo_last_comment'=>nl2br(htmlentities($wo_last_comment,ENT_QUOTES,'UTF-8')),'wo_last_comment_user_id'=>$wo_last_comment_user_id,'wo_last_comment_user'=>$wo_last_comment_user ,'last_log_date'=>$log_date_val,'wo_last_comment_date'=>format_date($wo_last_comment_date),'qa_last_action'=>$qa_last_action ,'qa_requested_by'=>$quality['requested_by']));
+        array_push($postingList[$i]['quality'],Array('id' => $quality['id'], 'title' => htmlentities(substr($quality['title'], 0, 37).$elipse,ENT_QUOTES,'UTF-8'), 'full_title' => htmlentities($quality['title'],ENT_QUOTES,'UTF-8'), 'status' => $wo_status_array[$quality['status']],'severity' => $custom_feild_arr['QA_SEVERITY'][$quality['severity']],'severity_id' => $quality['severity'],'category' => $custom_feild_arr['QA_CATEGORY'][$quality['category']],'version' => $qa_project_version[$quality['version']], 'detected_by' => $detectedby, 'assigned_to' => $assigned,'assigned_to_id' => $quality['assigned_to'],'creation_date' => $quality['creation_date'] ,'open_date' => format_date($quality['creation_date']), 'assigned_date' => format_date($quality['assigned_date']), 'completed' => format_date($quality['completed_date']),'launch_date' => format_date($quality['launch_date']), 'class' => $dlClass, 'overdue_flag' => $overdue_flag,'wo_last_comment'=>nl2br(htmlentities($wo_last_comment,ENT_QUOTES,'UTF-8')),'wo_last_comment_user_id'=>$wo_last_comment_user_id,'wo_last_comment_user'=>$wo_last_comment_user ,'last_log_date'=>$log_date_val,'wo_last_comment_date'=>format_date($wo_last_comment_date),'qa_last_action'=>$qa_last_action ,'qa_requested_by'=>$requested_by, $example_url=>$quality['example_url'], $body=>$quality['body']));
       }
     }
     $i=$i+1;
@@ -337,7 +337,7 @@ if(isset($from_action) && $from_action){
   //		return $postingList;
 }else if($type == 'excel'){
    
-  $header = "Id\t Title\t Project\t Company\t Category\t Status\t Severity\t Version\t Requested By\t Detected By\t Assigned To\t Open Date\t Assigned Date\t Completed Date\t Last Action\n";
+  $header = "Id\t Title\t Project\t Company\t Example Url\t Body\t Category\t Status\t Severity\t Version\t Requested By\t Detected By\t Assigned To\t Open Date\t Assigned Date\t Completed Date\t Last Action\n";
   $excel_body = '';
 
   $clientId = $_GET['rp_client_filter'];
@@ -356,6 +356,8 @@ if(isset($from_action) && $from_action){
           $project['project_code'] . " : " . $project['project_name'] . "\t " .
           $project['company_name'] . "\t " .
           $wo['full_title'] . "\t " .
+          $wo['$example_url'] . "\t" .
+          $wo['$body'] . "\t" .
           $wo['category'] . "\t " .
           $wo['status'] . "\t " .
           $wo['severity'] . "\t " .
