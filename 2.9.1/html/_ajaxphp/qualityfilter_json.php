@@ -88,7 +88,7 @@ $wo_last_comment_array = array();
 $qa_last_audit_array = array();
 $qa_project_version = array();
 $qa_project_iteration = array();
-$qa_project_version = array();
+$qa_project_product = array();
 
 if($project_result->num_rows > 0) {
 
@@ -174,7 +174,7 @@ if($project_result->num_rows > 0) {
 			  }
 		 }
 		 //For qa_project_iteration
-		 if(!array_key_exists($quality['iteration'], $qa_project_version)){
+		 if(!array_key_exists($quality['iteration'], $qa_project_iteration)){
 	          $select_qa_version = "SELECT * FROM `qa_project_iteration` WHERE `id`='" .$quality['iteration'] ."'";
 			  $version_result = $mysql->query($select_qa_version);
 			  $version_row = $version_result->fetch_assoc();
@@ -186,7 +186,7 @@ if($project_result->num_rows > 0) {
 			  }
 		 }
 		 //for product
-		 if(!array_key_exists($quality['product'], $qa_project_version)){
+		 if(!array_key_exists($quality['product'], $qa_project_product)){
 	          $select_qa_version = "SELECT * FROM `qa_project_product` WHERE `id`='" .$quality['product'] ."'";
 			  $version_result = $mysql->query($select_qa_version);
 			  $version_row = $version_result->fetch_assoc();
