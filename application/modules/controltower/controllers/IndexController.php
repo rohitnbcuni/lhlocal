@@ -33,7 +33,7 @@ echo '			<!--=========== START: COLUMNS ===========-->
 <div class=" create_pop_up " style="width:3000px;height:1024px;position:fixed;background-color:#fffff;z-index:1.0;margin-top:-500px;margin-left:-630px;opacity: 0.3;filter:alpha(opacity=30);zoom:2.0; z-index:1;"></div>
 <div class="main_actions" style="display">				
 <!--<button onClick="window.location = \'/controltower/index/create/\'"><span>create new project</span></button>-->	
-<button onClick="createProject();"><span>create new project</span></button>	
+<button onClick="createProject();"><span>create new project</span></button><button style="float:right;" onclick="return generateallocationreport();"><span>Allocation Report</span></button>	
 	<p class="message">Select a company or lead to list the projects.</p>';  
 		/*				if($_SESSION['login_status'] == "admin") {					echo '<div class="right_actions">						<button onClick="cloneProject();"><span>CLONE PROJECTS</span></button>					</div>					<div class="clone_pop_up">								<div id="clone_project_pop_up" style="margin-left:30px;" >		</div>						<div style="clear: both;"></div>											<div class="duplicate_buttons" style="float:left;margin-left:100px;">							<button class="cancel" onClick="$(\'.clone_pop_up\').css({display:\'none\'}); return false;"><span>Cancel</span></button>							<div style="clear: both;"></div>						</div>														</div>';							} */
 					echo '				<!--<button><span>archive project</span></button>	

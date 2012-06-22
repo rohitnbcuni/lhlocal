@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<?PHP	$randNum = "20120608"; ?>
+<?PHP	$randNum = "20120622"; ?>
 <title><?echo DEV_TEAM_NAME?>: Lighthouse</title>
 	<link rel="stylesheet" href="/_css/style.css?<?PHP echo $randNum; ?>" type="text/css" />
 	<link rel="stylesheet" href="/_css/ui.datepicker.css" type="text/css" />
@@ -248,9 +248,25 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 			."</style>";
 			echo "<script src=\"/_js/jquery.validate.js\" type=\"text/javascript\"></script>\n";
 			echo "<script src=\"/_js/lh_login.js\" type=\"text/javascript\"></script>\n";
-		}
-	?>
+		}	
+?>
+<?php
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$checker = array(
+  'iphone'=>preg_match('/iPhone|iPod|iPad/', $ua),
+  'blackberry'=>preg_match('/BlackBerry/', $ua),
+  'android'=>preg_match('/Android/', $ua),
+);
 
+if ($checker['iphone']){
+
+echo "<style>"
+."body {-webkit-background-size:1590px}"
+."</style>";
+
+}
+
+?>
 	<script language="javascript">
 		var sBasePath = document.location.href;
 	</script>
