@@ -1219,6 +1219,7 @@ function openAnimated(comment_id){
 function showNewComment() {
 	//$('#tips').slideDown('slow');
 	updateComments();
+	var last_comment_id ='';
 	var wid = $('#workorder_id').val();
 	var last_wid = $('#last_comment_id').val(); 
 	//alert("last_wid"+last_wid);
@@ -1241,7 +1242,7 @@ function showNewComment() {
 							
 						}
 						if(($.trim(last_comment_id) !='') && ($.trim(last_comment_username) !='')){  
-						//alert("last_comment_id"+last_comment_username);
+							checkEditCommentTimeDisable(last_comment_id);
 						$('#last_comment_id').val(last_comment_id); 
 						$.ajax({
 							type: "POST",
@@ -1350,7 +1351,9 @@ function checkEditCommentTime(current_server_time){
 			if(parseInt(days) > 0 || parseInt(hours) > 0 || parseInt(minutes) >=15){
 				//alert("days"+days+"hours"+hours+"minutes"+minutes);
 				$('#edit_pannel_'+commt_id).slideUp('slow');
+				$('#edit_pannel_'+commt_id).remove();
 				$('#comment_id_li_body_'+commt_id).slideUp('slow');
+				$('#comment_id_li_body_'+commt_id).remove();
 			
 			}
 				// Your code here
@@ -1379,4 +1382,26 @@ function deleteComment(comment_id){
 	  }
 	
 	
+}
+
+
+function checkEditCommentTimeDisable(last_comment_id){
+		$('.comment_id_li_comment_id').each(function ()
+		{
+			var commt_id = $(this).val();
+			
+			//alert("last_comment_id"+last_comment_id+"commt_id"+commt_id);
+			if(last_comment_id != commt_id){
+				//if(parseInt(days) > 0 || parseInt(hours) > 0 || parseInt(minutes) >=15){
+				$('#edit_pannel_'+commt_id).slideUp('slow');
+				$('#edit_pannel_'+commt_id).remove();
+				$('#comment_id_li_body_'+commt_id).slideUp('slow');
+				$('#comment_id_li_body_'+commt_id).remove();
+			
+				
+			}
+				// Your code here
+		});
+ 
+
 }

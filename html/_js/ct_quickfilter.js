@@ -936,4 +936,7 @@ if($.trim($('#create_company2').val()) == ''){
 	
 }//End
 
+function generateallocationreport(){
+	window.open('/_ajaxphp/allocationreport.php');
+}
 

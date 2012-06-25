@@ -306,15 +306,16 @@
 			} else {
 				$comp_query = "";
 			}
-
-			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a, `companies` com WHERE a.`company`=com.`id` AND a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1' ORDER BY com.`name`, a.`project_code` ASC");
+			//Optomize the sql query
+			//$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a, `companies` com WHERE a.`company`=com.`id` AND a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1' ORDER BY com.`name`, a.`project_code` ASC");
+			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com ON (a.`company`=com.`id`) WHERE a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1' ORDER BY com.`name`, a.`project_code` ASC");
 
 			$html = '';
 			
 			$html .= '<option value="">--Select Project--</option>';
 			$companyId = false;
 			for($i = 0; $i < sizeof($projects); $i++) {
-				$perms = self::getQuery("SELECT * FROM `user_project_permissions` WHERE `user_id`='" .$_SESSION['user_id'] ."' AND `project_id`='" .$projects[$i]['id'] ."'");
+				$perms = self::getQuery("SELECT id FROM `user_project_permissions` WHERE `user_id`='" .$_SESSION['user_id'] ."' AND `project_id`='" .$projects[$i]['id'] ."'");
 				
 				if(sizeof($perms) > 0) {
 					if($projects[$i]['company'] != $companyId) {
@@ -357,9 +358,13 @@
 			} else {
 				$comp_query = "";
 			}
+			//$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a, `companies` com WHERE a.`company`=com.`id`   ORDER BY com.`name`, a.`project_code` ASC");
+			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com ON (a.`company`=com.`id`)  WHERE a.qa_permission ='1' ORDER BY com.`name`, a.`project_code` ASC");
+			if(!self::projectInArray($projects, $itemId )){
+			
+			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com ON (a.`company`=com.`id`)  WHERE a.qa_permission ='0' ORDER BY com.`name`, a.`project_code` ASC");
 
-			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a, `companies` com WHERE a.`company`=com.`id`   ORDER BY com.`name`, a.`project_code` ASC");
-
+			}
 			$html = '';
 			
 			$html .= '<option value="">--Select Project--</option>';
@@ -395,6 +400,21 @@
 			return $html;
 		}
 
+		
+		public static function projectInArray($parray,$itemid){
+			$flag = false;
+			if(is_array($parray)){
+				foreach($parray as $k => $val ){
+				
+					if($val['id'] ==  $itemid){
+						return $flag = true;	
+					}
+				}
+			
+			}
+		return $flag;
+		
+		}
 		public function getPriorityOptionEditHTML($itemId) {
 			$priorities = self::getQuery(QRY_WO_PRIORITY_ASC);
 			$html = '';
@@ -423,7 +443,7 @@
 
 		
 		public function getStatusOptionEditHTML($itemId='') {
-			$types = self::getQuery("SELECT * FROM `lnk_qa_status_types` WHERE `active`='1' AND `deleted`='0' ORDER BY `sort_order` ASC");
+			$types = self::getQuery("SELECT id,name FROM `lnk_qa_status_types` WHERE `active`='1' AND `deleted`='0' ORDER BY `sort_order` ASC");
 			$html = '';
 
 			$html .= '<option value="">--Select Type--</option>';
@@ -521,7 +541,7 @@
 
 		public function userIMG($user_id) {
 			if(!empty($user_id)) {
-				$wo = self::getQuery("SELECT * FROM `users` WHERE `id`='$user_id' LIMIT 1");
+				$wo = self::getQuery("SELECT user_img FROM `users` WHERE `id`='$user_id' LIMIT 1");
 				return $wo[0]['user_img'];
 			} 
 			return "";
@@ -529,7 +549,7 @@
 
 		public function fetchUserName($user_id) {
 			if(!empty($user_id)) {
-				$wo = self::getQuery("SELECT * FROM `users` WHERE `id`='$user_id' LIMIT 1");
+				$wo = self::getQuery("SELECT first_name,last_name FROM `users` WHERE `id`='$user_id' LIMIT 1");
 				return $wo[0]['last_name'].', '.$wo[0]['first_name'];
 			} 
 			return "";
@@ -541,7 +561,7 @@
 			return '<input type="hidden" name="cclist" id="cclist" value="' .$cclist[0]['cclist'] .'" />';
 		}
 		public function getUserAssignOptionHTML($client=false) {
-			$users = self::getQuery("SELECT * FROM `users` WHERE `active`='1' AND `deleted`='0' AND `company`='2' and `id` = '97' ORDER BY `last_name` ASC");
+			$users = self::getQuery("SELECT id,last_name,first_name FROM `users` WHERE `active`='1' AND `deleted`='0' AND `company`='2' and `id` = '97' ORDER BY `last_name` ASC");
 			$html = '';
 			
 			//$html .= '<option value="">--Select User--</option>';
@@ -562,7 +582,7 @@
 			return $html;
 		}
 		public function getUserAssignOptionEditHTML($itemId ) {
-			$users = self::getQuery("SELECT * FROM `users` WHERE `active`='1' AND `deleted`='0' ORDER BY `last_name` ASC");
+			$users = self::getQuery("SELECT id,first_name,last_name FROM `users` WHERE `active`='1' AND `deleted`='0' ORDER BY `last_name` ASC");
 			$html = '';
 			
 			$html .= '<option value="">--Select User--</option>';
@@ -590,7 +610,7 @@
 		}
 
 		public function getAllStatusOptionHTML() {
-			$statuses = self::getQuery("select * from `lnk_qa_status_types` where active='1' order by name");
+			$statuses = self::getQuery("select name from `lnk_qa_status_types` where active='1' order by name");
 			$html = '';
 			
 			for($i = 0; $i < sizeof($statuses); $i++) {
