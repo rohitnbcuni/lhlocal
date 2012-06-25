@@ -168,9 +168,15 @@ if($project_result->num_rows > 0) {
 			  $version_result = $mysql->query($select_qa_version);
 			  $version_row = $version_result->fetch_assoc();
 			  $userName = '';
+		if(strlen($version_row['version_name']) > 16) {
+          $elipsee = "...";
+        } else {
+          $elipsee = "";
+        }
 			  if(!empty($version_row['version_name']))
 			  {
-		          $qa_project_version[$quality['version']] = htmlentities(substr($version_row['version_name'], 0, 15).$elipse,ENT_QUOTES,'UTF-8');
+			  
+		          $qa_project_version[$quality['version']] = htmlentities(substr($version_row['version_name'], 0, 15).$elipsee,ENT_QUOTES,'UTF-8');
 			  }
 		 }
 		 //For qa_project_iteration
