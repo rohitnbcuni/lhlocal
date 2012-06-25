@@ -176,7 +176,7 @@ if($project_result->num_rows > 0) {
 			  if(!empty($version_row['version_name']))
 			  {
 			  
-		          $qa_project_version[$quality['version']] = htmlentities(substr($version_row['version_name'], 0, 15).$elipsee,ENT_QUOTES,'UTF-8');
+		          $qa_project_version[$quality['version']] = htmlentities(substr($version_row['version_name'], 0, 10).$elipsee,ENT_QUOTES,'UTF-8');
 			  }
 		 }
 		 //For qa_project_iteration
