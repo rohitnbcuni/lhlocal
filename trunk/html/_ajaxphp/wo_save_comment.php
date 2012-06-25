@@ -73,6 +73,7 @@
 			$comment_id = $newNumPart2[0];
 			curl_close($session); */
 		}
+		$counts = 1;
 		$comment_id =0;
 		$comment_id_row = array();
 		$largest_comment_id =0;
@@ -106,7 +107,11 @@
 			if($date_diff['years'] == 0 && $date_diff['days'] == 0 && $date_diff['months'] == 0 && $date_diff['hours'] == 0 && $date_diff['minuts'] <= 15){
 
 				if($comRow['user_id'] == $_SESSION['user_id']){
-					$comment_delete = "<div id='edit_pannel_".$comment_id."'> <span id='comment_edit' style='padding-left:10px;' onclick='displayCommentBox(".$comment_id.");'> <img src='/_images/b_edit.png' alt='Edit' title='Edit'></span><span style='padding-left:10px;' id='comment_delete' onclick='deleteComment(".$comment_id.");'><img src='/_images/b_drop.png' alt='Delete' title='Delete'></span></div>";
+					if($counts == 1){
+						$comment_delete = "<div id='edit_pannel_".$comment_id."'> <span id='comment_edit' style='padding-left:10px;' onclick='displayCommentBox(".$comment_id.");'> <img src='/_images/b_edit.png' alt='Edit' title='Edit'></span><span style='padding-left:10px;' id='comment_delete' onclick='deleteComment(".$comment_id.");'><img src='/_images/b_drop.png' alt='Delete' title='Delete'></span></div>";
+					}else{
+						$comment_delete = '';
+					}
 					$comment_update_box ='<div id="comment_id_li_body_'.$comment_id.'" class="panel" >
 							
 							<textarea id="comment_id_li_textarea_'.$comment_id.'"  class ="field_large" >'.htmlentities($cmnt,ENT_NOQUOTES, 'UTF-8').'</textarea><br>
@@ -122,6 +127,7 @@
 							<input type="hidden" id="comment_id_li_comment_time_'.$comment_id.'"  name="comment_id_li_comment_time_'.$comment_id.'"  value="'.$comRow['date'].'">
 							</div>';
 				}
+				$counts++;
 			}
 			$comment_html .= '<li id="comment_id_li_'.$comment_id.'">
 				<img src="'.$user_row['user_img'].'" class="comment_photo" />

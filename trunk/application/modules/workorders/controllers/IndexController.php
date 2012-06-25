@@ -913,6 +913,7 @@
 									
 									if(isset($_REQUEST['wo_id'])) {
 										$comment_id =0;
+										$counts = 1;
 										$comment_id_row = array();
 										$largest_comment_id =array();
 										$comment_data = WoDisplay::getQuery("SELECT * FROM `workorder_comments` WHERE `workorder_id`='" .$wo_data[0]['id'] ."' AND active ='1' AND deleted ='0' order by date Desc");
@@ -943,7 +944,11 @@
 											if($date_diff['years'] == 0 && $date_diff['days'] == 0 && $date_diff['months'] == 0 && $date_diff['hours'] == 0 && $date_diff['minuts'] <= 15){
 												//echo "ss". $date_diff['years']." ".$date_diff['days']." ".$date_diff['months']." ".$date_diff['minuts'];
 												if($comment_data[$cx]['user_id'] == $_SESSION['user_id']){
-													$comment_delete = "<div id='edit_pannel_".$comment_id."'> <span id='comment_edit' style='padding-left:10px;' onclick='displayCommentBox(".$comment_id.");'><img src='/_images/b_edit.png' alt='Edit' title='Edit'></span><span style='padding-left:10px;' id='comment_delete' onclick='deleteComment(".$comment_id.");' ><img src='/_images/b_drop.png' alt='Delete' title='Delete'></span></div>";
+													if($counts == 1){
+														$comment_delete = "<div id='edit_pannel_".$comment_id."'> <span id='comment_edit' style='padding-left:10px;' onclick='displayCommentBox(".$comment_id.");'><img src='/_images/b_edit.png' alt='Edit' title='Edit'></span><span style='padding-left:10px;' id='comment_delete' onclick='deleteComment(".$comment_id.");' ><img src='/_images/b_drop.png' alt='Delete' title='Delete'></span></div>";
+													}else{
+														$comment_delete = '';
+													}
 													$comment_update_box ='<div id="comment_id_li_body_'.$comment_id.'" class="panel" >
 															
 															<textarea id="comment_id_li_textarea_'.$comment_id.'"  class ="field_large" stle=" padding-bottom: 12px;">'.htmlentities($text,ENT_NOQUOTES, 'UTF-8').'</textarea>
@@ -967,7 +972,7 @@
 												     <p id="comment_id_li_msg_'.$comment_id.'">'.$text_string.'</p>
 													 '.$comment_update_box.'
 											</li>';
-											
+											$counts++;
 											
 
 										}
