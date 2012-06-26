@@ -524,7 +524,7 @@ function displayWorkorders() {
 						html_body += '</span><select id="category_select_' + defect_id + '" style="display: none;" onChange="changeCategory(this.value, ' + defect_id + ');">';
 						html_body += '</select></dd>';
 
-						html_body += '<dd class="version" title='+ qualityList[i]['quality'][e]['version_full']+'>' + qualityList[i]['quality'][e]['version'] + '</dd>';
+						html_body += '<dd class="version" title='+ qualityList[i]['quality'][e]['version']+'>' + qualityList[i]['quality'][e]['version_break'] + '</dd>';
 						html_body += '<dd class="opendate">' + qualityList[i]['quality'][e]['open_date'] + '</dd>';
 						
 						html_body += '<dd style="height: 27px;" class="assigned" id="assigned_' + qualityList[i]['quality'][e]['id'] + '">';
