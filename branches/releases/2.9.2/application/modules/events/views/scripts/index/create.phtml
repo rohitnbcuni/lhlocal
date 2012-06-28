@@ -914,7 +914,7 @@ $(document).ready(function()
 								<img src="<?php echo $comment_user_data['user_img'] ?>" class="comment_photo" />
 								<div class="comment_body">
 									<p><strong><?php echo ucfirst($comment_user_data['first_name']) .' ' .ucfirst($comment_user_data['last_name']) ?></strong><br>
-									<em><?php echo @date("D M j \t g:i a", strtotime($commentVal['date'])) ?></em></p>
+									<em><?php echo @date("D M j \a\\t g:i a", strtotime($commentVal['date'])) ?></em></p>
 								     <p><?php echo $text_string ?></p>                                                 
 								</div>
 							</li>
