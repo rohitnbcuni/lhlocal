@@ -90,7 +90,7 @@
 			$date_time_split = explode(" ", $comRow['date']);
 			$date_split = explode("-", $date_time_split[0]);
 			$time_split = explode(":", $date_time_split[1]);
-			$date = date("D M j \a\t g:i a", mktime($time_split[0],$time_split[1],$time_split[2],$date_split[1],$date_split[2],$date_split[0]));
+			$date = date("D M j \a\\t g:i a", mktime($time_split[0],$time_split[1],$time_split[2],$date_split[1],$date_split[2],$date_split[0]));
 			$cmnt = $comRow['comment'];
 			//$text_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",str_replace('&#129;','&#153;',htmlentities($cmnt)));
 			/**
