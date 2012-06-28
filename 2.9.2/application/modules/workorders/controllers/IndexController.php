@@ -968,7 +968,7 @@
 												<img src="'.$comment_user_data[0]['user_img'].'" class="comment_photo" />
 												<div class="comment_body">
 													<p><strong>' .ucfirst($comment_user_data[0]['first_name']) .' ' .ucfirst($comment_user_data[0]['last_name']) .'</strong><br>
-													<em>' .@date("D M j \a\t g:i a", mktime(@$comment_time_part[0],@$comment_time_part[1],@$comment_time_part[2],@$comment_date_part[1],@$comment_date_part[2],@$comment_date_part[0])) .' '.$comment_delete.'</em>'.'</p>
+													<em>' .@date("D M j \a\\t g:i a", mktime(@$comment_time_part[0],@$comment_time_part[1],@$comment_time_part[2],@$comment_date_part[1],@$comment_date_part[2],@$comment_date_part[0])) .' '.$comment_delete.'</em>'.'</p>
 												     <p id="comment_id_li_msg_'.$comment_id.'">'.$text_string.'</p>
 													 '.$comment_update_box.'
 											</li>';
