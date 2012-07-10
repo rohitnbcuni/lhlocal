@@ -79,7 +79,6 @@ class commentServices {
 				$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$wid' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
 				$req_type_res = $mysql->query($select_req_type_qry);
 				$req_type_row = $req_type_res->fetch_assoc();
-				$this->updateAttachmentList($wid);
 				$this->insertWorkorderAudit($wid, '4', $uid,$bc_id_row['assigned_to'],$bc_id_row['status'],$curDateTime );
 				$this->createEmail($email_users,$Workorder,$userName);
 				return "SCC001";
@@ -229,7 +228,7 @@ public static function escapewordquotes ($text) {
 			//$headers .= "\r\n".'Reply-To: lighthouse.comments@nbcuni.com' . "\r\n";
 			//echo $headers."<br/>".$msg."<br/>".$subject."<br/>".$to;
 			try{
-			$result = @mail($to, $subject, $msg, $headers);
+			$result = mail($to, $subject, $msg, $headers);
 			if(!$result) {
 			//echo "falure";
  			   // There was an error
@@ -241,45 +240,10 @@ public static function escapewordquotes ($text) {
 				echo $e->getMessage();	
 			}
 		}
-		
-		
-		private function updateAttachmentList($wid){
-			$mysql = self::singleton();
-			$cleaned_filename = str_replace("'", "_", $_FILES['upload_file']['name']);
-			$ext = array('.jpg','.jpeg','.png','.gif','.tiff','.bmp','.html','.txt','.xml','.xls','.xlsx','.pdf','.doc','.docx','.zip','.tar','.flv','.mp4','.JPG','.JPEG','.PNG','.TIFF','.BMP','.HTML','.TXT','.XML','.XLS','.XLSX','.PDF','.DOC','.DOCX');
-				
-			if(!in_array(strrchr($cleaned_filename,'.'),$ext)){
-				die ("INVALID EXTENSION"); 
-			}
-					
-			$select_file = "SELECT * FROM `workorder_files` WHERE `directory`='" .$wid ."' AND `file_name`='" .$cleaned_filename ."' LIMIT 1";
-			$result = $mysql->query($select_file);
-			$dirName = $wid; 
-			if(!is_dir($_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName)){
-				mkdir($_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName);
-			
-			}
-			if (!@move_uploaded_file($_FILES['upload_file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName ."/".$cleaned_filename)) {
-				die("UNABLE-TO-UPLOAD");
-			} else {
-				@chmod($_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName ."/".$cleaned_filename, 0744);
-				if($result->num_rows == 1) {
-					$row = $result->fetch_assoc();
-					$update_row = "UPDATE `workorder_files` SET `workorder_id`='$wid', `upload_date`=NOW() WHERE `id`='" .$row['id'] ."'";
-					$mysql->query($update_row);
-				} else {
-					$insert_image = "INSERT INTO `workorder_files` "
-					."(`workorder_id`,`directory`,`file_name`,`upload_date`,`deleted`) "
-					."VALUES "
-					."($wid,'" .str_replace("/", "", $dirName) ."','" .$cleaned_filename ."',NOW(),'1')";
-					$mysql->query($insert_image);
-					
-				}
-			
-			}
-		}
-		
-	}
+	
+	 
+	
+}
 		
 		if($_POST['lh_submit']){
 		 	/* $handle = fopen('comment_service.log', 'a');
@@ -302,7 +266,8 @@ public static function escapewordquotes ($text) {
 			//tokenInput =from+"|"+messageId+"|"+getHostName()+"|"+currentTime
 			$currentTime = $_POST['lh_utc_time'];
 			$tokenInput = $u->useremail.'|'.$w->wid.'|'.$hostname.'|'.$currentTime.'|'.SALT;
-			echo $c->saveLHComment($u,$w); die;
+			//echo $c->saveLHComment($u,$w); die;
+			//(ShobhitSingh.Bhadauria@nbcuni.com|27738|useclwslp033.nbcuni.ge.com|1333638181878|lighthouse)
 			$cs_token = md5($tokenInput);
             $lh_token = $_POST['lh_token'];
 			if(trim($w->subject) == ''){
