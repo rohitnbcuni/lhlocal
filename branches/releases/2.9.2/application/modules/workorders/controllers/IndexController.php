@@ -86,6 +86,13 @@
 						}
 					}
 				}
+				$end_date_default = date("m/d/Y");// current date;
+				$start_date_add_one_month = strtotime(date("m/d/Y", strtotime($end_date_default)) . "-1 month");
+				$start_date_default = date("m/d/Y", $start_date_add_one_month);
+        echo '
+				<INPUT TYPE="hidden" ID="start_date_hidden" VALUE="'.$start_date_default.'" />
+				<INPUT TYPE="hidden" ID="end_date_hidden" VALUE="'.$end_date_default.'" />
+				<INPUT TYPE="hidden" ID="search_hidden" VALUE="" />';
 
 				echo '<div class="title_med2 workorders_filter">
 				<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE"" />
@@ -102,41 +109,23 @@
 					<select id="requestedby_filter" style="width: 140px;" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'2\');">
 						<option value="-1">Show All</option>
 					</select>
+					  <div id = "search_and_date_filters" style="display: none;">
+					<button onClick="$(\'.wo_date_range_filter\').css({display:\'block\'}); return false;"><span>Date Filters</span></button>
+					</div>
 				</div>
+				 	
+				 
+				 
 				<!-- ==| START: view type Botton Divison#7927 |== -->
 
 		         <div style="float: right; margin: 0pt; position: absolute; right: 12px; top: 85px;padding-right: 11px" id="list_view" >
-		       	<a href="/workorders/index/calendarview" title="Calendar View" style="padding-right: 6px;" ><img src="/_images/cal_active.png" alt="Calendar View" width="23" height="23" /></a>
+		       		<a href="/workorders/index/calendarview" title="Calendar View" style="padding-right: 6px;" ><img src="/_images/cal_active.png" alt="Calendar View" width="23" height="23" /></a>
 						         
-			<img src="/_images/list_dis_05.png" alt="List View"  title="List View" width="23" height="23" />
+					<img src="/_images/list_dis_05.png" alt="List View"  title="List View" width="23" height="23" />
 
-</div>
-		         <!-- ==| END: view type Botton Divison#7927 |== -->';
-				$end_date_default = date("m/d/Y");// current date;
-				$start_date_add_one_month = strtotime(date("m/d/Y", strtotime($end_date_default)) . "-1 month");
-				$start_date_default = date("m/d/Y", $start_date_add_one_month);
-        echo '
-				<INPUT TYPE="hidden" ID="start_date_hidden" VALUE="'.$start_date_default.'" />
-				<INPUT TYPE="hidden" ID="end_date_hidden" VALUE="'.$end_date_default.'" />
-				<INPUT TYPE="hidden" ID="search_hidden" VALUE="" />
-				  <div id = "search_and_date_filters" style="display: none; position: relative; float: left;">
-          	<button onClick="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'1\');" style="float:right;margin-top:6px"><span>GO</span></button>  
-            <div id="search_box" style="float:right;padding-left:30px;">
-  					 <label style = "color:#FFFFFF;" class="small">Search</label>
-  				    <input style = "margin-top:6px" type="text" value = "" id = "search_text"/>
-  				  </div>
-             
-            <div class="right_actions datePick" id = "start_date_select" style = "margin-top:6px;padding-right:12px;padding-left:10px;float:left;_width:150px;*width:150px;">
-  					 <label style = "color:#FFFFFF;float:left;padding:6px 5px 0 0;font-size:12px;" class="small">Start Date</label>
-  					 <input type="text" style = "width:65px;float:left;" class="jumptodatecal date_picker field_small" id="start_date_input" value="'.$start_date_default.'"/>
-            </div>
-            
-            <div class="right_actions datePick" id = "end_date_select" style = "margin-top:6px;padding:0 20px 0 5px;float:left;_width:150px;*width:150px;">
-  					 <label style = "color:#FFFFFF;padding:6px 5px 0 0;float:left;font-size:12px;" class="small">End Date</label>
-  					 <input type="text" style = "width:65px;float:left;" class="jumptodatecal date_picker field_small" id="end_date_input" value="'.$end_date_default.'"/>
-            </div>
-            
-         </div>
+				</div>
+		         <!-- ==| END: view type Botton Divison#7927 |== -->
+				
         </div>
 				<!--==| END: Bucket |==-->
 				
@@ -196,7 +185,20 @@
         </div>
     </div>
 			
-
+		<div class="wo_date_range_filter">
+			<div class="close_wo_date_range_filter" onClick="$(\'.wo_date_range_filter\').css({display:\'none\'}); return false;">X</div>
+				<div class="wo_date_range_filter_content">
+				
+					 <label class="small">Start Date</label>
+		  			 <input type="text"  class="jumptodatecal date_picker field_small" id="start_date_input" value="'.$start_date_default.'"/>
+					 <label  class="small">End Date</label>
+					 <input type="text"  class="jumptodatecal date_picker field_small" id="end_date_input" value="'.$end_date_default.'"/>
+					 <br/>
+					 <button onClick="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'1\');$(\'.wo_date_range_filter\').css({display:\'none\'});" ><span>GO</span></button> 
+	            </div>
+				
+			</div>
+		</div>
 
 			<div style="display: none;" id="wo_dimmer_ajax" class="wo_save_box">
 				<img alt="ajax-loader" src="/_images/ajax-loader.gif"/>
