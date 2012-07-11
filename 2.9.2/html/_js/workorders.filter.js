@@ -1269,3 +1269,15 @@ function calenderViewWorkorderList(){
 	});*/
 	workOrdercalender();
 }
+
+$(function() {
+	$( "#start_date_input" ).datepicker();
+	$( "#end_date_input" ).datepicker();
+});
+
+function displayDateFilters(){
+	alert("ddddd");
+	$('#date_range_filters').css("display","block");
+	
+	
+}
