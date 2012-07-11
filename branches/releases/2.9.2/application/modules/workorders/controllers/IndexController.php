@@ -110,7 +110,7 @@
 						<option value="-1">Show All</option>
 					</select>
 					  <div id = "search_and_date_filters" style="display: none;">
-					<button onClick="$(\'.wo_date_range_filter\').css({display:\'block\'}); return false;"><span>Date Filters</span></button>
+					<button style="margin-top:5px;" onClick="$(\'.wo_date_range_filter\').css({display:\'block\'}); return false;"><span>Date Filters</span></button>
 					</div>
 				</div>
 				 	
