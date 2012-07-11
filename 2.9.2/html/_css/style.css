@@ -1663,3 +1663,13 @@ padding:8px 0px 0px 3px;height: 68px }
 #fin_budget_code {
 width: 380px;
 }
+
+.wo_date_range_filter{ background-color:#fff ;display: none; height:115px; position:absolute; right:19%; top:1%; width:450px; z-index:1;border-style:solid;
+border-width:5px;}
+.close_wo_date_range_filter { background: url(../_images/close_btn.gif) no-repeat; width: 19px; height: 17px; margin-top:4px; right: 4px; z-index:1; text-indent: -9999px; position:absolute; cursor:pointer;}
+.wo_date_range_filter .wo_date_range_filter_content{ width: 440px; height: 215px; margin:44px 4px 4px 16px;}
+.wo_date_range_filter .wo_date_range_filter_content ul{ list-style-type: none; clear:both;}
+.wo_date_range_filter_content li.label_name{width: 75px; float: left; color:#000000; font-weight:bold;}
+.wo_date_range_filter_content li.label_value{ float:left; width: 140px; padding-left:10px;}
+.wo_date_range_filter_content .optional{font-style:italic; font-weight:normal; float:left; clear:both;}
+.wo_date_range_filter_content .add{clear:both; float:right; margin-top:10px;}
