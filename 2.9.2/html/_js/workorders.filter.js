@@ -672,12 +672,7 @@ function displayWorkorders(page_no,isNextClicked,column,order,isFilterClicked) {
 		
 	}else{
 	 if($('#project_status_filter').val() == '0'){         // for archived workorders
-		$('.pagination').removeClass('pagination_button');
-		$('.pagination').removeClass('pagination_left_button');
-		var req_type = $("#requestTypeFilter").val();
-		if(isNextClicked == "first"){
-		  $('#pagination').html("");            // rebuild pagination
-		}
+		
 		
 		if(typeof column == "undefined"){
 		  column = 'title';
@@ -703,6 +698,7 @@ function displayWorkorders(page_no,isNextClicked,column,order,isFilterClicked) {
 			$("#end_date_hidden").val($('#end_date_input').val());
 			$("#search_hidden").val($('#search_text').val());
 		  } else {
+		  
 			alert("end date should be greater than start date");
 			return false;
 		  }        
@@ -713,6 +709,12 @@ function displayWorkorders(page_no,isNextClicked,column,order,isFilterClicked) {
 		  
 		} else if (isFilterClicked == "3" && req_type.length == 0){   // multi select non selected
 		req_type = 'noneselected';
+		}
+		$('.pagination').removeClass('pagination_button');
+		$('.pagination').removeClass('pagination_left_button');
+		var req_type = $("#requestTypeFilter").val();
+		if(isNextClicked == "first"){
+		  $('#pagination').html("");            // rebuild pagination
 		}
 		$('#wo_dimmer_ajax').css({display:'block'});
 	  
