@@ -188,15 +188,16 @@
 		<div class="wo_date_range_filter">
 			<div class="close_wo_date_range_filter" onClick="$(\'.wo_date_range_filter\').css({display:\'none\'}); return false;">X</div>
 				<div class="wo_date_range_filter_content">
-			                 <div style="display:none">
+					<div style="display:none">
 					<input style = "margin-top:6px" type="text" value = "" id = "search_text"/>
 					</div>	
 					 <label class="small">Start Date</label>
-		  			 <input type="text"  class="jumptodatecal date_picker field_small" id="start_date_input" value="'.$start_date_default.'"/>
+		  			 <input type="text"   id="start_date_input" value="'.$start_date_default.'" readonly="readonly" />
 					 <label  class="small">End Date</label>
-					 <input type="text"  class="jumptodatecal date_picker field_small" id="end_date_input" value="'.$end_date_default.'"/>
+					 <input type="text"  id="end_date_input" value="'.$end_date_default.'" readonly="readonly" />
 					 <br/>
-					 <button style="margin-top:5px;margin-left:371px"  onClick="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'1\');$(\'.wo_date_range_filter\').css({display:\'none\'});" ><span>GO</span></button> 
+					 <button style="margin-top:5px;margin-left:371px" onClick="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'1\');$(\'.wo_date_range_filter\').css({display:\'none\'});" ><span>GO</span></button> 
+
 	            </div>
 				
 			</div>
