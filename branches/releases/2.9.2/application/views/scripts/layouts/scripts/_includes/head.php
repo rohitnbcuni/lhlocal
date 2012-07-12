@@ -167,9 +167,12 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						break;						
 					}//end 
 					default: {
+					echo	"<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n";
 					echo "<script src=\"/_js/workorders.filter.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
-					echo "\t<script src=\"/_js/jqueryMultiSelect.js\" type=\"text/javascript\"></script>\n";
-					echo "\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
+					echo "\t<script src=\"/_js/jqueryMultiSelect.js\" type=\"text/javascript\"></script>\n"
+						."\t<script src=\"/_js/jquery-ui-1.8.19.custom.min.js\" type=\"text/javascript\"></script>"
+						. "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
+					//echo "\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
 					}
 				}
 
