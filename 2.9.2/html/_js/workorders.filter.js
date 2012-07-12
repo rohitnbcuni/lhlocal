@@ -1270,14 +1270,24 @@ function calenderViewWorkorderList(){
 	workOrdercalender();
 }
 
-$(function() {
-	$( "#start_date_input" ).datepicker();
-	$( "#end_date_input" ).datepicker();
+$(document).ready(function(){
+  		$( "#start_date_input" ).datepicker({
+			beforeShow:function(){
+			  $('#ui-datepicker-div').css("width","210px");
+			},
+			onSelect: function( selectedDate ) {
+				$("#end_date_input" ).datepicker( "option", "minDate", selectedDate );
+				
+				//$("#end_date_input" ).datepicker( "setdate", "+7d" );
+			}
+		});
+		$( "#end_date_input" ).datepicker({
+			onSelect: function( selectedDate ) {
+				$("#start_date_input" ).datepicker( "option", "maxDate", selectedDate );
+				//$("#start_date_input" ).datepicker( "setdate", "-7d" );
+			}
+		});
+	
 });
 
-function displayDateFilters(){
-	alert("ddddd");
-	$('#date_range_filters').css("display","block");
-	
-	
-}
+
