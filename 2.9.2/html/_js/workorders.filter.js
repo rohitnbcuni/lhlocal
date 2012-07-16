@@ -332,7 +332,7 @@ function archiveWo(theId) {
 
 
 		
-	$('#'+theId).css({display:'none'});
+	//$('#'+theId).css({display:'none'});
 	
 	$.ajax({
 		type: "GET",
@@ -360,7 +360,7 @@ function activeWo(theId) {
 
 
 		
-	$('#'+theId).css({display:'none'});
+	//$('#'+theId).css({display:'none'});
 	
 	$.ajax({
 		type: "GET",
@@ -388,7 +388,7 @@ function unarchiveWo(theId) {
 	var comp = -1;
 	var tRemove = -1;
 		
-	$('#'+theId).css({display:'none'});
+	//$('#'+theId).css({display:'none'});
 	
 	$.ajax({
 		type: "GET",
