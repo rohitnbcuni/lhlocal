@@ -250,7 +250,7 @@ echo '			<!--=========== START: COLUMNS ===========-->
 			$proj_completeness = "0";	
 			}						
 			$strAddFlag = '	<div class="center_actions">	
-			<button class="status status_flag" onClick="$(\'.add_risk\').css({display:\'block\'}); return false;"><span>Add Flag</span></button>		
+			<button class="status status_flag" onClick="$(\'.add_risk\').css({display:\'block\'}); return false;" style="display:none;"><span>Add Flag</span></button>		
 			</div>';	
 			echo '<!--=========== START: COLUMNS ===========-->		
 			

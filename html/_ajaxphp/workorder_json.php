@@ -98,8 +98,10 @@ if('1' == $_GET['status']){         // for active workorders
     $req_filter_sql =  " AND e.`field_id` IN(".$request_type_string.")";
   }
   if(isset($_REQUEST['start_date']) && !empty($_REQUEST['start_date']) && isset($_REQUEST['end_date']) && !empty($_REQUEST['end_date'])){  
-    $date_range_filter_sql = " AND b.`creation_date` > '".date('Y-m-d',strtotime($_REQUEST['start_date']))."' AND b.`creation_date` < '".date('Y-m-d',strtotime($_REQUEST['end_date']))."'";
-  }
+  //  $date_range_filter_sql = " AND b.`creation_date` > '".date('Y-m-d',strtotime($_REQUEST['start_date']))."' AND b.`creation_date` < '".date('Y-m-d',strtotime($_REQUEST['end_date']))."'";
+$date_range_filter_sql = " AND b.`closed_date` >= '".date('Y-m-d',strtotime($_REQUEST['start_date']))." 00:00:00"."' AND b.`closed_date` <= '".date('Y-m-d',strtotime($_REQUEST['end_date']))." 23:59:00"."'";
+  
+	}
   if(isset($_REQUEST['search']) && !empty($_REQUEST['search'])){
     $search_filter_table_sql = " LEFT JOIN workorder_comments wc ON wc.workorder_id = b.id";
     $search_filter_sql = " AND (`title` like '%".$_REQUEST['search']."%' OR `body` like '%".$_REQUEST['search']."%' OR `example_url` like '%".$_REQUEST['search']."%' OR `comment` like '%".$_REQUEST['search']."%')";

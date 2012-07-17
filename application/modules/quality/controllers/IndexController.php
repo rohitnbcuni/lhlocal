@@ -737,7 +737,7 @@
 												<img src="'.$comment_user_data[0]['user_img'].'" class="comment_photo" />
 												<div class="comment_body">
 													<p><strong>' .ucfirst($comment_user_data[0]['first_name']) .' ' .ucfirst($comment_user_data[0]['last_name']) .'</strong><br>
-													<em>' .@date("D M j \a\t g:i a", mktime(@$comment_time_part[0],@$comment_time_part[1],@$comment_time_part[2],@$comment_date_part[1],@$comment_date_part[2],@$comment_date_part[0])) .'</em></p>
+													<em>' .@date("D M j \a\\t g:i a", mktime(@$comment_time_part[0],@$comment_time_part[1],@$comment_time_part[2],@$comment_date_part[1],@$comment_date_part[2],@$comment_date_part[0])) .'</em></p>
 
 													<p>'.$text_string.'</p>
 												</div>
@@ -1058,7 +1058,7 @@
 				$comment_user_data = QaDisplay::getQuery("SELECT * FROM `users` WHERE `id`='" .$comment_data[$cx]['user_id'] ."' LIMIT 1");
 
 				$comment[$cx]['name'] = ucfirst($comment_user_data[0]['first_name']) .' ' .ucfirst($comment_user_data[0]['last_name']);
-				$comment[$cx]['timestamp'] = @date("D M j \a\t g:i a", mktime(@$comment_time_part[0],@$comment_time_part[1],@$comment_time_part[2],@$comment_date_part[1],@$comment_date_part[2],@$comment_date_part[0]));
+				$comment[$cx]['timestamp'] = @date("D M j \a\\t g:i a", mktime(@$comment_time_part[0],@$comment_time_part[1],@$comment_time_part[2],@$comment_date_part[1],@$comment_date_part[2],@$comment_date_part[0]));
 				$comment[$cx]['comment_text'] = nl2br(htmlentities($comment_data[$cx]['comment'],ENT_NOQUOTES, 'UTF-8'));
 			}
 
