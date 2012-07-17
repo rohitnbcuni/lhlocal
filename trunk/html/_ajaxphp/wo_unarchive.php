@@ -14,7 +14,7 @@
 			if(!empty($wo_id))
 			{
 		
-			$unarchive_query = "UPDATE `workorders` SET `archived`='0', `status`='6',`closed_date`='' WHERE `id`='$wo_id'";
+			$unarchive_query = "UPDATE `workorders` SET `archived`='0', `status`='6',`closed_date`=NULL WHERE `id`='$wo_id'";
 			@$mysql->query($unarchive_query);
 
 			$select_wo = "SELECT * FROM `workorders` WHERE `id`='" .$wo_id ."'";
