@@ -1,0 +1,25 @@
+<?PHP
+
+	$wo_details = $this->wo_details;
+	echo "<h4>Work Orders</h4>";
+	foreach($wo_details as $project){
+		foreach($project['workorders'] as $wo){
+		echo "
+		<div>
+			<p>ID: <a href='/workorders/index/mobileedit?wo_id=" . $wo['id'] . "'>" . $wo['id'] . "</a><br>
+			Project: " . $project['project_code'] . " : " . $project['project_name'] . "<br>
+			Company: " . $project['company_name'] . "<br>
+			Title: " . $wo['full_title'] . "<br>
+			Priority: " . $wo['req_type'] . "<br>
+			Status: " . $wo['status'] . "<br>
+			Requested By: " . $wo['requested_by'] . "<br>
+			Assigned To: " . $wo['assigned_to'] . "<br>
+			Open Date: " . $wo['open_date'] . "<br>
+			Due Date: " . $wo['launch_date'] . "<br>
+			Last Commented By: " . $wo['wo_last_comment_user'] . "<br>
+			Last Commented Date: " . $wo['wo_last_comment_date'] . "</p>
+		</div>";
+		}
+	}
+
+?>

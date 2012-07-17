@@ -1,0 +1,104 @@
+<html>
+<body>
+<?php 
+
+//p($this->eventInfo);
+?>
+<b>Requestor : </b> <?php echo $this->eventInfo['requestedBy'] ?><br/><br/>
+<b>Brand : </b> <?php echo $this->eventInfo['brand'] ?><br/><br/>
+
+<b><?php echo $this->eventInfo['currentUser'] ?></b> has Updated Event <a href="<?php echo BASE_URL ?>/events/index/create/?eId=<?php echo $this->eventInfo['event_id'] ?>"><?php echo $this->eventInfo['event_id'] ?></a>
+<br/>
+<?php 
+if($this->eventInfo['pre_event_values']['company_id'] != $this->eventInfo['new_event_values']['company_id']):
+?>
+	<b>Old Company Name : </b><?php echo EventDisplay::getCompanyName($this->eventInfo['pre_event_values']['company_id']) ?><br/>
+	<b>New Company Name : </b><?php echo EventDisplay::getCompanyName($this->eventInfo['new_event_values']['company_id']) ?>
+	<br/>
+<?php endif ?>
+<?php 
+if(($this->eventInfo['pre_event_values']['est_start_datetime'] != $this->eventInfo['new_event_values']['est_start_datetime']) ||($this->eventInfo['pre_event_values']['est_end_datetime'] != $this->eventInfo['new_event_values']['est_end_datetime']) ):
+?>
+	<b>Old Event Start Date and Time : </b><?php echo date("M d, Y h:iA",strtotime($this->eventInfo['pre_event_values']['est_start_datetime']))?><br/>
+	<b>New Event Start Date and Time : </b><?php echo date("M d, Y h:iA",strtotime($this->eventInfo['new_event_values']['est_start_datetime'])) ?>
+	<br/>
+	<b>Old Event End Date and Time : </b><?php echo date("M d, Y h:iA",strtotime($this->eventInfo['pre_event_values']['est_end_datetime'])) ?><br/>
+	<b>New Event End Date and Time : </b><?php echo date("M d, Y h:iA",strtotime($this->eventInfo['new_event_values']['est_end_datetime'])) ?>
+	<br/>
+<?php endif ?>
+<?php 
+if($this->eventInfo['pre_event_values']['example_url'] != $this->eventInfo['new_event_values']['example_url']):
+?>
+	<b>Old Event Url : </b><?php echo $this->eventInfo['pre_event_values']['example_url']?><br/>
+	<b>New Event Url : </b><?php echo $this->eventInfo['new_event_values']['example_url']?>
+	<br/>
+<?php endif ?>
+<?php 
+if($this->eventInfo['pre_event_values']['title'] != $this->eventInfo['new_event_values']['title']):
+?>
+	<b>Old Event Title : </b><?php echo html_entity_decode($this->eventInfo['pre_event_values']['title'],ENT_NOQUOTES,'UTF-8')?><br/>
+	<b>New Event Title : </b><?php echo html_entity_decode($this->eventInfo['new_event_values']['title'],ENT_NOQUOTES,'UTF-8')?>
+	<br/>
+<?php endif ?>
+<?php 
+if($this->eventInfo['pre_event_values']['anticipated_traffic'] != $this->eventInfo['new_event_values']['anticipated_traffic']):
+?>
+<?php 
+	$statusArray = EventDisplay::anitcipatedTraffic();
+?>
+	<b>Old Anticipated Traffic : </b><?php echo $statusArray[$this->eventInfo['pre_event_values']['anticipated_traffic']]?><br/>
+	<b>New Anticipated Traffic : </b><?php echo $statusArray[$this->eventInfo['new_event_values']['anticipated_traffic']]?>
+	<br/>
+<?php endif ?>
+<?php 
+if($this->eventInfo['pre_event_values']['affected_company_list'] != $this->eventInfo['new_affected_brand']['affected_company_list']):
+?>
+<?php 
+	if(empty($this->eventInfo['pre_event_values']['affected_company_list'])){
+		$oldAffectedCompanyArray = array();
+	}else{
+		$oldAffectedCompanyArray  = EventDisplay::affected_company_list($this->eventInfo['pre_event_values']['affected_company_list']);
+	}
+	
+	if((count($oldAffectedCompanyArray) == 0) && (!empty($this->eventInfo['new_affected_brand']['affected_company_list']))){?>
+	<b>Affected Companies  : </b><?php echo EventDisplay::affected_company_list($this->eventInfo['new_affected_brand']['affected_company_list']) ?>
+	<?php }else{?>
+	
+	<b>Old Affected Companies  : </b><?php echo (!empty($this->eventInfo['pre_event_values']['affected_company_list']))? EventDisplay::affected_company_list($this->eventInfo['pre_event_values']['affected_company_list']):''; ?><br/>
+	<b>New Affected Companies  : </b><?php echo (!empty($this->eventInfo['new_affected_brand']['affected_company_list']))? EventDisplay::affected_company_list($this->eventInfo['new_affected_brand']['affected_company_list']):'' ?>
+	<br/>
+	<?php } ?>
+<?php endif ?>
+<?php 
+if($this->eventInfo['pre_event_values']['requested_by'] != $this->eventInfo['new_event_values']['requested_by']):
+?>
+	<b>Old Requested By  : </b><?php $u = EventDisplay::getRequestorInfo($this->eventInfo['pre_event_values']['requested_by']);
+	echo $u['0']['full_name'];								
+	?><br/>
+	<b>New Requested By  : </b><?php $u = EventDisplay::getRequestorInfo($this->eventInfo['new_event_values']['requested_by'])?>
+	<?php  echo $u['0']['full_name'];	?>
+	<br/>
+<?php endif ?>
+<?php 
+if($this->eventInfo['pre_event_values']['assigned_to'] != $this->eventInfo['new_event_values']['assigned_to']):
+?>
+	<b>Old Assigned To  : </b><?php $u = EventDisplay::getRequestorInfo($this->eventInfo['pre_event_values']['assigned_to']);
+	echo $u['0']['full_name'];
+	?><br/>
+	<b>New Assigned To  : </b><?php $u = EventDisplay::getRequestorInfo($this->eventInfo['new_event_values']['assigned_to'])?>
+	<?php echo $u['0']['full_name']; ?>
+	<br/>
+<?php endif ?>
+<?php 
+if($this->eventInfo['pre_event_values']['status'] != $this->eventInfo['new_event_values']['status']):
+?>
+	<b>Old Status  : </b><?php echo EventDisplay::getEventStatusType($this->eventInfo['pre_event_values']['status'])?><br/>
+	<b>New Status : </b><?php echo EventDisplay::getEventStatusType($this->eventInfo['new_event_values']['status'])?>
+	<br/>
+<?php endif ?>
+<hr>
+<br/>
+<b>Event Description:</b> <?php echo Util::escapeString($this->eventInfo['desc']) ?><br />
+
+</body>
+</html>
