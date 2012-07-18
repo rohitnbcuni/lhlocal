@@ -147,9 +147,23 @@
 
 				<!--==| END: Sorting |==-->
 
-				<!--==| START: Work Orders |==-->
-				<input type="hidden" name="active_wo" id="active_wo" value="" />
-				<div id="wo_containter" class="workorders_container">';
+				<!--==| START: Work Orders |==-->';
+				$inStyle = '';
+				$ua = $_SERVER['HTTP_USER_AGENT'];
+				$checker = array(
+				  'iphone'=>preg_match('/iPhone|iPod|iPad/', $ua),
+				  'blackberry'=>preg_match('/BlackBerry/', $ua),
+				  'android'=>preg_match('/Android/', $ua),
+				);
+			
+				if ($checker['iphone'] || $checker['blackberry'] || $android['android']){
+				//	  $inlineStyle = "style='height:auto;overflow:hidden'";
+				 $inlineStyle = "style='background:none repeat scroll 0 0 #C9C9C9;clear:both;height:auto;overflow:hidden;padding: 0 3px 3px;position: relative;'";
+		
+						
+				}
+				echo '<input type="hidden" name="active_wo" id="active_wo" value="" />
+				<div id="wo_containter" class="workorders_container" '.$inlineStyle.'>';
 					
 					echo '<!-- Company Break -->
 				</div>
