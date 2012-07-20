@@ -87,7 +87,8 @@ class commentServices {
 				$this->insertWorkorderAudit($wid, '4', $uid,$bc_id_row['assigned_to'],$bc_id_row['status'],$curDateTime );
 				$this->createEmail($email_users,$Workorder,$userName);
 				if(count($attachmentError) > 0){
-					return "SCC001"."-"."ATTACHEMNT-ERROR".print_r($attachmentError);	
+					//return "SCC001"."-"."ATTACHEMNT-ERROR".print_r($attachmentError);	
+					return "SCC001"."-".print_r($attachmentError);	
 				
 				}else{
 					return "SCC001";
