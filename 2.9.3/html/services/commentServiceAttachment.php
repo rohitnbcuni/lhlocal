@@ -238,7 +238,7 @@ public static function escapewordquotes ($text) {
 			//$headers .= "\r\n".'Reply-To: lighthouse.comments@nbcuni.com' . "\r\n";
 			//echo $headers."<br/>".$msg."<br/>".$subject."<br/>".$to;
 			try{
-			$result = @mail($to, $subject, $msg, $headers);
+			//$result = @mail($to, $subject, $msg, $headers);
 			if(!$result) {
 			//echo "falure";
  			   // There was an error
