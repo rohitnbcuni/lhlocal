@@ -26,6 +26,7 @@ class commentServices {
 	 */
 	 public function saveLHComment($userInfo, $Workorder) {
 	 	$mysql = self::singleton();
+		$attachmentError = array();
 	 	$userName = $mysql->real_escape_string($userInfo->useremail);
 	 	$usersSql = "SELECT id FROM `users` WHERE email = '$userName' AND active='1' and deleted ='0' LIMIT 0,1";
 	 	$userCheck = $mysql->query($usersSql);
@@ -65,6 +66,9 @@ class commentServices {
 						//}
 					}
 				}
+				//Check if Request have attachemnt
+				$attachmentError = $this->updateAttachmentList($Workorder);
+				
 				//Fixed the issue if ticket is closed as well as archived
 				//If WO is archived then change it to unarchive
 				/*if($bc_id_row['archived'] == '1'){
@@ -79,9 +83,16 @@ class commentServices {
 				$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$wid' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
 				$req_type_res = $mysql->query($select_req_type_qry);
 				$req_type_row = $req_type_res->fetch_assoc();
+				
 				$this->insertWorkorderAudit($wid, '4', $uid,$bc_id_row['assigned_to'],$bc_id_row['status'],$curDateTime );
 				$this->createEmail($email_users,$Workorder,$userName);
-				return "SCC001";
+				if(count($attachmentError) > 0){
+					//return "SCC001"."-"."ATTACHEMNT-ERROR".print_r($attachmentError);	
+					return "SCC001"."-".print_r($attachmentError);	
+				
+				}else{
+					return "SCC001";
+				}
 			}else{
 				return "ERR004";
 			}
@@ -129,9 +140,9 @@ class commentServices {
 			$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 			//$latest_comment = htmlentities($latest_comment);
 			$latest_comment= $this->escapewordquotes($latest_comment);
-            		$latest_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($latest_comment,ENT_NOQUOTES,'UTF-8'));
-			 $description = $this->escapewordquotes($bc_id_row['body']);
-           		$description = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES,'UTF-8'));
+            $latest_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($latest_comment,ENT_NOQUOTES,'UTF-8'));
+			$description = $this->escapewordquotes($bc_id_row['body']);
+           	$description = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES,'UTF-8'));
 			
  				$subject = "WO ".$wid.": Comment - ".$req_type_row['field_name']." - " . $bc_id_row['title']. "";
 				$link = "<a href='".BASE_URL ."/workorders/index/edit/?wo_id=" .$wid."'>".$wid."</a>";
@@ -228,7 +239,7 @@ public static function escapewordquotes ($text) {
 			//$headers .= "\r\n".'Reply-To: lighthouse.comments@nbcuni.com' . "\r\n";
 			//echo $headers."<br/>".$msg."<br/>".$subject."<br/>".$to;
 			try{
-			$result = mail($to, $subject, $msg, $headers);
+			$result = @mail($to, $subject, $msg, $headers);
 			if(!$result) {
 			//echo "falure";
  			   // There was an error
@@ -240,10 +251,74 @@ public static function escapewordquotes ($text) {
 				echo $e->getMessage();	
 			}
 		}
-	
-	 
-	
-}
+		
+		
+		private function updateAttachmentList($wobj){
+			$wid = $wobj->wid;
+			$attachmentList = $wobj->attachmentList;
+			$attamentAllError = array();
+			
+			if(count($attachmentList['name']) > 0){
+				for($i =0; $i< count($attachmentList['name']); $i++){
+					$errorArray = array();
+					$attachmentListfileName = $attachmentList['name'];
+					$attachmentListTmpfileName = $attachmentList['tmp_name'];
+					$attachmentListSize = $attachmentList['size'];
+					if($attachmentList['name'][$i] != ''){
+				//foreach($attachmentList['name'] as $attachmrntKey => $attachmentValues){ 
+						$mysql = self::singleton();
+						$cleaned_filename = str_replace("'", "_", $attachmentListfileName[$i]);
+						$ext = unserialize(ALLOWED_FILE_EXTENSION);
+							
+						if(!in_array(strrchr($cleaned_filename,'.'),$ext)){
+							$errorArray[$cleaned_filename]['extension'] ="INVALID EXTENSION";
+							
+							//die ("INVALID EXTENSION"); 
+						}
+						if ($attachmentListSize[$i] > MAX_UPLOAD_FILE_SIZE){
+							//die("");
+							$errorArray[$cleaned_filename]['SIZE-EXCEED'] ="EXCEED-FILE-SIZE";
+							
+						}			
+						$dirName = $wid; 
+						if(!is_dir($_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName)){
+							mkdir($_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName);
+						
+						}
+						if(count($errorArray) == 0 && $i < 5){
+							if (!@move_uploaded_file($attachmentListTmpfileName[$i], $_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName ."/".$cleaned_filename)) {
+								//die("");
+								$errorArray[$cleaned_filename]['UPLOAD'] ="UNABLE-TO-UPLOAD";
+								
+							} else {
+							
+								$select_file = "SELECT * FROM `workorder_files` WHERE `directory`='" .$wid ."' AND `file_name`='" .$cleaned_filename ."' LIMIT 1";
+								$result = $mysql->query($select_file);
+							
+								@chmod($_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName ."/".$cleaned_filename, 0744);
+								if($result->num_rows == 1) {
+									$row = $result->fetch_assoc();
+									$update_row = "UPDATE `workorder_files` SET `workorder_id`='$wid', `upload_date`=NOW() WHERE `id`='" .$row['id'] ."'";
+									$mysql->query($update_row);
+								} else {
+									$insert_image = "INSERT INTO `workorder_files` "
+									."(`workorder_id`,`directory`,`file_name`,`upload_date`,`deleted`) "
+									."VALUES "
+									."($wid,'" .str_replace("/", "", $dirName) ."','" .$cleaned_filename ."',NOW(),'1')";
+									$mysql->query($insert_image);
+									
+								}
+							
+							}
+						}
+					}
+					$attamentAllError[] = $errorArray;
+				}
+			}
+			return $attamentAllError;
+		}
+		
+	}
 		
 		if($_POST['lh_submit']){
 		 	/* $handle = fopen('comment_service.log', 'a');
@@ -265,9 +340,12 @@ public static function escapewordquotes ($text) {
 			$hostname = $_POST['source_host_name'];
 			//tokenInput =from+"|"+messageId+"|"+getHostName()+"|"+currentTime
 			$currentTime = $_POST['lh_utc_time'];
+			if(ISSET($_FILES['upload_file'])){
+				$w->attachmentList = $_FILES['upload_file'];
+			}
+				
 			$tokenInput = $u->useremail.'|'.$w->wid.'|'.$hostname.'|'.$currentTime.'|'.SALT;
-			//echo $c->saveLHComment($u,$w); die;
-			//(ShobhitSingh.Bhadauria@nbcuni.com|27738|useclwslp033.nbcuni.ge.com|1333638181878|lighthouse)
+			echo $c->saveLHComment($u,$w); die;
 			$cs_token = md5($tokenInput);
             $lh_token = $_POST['lh_token'];
 			if(trim($w->subject) == ''){
