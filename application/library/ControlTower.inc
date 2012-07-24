@@ -788,14 +788,14 @@
 				$resources = self::getQuery("SELECT * FROM `resource_blocks` WHERE `projectid`='" .$project_id ."' AND `userid`='" .$users[$i]['id'] ."'");
 				for($r = 0; $r < sizeof($resources); $r++) {
 					if($resources[$r]['status'] == 4) {
-						if($resources[$r]['daypart'] == 5){
+						if($resources[$r]['daypart'] == 9){
 							$total_actual += $resources[$r]['hours'];
 						}else{
-							$total_actual += 2;
+							$total_actual += 1;
 						}
 					}
 					if($resources[$r]['status'] == 3) {
-						$total_booked += 2;
+						$total_booked += 1;
 					}
 				}
 				$phase_id = 0;
