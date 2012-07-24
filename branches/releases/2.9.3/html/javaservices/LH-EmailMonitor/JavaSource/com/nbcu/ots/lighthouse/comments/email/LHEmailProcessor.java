@@ -40,11 +40,9 @@ public class LHEmailProcessor {
             	LHEmailMetadataSerializer.deserialize();
             	String configFile = args[0];
             	LHCommonConstants.init(configFile);
-            	
             	String popServer=LHCommonConstants.getLh_mail_smtp_host();//args[0];
                 String popUser=LHCommonConstants.getLh_mail_smtp_user();//args[1];
                 String popPassword=LHCommonConstants.getLh_mail_smtp_pwd();//args[2];
-                
                 System.out.println("java LHEmailProcessor "+configFile);
                 
                 receive(popServer, popUser, popPassword);
@@ -167,7 +165,6 @@ public class LHEmailProcessor {
                         for (int i=1, n=((Multipart)content).getCount(); i<n; i++) {
                             Part part = ((Multipart)content).getBodyPart(i);
                             String disposition = part.getDisposition();
-
                             if ((disposition != null) && 
                                 ((disposition.equals(Part.ATTACHMENT) || (disposition.equals(Part.INLINE))))){
                           	  	attachmentParts.add(part);
@@ -234,10 +231,10 @@ public class LHEmailProcessor {
                 	  String status = null;
                 			  
                 	  if(attachmentParts!=null && attachmentParts.size()>0){
-                		  status = lhAttachmentHandler.postCommentsWithAttachment(from,subject,commentBody, attachmentParts);
+                		  status = LHCommentHandler.postMessage(from,subject,commentBody, attachmentParts);
                 	  }
                 	  else{
-                		  status = LHCommentHandler.postMessage(from,subject,commentBody);
+                		  status = LHCommentHandler.postMessage(from,subject,commentBody,null);
                 	  }
                 	  
                 	  System.out.println("status: "+status);
