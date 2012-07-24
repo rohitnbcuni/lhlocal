@@ -46,7 +46,7 @@
 				$sel_class = 'sel';
 				$open = true;
 				$sqlOt = "SELECT * FROM `resource_blocks` WHERE `userid`='$userid' AND `datestamp` = '"
-				.date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))  ."' AND `daypart` = '5' AND `hours` > 0";
+				.date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))  ."' AND `daypart` = '9' AND `hours` > 0";
 				$resOt = $mysql->query($sqlOt);
 				if($resOt->num_rows > 0) {
 					$otClass = "cancel";
@@ -80,7 +80,7 @@
 				$sel_class = 'sel';
 				$open = true;
 				$sqlOt = "SELECT * FROM `resource_blocks` WHERE `userid`='$userid' AND `datestamp` = '"
-				.date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))  ."' AND `daypart` = '5' AND `hours` > 0";
+				.date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))  ."' AND `daypart` = '9' AND `hours` > 0";
 				$resOt = $mysql->query($sqlOt);
 				if($resOt->num_rows > 0) {
 					$otClass = "cancel";
@@ -112,7 +112,7 @@
 				$html .= '<!--== | START : Day ==-->
 					<li class="schedule_day">
 						<ul>';
-						for($it = 0; $it < 4; $it++) {
+						for($it = 0; $it < 8; $it++) {
 
 							$sqlrp = "SELECT * FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`='$userid' AND a.`datestamp` = '"
 							.$dayDate  ."' AND a.`daypart` = '" .($it+1) ."'";

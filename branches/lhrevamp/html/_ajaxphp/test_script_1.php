@@ -46,7 +46,7 @@
 		 {
 				if(date( "w", $test_date) != 6 && date( "w", $test_date) != 0){	// neglecting sat and sun
 					//echo date("Y-m-d", $test_date)."<br>";
-					for($i=1;$i<5;$i++){	
+					for($i=1;$i<9;$i++){	
 						$insert_sql= "INSERT INTO resource_blocks (userid,projectid,daypart,status,datestamp,active,deleted)VALUES(".$user_id.",".$project_id.",".$i.",'3','".date("Y-m-d 00:00:00", $test_date)."','1','0')";
 					//	echo $insert_sql;
 						$result = $mysql->query($insert_sql);
