@@ -289,11 +289,11 @@ public static function escapewordquotes ($text) {
 							@mkdir($_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName);
 						
 						}
-						if($i > 2){
+						if($i > 4){
 							$errorArray[$cleaned_filename] = "EXCEED-FILE-UPLOAD-LIMIT";
 											
 						}
-						if(count($errorArray) == 0 && $i < 3){
+						if(count($errorArray) == 0 && $i < 5){
 							if (!@move_uploaded_file($attachmentListTmpfileName[$i], $_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName ."/".$cleaned_filename)) {
 								//die("");
 								$errorArray[$cleaned_filename]['UPLOAD'] ="UNABLE-TO-UPLOAD";
@@ -336,7 +336,7 @@ public static function escapewordquotes ($text) {
 				$wid = $workorder->wid;
 				$link = "<a href='".BASE_URL ."/workorders/index/edit/?wo_id=" .$wid."'>".$wid."</a>";
 				
-				$subject = "WO [".$link."] contains attachments Error ";
+				$subject = "WO ".$wid.": contains attachments Error ";
 				
 				foreach($attachmentError as $attachemntErrorKey => $attachmentErrorVal){
 							if(count($attachmentErrorVal) > 0){
@@ -351,7 +351,8 @@ public static function escapewordquotes ($text) {
 				
 				}
 				if($msgStr == 'Ok'){
-					$msg = "There are following reason your attchment would not save in WO [".$link."]";
+					$msg = "There are following reason in your attchment ";
+					$msg .= "<br/><br/><br/>";	
 					$msg .= "WO [".$link."] contains too many attachments. Please limit the number of attachments to five or less<br/>";
 					$msg .= "WO [".$link."] contains an attachment that is too large. Please limit the size of the attachment to 10MB or less";
 
