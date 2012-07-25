@@ -351,10 +351,13 @@ public static function escapewordquotes ($text) {
 				
 				}
 				if($msgStr == 'Ok'){
-					$msg = "There are following reason in your attchment ";
+					$msg = "Your email attachment for WO [".$link."] has one, or more, of the following errors ";
 					$msg .= "<br/><br/><br/>";	
-					$msg .= "WO [".$link."] contains too many attachments. Please limit the number of attachments to five or less<br/>";
-					$msg .= "WO [".$link."] contains an attachment that is too large. Please limit the size of the attachment to 10MB or less";
+					$msg .= "-There are more than 5 files being attached<br/>";
+					$msg .="-The file size of the attachment is more than 10MB<br/>";
+                                        $msg .="-The file extension is not supported by Lighthouse<br/>";
+                                        $msg .="<br/><br/>";
+                                        $msg .=" Please take the appropriate action and re-submit your request";
 
 					$this->lh_sendEmail($to, $subject, $msg,$from,$attachmentError = true);
 				}
