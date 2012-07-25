@@ -13,6 +13,7 @@ import java.util.Properties;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Session;
@@ -175,7 +176,10 @@ public class LHEmailProcessor {
                               	  	attachmentParts.add(part);
                             	}
                             }
-                          }
+                        }
+                        if(!messagePart.isMimeType("multipart/alternative")){
+                        	messagePart = processMultiPartMsg(messagePart, attachmentParts);
+                        }
                       System.out.println("[ Multipart Message ]");
                   }
 
@@ -229,14 +233,7 @@ public class LHEmailProcessor {
                   System.out.println("CommentBody after filtering:"+commentBody);
                   if(LHEmailMetadataSerializer.getMessageCount(messageId)<6){
                 	  String status = null;
-                			  
-                	  if(attachmentParts!=null && attachmentParts.size()>0){
-                		  status = LHCommentHandler.postMessage(from,subject,commentBody, attachmentParts);
-                	  }
-                	  else{
-                		  status = LHCommentHandler.postMessage(from,subject,commentBody,null);
-                	  }
-                	  
+                	  status = LHCommentHandler.postMessage(from,subject,commentBody, attachmentParts);
                 	  System.out.println("status: "+status);
                   
                 	  if (status.trim().contains(LHCommonConstants.getLh_comment_service_success())){
@@ -266,6 +263,41 @@ public class LHEmailProcessor {
             }
       }
       
+      private static Part processMultiPartMsg(Part messagePart, List<Part> attachmentParts) throws Exception {
+    	  Part tempMsgPart = null;
+    	  
+    	  if(messagePart.isMimeType("text/*")){
+    		  tempMsgPart = messagePart;
+    	  }
+    	  else if(messagePart.isMimeType("multipart/alternative")){
+    		  tempMsgPart = messagePart;
+    	  }
+    	  else if (messagePart.isMimeType("multipart/*")){
+    		  Multipart mPart = (Multipart) messagePart.getContent();  
+              int partCount = mPart.getCount();  
+              for ( int i = 0; i < partCount ; i++ ) {  
+            	  Part tempMsgPartRec = processMultiPartMsg(mPart.getBodyPart(i), attachmentParts);
+            	  if(tempMsgPartRec!=null){
+            		  tempMsgPart = tempMsgPartRec;
+            	  }
+              }  
+    	  }
+    	  else{
+                  String disposition = messagePart.getDisposition();
+                  if ((disposition != null) && 
+                      ((disposition.equals(Part.ATTACHMENT) || (disposition.equals(Part.INLINE))))){
+                	  	attachmentParts.add(messagePart);
+                  }
+                  else if(disposition==null){
+                  	MimeBodyPart mbp = (MimeBodyPart)messagePart;
+                  	if (mbp.isMimeType("image/*")) {
+                    	  	attachmentParts.add(messagePart);
+                  	}
+                  }
+    	  }
+    	  return tempMsgPart;
+      }
+
       /**
        * this method will process an email message and write
        * relevant contents into the xml file
