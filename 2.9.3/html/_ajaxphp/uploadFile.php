@@ -12,15 +12,25 @@
 		$cleaned_filename = str_replace(" ", "_", $_FILES['upload_file']['name']);
 		$cleaned_filename = str_replace("'", "_", $_FILES['upload_file']['name']);
 		
-		$ext = array('.jpg','.jpeg','.png','.gif','.tiff','.bmp','.html','.txt','.xml','.xls','.xlsx','.pdf','.doc','.docx','.zip','.tar','.flv','.mp4','.JPG','.JPEG','.PNG','.TIFF','.BMP','.HTML','.TXT','.XML','.XLS','.XLSX','.PDF','.DOC','.DOCX');
-		
-		if(!in_array(strrchr($cleaned_filename,'.'),$ext))
+		//$ext = array('.jpg','.jpeg','.png','.gif','.tiff','.bmp','.html','.txt','.xml','.xls','.xlsx','.pdf','.doc','.docx','.zip','.tar','.flv','.mp4','.JPG','.JPEG','.PNG','.TIFF','.BMP','.HTML','.TXT','.XML','.XLS','.XLSX','.PDF','.DOC','.DOCX');
+		$ext = unserialize(ALLOWED_FILE_EXTENSION);
+
+		/*if(!in_array(strrchr($cleaned_filename,'.'),$ext))
 		die ("You cannot upload in that format"); 
 		
 		if (filesize($_FILES['upload_file']['size']) > 10242880)
 		
 		die("Exdeed");
-			
+		*/
+		if(!in_array(strrchr($cleaned_filename,'.'),$ext)){
+			die ("You cannot upload in that format"); 
+		}	
+		
+		if ($_FILES['upload_file']['size']> MAX_UPLOAD_FILE_SIZE){
+		
+			die("The file size of the attachment is more than uploading limit");
+		
+		}	
 		if(!is_numeric($woIdClean)) {
 			$woId = "null";
 		} else {
