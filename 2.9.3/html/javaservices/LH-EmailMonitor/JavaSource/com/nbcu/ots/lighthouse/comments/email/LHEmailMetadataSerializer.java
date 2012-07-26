@@ -118,6 +118,7 @@ public class LHEmailMetadataSerializer implements java.io.Serializable {
 		try {
 
 			//FileOutputStream fos = new FileOutputStream("C:\\Jsch\\lhemailmetadata.ser");
+			System.out.println("Serial File Path : "+LHCommonConstants.getLh_comment_workdir()+fileName);
 			 fos = new FileOutputStream(LHCommonConstants.getLh_comment_workdir()+fileName);
 			 oos = new ObjectOutputStream(fos);
 			oos.writeObject(metadataList);
@@ -125,7 +126,7 @@ public class LHEmailMetadataSerializer implements java.io.Serializable {
 			
 		} catch (Exception e) {
 			System.out.println("Exception during serialization: " + e);
-			// System.exit(0);
+			e.printStackTrace();
 		}finally{
 			
 			try {

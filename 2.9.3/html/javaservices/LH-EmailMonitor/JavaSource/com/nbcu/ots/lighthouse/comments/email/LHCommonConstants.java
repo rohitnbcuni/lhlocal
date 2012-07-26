@@ -28,6 +28,7 @@ public class LHCommonConstants extends LHTokenHandler{
 	private static String lh_comment_service_success = "";
 	private static String lh_mail_smtp_store_type = "smtp";
 	private static String lh_comment_workdir = "";
+	private static int lh_mail_signature_sizelimit = 134850; //Defaults to 100KB
 	
 	public static String getLh_comment_workdir() {
 		return lh_comment_workdir;
@@ -172,6 +173,14 @@ public class LHCommonConstants extends LHTokenHandler{
 			String lh_mail_smtp_header_reply_to) {
 		LHCommonConstants.lh_mail_smtp_header_reply_to = lh_mail_smtp_header_reply_to;
 	}
+	public static int getLh_mail_signature_sizelimit() {
+		return lh_mail_signature_sizelimit;
+	}
+	public static void setLh_mail_signature_sizelimit(
+			int lh_mail_signature_sizelimit) {
+		LHCommonConstants.lh_mail_signature_sizelimit = lh_mail_signature_sizelimit;
+	}
+
 	private static String lh_mail_smtp_header_reply_to = "";
 	
 	public static synchronized void init(String fileName){
@@ -203,6 +212,7 @@ public class LHCommonConstants extends LHTokenHandler{
 		 setLh_comment_service_success (properties.getProperty("lh.comment.service.success"));
 		 setLh_mail_smtp_store_type (properties.getProperty("lh.mail.smtp.store.type"));
 		 setLh_comment_workdir(properties.getProperty("lh.comment.workdir"));
+		 setLh_mail_signature_sizelimit(Integer.parseInt(properties.getProperty("lh.mail.signature.sizelimit")));
 		
 		} catch (Exception e) {
 			
