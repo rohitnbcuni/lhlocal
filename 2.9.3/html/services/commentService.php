@@ -336,7 +336,7 @@ public static function escapewordquotes ($text) {
 				$wid = $workorder->wid;
 				$link = "<a href='".BASE_URL ."/workorders/index/edit/?wo_id=" .$wid."'>".$wid."</a>";
 				
-				$subject = "WO ".$wid.": contains attachments Error ";
+				$subject = "WO ".$wid.":  Attachment Error ";
 				
 				foreach($attachmentError as $attachemntErrorKey => $attachmentErrorVal){
 							if(count($attachmentErrorVal) > 0){
@@ -386,7 +386,7 @@ public static function escapewordquotes ($text) {
 	    	$w = new stdClass();
 	    	$u->useremail = $_POST['lh_email'];
 	        $w->wid = $_POST['lh_wid'];
-	     	$w->comment = $_POST['lh_comment'];
+	     	$w->comment =urldecode($_POST['lh_comment']);
 	     	$w->subject = $_POST['lh_subject'];
 			$hostname = $_POST['source_host_name'];
 			//tokenInput =from+"|"+messageId+"|"+getHostName()+"|"+currentTime
