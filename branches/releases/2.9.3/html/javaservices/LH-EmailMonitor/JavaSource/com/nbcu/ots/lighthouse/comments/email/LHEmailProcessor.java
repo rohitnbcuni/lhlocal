@@ -13,7 +13,6 @@ import java.util.Properties;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Session;
@@ -38,9 +37,9 @@ public class LHEmailProcessor {
             // TODO Auto-generated method stub
             try
           {
-            	LHEmailMetadataSerializer.deserialize();
             	String configFile = args[0];
             	LHCommonConstants.init(configFile);
+            	LHEmailMetadataSerializer.deserialize();
             	String popServer=LHCommonConstants.getLh_mail_smtp_host();//args[0];
                 String popUser=LHCommonConstants.getLh_mail_smtp_user();//args[1];
                 String popPassword=LHCommonConstants.getLh_mail_smtp_pwd();//args[2];
@@ -139,7 +138,6 @@ public class LHEmailProcessor {
     	  String encoding = "UTF-8";
     	  String NL = System.getProperty("line.separator");
     	  List<Part> attachmentParts = new ArrayList<Part>();
-    	  LHAttachmentHandler lhAttachmentHandler = new LHAttachmentHandler();
     	  
     	  try
             {
@@ -166,21 +164,29 @@ public class LHEmailProcessor {
                         for (int i=1, n=((Multipart)content).getCount(); i<n; i++) {
                             Part part = ((Multipart)content).getBodyPart(i);
                             String disposition = part.getDisposition();
-                            if ((disposition != null) && 
-                                ((disposition.equals(Part.ATTACHMENT) || (disposition.equals(Part.INLINE))))){
-                          	  	attachmentParts.add(part);
+                            if ((disposition != null) && ((disposition.equals(Part.ATTACHMENT) || (disposition.equals(Part.INLINE))))) {
+                            	if(disposition.equals(Part.INLINE) && part.isMimeType("image/*")) {
+                            		if(part.getSize() > LHCommonConstants.getLh_mail_signature_sizelimit()) {
+                            			attachmentParts.add(part);
+                            		}
+                          	  	}
+                            	else{
+                            		attachmentParts.add(part);
+                            	}
                             }
-                            else if(disposition==null){
+                            else if(disposition==null) {
                             	MimeBodyPart mbp = (MimeBodyPart)part;
                             	if (mbp.isMimeType("image/*")) {
-                              	  	attachmentParts.add(part);
+                            		if(part.getSize()>LHCommonConstants.getLh_mail_signature_sizelimit()){
+                              	  		attachmentParts.add(part);
+                              	  	}
                             	}
                             }
                         }
                         if(!messagePart.isMimeType("multipart/alternative")){
                         	messagePart = processMultiPartMsg(messagePart, attachmentParts);
                         }
-                      System.out.println("[ Multipart Message ]");
+                        System.out.println("[ Multipart Message ]");
                   }
 
                   // -- Get the content type --
@@ -231,6 +237,7 @@ public class LHEmailProcessor {
                   commentBody = commentBody.replaceAll(NEW_LINE_DELIMITER,NL);
                   commentBody = StringUtils.stripEnd(commentBody,NL).trim()+NL+NL;
                   System.out.println("CommentBody after filtering:"+commentBody);
+                  System.out.println("Attachment Count : "+(attachmentParts!=null?attachmentParts.size():"0"));
                   if(LHEmailMetadataSerializer.getMessageCount(messageId)<6){
                 	  String status = null;
                 	  status = LHCommentHandler.postMessage(from,subject,commentBody, attachmentParts);
@@ -284,14 +291,22 @@ public class LHEmailProcessor {
     	  }
     	  else{
                   String disposition = messagePart.getDisposition();
-                  if ((disposition != null) && 
-                      ((disposition.equals(Part.ATTACHMENT) || (disposition.equals(Part.INLINE))))){
-                	  	attachmentParts.add(messagePart);
+                  if ((disposition != null) && ((disposition.equals(Part.ATTACHMENT) || (disposition.equals(Part.INLINE))))){
+                	  if(disposition.equals(Part.INLINE) && messagePart.isMimeType("image/*") ){
+                  			if(messagePart.getSize() > LHCommonConstants.getLh_mail_signature_sizelimit()) {
+                  				attachmentParts.add(messagePart);
+                  			}
+                	  	}
+	                  	else{
+	                  		attachmentParts.add(messagePart);
+	                  	}
                   }
                   else if(disposition==null){
                   	MimeBodyPart mbp = (MimeBodyPart)messagePart;
                   	if (mbp.isMimeType("image/*")) {
-                    	  	attachmentParts.add(messagePart);
+                  		if(messagePart.getSize()>LHCommonConstants.getLh_mail_signature_sizelimit()){
+                  			attachmentParts.add(messagePart);
+                  		}
                   	}
                   }
     	  }
