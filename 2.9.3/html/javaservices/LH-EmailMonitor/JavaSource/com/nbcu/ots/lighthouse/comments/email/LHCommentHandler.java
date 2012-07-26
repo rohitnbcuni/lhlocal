@@ -102,10 +102,10 @@ public class LHCommentHandler {
 			output.writeBytes(twoHyphens + boundary + lineEnd);
 			output.writeBytes("Content-Disposition: form-data; name=\"lh_wid\""+ lineEnd + lineEnd);
 			output.writeBytes(LHCommonUtils.getWorkOrderId(subject) + lineEnd);
-			System.out.println("comment before passing:"+body);
+			System.out.println("comment before passing:"+URLEncoder.encode(body, "UTF-8"));
 			output.writeBytes(twoHyphens + boundary + lineEnd);
 			output.writeBytes("Content-Disposition: form-data; name=\"lh_comment\""+ lineEnd + lineEnd);
-			output.writeBytes(body+ lineEnd);
+			output.writeBytes(URLEncoder.encode(body, "UTF-8")+ lineEnd);
 
 			output.writeBytes(twoHyphens + boundary + lineEnd);
 			output.writeBytes("Content-Disposition: form-data; name=\"lh_subject\""+ lineEnd + lineEnd);
