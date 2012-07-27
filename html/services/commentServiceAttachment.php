@@ -1,12 +1,11 @@
 <?php
-
-
+//error_reporting(E_ALL);
+//ini_set('display_errors', '1');
 class commentServices {
 
 	private static $instance;
     private $count = 0;
 	public $config;
-	//const MAX_UPLOAD_LIMIT = 5;
 	
 	
  	public static function singleton()
@@ -88,12 +87,8 @@ class commentServices {
 				$this->insertWorkorderAudit($wid, '4', $uid,$bc_id_row['assigned_to'],$bc_id_row['status'],$curDateTime );
 				$this->createEmail($email_users,$Workorder,$userName);
 				if(count($attachmentError) > 0){
-					
-					if(count($attachmentError) > 0){
-						$this->sendAttachmentEmail($attachmentError,$Workorder,$userName);
-						
-					}
-					return "SCC001";	
+					//return "SCC001"."-"."ATTACHEMNT-ERROR".print_r($attachmentError);	
+					return "SCC001"."-".print_r($attachmentError);	
 				
 				}else{
 					return "SCC001";
@@ -113,8 +108,8 @@ class commentServices {
 			$mysql = self::singleton();
 			
  				//$msg = $Workorder->comment;
-			//echo $userName;
- 			$new_commenter = "SELECT * FROM `users` WHERE `email` = '".$userName."' LIMIT 1";  
+				
+ 			$new_commenter = "SELECT * FROM `users` WHERE `email` = '.$from.' LIMIT 1";
 			$commenter_res = $mysql->query($new_commenter);
 			$commenter_row = $commenter_res->fetch_assoc();
  				
@@ -231,27 +226,27 @@ public static function escapewordquotes ($text) {
 
 
 	}
-	public function lh_sendEmail($to, $subject, $msg,$from,$attachmentMail = ''){
+	public function lh_sendEmail($to, $subject, $msg,$from){
 			$headers = '';
 			//$headers  = 'MIME-Version: 1.0' . "\r\n";
 			$headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-			if($attachmentMail  == ''){
-				$headers .= 'From:'.$from . "\r\n" .
+			$headers .= 'From:'.$from . "\r\n" .
  			   "Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";
 			    'X-Mailer: PHP/' . phpversion();
-			}else{
-				$headers .= 'From:'.$from . "\r\n" ;
-			}	
 			//$headers = " From: ".$from."\nMIME-Version: 1.0\nContent-type: text/html; ";
 			$msg = nl2br($msg);
-			//$subject = ($subject);
-	
 			$subject = '=?UTF-8?B?'.base64_encode($subject).'?=';
 			//$headers .= "\r\n".'Reply-To: lighthouse.comments@nbcuni.com' . "\r\n";
-			$headers."<br/>".$msg."<br/>".$subject."<br/>".$to;
+			//echo $headers."<br/>".$msg."<br/>".$subject."<br/>".$to;
 			try{
-				$result = @mail($to, $subject, $msg, $headers);
-			
+			//$result = @mail($to, $subject, $msg, $headers);
+			if(!$result) {
+			//echo "falure";
+ 			   // There was an error
+			    // Do some error handling things here
+			} else {
+			  //  echo "Email successful";
+			}
 			}catch(Exception $e){
 				echo $e->getMessage();	
 			}
@@ -276,22 +271,19 @@ public static function escapewordquotes ($text) {
 						$ext = unserialize(ALLOWED_FILE_EXTENSION);
 							
 						if(!in_array(strrchr($cleaned_filename,'.'),$ext)){
-							$errorArray[$cleaned_filename] ="INVALID EXTENSION";
+							$errorArray[$cleaned_filename]['extension'] ="INVALID EXTENSION";
 							
 							//die ("INVALID EXTENSION"); 
 						}
 						if ($attachmentListSize[$i] > MAX_UPLOAD_FILE_SIZE){
-							$errorArray[$cleaned_filename] ="EXCEED-FILE-SIZE-";
+							//die("");
+							$errorArray[$cleaned_filename]['SIZE-EXCEED'] ="EXCEED-FILE-SIZE";
 							
 						}			
 						$dirName = $wid; 
 						if(!is_dir($_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName)){
-							@mkdir($_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName);
+							mkdir($_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName);
 						
-						}
-						if($i > 4){
-							$errorArray[$cleaned_filename] = "EXCEED-FILE-UPLOAD-LIMIT";
-											
 						}
 						if(count($errorArray) == 0 && $i < 5){
 							if (!@move_uploaded_file($attachmentListTmpfileName[$i], $_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName ."/".$cleaned_filename)) {
@@ -326,49 +318,6 @@ public static function escapewordquotes ($text) {
 			return $attamentAllError;
 		}
 		
-		
-		private function sendAttachmentEmail($attachmentError,$workorder,$userName){
-			if(count($attachmentError) > 0){
-				 $to = $userName;
-				
-				$from = WO_EMAIL_FROM;
-				$msgStr = "";
-				$wid = $workorder->wid;
-				$link = "<a href='".BASE_URL ."/workorders/index/edit/?wo_id=" .$wid."'>".$wid."</a>";
-				
-				$subject = "WO ".$wid.":  Attachment Error ";
-				
-				foreach($attachmentError as $attachemntErrorKey => $attachmentErrorVal){
-							if(count($attachmentErrorVal) > 0){
-							
-								foreach($attachmentErrorVal as $attachmentErrorValKey => $attachmentErrorValVal){
-										//$msg = "$workorder->wid"
-										$msgStr = "Ok";
-								
-								}
-							
-							}
-				
-				}
-				if($msgStr == 'Ok'){
-					$msg = "Your email attachment for WO [".$link."] has one, or more, of the following errors ";
-					$msg .= "<br/><br/><br/>";	
-					$msg .= "-There are more than 5 files being attached<br/>";
-					$msg .="-The file size of the attachment is more than 10MB<br/>";
-                                        $msg .="-The file extension is not supported by Lighthouse<br/>";
-                                        $msg .="<br/><br/>";
-                                        $msg .=" Please take the appropriate action and re-submit your request";
-
-					$this->lh_sendEmail($to, $subject, $msg,$from,$attachmentError = true);
-				}
-				//
-			
-			
-			}
-		
-		
-		}
-		
 	}
 		
 		if($_POST['lh_submit']){
@@ -386,7 +335,7 @@ public static function escapewordquotes ($text) {
 	    	$w = new stdClass();
 	    	$u->useremail = $_POST['lh_email'];
 	        $w->wid = $_POST['lh_wid'];
-	     	$w->comment =urldecode($_POST['lh_comment']);
+	     	$w->comment = $_POST['lh_comment'];
 	     	$w->subject = $_POST['lh_subject'];
 			$hostname = $_POST['source_host_name'];
 			//tokenInput =from+"|"+messageId+"|"+getHostName()+"|"+currentTime
@@ -396,7 +345,7 @@ public static function escapewordquotes ($text) {
 			}
 				
 			$tokenInput = $u->useremail.'|'.$w->wid.'|'.$hostname.'|'.$currentTime.'|'.SALT;
-			//echo $c->saveLHComment($u,$w); die;
+			echo $c->saveLHComment($u,$w); die;
 			$cs_token = md5($tokenInput);
             $lh_token = $_POST['lh_token'];
 			if(trim($w->subject) == ''){
