@@ -8,7 +8,7 @@
   
   $overtime_daypart = $mysql->query($overtime_daypart_query);
   
-  $all_daypart_query = "SELECT * FROM `resource_blocks` WHERE `daypart` in ('1', '2', '3', '4', '5') order by `daypart` DESC ";
+  $all_daypart_query = "SELECT * FROM `resource_blocks` WHERE `daypart` in ('1', '2', '3', '4') order by `daypart` DESC ";
    
   $all_daypart = $mysql->query($all_daypart_query);
   
