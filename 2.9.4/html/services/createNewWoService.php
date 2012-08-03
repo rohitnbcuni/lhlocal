@@ -142,7 +142,7 @@ class createNewWoService{
 			if($wo->reqType == '2'){
 				//6 for severity 2 Ticket
 				$insert_custom_field1 = "INSERT INTO  `workorder_custom_fields`
-				SET `workorder_id` ='$getWoId', `field_key` = 'SEVERITY',`field_id` = '6'";
+				SET `workorder_id` ='$getWoId', `field_key` = 'SEVERITY',`field_id` = '$wo->severity'";
 				$mysql->query($insert_custom_field1) ;
 			}
 			//SET default SITE NAME
@@ -401,6 +401,15 @@ class createNewWoService{
 		}
 		$workOrderObj->reqType = $customFieldsArray[$woType];
 		
+		if($workOrderObj->reqType == 2){
+			if(ISSET($_POST['lh_severity']) && (!empty($_POST['lh_severity']))){
+				$workOrderObj->severity = getSeverityValue($_POST['lh_severity']);
+				
+		
+			}else{
+				$workOrderObj->severity = 6;
+			}
+		}
 		$result = $wo->saveWorkorder($workOrderObj);
 		if($result == TRUE){
 			die("SCC001");
@@ -411,3 +420,20 @@ class createNewWoService{
 		
 	}
 
+	function getSeverityValue($sev){
+		
+		//Severity 1 =5 , sev2  =6, sev3 =7
+		switch($sev){
+		 case 5:
+			return 5;
+			break;
+		case 6:
+			return 6;
+			break;
+		case 7:
+			return 7;
+			break;
+		default :
+			return 6;
+			}
+	}
