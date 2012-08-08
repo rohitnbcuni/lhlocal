@@ -757,15 +757,33 @@
 					<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';				
 							echo '<div class="adminSelect">
 								   <div >
-									<p>Select Month:</p>';			
-									echo '<select class="field_medium" name="admin_user_select" id="admin_user_select" >';
+									<p>From Month:</p>';			
+									echo '<select class="customFields" name="admin_user_select" id="admin_user_select" >';
 									echo AdminDisplay::getMonths($sla_report_month);
 									echo '</select>
 								</div>
-                                  <div style="position: absolute; top: 30px; right: 218px;">
-									<p>Select Year:</p>';			
-									echo '<select class="field_medium" name="admin_year_select" id="admin_year_select" >';
+                                  <div style="position: absolute; top: 30px; right: 380px;">
+									<p>From Year:</p>';			
+									echo '<select class="customFields" name="admin_year_select" id="admin_year_select" >';
 									echo AdminDisplay::getYears($sla_report_year);
+									echo '</select>
+								</div>
+								<div style="position: absolute; top: 30px; right: 275px;">
+								<p>To Month:</p>';			
+									echo '<select class="customFields" name="admin_to_select" id="admin_to_select" >';
+									echo AdminDisplay::to_getMonths($sla_report_month);
+									echo '</select>
+								</div>
+                                  <div style="position: absolute; top: 30px; right: 150px;">
+									<p>To Year:</p>';			
+									echo '<select class="customFields" name="admin_to_year_select" id="admin_to_year_select" >';
+									echo AdminDisplay::to_getYears($sla_report_year);
+									echo '</select>
+								</div>
+								 <div style="position: absolute; top: 30px; right: 15px;">
+									<p> Assigned To:</p>';			
+									echo '<select class="field_medium" name="admin_assign_select" id="admin_assign_select" >';
+									echo AdminDisplay::getUserOptionHTML();
 									echo '</select>
 								</div>
 								<div class="row2" >
