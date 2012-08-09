@@ -113,10 +113,20 @@ class createNewWoService{
     public function saveWorkorder($wo){
     	$mysql = self::singleton();
     	$attachmentError = array();
-    	$cclist = implode(",", $wo->ccLists);
+    	/*$cclist = implode(",", $wo->ccLists);
 		if(!empty($cclist)){
 			$cclist = $cclist.",";
 		}
+	*/
+	$cclistStr = '';
+	if($wo->ccLists != ''){
+	    	$cclist = implode(",", $wo->ccLists);
+		if(!empty($cclist)){
+			$cclistStr = $cclist.",";
+		}else{
+			$cclistStr = '';
+		}
+    	}
     	 $insert_wo = "INSERT INTO `workorders` " 
 				."(`project_id`,`assigned_to`,`status`,`title`,"
 				."`example_url`,`body`,`requested_by`,`assigned_date`,`estimated_date`,"
@@ -124,7 +134,7 @@ class createNewWoService{
 				."VALUES "
 				."('$wo->projectId','$wo->woAssignedTo','$wo->woStatus','$wo->woTitle',"
 				."'$woExampleURL','$wo->woDesc','$wo->requestedId','$wo->woStartDate','$wo->woEstDate',"
-				."'$wo->creation_date', '$wo->launch_date','$cclist')";
+				."'$wo->creation_date', '$wo->launch_date','$cclistStr')";
 		$mysql->query($insert_wo);
 		$getWoId = $mysql->insert_id;
 		if($getWoId > 0){
@@ -316,6 +326,7 @@ class createNewWoService{
 
 	
 	if(ISSET($_POST['lh_submit'])){
+		//print_r($_POST);
 		require_once('../_inc/config.inc');
 		
 		define("OUTAGE","OUTAGE");
@@ -381,6 +392,7 @@ class createNewWoService{
 		}else{
 			die("REQUEST TYPE NOT FOUND");
 		}
+		//print_r($_FILES);
 		if(ISSET($_FILES['upload_file'])){
 				$workOrderObj->attachmentList = $_FILES['upload_file'];
 			}
@@ -407,6 +419,7 @@ class createNewWoService{
 		/******************************************************************/
 		if(ISSET($_POST['lh_utc_time']) && (!empty($_POST['lh_utc_time']))){
 			//convert milli second in to second
+			$apiTime = $_POST['lh_utc_time'];
 			$javaTime = trim($_POST['lh_utc_time'])/1000;
 		}else{
 			die("UTC TIME NOT DEFINED");
@@ -417,7 +430,8 @@ class createNewWoService{
 			die("HOST NAME NOT FOUND");
 		}
 		
-		$tokenInput = $workOrderObj->requestorEmail.'|'.$hostname.'|'.$currentTime.'|'.SALT;
+		$tokenInput = $requestorEmail.'|'.$hostname.'|'.$apiTime.'|'.SALT;
+	        //print_r($workOrderObj);
 		
 		$cs_token = md5($tokenInput);
 		
