@@ -317,10 +317,15 @@ class createNewWoService{
 	
 	if(ISSET($_POST['lh_submit'])){
 		require_once('../_inc/config.inc');
+		
 		define("OUTAGE","OUTAGE");
 		define("REQUEST","REQUEST");
 		define("PROBLEM","PROBLEM");
+		define("SALT",'lighthouse');
+		
+		
 		$customFieldsArray = array('OUTAGE' =>1,'PROBLEM' => 2,'REQUEST'=> 3);
+		
 		$workOrderObj = new stdClass();
 		$wo = new createNewWoService();
 		$statusArray = $wo->getTableWhereData("lnk_workorder_status_types","name ='New'", "id"); 
@@ -399,18 +404,52 @@ class createNewWoService{
 		if(ISSET($_POST['ccList']) && (!empty($_POST['ccList']))){
 			$workOrderObj->ccLists = $wo->getCCList($_POST['ccList']);
 		}
-		$workOrderObj->reqType = $customFieldsArray[$woType];
+		/******************************************************************/
+		if(ISSET($_POST['lh_utc_time']) && (!empty($_POST['lh_utc_time']))){
+			//convert milli second in to second
+			$javaTime = trim($_POST['lh_utc_time'])/1000;
+		}else{
+			die("UTC TIME NOT DEFINED");
+		}
+		if(ISSET($_POST['source_host_name']) && (!empty($_POST['source_host_name']))){
+			$hostname = $_POST['source_host_name'];
+		}else{
+			die("HOST NAME NOT FOUND");
+		}
 		
+		$tokenInput = $workOrderObj->requestorEmail.'|'.$hostname.'|'.$currentTime.'|'.SALT;
+		
+		$cs_token = md5($tokenInput);
+		
+		if(ISSET($_POST['lh_token']) && (!empty($_POST['lh_token']))){
+			
+			$lh_token = $_POST['lh_token'];
+		}else{
+			die("TOKEN NOT FOUND");
+		}
+		$phpTime = time();
+		/*************************************************************/
+		$workOrderObj->reqType = $customFieldsArray[$woType];
+		// 2 = PROBLEM
 		if($workOrderObj->reqType == 2){
 			if(ISSET($_POST['lh_severity']) && (!empty($_POST['lh_severity']))){
 				$workOrderObj->severity = getSeverityValue($_POST['lh_severity']);
-				
-		
 			}else{
 				$workOrderObj->severity = 6;
 			}
 		}
-		$result = $wo->saveWorkorder($workOrderObj);
+		//calculte time difference
+		$timeDiffernce = round(abs($phpTime-$javaTime)/60,2);
+		
+		if( $cs_token == $lh_token){
+			if($timeDiffernce <= 15){
+				$result = $wo->saveWorkorder($workOrderObj);
+			}else{
+				die("TIME LIMIT EXCEED");
+			}
+		}else{
+			die("TOKEN MISS-MATCH");
+		}
 		if($result == TRUE){
 			die("SCC001");
 		}else{
