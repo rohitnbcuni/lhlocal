@@ -54,7 +54,7 @@ class createNewWoService{
 				$projectDataArr['projectID'] =  $projectData['id'];
 				$projectDataArr['requestedId'] =  $requesterUserID;
 			}else{
-				$projectDataArr['ERROR'] = "USER-DONT-HAVE-ANY-PROJECT-PERMISSION";
+				$projectDataArr['ERROR'] = "USER-DONT-HAVE-PROJECT-PERMISSION";
 			}
 	 	}else{
 	 		$projectDataArr['ERROR'] = "USER-NOT-FOUND";
@@ -113,11 +113,7 @@ class createNewWoService{
     public function saveWorkorder($wo){
     	$mysql = self::singleton();
     	$attachmentError = array();
-    	/*$cclist = implode(",", $wo->ccLists);
-		if(!empty($cclist)){
-			$cclist = $cclist.",";
-		}
-	*/
+
 	$cclistStr = '';
 	if($wo->ccLists != ''){
 	    	$cclist = implode(",", $wo->ccLists);
@@ -153,6 +149,14 @@ class createNewWoService{
 				//6 for severity 2 Ticket
 				$insert_custom_field1 = "INSERT INTO  `workorder_custom_fields`
 				SET `workorder_id` ='$getWoId', `field_key` = 'SEVERITY',`field_id` = '$wo->severity'";
+				$mysql->query($insert_custom_field1) ;
+			}
+			if($wo->reqType == '3'){
+				//13 TRUE CRITICAL
+				//14 FALSE CRITICAL
+				$critical_id = ($wo->critical==1)?13:14;
+				$insert_custom_field1 = "INSERT INTO  `workorder_custom_fields`
+				SET `workorder_id` ='$getWoId', `field_key` = 'CRITICAL',`field_id` = '$critical_id'";
 				$mysql->query($insert_custom_field1) ;
 			}
 			//SET default SITE NAME
@@ -195,7 +199,7 @@ class createNewWoService{
 					$attachmentListTmpfileName = $attachmentList['tmp_name'];
 					$attachmentListSize = $attachmentList['size'];
 					if($attachmentList['name'][$i] != ''){
-				//foreach($attachmentList['name'] as $attachmrntKey => $attachmentValues){ 
+					//foreach($attachmentList['name'] as $attachmrntKey => $attachmentValues){ 
 						$mysql = self::singleton();
 						$cleaned_filename = str_replace("'", "_", $attachmentListfileName[$i]);
 						$ext = unserialize(ALLOWED_FILE_EXTENSION);
@@ -379,9 +383,18 @@ class createNewWoService{
 				}
 				if($woType == REQUEST){
 					$assignedTo = json_decode(WO_CREATE_CHANGE);
+					if(ISSET($_POST['required_date']) && (!empty($_POST['required_date']))){
+						$required_date = $_POST['required_date'];
+						$required_date_timestamp = strtotime($required_date);
+						if($required_date_timestamp > time()){
+							$required_date_timestamp_val = date("Y-m-d H:i:s",$required_date_timestamp);
+						}else{
+							$required_date_timestamp_val = date("Y-m-d H:i:s",mktime(date("H"),date("i"),date("s"),date("m"),date("d")+14,date("Y")));
+						}
+					}
 					$workOrderObj->woAssignedTo = $assignedTo[0]->id;
 					$workOrderObj->woStartDate = date("Y-m-d H:i:s");
-					$workOrderObj->woEstDate = date("Y-m-d H:i:s",mktime(date("H"),date("i"),date("s"),date("m"),date("d")+14,date("Y")));
+					$workOrderObj->woEstDate = $required_date_timestamp_val;
 					$workOrderObj->creation_date = $workOrderObj->woStartDate;
 					$workOrderObj->launch_date = $workOrderObj->woEstDate;
 					
@@ -430,9 +443,9 @@ class createNewWoService{
 			die("HOST NAME NOT FOUND");
 		}
 		
+
 		$tokenInput = $requestorEmail.'|'.$hostname.'|'.$apiTime.'|'.SALT;
-	        //print_r($workOrderObj);
-		
+	
 		$cs_token = md5($tokenInput);
 		
 		if(ISSET($_POST['lh_token']) && (!empty($_POST['lh_token']))){
@@ -441,10 +454,12 @@ class createNewWoService{
 		}else{
 			die("TOKEN NOT FOUND");
 		}
+		
+		
 		$phpTime = time();
 		/*************************************************************/
 		$workOrderObj->reqType = $customFieldsArray[$woType];
-		// 2 = PROBLEM
+		// reqType 2 = PROBLEM
 		if($workOrderObj->reqType == 2){
 			if(ISSET($_POST['lh_severity']) && (!empty($_POST['lh_severity']))){
 				$workOrderObj->severity = getSeverityValue($_POST['lh_severity']);
@@ -452,6 +467,14 @@ class createNewWoService{
 				$workOrderObj->severity = 6;
 			}
 		}
+		if($workOrderObj->reqType == 3){
+			if(ISSET($_POST['lh_critical']) && (!empty($_POST['lh_critical']))){
+				$workOrderObj->critical = true;
+			}else{
+				$workOrderObj->critical = false;
+			}
+		}
+		
 		//calculte time difference
 		$timeDiffernce = round(abs($phpTime-$javaTime)/60,2);
 		
