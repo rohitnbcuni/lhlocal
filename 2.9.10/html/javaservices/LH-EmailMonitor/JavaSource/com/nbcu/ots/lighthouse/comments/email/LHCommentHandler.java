@@ -111,48 +111,48 @@ public class LHCommentHandler {
 			output.writeBytes("Content-Disposition: form-data; name=\"lh_subject\""+ lineEnd + lineEnd);
 			output.writeBytes(subject + lineEnd);
 			
-			if(attachmentParts!=null && attachmentParts.size()>0){
-				for(Part attachmentPart : attachmentParts){
-					if(attachmentPart.getDisposition()==null){
-						//Give unique file name to embedded images
-						fileName = sdf.format(new Date())+attachmentPart.getFileName();
-					}
-					else{
-						fileName = attachmentPart.getFileName();
-					}
-					fileAttachment = IOUtils.toByteArray(attachmentPart.getInputStream());
-
-					if(StringUtils.isNotBlank(fileName)){
-						System.out.println("fileName -:- "+fileName+"\n"+fileAttachment);
-						InputStream input = null;
-						try {
-							output.writeBytes(twoHyphens + boundary + lineEnd);
-							output.writeBytes("Content-Disposition: attachment; name=\"upload_file[]\";filename=\""+ fileName + "\"" + lineEnd);
-							//output.writeBytes("Content-Type: "+fileType + lineEnd + lineEnd);
-							output.writeBytes(lineEnd);
-							
-							output.write(fileAttachment);
-							output.writeBytes(lineEnd);
-							output.writeBytes(twoHyphens + boundary + lineEnd);
-						} catch (IOException e) {
-							e.printStackTrace();
-						} finally {
-							if (input != null)
-								try {
-									input.close();
-								} catch (IOException logOrIgnore) {
-								}
+				if(attachmentParts!=null && attachmentParts.size()>0){
+					for(Part attachmentPart : attachmentParts){
+						if(attachmentPart.getDisposition()==null){
+							//Give unique file name to embedded images
+							fileName = sdf.format(new Date())+attachmentPart.getFileName();
+						}
+						else{
+							fileName = attachmentPart.getFileName();
+						}
+						fileAttachment = IOUtils.toByteArray(attachmentPart.getInputStream());
+	
+						if(StringUtils.isNotBlank(fileName)){
+							System.out.println("fileName -:- "+fileName+"\n"+fileAttachment);
+							InputStream input = null;
+							try {
+								output.writeBytes(twoHyphens + boundary + lineEnd);
+								output.writeBytes("Content-Disposition: attachment; name=\"upload_file[]\";filename=\""+ fileName + "\"" + lineEnd);
+								//output.writeBytes("Content-Type: "+fileType + lineEnd + lineEnd);
+								output.writeBytes(lineEnd);
+								
+								output.write(fileAttachment);
+								output.writeBytes(lineEnd);
+								output.writeBytes(twoHyphens + boundary + lineEnd);
+							} catch (IOException e) {
+								e.printStackTrace();
+							} finally {
+								if (input != null)
+									try {
+										input.close();
+									} catch (IOException logOrIgnore) {
+									}
+							}
 						}
 					}
 				}
-			}
-			else
-			{
-				output.writeBytes(twoHyphens + boundary + lineEnd);
-				output.writeBytes("Content-Disposition: attachment; name=\"upload_file[]\";filename=\"\"" + lineEnd);
-				output.writeBytes(lineEnd);
-				output.writeBytes(twoHyphens + boundary + lineEnd);
-			}
+				else
+				{
+					output.writeBytes(twoHyphens + boundary + lineEnd);
+					output.writeBytes("Content-Disposition: attachment; name=\"upload_file[]\";filename=\"\"" + lineEnd);
+					output.writeBytes(lineEnd);
+					output.writeBytes(twoHyphens + boundary + lineEnd);
+				}
 			output.writeBytes("Content-Disposition: form-data; name=\"lh_submit\""+ lineEnd + lineEnd);
 			output.writeBytes("Submit Query" + lineEnd);
 			output.writeBytes(twoHyphens + boundary + lineEnd + "--");
@@ -190,7 +190,7 @@ public class LHCommentHandler {
 	//	return status;
 	}
 
-	private static String getHostName(){
+	public static String getHostName(){
 		String hostName = "localhost";
 		try {
 		    InetAddress addr = InetAddress.getLocalHost();
