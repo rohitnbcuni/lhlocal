@@ -34,7 +34,7 @@ class createNewWoService{
      * @param string $useremail
      * @return project data
      */
-    public function getDefaultProjectName($useremail){
+    public function getDefaultProjectName($useremail,$projectCode =''){
     	$mysql = self::singleton();
     	$projectDataArr = array();
         $userEmail = $mysql->real_escape_string($useremail);
@@ -45,10 +45,20 @@ class createNewWoService{
 	 		$userResult = $userCheck->fetch_assoc();
 	 		$userCompany = $userResult['company'];
 	 		$requesterUserID = $userResult['id'];
-	 		$projectSql = "SELECT id,project_code, project_name FROM `projects` WHERE `company` = '$userCompany' AND `id` 
-	 		IN (SELECT `project_id` FROM  `user_project_permissions` WHERE  `user_id` = '$requesterUserID') AND 
-	 		archived ='0' and active ='1' and deleted ='0' ORDER BY project_name";
-	 		$projectResult = $mysql->query($projectSql);
+	 		$projectCode = $mysql->real_escape_string(trim($projectCode));
+	 		//Project code define in EMail <projectCodeTag>
+	 		if($projectCode != '' ){
+	 			$projectCodeSql  = "SELECT p.id,p.project_code, p.project_name FROM `projects` p INNER JOIN user_project_permissions UPP ON (p.`id` = UPP.project_id) WHERE p.`company` = '$userCompany' AND UPP.user_id = '$requesterUserID' AND p.`project_code` ='$projectCode' AND p.`archived` ='0' AND p.`active` = '1' AND p.`deleted` ='0'";
+	 			$projectResult = $mysql->query($projectCodeSql);
+	 		}
+	 		//Set Default Project Code
+ 			if($projectResult->num_rows == 0){
+	 			$projectSql = "SELECT id,project_code, project_name FROM `projects` WHERE `company` = '$userCompany' AND `id` 
+		 		IN (SELECT `project_id` FROM  `user_project_permissions` WHERE  `user_id` = '$requesterUserID') AND 
+		 		archived ='0' and active ='1' and deleted ='0' ORDER BY project_name";
+		 		$projectResult = $mysql->query($projectSql);
+ 			}	
+	 				
 			if($projectResult->num_rows >0){
 				$projectData = $projectResult->fetch_assoc();
 				$projectDataArr['projectID'] =  $projectData['id'];
@@ -340,16 +350,17 @@ class createNewWoService{
 		
 		
 		$customFieldsArray = array('OUTAGE' =>1,'PROBLEM' => 2,'REQUEST'=> 3);
-		
+			
 		$workOrderObj = new stdClass();
 		$wo = new createNewWoService();
 		$statusArray = $wo->getTableWhereData("lnk_workorder_status_types","name ='New'", "id"); 
 		
 		include_once("../_ajaxphp/util.php");
-	    $requestorEmail = $_POST['lh_email']; 
+	    $requestorEmail = $_POST['lh_email'];
+	    $projectCode = trim($_POST['lh_projectcode']); 
 		if(!empty($requestorEmail)){
 			$workOrderObj->requestorEmail = $requestorEmail;
-			$projectData = $wo->getDefaultProjectName($requestorEmail);
+			$projectData = $wo->getDefaultProjectName($requestorEmail,$projectCode);
 			if(array_key_exists("ERROR", $projectData)== true){
 				die($projectData['ERROR']);
 			}else{
@@ -359,11 +370,13 @@ class createNewWoService{
 		}else{
 			die("INVALID REQUESTOR EMAIL ID");
 		}
+		
 		//echo date("Y-m-d h:i:s",mktime("3","25","23"+(int)date("m"),(int)date("d"),(int)date("Y")));
 		//echo date("Y-m-d h:i:s",mktime((int)date("h")+2,(int)date("i")+(int)date("s")+(int)date("m"),(int)date("d"),(int)date("Y")));
 		if(ISSET($_POST['lh_type'])){
 			if(trim($_POST['lh_type']) != ''){
-				$woType = $_POST['lh_type']; 
+				$woType = $_POST['lh_type'];
+				$workOrderObj->reqType = $customFieldsArray[$woType]; 
 				if($woType == OUTAGE){
 					$assignedTo = json_decode(WO_CREATE_OUTAGE);
 					$workOrderObj->woAssignedTo = $assignedTo[0]->id;
@@ -373,11 +386,27 @@ class createNewWoService{
 					$workOrderObj->launch_date = $workOrderObj->woEstDate;
 					
 				}
+				
 				if($woType == PROBLEM){
+					if(ISSET($_POST['lh_severity']) && (!empty($_POST['lh_severity']))){
+						$workOrderObj->severity = getSeverityValue($_POST['lh_severity']);
+					}else{
+						//6 for sev2 
+						$workOrderObj->severity = 6;
+					}
 					$assignedTo = json_decode(WO_CREATE_PROBLEM);
 					$workOrderObj->woAssignedTo = $assignedTo[0]->id;
 					$workOrderObj->woStartDate = date("Y-m-d H:i:s");
-					$workOrderObj->woEstDate = date("Y-m-d H:i:s",mktime(date("H")+48,date("i"),date("s"),date("m"),date("d"),date("Y")));
+					//For Sev 1 add 2 Hr in Required Time
+					if($workOrderObj->severity == 5){
+						$workOrderObj->woEstDate = date("Y-m-d H:i:s",mktime(date("H")+2,date("i"),date("s"),date("m"),date("d"),date("Y")));
+						}else if($workOrderObj->severity == 6){
+							//For sev 2 add 48 hr
+							$workOrderObj->woEstDate = date("Y-m-d H:i:s",mktime(date("H")+48,date("i"),date("s"),date("m"),date("d"),date("Y")));
+						}else if($workOrderObj->severity == 7){
+							//for sev 3 add 6 month
+							$workOrderObj->woEstDate = date("Y-m-d H:i:s",mktime(date("H"),date("i"),date("s"),date("m")+6,date("d"),date("Y")));
+						}
 					$workOrderObj->creation_date = $workOrderObj->woStartDate;
 					$workOrderObj->launch_date = $workOrderObj->woEstDate;
 				}
@@ -458,15 +487,7 @@ class createNewWoService{
 		
 		$phpTime = time();
 		/*************************************************************/
-		$workOrderObj->reqType = $customFieldsArray[$woType];
-		// reqType 2 = PROBLEM
-		if($workOrderObj->reqType == 2){
-			if(ISSET($_POST['lh_severity']) && (!empty($_POST['lh_severity']))){
-				$workOrderObj->severity = getSeverityValue($_POST['lh_severity']);
-			}else{
-				$workOrderObj->severity = 6;
-			}
-		}
+		
 		if($workOrderObj->reqType == 3){
 			if(ISSET($_POST['lh_critical']) && (!empty($_POST['lh_critical']))){
 				$workOrderObj->critical = true;
@@ -474,7 +495,9 @@ class createNewWoService{
 				$workOrderObj->critical = false;
 			}
 		}
-		
+		/*$result = $wo->saveWorkorder($workOrderObj);
+		p($workOrderObj);
+		die;*/
 		//calculte time difference
 		$timeDiffernce = round(abs($phpTime-$javaTime)/60,2);
 		
