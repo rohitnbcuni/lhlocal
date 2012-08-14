@@ -112,7 +112,7 @@ public class LHWorkOrderCreateHandler {
 			}
 			if(workOrder.getProject()!=null){
 				output.writeBytes(twoHyphens + boundary + lineEnd);
-				output.writeBytes("Content-Disposition: form-data; name=\"lh_project\""+ lineEnd + lineEnd);
+				output.writeBytes("Content-Disposition: form-data; name=\"lh_projectcode\""+ lineEnd + lineEnd);
 				output.writeBytes(workOrder.getProject() + lineEnd);
 			}
 			
