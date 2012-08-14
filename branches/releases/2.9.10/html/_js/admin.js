@@ -557,10 +557,16 @@ function generateReport(){
 	var admin_to_select = $('#admin_to_select').val();
     var admin_to_year_select = $('#admin_to_year_select').val();
 	var admin_assign_select = $('#admin_assign_select').val();
-    
+	if(admin_to_select!='' && admin_to_year_select!=''){
+	if(admin_user_select > admin_to_select && admin_year_select > admin_to_year_select || admin_user_select > admin_to_select && admin_year_select == admin_to_year_select || admin_user_select >= admin_to_select && admin_year_select > admin_to_year_select )
+	{ 
+		  alert('Pls select correct date'); return false;
+	}
+	window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select );
+	}else{
 	window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select );
 	//window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select);
-}
+}}
 
 function fetchProjVersion(proj_id,version_id)
 {
