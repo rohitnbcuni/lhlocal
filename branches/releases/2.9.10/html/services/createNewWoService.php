@@ -48,12 +48,12 @@ class createNewWoService{
 	 		$projectCode = $mysql->real_escape_string(trim($projectCode));
 	 		//Project code define in EMail <projectCodeTag>
 	 		if($projectCode != '' ){
-	 			$projectCodeSql  = "SELECT p.id,p.project_code, p.project_name FROM `projects` p INNER JOIN user_project_permissions UPP ON (p.`id` = UPP.project_id) WHERE p.`company` = '$userCompany' AND UPP.user_id = '$requesterUserID' AND p.`project_code` ='$projectCode' AND p.`archived` ='0' AND p.`active` = '1' AND p.`deleted` ='0'";
+	 			$projectCodeSql  = "SELECT p.id,p.project_code, p.project_name,p.cclist FROM `projects` p INNER JOIN user_project_permissions UPP ON (p.`id` = UPP.project_id) WHERE p.`company` = '$userCompany' AND UPP.user_id = '$requesterUserID' AND p.`project_code` ='$projectCode' AND p.`archived` ='0' AND p.`active` = '1' AND p.`deleted` ='0'";
 	 			$projectResult = $mysql->query($projectCodeSql);
 	 		}
 	 		//Set Default Project Code
  			if($projectResult->num_rows == 0){
-	 			$projectSql = "SELECT id,project_code, project_name FROM `projects` WHERE `company` = '$userCompany' AND `id` 
+	 			$projectSql = "SELECT id,project_code, project_name,cclist FROM `projects` WHERE `company` = '$userCompany' AND `id` 
 		 		IN (SELECT `project_id` FROM  `user_project_permissions` WHERE  `user_id` = '$requesterUserID') AND 
 		 		archived ='0' and active ='1' and deleted ='0' ORDER BY project_name";
 		 		$projectResult = $mysql->query($projectSql);
@@ -63,6 +63,7 @@ class createNewWoService{
 				$projectData = $projectResult->fetch_assoc();
 				$projectDataArr['projectID'] =  $projectData['id'];
 				$projectDataArr['requestedId'] =  $requesterUserID;
+				$projectDataArr['ccList'] = $projectData['cclist'];
 			}else{
 				$projectDataArr['ERROR'] = "USER-DONT-HAVE-PROJECT-PERMISSION";
 			}
@@ -358,14 +359,17 @@ class createNewWoService{
 		include_once("../_ajaxphp/util.php");
 	    $requestorEmail = $_POST['lh_email'];
 	    $projectCode = trim($_POST['lh_projectcode']); 
+		$ccList = '';
 		if(!empty($requestorEmail)){
 			$workOrderObj->requestorEmail = $requestorEmail;
 			$projectData = $wo->getDefaultProjectName($requestorEmail,$projectCode);
+			
 			if(array_key_exists("ERROR", $projectData)== true){
 				die($projectData['ERROR']);
 			}else{
 				$workOrderObj->projectId = $projectData['projectID'];
 				$workOrderObj->requestedId = $projectData['requestedId'];
+				$ccList = $projectData['ccList'];
 			}
 		}else{
 			die("INVALID REQUESTOR EMAIL ID");
@@ -420,6 +424,8 @@ class createNewWoService{
 						}else{
 							$required_date_timestamp_val = date("Y-m-d H:i:s",mktime(date("H"),date("i"),date("s"),date("m"),date("d")+14,date("Y")));
 						}
+					}else{
+						$required_date_timestamp_val = date("Y-m-d H:i:s",mktime(date("H"),date("i"),date("s"),date("m"),date("d")+14,date("Y")));
 					}
 					$workOrderObj->woAssignedTo = $assignedTo[0]->id;
 					$workOrderObj->woStartDate = date("Y-m-d H:i:s");
@@ -455,8 +461,16 @@ class createNewWoService{
 		}else{
 			die("MAIL BODY MUST HAVE SOME VALUE");
 		}
+		$ccListArray = array();
+		if(strlen($ccList) > 1){
+			$ccListArray = explode(",",$ccList);
+		}
+		
 		if(ISSET($_POST['ccList']) && (!empty($_POST['ccList']))){
-			$workOrderObj->ccLists = $wo->getCCList($_POST['ccList']);
+			$postCCList = $wo->getCCList($_POST['ccList']);
+			$workOrderObj->ccLists = array_merge($ccListArray,$postCCList);
+		}else{
+			$workOrderObj->ccLists = $ccListArray;
 		}
 		/******************************************************************/
 		if(ISSET($_POST['lh_utc_time']) && (!empty($_POST['lh_utc_time']))){
@@ -496,7 +510,7 @@ class createNewWoService{
 			}
 		}
 		/*$result = $wo->saveWorkorder($workOrderObj);
-		p($workOrderObj);
+	p($workOrderObj);
 		die;*/
 		//calculte time difference
 		$timeDiffernce = round(abs($phpTime-$javaTime)/60,2);
