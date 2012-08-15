@@ -280,7 +280,13 @@
 				<div class="title_med workorders_filter">
 					<div class="title_actions"><button class="back_arrow" onClick="window.location= \'/quality/\';"><span>all defects</span></button></div>
 					<h4>Defect Entry</h4>
-				  <form id = "prevNextNav" method = "POST">  
+					<form onsubmit="javascript:return qualityeditsearch();" name="gotowo_form">';
+					?>
+						<input type="text" name="defect_id" id="defect_id" class="field_xsmall" style="width:50px;height:17px;margin-right:3px;" onfocus="javascript:if (this.value == 'id #') this.value='';" onblur="javascript:if (this.value == '') this.value = 'id #';" value="id #">
+						<span class="submit_button_span" style="margin-top:7px;margin-right:0px;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<input type="submit" class="submit_button" value="go" style="width:25px;margin-top:7px;margin-left:-11px;border:0">
+					</form>
+				<?php  echo '<form id = "prevNextNav" method = "POST">  
             <input name = "stringId" type = "hidden" id = "stringId" value = '.$qa_id_array_string.'>
             <button id="next_button" style = "float:right;margin-right:12px;'.$display_next.';margin-top: 7px;" onClick="navigate('.$next_defect_id.')"><span>NEXT</span></button>
 					  <button id="prev_button" style = "float:right;'.$display_prev.';margin-top: 7px;" onClick="navigate('.$prev_defect_id.')"><span>PREV</span></button>					
