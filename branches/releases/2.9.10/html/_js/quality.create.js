@@ -822,7 +822,7 @@ function navigate(page){
 }
 
 function qualityeditsearch(){ 
-	var defectId = document.getElementById("defect_id").value;
+	var defectId = document.getElementById("defect_search_id").value;
 	if(defectId == "" || defectId == "id #") {
 		alert("Please enter a Defect ID");
 	} else {
