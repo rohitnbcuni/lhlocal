@@ -557,11 +557,22 @@ function generateReport(){
 	var admin_to_select = $('#admin_to_select').val();
     var admin_to_year_select = $('#admin_to_year_select').val();
 	var admin_assign_select = $('#admin_assign_select').val();
-
+	
+	var from_date = new Date(admin_year_select,admin_user_select);
+	var to_date = new Date(admin_to_year_select,admin_to_select);
+	var diff= from_date- to_date;
+	var weeks = Math.floor(Math.abs(diff) / (1000 * 7 * 24 * 60 * 60));
+	
 	if(admin_to_select!='' && admin_to_year_select!=''){
 	if(parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) < parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) == parseInt(admin_to_year_select)|| parseInt(admin_user_select) == parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select))
 	{ 	
 		  alert('From Date should not be greater than to date'); return false;
+	}
+	
+
+	if(weeks>17)
+	{
+	alert('Difference-in-Months exceeded the Max Limit of 5'); return false;
 	}
 	window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select );
 	}else{
