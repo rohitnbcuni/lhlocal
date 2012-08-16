@@ -561,7 +561,7 @@ function generateReport(){
 	if(admin_to_select!='' && admin_to_year_select!=''){
 	if(parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) < parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) == parseInt(admin_to_year_select)|| parseInt(admin_user_select) == parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select))
 	{ 	
-		  alert('From Date should be greater than to date'); return false;
+		  alert('From Date should not be greater than to date'); return false;
 	}
 	window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select );
 	}else{
