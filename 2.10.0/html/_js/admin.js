@@ -559,7 +559,7 @@ function generateReport(){
 	var admin_assign_select = $('#admin_assign_select').val();
 
 	if(admin_to_select!='' && admin_to_year_select!=''){
-	if(parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) < parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) == parseInt(admin_to_year_select))
+	if(parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) < parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) == parseInt(admin_to_year_select)|| parseInt(admin_user_select) == parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select))
 	{ 	
 		  alert('Pls select correct date'); return false;
 	}
