@@ -124,7 +124,8 @@ class createNewWoService{
     public function saveWorkorder($wo){
     	$mysql = self::singleton();
     	$attachmentError = array();
-
+        $wo->woTitle = $mysql->real_escape_string($wo->woTitle);
+	$wo->woDesc = $mysql->real_escape_string($wo->woDesc);
 	$cclistStr = '';
 	if($wo->ccLists != ''){
 	    	$cclist = implode(",", $wo->ccLists);
