@@ -85,16 +85,20 @@ public class LHWorkOrderProcessor {
 				Message[] msgs = folder.getMessages();
 
 				System.out.println(type + " -- EmailReader" + " msgs "+ msgs.length);
+				/**Start processing the messages from INBOX */
 				for (int msgNum = 0; msgNum < msgs.length; msgNum++) {
 					Address[] toArr = msgs[msgNum].getRecipients(RecipientType.TO);
 					
-					//Process only if the email is specifically addressed to the LH Email Address, And also doesn't have a WO number in the subject
+					/**Process only if the email is specifically addressed to the LH Email Address, 
+					 * And Subject is present
+					 * And the Subject doesn't have a WO number in it*/
 					if(toArr!=null && toArr.length==1 && emailId.equalsIgnoreCase(((InternetAddress)toArr[0]).getAddress())
+							&& StringUtils.isNotBlank(msgs[msgNum].getSubject())
 							&& "-100".equals(LHCommonUtils.getWorkOrderId(msgs[msgNum].getSubject()))){
 						processWorkOrderMessage(msgs[msgNum], type);
 					}
 					else{
-						//Copy ignored mails to Junk and Remove them from Inbox
+						/**Move invalid/ignored mails to Junk and Remove them from Inbox*/
 						System.out.println("Fail : "+msgs[msgNum].getSubject());
 						folder.copyMessages(new Message[]{msgs[msgNum]}, junkFolder);
 						msgs[msgNum].setFlag(Flags.Flag.DELETED, true);
@@ -125,6 +129,7 @@ public class LHWorkOrderProcessor {
 		Pattern woDatePattern = Pattern.compile("^(\\s*?)date(\\s*?):(.*?)", Pattern.CASE_INSENSITIVE);
 		Pattern woProjCodePattern = Pattern.compile("^(\\s*?)Project(\\s*?):(.*?)", Pattern.CASE_INSENSITIVE);
 		List<Part> attachmentParts = new ArrayList<Part>();
+		int lineCounter = 0;
 		String contentType = null;
 		String messageId = null;
 		String encoding = "UTF-8";
@@ -144,11 +149,12 @@ public class LHWorkOrderProcessor {
 		workOrder.setCcList(ccList.toString());
 		
 		workOrder.setEmailId(((InternetAddress) message.getFrom()[0]).getAddress());
-		
+		/**Parse out the subject*/
 		String subject = message.getSubject();
 		System.out.println("SUBJECT: " + subject);
 		workOrder.setTitle(LHCommonUtils.getWorkorderTitle(subject));
 		
+		/**Check Criticality/Severity based on request type*/
 		if (type.equalsIgnoreCase("REQUEST")) {
 			workOrder.setCriticality(LHCommonUtils.isCritical(subject));
 		}
@@ -157,7 +163,7 @@ public class LHWorkOrderProcessor {
 			workOrder.setSeverity(LHCommonUtils.getSeverity(subject));
 		}
 		
-
+		/**Start processing the Message Body*/
 		if (content instanceof Multipart) {
 			messagePart = ((Multipart) content).getBodyPart(0);
 			for (int i = 1, n = ((Multipart) content).getCount(); i < n; i++) {
@@ -200,14 +206,25 @@ public class LHWorkOrderProcessor {
 				StringBuilder sb = new StringBuilder();
 
 				String desc = "";
+				lineCounter = 0;
 				while (currentLine != null) {
-					String dateValueArr[] = woDatePattern.split(currentLine);
-					String prjCodeValArr[] = woProjCodePattern.split(currentLine);
-					if(dateValueArr.length>1){
-						workOrder.setDate(LHCommonUtils.parseWorkOrderDate(dateValueArr[1].trim()));
-					}
-					else if(prjCodeValArr.length>1){
-						workOrder.setProject(prjCodeValArr[1].trim());
+					if(lineCounter < 1){
+						String dateValueArr[] = woDatePattern.split(currentLine);
+						String prjCodeValArr[] = woProjCodePattern.split(currentLine);
+					
+						if(dateValueArr.length>1 && lineCounter < 1){
+							workOrder.setDate(LHCommonUtils.parseWorkOrderDate(dateValueArr[1].trim()));
+						}
+						else if(prjCodeValArr.length>1 && lineCounter < 1){
+							workOrder.setProject(prjCodeValArr[1].trim());
+						}
+						else{
+							if(StringUtils.isNotBlank(currentLine)){
+								lineCounter++;
+							}
+							sb.append(currentLine);
+							sb.append(NEW_LINE_DELIMITER);
+						}
 					}
 					else {
 						sb.append(currentLine);
@@ -236,14 +253,25 @@ public class LHWorkOrderProcessor {
 
 				String desc = "";
 				while (currentLine != null) {
-					String dateValueArr[] = woDatePattern.split(currentLine);
-					String prjCodeValArr[] = woProjCodePattern.split(currentLine);
-					if(dateValueArr.length>1){
-						workOrder.setDate(LHCommonUtils.parseWorkOrderDate(dateValueArr[1].trim()));
+					if(lineCounter < 1){
+						String dateValueArr[] = woDatePattern.split(currentLine);
+						String prjCodeValArr[] = woProjCodePattern.split(currentLine);
+					
+						if(dateValueArr.length>1 && lineCounter < 1){
+							workOrder.setDate(LHCommonUtils.parseWorkOrderDate(dateValueArr[1].trim()));
+						}
+						else if(prjCodeValArr.length>1 && lineCounter < 1){
+							workOrder.setProject(prjCodeValArr[1].trim());
+						}
+						else{
+							if(StringUtils.isNotBlank(currentLine)){
+								lineCounter++;
+							}
+							sb.append(currentLine);
+							sb.append(NEW_LINE_DELIMITER);
+						}
 					}
-					else if(prjCodeValArr.length>1){
-						workOrder.setProject(prjCodeValArr[1].trim());
-					} else {
+					else {
 						sb.append(currentLine);
 						sb.append(NEW_LINE_DELIMITER);
 					}
@@ -263,16 +291,18 @@ public class LHWorkOrderProcessor {
 				System.out.println("Description:" + workOrder.getDescription());*/
 			}
 		}
-		
+		/**If Message has exceeded 6 retries, skip it.*/
 		if(LHEmailMetadataSerializer.getMessageCount(messageId)<6){
 			String status = LHWorkOrderCreateHandler.createWorkOrder(workOrder);
 			status = status.substring(status.length() - 7, status.length());
 			System.out.println("status :" + status);
+			/**After success delete Message*/
       	  	if (status.trim().contains(LHCommonConstants.getLh_comment_service_success())){
       		  message.setFlag(Flags.Flag.DELETED, true); 
             }else{
-          	  LHEmailMetadataSerializer.addMessage(messageId);
-          	  LHEmailMetadataSerializer.serialize();
+            	/**On Failure add to the tracking DB - it marks the retry count*/
+          	  	LHEmailMetadataSerializer.addMessage(messageId);
+          	  	LHEmailMetadataSerializer.serialize();
             }
         }else{
       	  System.out.println("No of attempts to process the email with id "+messageId+" exceeded the maximum limit. Please take manual action now");
