@@ -137,11 +137,11 @@ class createNewWoService{
     	 $insert_wo = "INSERT INTO `workorders` " 
 				."(`project_id`,`assigned_to`,`status`,`title`,"
 				."`example_url`,`body`,`requested_by`,`assigned_date`,`estimated_date`,"
-				."`creation_date`,`launch_date`,`cclist`) "
+				."`creation_date`,`launch_date`,`cclist`,`draft_date`) "
 				."VALUES "
 				."('$wo->projectId','$wo->woAssignedTo','$wo->woStatus','$wo->woTitle',"
 				."'$woExampleURL','$wo->woDesc','$wo->requestedId','$wo->woStartDate','$wo->woEstDate',"
-				."'$wo->creation_date', '$wo->launch_date','$cclistStr')";
+				."'$wo->creation_date', '$wo->launch_date','$cclistStr','0000-00-00 00:00:00')";
 		$mysql->query($insert_wo);
 		$getWoId = $mysql->insert_id;
 		if($getWoId > 0){
@@ -456,7 +456,7 @@ class createNewWoService{
 		}
 		
 		//$workOrderObj->workOrderObj->woExampleURL = Util::escapewordquotes(@$_POST['woExampleURL']);
-		if(ISSET($_POST['woDesc']) && (!empty($_POST['woDesc']))){
+		if(ISSET($_POST['woDesc']) && (!empty($_POST['woDesc'])) && (trim($_POST['woDesc']) !='')){
 			$workOrderObj->woDesc = Util::escapewordquotes(urldecode($_POST['woDesc']));
 		}else{
 			die("MAIL BODY MUST HAVE SOME VALUE");
