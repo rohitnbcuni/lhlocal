@@ -1,6 +1,4 @@
 <?php 
-
-
 class createSolrXml{
 
 	private static $instance;
@@ -25,10 +23,11 @@ class createSolrXml{
 			$workorders_row = $workorders_res->fetch_assoc();
 			return  $workorders_row;
 			}
-			}
+	}
 			require_once('../_inc/config.inc');
 			$c = new createSolrXml();
 			$u = new stdClass();
 	    	$w = new stdClass();
 	    	echo workorders();
+			
 ?>
