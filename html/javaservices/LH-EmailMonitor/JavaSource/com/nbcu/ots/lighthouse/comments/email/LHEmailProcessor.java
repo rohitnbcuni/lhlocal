@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -32,11 +33,9 @@ public class LHEmailProcessor {
        * popUser - POP server user name
        * popPassword - password associated with the above username
        */
-      public static void main(String[] args) 
-      {
+      public static void main(String[] args) {
             // TODO Auto-generated method stub
-            try
-          {
+          try {
             	String configFile = args[0];
             	LHCommonConstants.init(configFile);
             	LHEmailMetadataSerializer.deserialize();
@@ -46,15 +45,14 @@ public class LHEmailProcessor {
                 System.out.println("java LHEmailProcessor "+configFile);
                 
                 receive(popServer, popUser, popPassword);
+                
+                /**Workorder Creation Part*/
+                LHWorkOrderProcessor.receiveWOMails();
           }
-          catch (Exception ex)
-          {
-                System.out.println("Usage: LHEmailProcessor"
-                            +" configFile");
+          catch (Exception ex) {
+                System.out.println("Usage: LHEmailProcessor"+" configFile");
           }
-
           System.exit(0);
-
       }
       
       /**

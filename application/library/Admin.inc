@@ -509,7 +509,54 @@ public function getQCProjectCCList($project_id) {
 			
 			return $html;
 		}
-                 public function getYears($yearSelected) {
+/* //////////////////////////////////////////////////////////////////////changes //////////////////////////////// */
+		
+		public function to_getMonths($monthSelected) {
+			$startDate = strtotime(date('01/01/y'));
+			$nextMonth = $startDate;
+			$html .= '<option value="">-Select Month-</option>';
+			for($i=1;$i<=12;$i++)
+			{
+				/*if($monthSelected == $i){
+					$selected = " SELECTED";
+				}
+				else{
+					$selected = "";
+				}*/ 
+					
+				$html .= '<option value="' .$i .'"' .$selected .'>' 
+							.date("F",$nextMonth)
+						.'</option>';
+				$nextMonth = strtotime("next month",$nextMonth);
+			}			
+			
+			return $html;
+		}
+
+		public function to_getYears($yearSelected) {
+		//	$startDate = strtotime(date('d/m/2010'));
+		//	$nextYear = $startDate;
+		$html .= '<option value="">-Select Year-</option>';
+			for($i=2010;$i<=$yearSelected;$i++)
+			{
+				/*if($yearSelected == $i){
+					$selected = " SELECTED";
+				}
+				else{
+					$selected = "";
+				}*/
+
+				$html .= '<option value="' .$i .'"' .$selected .'>' 
+							.$i
+						.'</option>';
+		//		$nextYear = strtotime("next year",$nextYear);
+			}			
+			
+			return $html;
+		}
+
+/* //////////////////////////////////////////////////////////////changes///////////////////////////////////////////////////////////*/		
+               public function getYears($yearSelected) {
 		//	$startDate = strtotime(date('d/m/2010'));
 		//	$nextYear = $startDate;
 			for($i=2010;$i<=$yearSelected;$i++)

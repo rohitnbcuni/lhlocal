@@ -820,3 +820,24 @@ function navigate(page){
   form.action = '/quality/index/edit/?defect_id='+page;
   form.submit();  
 }
+
+function qualityeditsearch(){ 
+	var defectId = document.getElementById("defect_search_id").value;
+	if(defectId == "" || defectId == "id #") {
+		alert("Please enter a Defect ID");
+	} else {
+		$.ajax({
+			type: "GET",
+			url: "/_ajaxphp/qa_exist_check.php?defectId="+defectId,
+			success: function(msg) {
+				if(msg == "1"){
+					window.location = "/quality/index/edit/?defect_id="+defectId;
+				}else{
+					alert("Defect ID does not exist.");
+				}
+			}
+		});
+	}
+	return false;
+}
+
