@@ -466,10 +466,10 @@ session_start();
 					}
 				}
 
-				if($rp_row['daypart'] == 5) {
+				if($rp_row['daypart'] == 9) {
 					$todate += $rp_row['hours'] * $hourly_rate;
 				} else {
-					$todate += 2 * $hourly_rate;
+					$todate += $hourly_rate;
 				}
 				$prev_user = $rp_row['userid'];
 			}
@@ -527,12 +527,12 @@ session_start();
 					$rp_res = @$mysql->query($rp_data);
 					if($rp_res->num_rows > 0) {
 						while($rp_row = $rp_res->fetch_assoc()) {
-							if($rp_row['daypart'] == 5) {
+							if($rp_row['daypart'] == 9) {
 								$todate += $rp_row['hours'] * $row_phases['rate'];
 								$todate += $rp_row['hours'] * $sup_phase_rate;
 							} else {
-								$todate += 2 * $row_phases['rate'];
-								$todate += 2 * $sup_phase_rate;
+								$todate += $row_phases['rate'];
+								$todate += $sup_phase_rate;
 							}
 						}
 					}
@@ -641,13 +641,13 @@ function calculateToDate($projID, $mysql, $rp_date,$archive){
 		}else if($quarterID == 4){
 			$quarter_select = " and datestamp <= '".current_year."-12-31' and datestamp >= '".current_year."-10-1' ";
 		}
-		 $sql = "Select tab3.projectid, tab3.userid, sum(tab3.Total) AS Total from (Select rb.projectid, rb.userid, count(1)*2 AS Total  
+		 $sql = "Select tab3.projectid, tab3.userid, sum(tab3.Total) AS Total from (Select rb.projectid, rb.userid, count(1) AS Total  
 		from projects pj, resource_blocks rb where pj.id=rb.projectid and pj.active='1' and pj.deleted='0' and pj.archived='".$archive."'  
-		$rp_date and rb.status='4' and rb.daypart <> 5 AND rb.projectid = '".$projID."' group by pj.id, rb.userid 
+		$rp_date and rb.status='4' and rb.daypart <> 9 AND rb.projectid = '".$projID."' group by pj.id, rb.userid 
 		UNION ALL 
 		Select rb.projectid, rb.userid, rb.hours AS Total  from projects pj, resource_blocks rb 
 		where pj.id=rb.projectid and pj.active='1' and pj.deleted='0' and pj.archived='".$archive."' $rp_date and 
-		rb.status='4' and rb.daypart = 5 AND rb.projectid = '".$projID."' group by pj.id, rb.userid) tab3  group by tab3.projectid, tab3.userid";
+		rb.status='4' and rb.daypart = 9 AND rb.projectid = '".$projID."' group by pj.id, rb.userid) tab3  group by tab3.projectid, tab3.userid";
 		
 		//$rp_data = "SELECT daypart, hours,userid FROM `resource_blocks` WHERE `projectid`='" .$projID ."' AND `status`='4' $quarter_select";
 		$rp_res = $mysql->query($sql);

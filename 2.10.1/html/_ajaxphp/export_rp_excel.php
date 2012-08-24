@@ -31,7 +31,7 @@
 	lut.name Title,
 	pb.sso SSO,
 	pb.agency Agency,
-	(count(rb.daypart) * 2) AS Hours,
+	(count(rb.daypart)) AS Hours,
 	case rb.status
 	when 0 then 'UNA'
 	when 1 then 'Overhead'
@@ -43,7 +43,7 @@
 	FROM resource_blocks rb
     JOIN users pb ON rb.userid = pb.id 
 	LEFT JOIN `lnk_user_titles` lut ON pb.user_title = lut.id
-	WHERE rb.datestamp >= '".$fromDate."' and rb.datestamp <= '".$toDate."' and rb.daypart <> '5' and rb.status <> '2' and status <> '3' and pb.deleted = '0' and pb.active = '1' 
+	WHERE rb.datestamp >= '".$fromDate."' and rb.datestamp <= '".$toDate."' and rb.daypart <> '9' and rb.status <> '2' and status <> '3' and pb.deleted = '0' and pb.active = '1' 
 	GROUP BY DAY(rb.datestamp),pb.first_name,pb.last_name order by pb.first_name,pb.last_name,DAY(rb.datestamp)";
 	//print("rp_query  ".$rp_query);die();
 	$result = @$mysql->query($rp_query);
@@ -86,7 +86,7 @@
 	uasort($all_users_list, 'compare_name'); 
 	$userArray = $all_users_list;
 
-	$overtime_sql = "SELECT rb.userid AS id, DAY(rb.datestamp) Date, rb.hours AS Hours FROM resource_blocks rb WHERE rb.datestamp >= '".$fromDate."' and rb.datestamp <= '".$toDate."' and rb.status <> '2' and rb.daypart = '5'";
+	$overtime_sql = "SELECT rb.userid AS id, DAY(rb.datestamp) Date, rb.hours AS Hours FROM resource_blocks rb WHERE rb.datestamp >= '".$fromDate."' and rb.datestamp <= '".$toDate."' and rb.status <> '2' and rb.daypart = '9'";
 	$overtime_result = $mysql->query($overtime_sql);
 	if($overtime_result->num_rows > 0){
 		while($overtime_row = $overtime_result->fetch_assoc()){
