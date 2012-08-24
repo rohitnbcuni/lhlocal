@@ -197,7 +197,7 @@ class createSolrXml{
 			$c = new createSolrXml();
 			$u = new stdClass();
 	    	$w = new stdClass();
-	    	 print_r($c->workorders());
-	    	 print_r($c->quality());
+	    	 $c->workorders();
+	    	 $c->quality();
 			
 ?>
