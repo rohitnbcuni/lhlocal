@@ -60,39 +60,45 @@ class createSolrXml{
 			$r = $doc->createElement( "add" ); 
 			$doc->appendChild( $r ); 
 			while($workorders_row = $workorders_res->fetch_assoc())
-			//foreach( $workorders_row as $workorders_row ) 
-			{//print_r($workorders_row); echo '</br>';
+			{
 			$b = $doc->createElement( "doc" ); 
-			$id = $doc->createElement( "id" ); 
-			$id->appendChild( $doc->createTextNode( $workorders_row['id'] ) ); 
+			$id = $doc->createElement( "field" );
+			$id->setAttribute('name', 'id');
+			$id->appendChild( $doc->createTextNode( $workorders_row['id'] ) );
 			$b->appendChild($id); 
 			
-			$guid = $doc->createElement( "guid" ); 
+			$guid = $doc->createElement( "field" ); 
+			$guid->setAttribute('name', 'guid');
 			$guid->appendChild( $doc->createTextNode( $workorders_row['project_id'] ) ); 
 			$b->appendChild( $guid ); 
 			
 			
-			$title = $doc->createElement( "title" ); 
+			$title = $doc->createElement( "field" ); 
+			$title->setAttribute('name', 'title');
 			$title->appendChild( $doc->createCDATASection(htmlentities($this->escapewordquotes($workorders_row['title']), ENT_QUOTES, "UTF-8")) ); 
 			$b->appendChild( $title ); 
 			
-			$title_facet = $doc->createElement( "title_facet" ); 
+			$title_facet = $doc->createElement( "field" ); 
+			$title_facet->setAttribute('name', 'title_facet');
 			$title_facet->appendChild( $doc->createCDATASection(htmlentities($this->escapewordquotes($workorders_row['example_url'] ), ENT_QUOTES, "UTF-8")) ); 
 			$b->appendChild( $title_facet ); 
 			
 			
 			
-			$description = $doc->createElement( "description" ); 
+			$description = $doc->createElement( "field" );
+			$description->setAttribute('name', 'description');			
 			$description->appendChild( $doc->createCDATASection(htmlentities($this->escapewordquotes( $workorders_row['body']), ENT_QUOTES, "UTF-8") ) ); 
 			$b->appendChild( $description );
 
 
-			$categories = $doc->createElement( "categories" ); 
+			$categories = $doc->createElement( "field" ); 
+			$categories->setAttribute('name', 'categories');
 			$categories->appendChild( $doc->createCDATASection( 'workorder' ) ); 
 			$b->appendChild( $categories ); 
 			
 				
-			$author = $doc->createElement( "author" ); 
+			$author = $doc->createElement( "field" );
+			$author->setAttribute('name', 'author');
 			$author->appendChild( $doc->createTextNode(htmlentities($this->escapewordquotes($workorders_row['requested_by']), ENT_QUOTES, "UTF-8") ) ); 
 			$b->appendChild( $author ); 
 			
@@ -101,7 +107,8 @@ class createSolrXml{
 			
 			
 			while($workorders_comment_row = $workorders_comment_res->fetch_assoc()){
-			$commentTextList = $doc->createElement( "commentTextList" ); 
+			$commentTextList = $doc->createElement( "field" );
+			$commentTextList->setAttribute('name', 'commentTextList');
 			$commentTextList->appendChild( $doc->createCDATASection( htmlentities($this->escapewordquotes($workorders_comment_row['comment'] ), ENT_QUOTES, "UTF-8")) ); 
 			$b->appendChild($commentTextList); 
 			
@@ -129,36 +136,44 @@ class createSolrXml{
 			while($quality_row = $quality_res->fetch_assoc())
 			{
 			$b = $doc->createElement( "doc" ); 
-			$id = $doc->createElement( "id" ); 
+			
+			$id = $doc->createElement( "field" );
+			$id->setAttribute('name', 'id');			
 			$id->appendChild( $doc->createTextNode( $quality_row['id'] ) ); 
 			$b->appendChild($id); 
 			
-			$guid = $doc->createElement( "guid" ); 
+			$guid = $doc->createElement( "field" ); 
+			$guid->setAttribute('name', 'guid');
 			$guid->appendChild( $doc->createTextNode( $quality_row['project_id'] ) ); 
 			$b->appendChild( $guid ); 
 			
 			
-			$title = $doc->createElement( "title" ); 
+			$title = $doc->createElement( "field" ); 
+			$title->setAttribute('name', 'title');
 			$title->appendChild( $doc->createCDATASection(htmlentities($this->escapewordquotes($quality_row['title']), ENT_QUOTES, "UTF-8")) ); 
 			$b->appendChild( $title ); 
 			
-			$title_facet = $doc->createElement( "title_facet" ); 
+			$title_facet = $doc->createElement( "field" ); 
+			$title_facet->setAttribute('name', 'title_facet');
 			$title_facet->appendChild( $doc->createCDATASection(htmlentities($this->escapewordquotes($quality_row['example_url'] ), ENT_QUOTES, "UTF-8")) ); 
 			$b->appendChild( $title_facet ); 
 			
 			
 			
-			$description = $doc->createElement( "description" ); 
+			$description = $doc->createElement( "field" );
+			$description->setAttribute('name', 'description');
 			$description->appendChild( $doc->createCDATASection(htmlentities($this->escapewordquotes( $quality_row['body']), ENT_QUOTES, "UTF-8") ) ); 
 			$b->appendChild( $description );
 
 
-			$categories = $doc->createElement( "categories" ); 
+			$categories = $doc->createElement( "field" ); 
+			$categories->setAttribute('name', 'categories');
 			$categories->appendChild( $doc->createCDATASection( 'quality' ) ); 
 			$b->appendChild( $categories ); 
 			
 				
-			$author = $doc->createElement( "author" ); 
+			$author = $doc->createElement( "field" );
+			$author->setAttribute('name', 'author'); 
 			$author->appendChild( $doc->createTextNode(htmlentities($this->escapewordquotes($quality_row['requested_by']), ENT_QUOTES, "UTF-8") ) ); 
 			$b->appendChild( $author ); 
 			
@@ -167,7 +182,8 @@ class createSolrXml{
 			
 			
 			while($quality_comment_row = $quality_comment_res->fetch_assoc()){
-			$commentTextList = $doc->createElement( "commentTextList" ); 
+			$commentTextList = $doc->createElement( "field" );
+			$commentTextList->setAttribute('name', 'commentTextList');
 			$commentTextList->appendChild( $doc->createCDATASection( htmlentities($this->escapewordquotes($quality_comment_row['comment'] ), ENT_QUOTES, "UTF-8")) ); 
 			$b->appendChild($commentTextList); 
 			
