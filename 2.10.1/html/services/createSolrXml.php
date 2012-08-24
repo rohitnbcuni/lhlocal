@@ -180,20 +180,6 @@ class createSolrXml{
 			
 			$doc->saveXML(); 
 			$doc->save("lhq.xml");
-			$file= "lhxml.xml";
-			$t=file_get_contents('lh.xml');
-			$replace= preg_replace('</add>','',$t );
-			$replace= preg_replace('/<>/','',$replace );
-			$tq=file_get_contents('lhq.xml');
-			
-			$replaceq = preg_replace('/<add>/','',$tq );
-			$strlen=strlen($replaceq);
-			$replaceq =substr($replaceq,22, $strlen);
-			
-			$content = $replace.$replaceq; /* put array into one variable with newline as delimiter */
-			//$content = Util::escapewordquotes($content);
-			file_put_contents($file, $content); /* over write original with changes made */
-			
 			}
 
 
