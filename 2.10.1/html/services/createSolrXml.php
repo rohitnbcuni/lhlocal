@@ -19,21 +19,8 @@ class createSolrXml{
 	
     public function escapewordquotes ($text) {
 		$pre = chr(226).chr(128);
-		$badwordchars=array('?','?','?','apos;',"#039;","?","?",'&#233;','&#8216;','&#8217;',
-		'&#8230;',
-		'&#8217;',
-		'&#8220;',
-		'&#8221;',
-		'&#8212;',
-		'#8212;',
-		'#&8211;',
-		'#8211;',
-		'amp;',
-		'&#160;',
-		'#160;','','','','','','','','',''
-			
-		);
-		$fixedwordchars = array('','"','"',"'","'",",","'", "e","'","'",'~','~','','','_','-','-','-','','','','','','','','','','');
+		$badwordchars=array('?','?','?','apos;',"#039;","?","?",'&#233;','&#8216;','&#8217;','&#8230;','&#8217;','&#8220;','&#8221;','&#8212;','#8212;','#&8211;','#8211;','amp;','&#160;','#160;','','','','','','','','','','','','','','','','','','','','','','','');
+		$fixedwordchars = array('','"','"',"'","'",",","'", "e","'","'",'~','~','','','_','-','-','-','','','','','','','','','','','','','','','','','','','','','','','','');
 	    $text = str_replace($badwordchars,$fixedwordchars,$text);                         
 		$text=str_replace('?',"'",$text); 
 	    $text=str_replace('?',"'",$text); 
@@ -52,7 +39,7 @@ class createSolrXml{
 	public function workorders(){
 		
 			$mysql = self::singleton();
-			$workorders = "SELECT * FROM workorders";  
+			$workorders = "SELECT * FROM workorders where id!='28317'";  
 			$workorders_res = $mysql->query($workorders);
 							
 			$doc = new DOMDocument("1.0");
@@ -204,6 +191,7 @@ class createSolrXml{
 			$replaceq =substr($replaceq,22, $strlen);
 			
 			$content = $replace.$replaceq; /* put array into one variable with newline as delimiter */
+			//$content = Util::escapewordquotes($content);
 			file_put_contents($file, $content); /* over write original with changes made */
 			
 			}
@@ -211,6 +199,7 @@ class createSolrXml{
 
 	}
 			require_once('../_inc/config.inc');
+			require_once('../_ajaxphp/util.php');
 			$c = new createSolrXml();
 			$u = new stdClass();
 	    	$w = new stdClass();
