@@ -1,12 +1,12 @@
 <?php 
+
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', '1024M');
 class createSolrXml{
 
 	private static $instance;
-    private $count = 0;
+	private $count = 0;
 	public $config;
-
 	public static function singleton()
     {
         if (!isset(self::$instance)) {
@@ -36,7 +36,7 @@ class createSolrXml{
 
 	}
     
-	public function workorders(){
+	public function workorders($path){
 		
 			$mysql = self::singleton();
 			$workorders = "SELECT * FROM workorders where id!='28317'";  
@@ -105,14 +105,14 @@ class createSolrXml{
 			$r->appendChild($b); 
 			} 
 			
-			$doc->saveXML(); 
-			$doc->save("lh.xml");
+			$doc-> saveXML(); 
+			$doc->save($path."workorders.xml");
 					
 			//return  $workorders_row;
 		
 	}
 	
-	public function quality(){
+	public function quality($path){
 			$mysql = self::singleton();
 			$quality = "SELECT * FROM qa_defects";  
 			$quality_res = $mysql->query($quality);
@@ -179,19 +179,21 @@ class createSolrXml{
 			} 
 			
 			$doc->saveXML(); 
-			$doc->save("lhq.xml");
+			$doc->save($path."quality.xml");
 			}
 
 
 	}
-			require_once('../_inc/config.inc');
-			require_once('../_ajaxphp/util.php');
+			
+			require_once('/var/www/lighthouse-uxd/dev3/current/html/_inc/config.inc');
+			require_once('/var/www/lighthouse-uxd/dev3/current/html/_ajaxphp/util.php');
+			$path = '/var/www/lighthouse-uxd/dev3/current/Solarxml/';
 			$c = new createSolrXml();
 			$u = new stdClass();
-	    	$w = new stdClass();
-	    	 $c->workorders();
-	    	 $c->quality();
-			 echo 'XML Created';
+	    		$w = new stdClass();
+	    	 	$c->workorders($path);
+	    		$c->quality($path);
+		        echo 'XML Created';
 			 
 			
 ?>
