@@ -33,7 +33,9 @@
 		$deleteArrayDiff = array();
 		$userProjectStr = array();
 		if($_POST['userStatus'] == "client") {
-				$comp_query = " AND a.`company` = '".$_POST['user_company'] ."'";
+			//	$comp_query = " AND a.`company` = '".$_POST['user_company'] ."'";
+				 $comp_query = "";
+
 			} else {
 				$comp_query = "";
 			}
