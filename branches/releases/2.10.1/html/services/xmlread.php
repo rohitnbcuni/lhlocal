@@ -35,20 +35,20 @@ $ch = curl_init();
 							//echo $eVal->str[0]; echo '</BR>';echo  $eVal->str[1]; echo '</BR>';
 							print_r($eVal);exit();	
 							
-				                    				 $id[] =  $eVal->str[0];
+				                    				 $id[] =  (array) $eVal->str[0];
 										
 										
 												
-											$project_id[] = $eVal->str[1];
+											$project_id[] = (array) $eVal->str[1];
 										
-											$title[] = $eVal->str[2];
+											$title[] = (array) $eVal->str[2];
 										
 										
-											$url[] = $eVal->str[3];
+											$url[] = (array) $eVal->str[3];
 										
-											$desc[] = $eVal->str[4];
+											$desc[] = (array) $eVal->str[4];
 										
-                                            $cat[] = $eVal->str[5];
+                                            $cat[] = (array) $eVal->str[5];
 					
 						}
 					
