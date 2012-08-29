@@ -641,5 +641,62 @@ public function getQCProjectCCList($project_id) {
  			}
  			return $result;
  		}
+		
+		
+		public function getAllCompaniesProjectOptionEditHTML($userid,$userStatus,$userCompany,$userProjectListArray) {
+			$db = Zend_Registry::get('db');
+			if($userStatus == "client") {
+				$comp_query = " AND a.`company` = '".$userCompany ."'";
+			} else {
+				$comp_query = "";
+			}
+			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com  ON (a.`company`=com.`id`) WHERE  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1'  $comp_query ORDER BY com.`name`, a.`project_code` ASC");
+			$html = '';
+					
+			$companyId = false;
+			//$userProjectListArray =  $db->fetchCol("SELECT project_id FROM `user_project_permissions` WHERE `user_id`='" .$userid ."' ");
+					
+			for($i = 0; $i < sizeof($projects); $i++) {
+				if($projects[$i]['company'] != $companyId) {
+//					$company = self::getQuery("SELECT * FROM `companies` WHERE `id`='" .$projects[$i]['company'] ."' LIMIT 1");
+//					$html .= '<optgroup label="' .$company[0]['name'] .'">';
+					$html .= '<optgroup label="' . $projects[$i]['company_name'] .'">';
+				}
+				if(in_array($projects[$i]['id'],$userProjectListArray) == TRUE) {
+					$selected = " selected='selected'";
+				} else {
+					$selected = "";
+				}
+				$html .= '<option value="' .$projects[$i]['id'] .'"' .$selected .'>' 
+					.$projects[$i]['project_code']
+					.' - ' 
+					.$projects[$i]['project_name']
+				.'</option>';
+				$companyId = $projects[$i]['company'];
+				$nxt = $i+1;
+				if($projects[$nxt]['company'] != $companyId) {
+					$html .= '</optgroup>';
+				}
+			}
+			if(count($projects) == 0){
+				$html = "<option value=''>No Project Found</option>";
+			}
+			
+			return $html;
+		}
+		
+		function userProjectArray($userId, $userType,$userStatus){
+			$db = Zend_Registry::get('db');
+			//$db = Zend_Registry::get('db');
+			if($userStatus == "client") {
+				$comp_query = " AND a.`company` = '".$userCompany ."'";
+			} else {
+				$comp_query = "";
+			}
+			//$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com  ON (a.`company`=com.`id`) WHERE  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1'  $comp_query ORDER BY com.`name`, a.`project_code` ASC");
+
+			return $userProjectListArray =  $db->fetchCol("SELECT distinct UP.project_id FROM `user_project_permissions` UP INNER JOIN `projects` a  ON (a.`id`=UP.`project_id`) WHERE UP.`user_id`='" .$userId."' AND  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1' $comp_query ORDER BY a.`project_code` ASC ");
+		
+		}
 	}
 ?>
