@@ -25,30 +25,24 @@ $ch = curl_init();
 	$desc = array();
    	if(count($xml) > 0){
 	foreach($xml as $key =>$val){
-		if($key == 'result'){
+		if($key == 'result'){//print_r($val);
 				$searchResult =  $val->doc;
 				if(count($searchResult) > 0){
 				foreach($searchResult as $k => $v){
-				//	$searchResult = (array) $v->str;
 					if(count($searchResult) > 0){
 						foreach($searchResult as $sKey => $eVal){
-							//echo $eVal->str[0]; echo '</BR>';echo  $eVal->str[1]; echo '</BR>';
-							print_r($eVal);exit();	
-							
-				                    				 $id[] =  (array) $eVal->str[0];
-										
-										
-												
+							$comments='';
+							for($i=0;$i<count($eVal->arr[1]->str);$i++)
+							{
+							$comments .= $i+1.'.'. $eVal->arr[1]->str[$i].'</br>';
+							 }
+											$id[] =  (array) $eVal->str[0];
 											$project_id[] = (array) $eVal->str[1];
-										
 											$title[] = (array) $eVal->str[2];
-										
-										
-											$url[] = (array) $eVal->str[3];
-										
+											$urllink[] = (array) $eVal->arr->str[1];
 											$desc[] = (array) $eVal->str[4];
-										
-                                            $cat[] = (array) $eVal->str[5];
+                                            						$cat[] = (array) $eVal->str[5];
+											$comment[] =$comments ;
 					
 						}
 					
@@ -62,7 +56,7 @@ $ch = curl_init();
 	
 	}	
 	
-	for($i =0 ; $i<count($id); $i++){ exit();
+	for($i =0 ; $i<count($id); $i++){
 ?>
 
 <article class="answers type-answers status-publish">
@@ -70,7 +64,7 @@ $ch = curl_init();
 <h3 class="entry-title"><a href="<?php echo $link.$id[$i][0];?>"><?php echo $title[$i][0];?></a></h3>
 </header><!-- .entry-header -->
 <div class="entry-content native_html_style">
-<p><?php echo $desc;?> <span><a href="<?php echo $link.$id[$i][0];?>" class="more-link">...read more</a></span></p>
+<p><?php echo $desc[$i][0];?> <span><a href="<?php echo $link.$id[$i][0];?>" class="more-link">...read more</a></span></p>
 </div><!-- .entry-content -->
 <footer class="entry-meta">
 <?php if ( $cat[$i][0]!='') { ?> 
