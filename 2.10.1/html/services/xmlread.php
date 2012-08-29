@@ -48,9 +48,8 @@ $ch = curl_init();
 										
 											$desc[] = $eVal->str[4];
 										
-                                                                                        $cat[] = $eVal->str[5];
-
-						
+                                            $cat[] = $eVal->str[5];
+					
 						}
 					
 					}
@@ -67,7 +66,7 @@ $ch = curl_init();
 ?>
 
 <article class="answers type-answers status-publish">
-<?php if($cat[$i][0]=='quality'){$link='/quality/index/edit/?defect_id=';}else{$link='/workorders/index/edit/?wo_id=';}
+<?php if($cat[$i][0]=='quality'){$link='/quality/index/edit/?defect_id=';}else{$link='/workorders/index/edit/?wo_id=';}?>
 <h3 class="entry-title"><a href="<?php echo $link.$id[$i][0];?>"><?php echo $title[$i][0];?></a></h3>
 </header><!-- .entry-header -->
 <div class="entry-content native_html_style">
