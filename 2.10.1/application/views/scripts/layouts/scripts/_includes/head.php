@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<?PHP	$randNum = "20120817"; ?>
+<?PHP	$randNum = "20120728"; ?>
 <title><?echo DEV_TEAM_NAME?>: Lighthouse</title>
 	<link rel="stylesheet" href="/_css/style.css?<?PHP echo $randNum; ?>" type="text/css" />
 	<link rel="stylesheet" href="/_css/ui.datepicker.css" type="text/css" />
@@ -198,14 +198,33 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 				break;
 			}
 
-			case "admin": {					
-
-				echo "<script src=\"/_js/ui/jquery.ui.all.js\" type=\"text/javascript\"></script>\n"
-					."\t<script src=\"/_js/admin.js?" . $randNum . "\" type=\"text/javascript\"></script>\n"
-					."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
-				break;
+		case "admin": {	
+		switch(@$_action) {
+					case 'fetchUser': {
+						echo "<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n"
+						."\t<script src=\"/_js/ui/jquery-ui-1.8.13.custom.min.js\" type=\"text/javascript\"></script>\n";
+						echo "<link href=\"/_css/jquery.multiselect_new.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
+						."\t<link href=\"/_css/jquery.multiselect.filter.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
+						."\t<link href=\"/_css/jquery.ui.multiselect.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
+						."\t<script src=\"/_js/ui/jquery.multiselect_new.js\" type=\"text/javascript\"></script>\n"
+						//."\t<script src=\"/_js/ui/jquery.multiselect.js\" type=\"text/javascript\"></script>\n"
+						."\t<script src=\"/_js/ui/jquery.multiselect.filter.js\" type=\"text/javascript\"></script>\n"
+						."\t<script src=\"/_js/admin.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
+						
+						break;
+						
+					}				
+		
+				default: {
+					echo "<script src=\"/_js/ui/jquery.ui.all.js\" type=\"text/javascript\"></script>\n"
+						."\t<script src=\"/_js/admin.js?" . $randNum . "\" type=\"text/javascript\"></script>\n"
+						."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
+					break;
+				}
 				break;
 			}
+			break;
+		}
 			//Launch Calendar
 			case "launchcalendar": {
 				//echo "<script src=\"/_js/dom-drag.js\" type=\"text/javascript\"></script>\n";
