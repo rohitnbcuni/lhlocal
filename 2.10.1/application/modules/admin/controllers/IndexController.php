@@ -1,7 +1,6 @@
 <?PHP
 	include('Admin.inc');
 	require_once('../html/_inc/config.inc');
-
 	class Admin_IndexController extends LighthouseController { 
 		public function indexAction() {
 
@@ -826,9 +825,27 @@
 
 		public function buildUserHTML($users)
 		{
+			
+			$employeeTypeCompany = array(2,136,141);
+			if(in_array($users['company'],$employeeTypeCompany) == TRUE){
+					$userStatus  = "employee";
+			}else{
+					$userStatus  = "client";
+			}
+						
+			$userProjectListArray = AdminDisplay::userProjectArray($users['id']);
+			if(count($userProjectListArray) > 0){
+				$userProjectListStr = implode(",",$userProjectListArray);
+			
+			}else{
+				$userProjectListStr = '';
+			}
+			
+				
 			$activeCheck = '';
 			$deletedCheck = '';
 			$adminCheck = '';
+			//echo AdminDisplay::getAllCompaniesProjectOptionEditHTML($users['id'], $userStatus,$users['company'], $userProjectList);
 				echo '<div class="admindisplayUserInfo">
 						 <div class="row">
 								<div class="label"><label>User ID:</label></div>
@@ -875,7 +892,8 @@
 									<input type="text" class="readonly" readonly name="userID" id="userID" value="'. AdminDisplay::getUserCompany($users['company']).'" >
 									<input type="hidden" id="user_company" value="'.$users['company'].'">
 						</div>					
-
+							
+						
 						<div class="row">
 							<div class="label"><label>Basecamp ID:</label></div>
 								<input type="text" class="readonly" readonly name="userID" id="userID" value="'. $users['bc_id'].'" >
@@ -906,6 +924,14 @@
 							<div class="label"><label>Deleted:</label></div>
 								<input type="checkBox" class="adminCheckBox" DISABLED style="width:10px;" name="userDeletedStatus" id="userDeletedStatus" value="" '.$deletedCheck.'>
 						</div>
+						<div class="row" >
+							<div class="label2"><label><u>User Project Permission:</u></label></div>
+							
+							<input type="hidden" name="userStatus" id="userStatus" value="'.$userStatus.'">
+							<div style="margin-left:-73px;">
+							<select class="field_medium" name="userProjectArray" id="userProjectArray" multiple="multiple">';
+								echo AdminDisplay::getAllCompaniesProjectOptionEditHTML($users['id'], $userStatus,$users['company'],$userProjectListArray);
+						echo'</select></div></div>
 						<div class="row">
 							<div class="label2"><label><u>User Access</u></label></div>						
 						</div>';
