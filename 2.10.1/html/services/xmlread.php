@@ -25,7 +25,7 @@ $ch = curl_init();
 	$desc = array();
    	if(count($xml) > 0){
 	foreach($xml as $key =>$val){
-		if($key == 'result'){//print_r($val);
+		if($key == 'result'){
 				$searchResult =  $val->doc;
 				if(count($searchResult) > 0){
 				foreach($searchResult as $k => $v){
@@ -33,8 +33,8 @@ $ch = curl_init();
 						foreach($searchResult as $sKey => $eVal){
 							$comments='';
 							for($i=0;$i<count($eVal->arr[1]->str);$i++)
-							{
-							$comments .= $i+1.'.'. $eVal->arr[1]->str[$i].'</br>';
+							{$no = $i+1;
+							$comments .= $no.'.'. $eVal->arr[1]->str[$i].'</br>';
 							 }
 											$id[] =  (array) $eVal->str[0];
 											$project_id[] = (array) $eVal->str[1];
@@ -42,7 +42,7 @@ $ch = curl_init();
 											$urllink[] = (array) $eVal->arr->str[1];
 											$desc[] = (array) $eVal->str[4];
                                             						$cat[] = (array) $eVal->str[5];
-											$comment[] =$comments ;
+											$comment[] =  (array) $comments ;
 					
 						}
 					
@@ -66,6 +66,11 @@ $ch = curl_init();
 <div class="entry-content native_html_style">
 <p><?php echo $desc[$i][0];?> <span><a href="<?php echo $link.$id[$i][0];?>" class="more-link">...read more</a></span></p>
 </div><!-- .entry-content -->
+
+<div class="entry-content native_html_style">
+<p>Comments:</br><span><?php echo $comment[$i][0];?> <span></p>
+</div><!-- .entry-content -->
+
 <footer class="entry-meta">
 <?php if ( $cat[$i][0]!='') { ?> 
 <span class="cat-links">
