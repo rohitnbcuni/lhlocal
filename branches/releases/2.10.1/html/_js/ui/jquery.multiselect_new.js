@@ -33,7 +33,7 @@ $.widget("ech.multiselect", {
 		checkAllText: 'Check all',
 		uncheckAllText: 'Uncheck all',
 		noneSelectedText: 'Select options',
-		selectedText: '# selected project',
+		selectedText: '# selected projects',
 		selectedList: 0,
 		show: null,
 		hide: null,
