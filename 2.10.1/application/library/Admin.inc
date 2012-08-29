@@ -650,7 +650,7 @@ public function getQCProjectCCList($project_id) {
 			} else {
 				$comp_query = "";
 			}
-			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com  ON (a.`company`=com.`id`) WHERE  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1'  $comp_query ORDER BY com.`name`, a.`project_code` ASC");
+			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com  ON (a.`company`=com.`id`) WHERE  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1'   ORDER BY com.`name`, a.`project_code` ASC");
 			$html = '';
 					
 			$companyId = false;
@@ -695,7 +695,7 @@ public function getQCProjectCCList($project_id) {
 			}
 			//$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com  ON (a.`company`=com.`id`) WHERE  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1'  $comp_query ORDER BY com.`name`, a.`project_code` ASC");
 
-			return $userProjectListArray =  $db->fetchCol("SELECT distinct UP.project_id FROM `user_project_permissions` UP INNER JOIN `projects` a  ON (a.`id`=UP.`project_id`) WHERE UP.`user_id`='" .$userId."' AND  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1' $comp_query ORDER BY a.`project_code` ASC ");
+			return $userProjectListArray =  $db->fetchCol("SELECT distinct UP.project_id FROM `user_project_permissions` UP INNER JOIN `projects` a  ON (a.`id`=UP.`project_id`) WHERE UP.`user_id`='" .$userId."' AND  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1'  ORDER BY a.`project_code` ASC ");
 		
 		}
 	}
