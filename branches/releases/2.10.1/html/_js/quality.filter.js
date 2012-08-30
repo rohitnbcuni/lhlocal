@@ -854,8 +854,8 @@ function generateWOReport(){
 	var rp_status_filter =  $("#status_filter").val();
 	var rp_severity_filter =  $("#severity_filter :selected").text();
 	var rp_assigned_filter =  $("#assigned_filter").val();
-
-	window.open('/_ajaxphp/qualityfilter_json.php?report=excel&rp_client_filter='+rp_client_filter+'&rp_project_filter='+rp_project_filter+'&rp_status_filter='+rp_status_filter+'&rp_severity_filter='+rp_severity_filter+'&rp_assigned_filter='+rp_assigned_filter);
+	window.open("/_ajaxphp/qualityfilter_json.php?report=excel&severityID="+severityID+"&statusId="+statusId+"&projectId="+projectId+"&aclientId="+clientId+"&assignedTo="+assignedTo);
+	//window.open('/_ajaxphp/qualityfilter_json.php?report=excel&rp_client_filter='+rp_client_filter+'&rp_project_filter='+rp_project_filter+'&rp_status_filter='+rp_status_filter+'&rp_severity_filter='+rp_severity_filter+'&rp_assigned_filter='+rp_assigned_filter);
 }
 
 function gotoWorkorder(){
