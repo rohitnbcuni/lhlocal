@@ -1,14 +1,25 @@
 <?php
   include('../_inc/config.inc');
   $mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-  
+
+	$daypart = "";
+
+
+	if($_REQUEST["daypart"]){
+		$daypart = $_REQUEST["daypart"];
+	}else{
+		$daypart =  $argv[1];
+	}
+
   echo "<center> <b> Resource Planner Daypart To Hours<b></center>";
+
+  if($daypart == "4"){	
+	  $overtime_daypart_query = "UPDATE `resource_blocks` SET `daypart`='9' WHERE `daypart`='5'";  
+	  $overtime_daypart = $mysql->query($overtime_daypart_query);	
+  }
   
-  $overtime_daypart_query = "UPDATE `resource_blocks` SET `daypart`='9' WHERE `daypart`='5'";
-  
-  $overtime_daypart = $mysql->query($overtime_daypart_query);
-  
-  $all_daypart_query = "SELECT * FROM `resource_blocks` WHERE `daypart` in ('1', '2', '3', '4') order by `daypart` DESC ";
+  //$all_daypart_query = "SELECT * FROM `resource_blocks` WHERE `daypart` in ('1', '2', '3', '4') order by `daypart` DESC ";
+  $all_daypart_query = "SELECT * FROM `resource_blocks` WHERE `daypart` = '" . $daypart . "' order by `daypart` DESC ";
    
   $all_daypart = $mysql->query($all_daypart_query);
   
