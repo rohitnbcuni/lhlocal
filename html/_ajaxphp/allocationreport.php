@@ -49,9 +49,9 @@ LEFT JOIN users elu ON el.user_id=elu.id
 LEFT JOIN 
 (Select tab1.projectid, sum(tab1.Total*tab2.rate) AS amount from 
 (Select tab3.projectid, tab3.userid, sum(tab3.Total) AS Total from
-(Select rb.projectid, rb.userid, count(1)*2 AS Total  from projects pj, resource_blocks rb where pj.id=rb.projectid and pj.active='1' and pj.deleted='0' and pj.archived='0'  and rb.status='4' and rb.daypart <> 5 group by pj.id, rb.userid
+(Select rb.projectid, rb.userid, count(1) AS Total  from projects pj, resource_blocks rb where pj.id=rb.projectid and pj.active='1' and pj.deleted='0' and pj.archived='0'  and rb.status='4' and rb.daypart <> 9 group by pj.id, rb.userid
 UNION
-Select rb.projectid, rb.userid, rb.hours AS Total  from projects pj, resource_blocks rb where pj.id=rb.projectid and pj.active='1' and pj.deleted='0' and pj.archived='0' and rb.status='4' and rb.daypart = 5) tab3
+Select rb.projectid, rb.userid, rb.hours AS Total  from projects pj, resource_blocks rb where pj.id=rb.projectid and pj.active='1' and pj.deleted='0' and pj.archived='0' and rb.status='4' and rb.daypart = 9) tab3
 group by tab3.projectid, tab3.userid) tab1, (select upr.project_id , upr.phase_subphase_id, upr.user_id, ppf.rate from user_project_role upr, project_phase_finance ppf where upr.project_id=ppf.project_id and upr.phase_subphase_id=ppf.phase and upr.flag='phase'
 UNION
 select upr.project_id , upr.phase_subphase_id, upr.user_id, pspf.rate from user_project_role upr, project_sub_phase_finance pspf where upr.project_id=pspf.project_id and upr.phase_subphase_id=pspf.sub_phase and upr.flag='subphase'

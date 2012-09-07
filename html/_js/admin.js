@@ -1,4 +1,6 @@
+
 $(document).ready(function(){
+	
 	var adminTitlemsg = $('#adminTitlemsg').val();
 	if(adminTitlemsg=='' || adminTitlemsg=='User Info')
 	{
@@ -50,7 +52,15 @@ $(document).ready(function(){
 		$('#create_sections #fetchProjIteration').addClass('active');
 	}
 	$('.title_lrg h4').html(adminTitlemsg);
+	
 });
+
+$(document).ready(function(){
+	//$(".ui-multiselect").removeClass('button');
+	$("#userProjectArray").multiselect({create: function(){ $(this).next().width(200); }}).multiselectfilter();
+	
+		
+	});
 
 function editUser() {
 	$(".adminCheckBox").removeAttr('disabled');
@@ -231,7 +241,8 @@ function updateUser(USER_ACCESS) {
 	{
 		userAdminAccess = ''; 
 	}
-
+	var user_project_array = $("#user_project_array").val();
+	
 	var user_access_bit = "";
 	var count_access = 0;
 	for(var i = 0; i < USER_ACCESS.length; i++) {
@@ -272,10 +283,20 @@ function updateUserConfirmed(userDeletedStatus,userActiveStatus,userAdminAccess,
 	}else{
 		isUserTitleChanged='Y';
 	}
+	//alert("string"+$('#userProjectStr').val());
+	var userStatus = $('#userStatus').val();
+	if($('#userProjectArray').val()  == 0){
+		isUserProjectChanged = 'N';
+	}else{
+		isUserProjectChanged = 'Y';
+	}
+	
+	var user_company = $('#user_company').val();
+	//alert("string2"+$('#userProjectArray').val()+"flag"+isUserProjectChanged);
 	$.ajax({
 		type: "POST",
 		url: "/_ajaxphp/updateUserInfo.php",
-		data: "user_id="+$('#userID').val()+"&userTitle="+$('#user_title_id').val()+"&isUserTitleChanged="+isUserTitleChanged+"&userRole="+$('#user_Role_id').val()+"&userProgram="+$('#user_program option:selected').val()+"&userVendorName="+$('#user_vendor_name').val()+"&userDeletedStatus="+userDeletedStatus+"&userActiveStatus="+userActiveStatus+"&userAdminAccess="+userAdminAccess+"&user_access_bit="+user_access_bit,
+		data: "user_id="+$('#userID').val()+"&userTitle="+$('#user_title_id').val()+"&isUserTitleChanged="+isUserTitleChanged+"&userRole="+$('#user_Role_id').val()+"&userProgram="+$('#user_program option:selected').val()+"&userVendorName="+$('#user_vendor_name').val()+"&userDeletedStatus="+userDeletedStatus+"&userActiveStatus="+userActiveStatus+"&userAdminAccess="+userAdminAccess+"&user_access_bit="+user_access_bit+"&isUserProjectChanged="+isUserProjectChanged+"&userStatus="+userStatus+"&userProjectArray="+$('#userProjectArray').val()+"&user_company="+user_company,
 		success: function(msg) {
 			$('.message_required p').html('The User data has been updated Successfully.');
 			$('.message_required').css({display:'block'});
@@ -566,7 +587,8 @@ function generateReport(){
 	if(admin_to_select!='' && admin_to_year_select!=''){
 	if(parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) < parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) == parseInt(admin_to_year_select)|| parseInt(admin_user_select) == parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select))
 	{ 	
-		  alert('From Date should not be greater than to date'); return false;
+		alert('From Date should not be greater than to date'); return false;
+
 	}
 	
 

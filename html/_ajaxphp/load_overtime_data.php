@@ -12,7 +12,7 @@
 	$start_date_part = explode("-", $start_date);
 	$otdata = array();
 	
-	$select_ot = "SELECT * FROM `resource_blocks` WHERE `daypart`='5' AND `userid`='$user_id' AND `hours` > 0 AND `datestamp`='"
+	$select_ot = "SELECT * FROM `resource_blocks` WHERE `daypart`='9' AND `userid`='$user_id' AND `hours` > 0 AND `datestamp`='"
 		.$start_date_part[2] ."/"
 		.$start_date_part[0] ."/"
 		.$start_date_part[1]

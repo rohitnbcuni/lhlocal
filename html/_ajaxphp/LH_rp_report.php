@@ -123,10 +123,10 @@ function calculateToDate($projID, $mysql,$phase_types){
 
 			if($result_user_project_phase->num_rows > 0){
 				$user_project_phase_row = $result_user_project_phase->fetch_assoc();
-				if($rp_row['daypart'] == 5) {
+				if($rp_row['daypart'] == 9) {
 					$todate = $rp_row['hours'];
 				} else {
-					$todate = 2 ;
+					$todate = 1 ;
 				}
 				$toDateArray[$phase_types[$user_project_phase_row['phase']]] += $todate;
 		//		echo $rp_row['userid']."<br>";
@@ -136,10 +136,10 @@ function calculateToDate($projID, $mysql,$phase_types){
 
 				if($result_sub_phases->num_rows > 0){
 					$sub_phase_row = $result_sub_phases->fetch_assoc();
-					if($rp_row['daypart'] == 5) {
+					if($rp_row['daypart'] == 9) {
 						$todate = $rp_row['hours'];
 					} else {
-						$todate = 2;
+						$todate = 1;
 					}
 					$toDateArray[$phase_types[$sub_phase_row['phase']]] += $todate;
 				}else{/*
@@ -154,10 +154,10 @@ function calculateToDate($projID, $mysql,$phase_types){
 						}
 						$toDateArray[$phase_row['phase']] += $todate;
 					} */
-					if($rp_row['daypart'] == 5) {
+					if($rp_row['daypart'] == 9) {
 						$todate = $rp_row['hours'];
 					} else {
-						$todate = 2;
+						$todate = 1;
 					}
 						$toDateArray['unassigned'] += $todate;
 				}
