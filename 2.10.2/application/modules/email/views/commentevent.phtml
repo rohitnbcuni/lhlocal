@@ -1,0 +1,15 @@
+<html>
+<body>
+
+<b>Latest Comment:</b> <?php echo Util::escapeString($this->eventInfo['latest_commet'])?><br />
+<b>Requestor:</b> <?php echo $this->eventInfo['requestor'] ?><br/><br/>
+<b>Brand:</b> <?php echo $this->eventInfo['brand'] ?><br/><br/>
+
+<b><?php echo $this->commentorInfo['fullname'] ?></b> commented on Event [<a href="<?php echo BASE_URL ?>/events/index/create/?eId=<?php echo $this->eventInfo['event_id'] ?>"><?php echo $this->eventInfo['event_id'] ?></a>]<br />
+<hr>
+<br/>
+<b>Event Description:</b> <?php echo  Util::escapeString($this->eventInfo['body']) ?><br />
+
+</body>
+</html>
+
