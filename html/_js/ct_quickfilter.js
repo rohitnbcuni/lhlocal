@@ -804,7 +804,7 @@ function displayArchiveList() {
 			if (((compId>0) && (proj["company"] == compId)) || (compId == 0)) {
 				pwidth = proj["complete"] > 100 ? 130 : (proj["complete"]/ 100) * 130;
 				if((leadId != '0')){
-					if((proj["producer_userid"] == producerId)){
+					if((proj["producer_userid"] === producerId)){
 						if (proj["id"] == selectedRow) {
 							plist = plist + "<dt onClick=\"selectRow('" + proj["id"] + "');\" id=\"row_" + proj["id"] + "\" class=\"active\"><ul><li class=\"project\" title='" + pFullName + "'>" + pName + "</li><li class=\"actual\">$" + addCommas(parseFloat(proj["todate"]).toFixed(0)) + "</li><li class=\"budget\"> $" + addCommas(parseFloat(proj["budget"]).toFixed(0)) + "</li><li class=\"completeness\"><div class=\"project_progress\" style=\"width: " + pwidth + "px;\"></div><div class=\"percentage\">" + proj["complete"] + "%</div></li><li class=\"button\"><!--<button class=\"secondary\"><span>create work order</span></button>--></li></ul></dt>";
 							plist = plist + '		<dd id="row_' + proj["id"] +'_d" class=\"active\">';
