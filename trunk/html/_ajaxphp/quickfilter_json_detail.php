@@ -252,10 +252,10 @@
 
 				if($result_user_project_phase->num_rows > 0){
 					$user_project_phase_row = $result_user_project_phase->fetch_assoc();
-					if($rp_row['daypart'] == 5) {
+					if($rp_row['daypart'] == 9) {
 						$todate += $rp_row['hours'] * $user_project_phase_row['rate'];
 					} else {
-						$todate += 2 * $user_project_phase_row['rate'];
+						$todate += $user_project_phase_row['rate'];
 					}
 					if(array_key_exists($user_project_phase_row['phase'], $toDateArray)){
 						$toDateArray[$user_project_phase_row['phase']] += $todate;
@@ -268,10 +268,10 @@
 
 					if($result_sub_phases->num_rows > 0){
 						$sub_phase_row = $result_sub_phases->fetch_assoc();
-						if($rp_row['daypart'] == 5) {
+						if($rp_row['daypart'] == 9) {
 							$todate = $rp_row['hours'] * $sub_phase_row['rate'];
 						} else {
-							$todate = 2 * $sub_phase_row['rate'];
+							$todate = $sub_phase_row['rate'];
 						}
 						if(array_key_exists($sub_phase_row['phase'], $toDateArray)){
 							$toDateArray[$sub_phase_row['phase']] += $todate;
@@ -283,10 +283,10 @@
 						$result_phases = $mysql->query($select_project_phase);
 						if($result_phases->num_rows > 0){
 							$phase_row = $result_phases->fetch_assoc();
-							if($rp_row['daypart'] == 5) {
+							if($rp_row['daypart'] == 9) {
 								$todate = $rp_row['hours'] * $phase_row['rate'];
 							} else {
-								$todate = 2 * $phase_row['rate'];
+								$todate = $phase_row['rate'];
 							}
 							if(array_key_exists($phase_row['phase'], $toDateArray)){
 								$toDateArray[$phase_row['phase']] += $todate;

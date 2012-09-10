@@ -1555,9 +1555,9 @@ span.submit_button_span { background:transparent url(../_images/buttons.gif) no-
 .admindisplayUserInfo label{ font-size: 11px; font-weight: bold; padding-right: 10px;}
 
 .admindisplayUserInfo button{ width:80px;margin-left:200px; }
-.admin_UserTitle_fade { position:absolute; z-index: 10; margin-left: 120px; width: 208px; height: 400px;   background-color: #fff; opacity:0.4; filter:alpha(opacity=70); *margin-left: 0px; *height: 330px;}
+.admin_UserTitle_fade { position:absolute; z-index: 10; margin-left: 120px; width: 208px; height: 494px;   background-color: #fff; opacity:0.4; filter:alpha(opacity=70); *margin-left: 0px; *height: 330px;}
 /* hack for Crome*/
-@media screen and (-webkit-min-device-pixel-ratio:0) { .admin_UserTitle_fade{ height: 327px; } } 
+@media screen and (-webkit-min-device-pixel-ratio:0) { .admin_UserTitle_fade{ height: 499px; } } 
 .admin_UserRole_fade { position:absolute; z-index: 10; height: 24px; width: 380px; margin-left:122px; background-color:#fff;  opacity:0.7; filter:alpha(opacity=70); }
 .admin_UserStatus_fade { position:absolute; z-index: 10; position: absolute; width: 120px;margin-top:-41px; height: 45px; margin-left: 100px;background-color:#fff; opacity:0.7; filter:alpha(opacity=70); }
 #updateButton{display:none}
@@ -1673,3 +1673,8 @@ border-width:5px;}
 .wo_date_range_filter_content li.label_value{ float:left; width: 140px; padding-left:10px;}
 .wo_date_range_filter_content .optional{font-style:italic; font-weight:normal; float:left; clear:both;}
 .wo_date_range_filter_content .add{clear:both; float:right; margin-top:10px;}
+
+
+.ui-multiselect.ui-widget span{
+	background:none;
+	}

@@ -36,7 +36,7 @@ if (@$_POST["overtime"]) {
 	//$date_part = explode("-", $date);
 	//$dateFormat = $date_part[2] ."/" .$date_part[0] ."/" .$date_part[1];
 
-	$sql = "SELECT * FROM resource_blocks WHERE userid='$userId' AND daypart='5' AND datestamp='$dateFormat'";
+	$sql = "SELECT * FROM resource_blocks WHERE userid='$userId' AND daypart='9' AND datestamp='$dateFormat'";
 	$res = $mysql->query($sql);
 	if ($res->num_rows > 0) {
 		$rb = $res ->fetch_assoc();
@@ -45,19 +45,19 @@ if (@$_POST["overtime"]) {
 		//echo $sql;
 		$mysql->query($sql);
 	} else {
-		$sql = "INSERT INTO resource_blocks (userid,projectid,daypart,datestamp,hours,notes,status) VALUES ('$userId',$projectId,'5','$dateFormat','$hours','$notes','4')";
+		$sql = "INSERT INTO resource_blocks (userid,projectid,daypart,datestamp,hours,notes,status) VALUES ('$userId',$projectId,'9','$dateFormat','$hours','$notes','4')";
 		//echo $sql;
 		$mysql->query($sql);
 	}
 } else {
 	$newData = str_replace("\\", "", $_POST['data']);
-	print("new data ".$newData);
+	//print("new data ".$newData);
 	$data = unserialize($newData);
 	$projectID = substr(strstr($data["projectID"], '_'), 1);
 	$status = $data["status"];
 	$blocks = $data["blocks"];
 	//echo $projectID." - ".$status."<br /><br /><br /><br />";
-	print_r($data);
+	//print_r($data);
 	//echo "<br /><br /><br /><br />";
 	//print_r($blocks);
 	//echo "<br /><br /><br /><br />";
@@ -69,10 +69,10 @@ if (@$_POST["overtime"]) {
 		$datestamp = $blocks[$i]['date'] . " 00:00:00";
 
 		if ($status==0) {
-			echo $sql = "DELETE FROM resource_blocks WHERE userid='$user' AND daypart='" .$dayblock['block'] ."' AND datestamp='$datestamp'";
+			$sql = "DELETE FROM resource_blocks WHERE userid='$user' AND daypart='" .$dayblock['block'] ."' AND datestamp='$datestamp'";
 			$res = $mysql->query($sql);
 		} else {
-			echo $sql = "SELECT * FROM resource_blocks WHERE userid='$user' AND daypart='" .$dayblock['block'] ."' AND datestamp='$datestamp'";
+			$sql = "SELECT * FROM resource_blocks WHERE userid='$user' AND daypart='" .$dayblock['block'] ."' AND datestamp='$datestamp'";
 			$res = $mysql->query($sql);
 			if ($res->num_rows > 0) {
 				if ($status<5) {
@@ -99,7 +99,7 @@ if (@$_POST["overtime"]) {
 				}
 			} else {
 				if ($status<5) {
-					echo $sql = "INSERT INTO resource_blocks (userid,projectid,daypart,status,datestamp) VALUES ('$user',";
+					$sql = "INSERT INTO resource_blocks (userid,projectid,daypart,status,datestamp) VALUES ('$user',";
 					if ($projectID==0) {
 						$sql .= "NULL";
 					} else {
@@ -108,7 +108,6 @@ if (@$_POST["overtime"]) {
 					$sql .=",'" .$dayblock['block'] ."','$status','$datestamp')";
 					$mysql->query($sql);
 				}
-
 			}
 		}
 

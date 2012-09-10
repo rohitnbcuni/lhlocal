@@ -34,9 +34,9 @@
 				if(empty($user_data)){
 					$this->_redirect("noaccess");
 				}
-				
+				//LH# 33559 change height:1055px to 0px	
 				echo '<!--=========== START: COLUMNS ===========-->
-				<div id="rp_content" style="padding-top:1px;background:white;height:1055px"><div id="dimmer_rp" class="popHours blur message_lock_confirm " style="width:3000px;height:1024px;position:fixed;background-color:#ffffff;z-index:1;margin-top:0px;margin-left:-630px;opacity: 0.3; filter: alpha(opacity = 30); zoom:1; z-index:1"></div>
+				<div id="rp_content" style="padding-top:1px;background:white;height:0px"><div id="dimmer_rp" class="popHours blur message_lock_confirm " style="width:3000px;height:1024px;position:fixed;background-color:#ffffff;z-index:1;margin-top:0px;margin-left:-630px;opacity: 0.3; filter: alpha(opacity = 30); zoom:1; z-index:1"></div>
 				<div class="rp_report popHeader " style="position: fixed; background-color: rgb(255, 255, 255); opacity: 0.3;filter: alpha(opacity = 30); display: none; margin-right: -300px; height: 1024px; width: 3000px; z-index: 1;"></div>
 					<div class="column_main_resource_noborder">
 					<form method="post" action="' .BASE_URL .'/_ajaxphp/export_rp_excel.php" target="_blank" id="excelform1" name="excelform1">

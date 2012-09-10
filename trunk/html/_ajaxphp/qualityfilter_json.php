@@ -396,9 +396,9 @@ if(isset($from_action) && $from_action){
     $rp_severity_filter = -1;
   }
   foreach($postingList as $project){
-    if(($clientId < 0 || $clientId == $project['client']) && ($projectId < 0 || $projectId == $project['project_id'])){
+    //if(($clientId < 0 || $clientId == $project['client']) && ($projectId < 0 || $projectId == $project['project_id'])){
       foreach($project['quality'] as $wo){
-         if(($statusId < 0 || ($statusId == 99 && $wo['status'] != 'Closed') || $statusId == $wo['status']) && ($assignedTo < 0 || $assignedTo == $wo['assigned_to_id']) && ($rp_severity_filter < 0 || $rp_severity_filter == $wo['severity'])){
+        // if(($statusId < 0 || ($statusId == 99 && $wo['status'] != 'Closed') || $statusId == $wo['status']) && ($assignedTo < 0 || $assignedTo == $wo['assigned_to_id']) && ($rp_severity_filter < 0 || $rp_severity_filter == $wo['severity'])){
 		
          $excel_body .=  $wo['id'] . "\t " .
           $project['project_code'] . " : " . $project['project_name'] . "\t " .
@@ -426,8 +426,8 @@ if(isset($from_action) && $from_action){
           $wo['active'] . "\t" .
           $wo['deleted'] . "\t" .
           $wo['archived'] . "\n";
-        }
-      }
+        //}
+      //}
     }
   }
 
