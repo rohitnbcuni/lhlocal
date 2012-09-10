@@ -36,7 +36,7 @@ if (@$_POST["overtime"]) {
 	//$date_part = explode("-", $date);
 	//$dateFormat = $date_part[2] ."/" .$date_part[0] ."/" .$date_part[1];
 
-	$sql = "SELECT * FROM resource_blocks WHERE userid='$userId' AND daypart='5' AND datestamp='$dateFormat'";
+	$sql = "SELECT * FROM resource_blocks WHERE userid='$userId' AND daypart='9' AND datestamp='$dateFormat'";
 	$res = $mysql->query($sql);
 	if ($res->num_rows > 0) {
 		$rb = $res ->fetch_assoc();
@@ -45,7 +45,7 @@ if (@$_POST["overtime"]) {
 		//echo $sql;
 		$mysql->query($sql);
 	} else {
-		$sql = "INSERT INTO resource_blocks (userid,projectid,daypart,datestamp,hours,notes) VALUES ('$userId',$projectId,'5','$dateFormat','$hours','$notes')";
+		$sql = "INSERT INTO resource_blocks (userid,projectid,daypart,datestamp,hours,notes) VALUES ('$userId',$projectId,'9','$dateFormat','$hours','$notes')";
 		//echo $sql;
 		$mysql->query($sql);
 	}

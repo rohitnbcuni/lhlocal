@@ -227,7 +227,7 @@ class RpDisplay extends ResourcePlanner {
 		}
 
 		if($savedCompany != ""){
-			$companyFilter = ' AND id IN (SELECT distinct rb.userid from resource_blocks rb, projects pj WHERE pj.company="' . $savedCompany . '" AND rb.`datestamp` >= "' . date("Y-m-d", $week_start_day) . ' 00:00:00" AND rb.`datestamp` <= "' . date("Y-m-d", $week_end_day) . ' 00:00:00" AND ((rb.`daypart` <> "5" AND rb.status is not null) OR (rb.`daypart` = "5" AND rb.hours >0)) AND rb.projectid=pj.id)';
+			$companyFilter = ' AND id IN (SELECT distinct rb.userid from resource_blocks rb, projects pj WHERE pj.company="' . $savedCompany . '" AND rb.`datestamp` >= "' . date("Y-m-d", $week_start_day) . ' 00:00:00" AND rb.`datestamp` <= "' . date("Y-m-d", $week_end_day) . ' 00:00:00" AND ((rb.`daypart` <> "9" AND rb.status is not null) OR (rb.`daypart` = "9" AND rb.hours >0)) AND rb.projectid=pj.id)';
 		}else{
 			$companyFilter = '';
 		}
@@ -274,7 +274,7 @@ class RpDisplay extends ResourcePlanner {
 				//if($alpha != ucfirst(substr($user_row['last_name'], 0, 1))) {
 					$id = ucfirst(substr($user_row['last_name'], 0, 1));
 				//}
-				$sqlrpOt = "SELECT COUNT(a.`id`) as total FROM `resource_blocks` a WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '5' AND `hours` > 0 ORDER BY a.`datestamp`";
+				$sqlrpOt = "SELECT COUNT(a.`id`) as total FROM `resource_blocks` a WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '9' AND `hours` > 0 ORDER BY a.`datestamp`";
 				$resrpOt = @$mysql->query($sqlrpOt);
 
 				if($resrpOt->num_rows > 0) {
@@ -350,8 +350,8 @@ class RpDisplay extends ResourcePlanner {
 //							$sqlrp = "SELECT COUNT(a.`id`) FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' ORDER BY a.`datestamp`, a.`daypart`";
 //							$resrp = $mysql->query($sqlrp);
 
-								for($i = 0; $i < 4; $i++) {
-									$sqlrp = "SELECT * FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '" .($i+1) ."' ORDER BY a.`datestamp`  , a.projectid DESC LIMIT 0,1  ";
+								for($i = 0; $i < 8; $i++) {
+									$sqlrp = "SELECT * FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '" .($i+1) ."' ORDER BY a.`datestamp`";
 									$resrp = $mysql->query($sqlrp);
 
 									if($resrp->num_rows == 1) {
@@ -478,7 +478,7 @@ class RpDisplay extends ResourcePlanner {
 		$end_day = mktime(0,0,0,$end_date_part[0],$end_date_part[1],$end_date_part[2],0);
 
 		if($savedCompany != ""){
-			$companyFilter = ' AND id IN (SELECT distinct rb.userid from resource_blocks rb, projects pj WHERE pj.company="' . $savedCompany . '" AND rb.`datestamp` >= "' . date("Y-m-d", $start_day) . ' 00:00:00" AND rb.`datestamp` <= "' . date("Y-m-d", $end_day) . ' 00:00:00" AND ((rb.`daypart` <> "5" AND rb.status is not null) OR (rb.`daypart` = "5" AND rb.hours >0)) AND rb.projectid=pj.id)';
+			$companyFilter = ' AND id IN (SELECT distinct rb.userid from resource_blocks rb, projects pj WHERE pj.company="' . $savedCompany . '" AND rb.`datestamp` >= "' . date("Y-m-d", $start_day) . ' 00:00:00" AND rb.`datestamp` <= "' . date("Y-m-d", $end_day) . ' 00:00:00" AND ((rb.`daypart` <> "9" AND rb.status is not null) OR (rb.`daypart` = "9" AND rb.hours >0)) AND rb.projectid=pj.id)';
 		}else{
 			$companyFilter = '';
 		}
@@ -570,7 +570,7 @@ exit;*/
 			if($d == 1 && $firstMonthDay < 6) {
 				$sel_class = 'sel';
 				$sqlOt = "SELECT * FROM `resource_blocks` WHERE `userid`='$userid' AND `datestamp` = '" 
-				.date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))  ."' AND `daypart` = '5' AND `hours` > 0";
+				.date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))  ."' AND `daypart` = '9' AND `hours` > 0";
 				$resOt = $mysql->query($sqlOt);
 				if($resOt->num_rows > 0) {
 					$otClass = "cancel";
@@ -603,7 +603,7 @@ exit;*/
 			if($currentDay == 1 && $currentDay != $d) {
 				$sel_class = 'sel';
 				$sqlOt = "SELECT * FROM `resource_blocks` WHERE `userid`='$userid' AND `datestamp` = '" 
-				.date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))  ."' AND `daypart` = '5' AND `hours` > 0";
+				.date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))  ."' AND `daypart` = '9' AND `hours` > 0";
 				$resOt = $mysql->query($sqlOt);
 				if($resOt->num_rows > 0) {
 					$otClass = "cancel";
@@ -635,7 +635,7 @@ exit;*/
 				$row_html .= '<!--== | START : Day ==-->
 					<li class="schedule_day">
 						<ul>';
-						for($it = 0; $it < 4; $it++) {
+						for($it = 0; $it < 8; $it++) {
 
 							$sqlrp = "SELECT * FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`='$userid' AND a.`datestamp` = '" 
 							.$dayDate  ."' AND a.`daypart` = '" .($it+1) ."' ORDER BY projectid  DESC LIMIT 0,1 ";

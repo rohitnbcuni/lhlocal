@@ -18,7 +18,7 @@
 	pb.first_name as FirstName,
 	pb.last_name LastName,
 	pb.program prog,
-	(count(rb.daypart) * 2) AS Hours,
+	(count(rb.daypart)) AS Hours,
 	pr.user_id as mgr,
 	case rb.status
 	when 0 then 'UNA'
@@ -32,7 +32,7 @@
     JOIN users pb ON rb.userid = pb.id
 	JOIN projects p ON p.id = rb.projectid
 	JOIN project_roles pr ON pr.project_id = p.id AND pr.resource_type_id = 3 
-	WHERE rb.datestamp >= '".$fromDate."' and rb.datestamp <= '".$toDate."' and rb.daypart <> '5' and rb.status <> '2' and status <> '3' and pb.deleted = '0' and pb.active = '1' and p.program='9' and  p.archived ='0' and p.active = '1' and p.deleted ='0' GROUP BY project_code,DAY(rb.datestamp),pb.first_name,pb.last_name 
+	WHERE rb.datestamp >= '".$fromDate."' and rb.datestamp <= '".$toDate."' and rb.daypart <> '9' and rb.status <> '2' and status <> '3' and pb.deleted = '0' and pb.active = '1' and p.program='9' and  p.archived ='0' and p.active = '1' and p.deleted ='0' GROUP BY project_code,DAY(rb.datestamp),pb.first_name,pb.last_name 
 	
 UNION 
 
@@ -58,7 +58,7 @@ SELECT
     JOIN users pb ON rb.userid = pb.id
 	JOIN projects p ON p.id = rb.projectid
 	JOIN project_roles pr ON pr.project_id = p.id AND pr.resource_type_id = 3 
-	WHERE rb.datestamp >= '".$fromDate."' and rb.datestamp <= '".$toDate."' and rb.daypart = '5' and rb.status <> '2' and status <> '3' and pb.deleted = '0' and pb.active = '1' and p.program='9' and p.archived ='0' and p.active = '1' and p.deleted ='0' GROUP BY project_code,DAY(rb.datestamp),pb.first_name,pb.last_name) as tab group by tab.project_code,tab.Date,tab.FirstName,tab.LastName order by tab.FirstName,tab.LastName,tab.project_code,tab.Date";
+	WHERE rb.datestamp >= '".$fromDate."' and rb.datestamp <= '".$toDate."' and rb.daypart = '9' and rb.status <> '2' and status <> '3' and pb.deleted = '0' and pb.active = '1' and p.program='9' and p.archived ='0' and p.active = '1' and p.deleted ='0' GROUP BY project_code,DAY(rb.datestamp),pb.first_name,pb.last_name) as tab group by tab.project_code,tab.Date,tab.FirstName,tab.LastName order by tab.FirstName,tab.LastName,tab.project_code,tab.Date";
 
 		$result = @$mysql->query($rp_query);
 	$userList = array();

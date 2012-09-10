@@ -106,7 +106,7 @@
 		$end_day = mktime(0,0,0,$end_date_part[0],$end_date_part[1],$end_date_part[2],0); */
 
 		if($company != ""){
-			$companyFilter = ' AND id IN (SELECT distinct rb.userid from resource_blocks rb, projects pj WHERE pj.company="' . $company . '" AND rb.`datestamp` >= "' . date("Y-m-d", $week_start_day) . ' 00:00:00" AND rb.`datestamp` <= "' . date("Y-m-d", $week_end_day) . ' 00:00:00" AND ((rb.`daypart` <> "5" AND rb.status  is not null) OR (rb.`daypart` = "5" AND rb.hours >0)) AND rb.projectid=pj.id)';
+			$companyFilter = ' AND id IN (SELECT distinct rb.userid from resource_blocks rb, projects pj WHERE pj.company="' . $company . '" AND rb.`datestamp` >= "' . date("Y-m-d", $week_start_day) . ' 00:00:00" AND rb.`datestamp` <= "' . date("Y-m-d", $week_end_day) . ' 00:00:00" AND ((rb.`daypart` <> "9" AND rb.status  is not null) OR (rb.`daypart` = "9" AND rb.hours >0)) AND rb.projectid=pj.id)';
 		}else{
 			$companyFilter = '';
 		}

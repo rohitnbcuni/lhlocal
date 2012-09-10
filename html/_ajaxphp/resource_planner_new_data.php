@@ -23,7 +23,7 @@
 			$start_day = mktime(0,0,0,$startDatePart[0],$startDatePart[1],$startDatePart[2]);
 			$end_day = mktime(0,0,0,$endDatePart[0],$endDatePart[1],$endDatePart[2]);
 			
-			$sqlrpOt = "SELECT COUNT(a.`id`) as total FROM `resource_blocks` a WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '5' ORDER BY a.`datestamp`";
+			$sqlrpOt = "SELECT COUNT(a.`id`) as total FROM `resource_blocks` a WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '9' ORDER BY a.`datestamp`";
 			$resrpOt = @$mysql->query($sqlrpOt);
 			
 			if($resrpOt->num_rows > 0) {
@@ -39,7 +39,7 @@
 			
 			$col = 1;
 			while($start_day<=$end_day) {
-				for($i = 0; $i < 4; $i++) {
+				for($i = 0; $i < 8; $i++) {
 					$sqlrp = "SELECT * FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '" .($i+1) ."' ORDER BY a.`datestamp`";
 					$resrp = $mysql->query($sqlrp);
 
