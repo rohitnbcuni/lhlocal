@@ -26,11 +26,11 @@ class MySQLiDB
             }
         }
 
-    public static function getInstance()
+    public static function getInstance($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, $DB_PORT)
         {
         if (!self::$single_state)
             {
-            self::$single_state=new MySQLiDB();
+            self::$single_state=new MySQLiDB($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, $DB_PORT);
             }
 
         return self::$single_state;
@@ -345,8 +345,29 @@ class MySQLiDB
 			}
 			return $results;
 			
-		}	
+		}
 
+	/**
+	* if method not defined in this call
+	*  It call megical function and preserve mysqli all methods
+	*
+	*/	
+
+	
+	public function __call($f,$arg)
+	{
+		return call_user_func_array(array($this->mySql,$f),$arg);
+		//return $this->mySql;
+	}
+	
+	public function __set($key,$val){
+	}
+	
+	public function __get($variable_name){
+		return $this->mySql->$variable_name;
+	}
+	
+	
     // disconnecting the database
 
     public function __destruct() { $this->mySql->close(); }
