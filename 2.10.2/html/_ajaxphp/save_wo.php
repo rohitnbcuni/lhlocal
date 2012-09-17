@@ -7,7 +7,7 @@
 	if(isset($_SESSION['user_id'])) {
 		$user = $_SESSION['lh_username'];
 	    $password = $_SESSION['lh_password'];
-		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 		
 		//$sanitized['woTitle'] = filter_input( INPUT_POST, 'woTitle', FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 		//$sanitized['woExampleURL'] = filter_input( INPUT_POST, 'woExampleURL', FILTER_SANITIZE_URL, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
@@ -74,8 +74,8 @@
 			$updatesql_draft_date = "`draft_date`='".dateTimeToSql_new($timeSensDate_draft,$timeSensTime_draft,$ampm_draft,'00')."', ";
 			$insertsql_draft_date = dateTimeToSql_new($timeSensDate_draft,$timeSensTime_draft,$ampm_draft,'00');
 		} 
-		$select_wo_old = "SELECT * FROM `workorders` WHERE `id`='" .$woId ."'";
-		$wo_old_res = $mysql->query($select_wo_old);
+		$select_wo_old = "SELECT * FROM `workorders` WHERE `id`= ?";
+		$wo_old_res = $mysql->sqlprepare($select_wo_old, array($woId));
 		$wo_old_row = $wo_old_res->fetch_assoc();
 
 		$commentSubmit = $mysql->real_escape_string(@$_POST['commentSubmit']);
@@ -83,9 +83,9 @@
 			$needFBStatusId = '5';
 			if($woAssignedTo == $_SESSION['user_id'] && $woStatus == $needFBStatusId && $woStatus == $wo_old_row['status']){
 				// When the user is posting a Feedback to the WO, we auto change the status and assigned_to
-				$sql = "SELECT `id`, `log_user_id`, `assign_user_id`, `audit_id`, `status`, `log_date` FROM `workorder_audit` WHERE `workorder_id` = '" .$woId ."' ORDER BY `log_date` DESC";
+				$sql = "SELECT `id`, `log_user_id`, `assign_user_id`, `audit_id`, `status`, `log_date` FROM `workorder_audit` WHERE `workorder_id` = ? ORDER BY `log_date` DESC";
 
-				$resultObj = $mysql->query($sql);
+				$resultObj = $mysql->sqlprepare($sql, $woId);
 				$audit_prev_row = array();
 				$audit_curr_row = array();
 				while($auditRow = $resultObj->fetch_assoc()){
@@ -141,13 +141,13 @@
 			}
 		
 
-			$proj_default_cc = "SELECT `cclist` FROM `projects` WHERE `id`='" .$projectId ."'";
-			$proj_default_cc_res = $mysql->query($proj_default_cc);
+			$proj_default_cc = "SELECT `cclist` FROM `projects` WHERE `id`= ?";
+			$proj_default_cc_res = $mysql->sqlprepare($proj_default_cc, array($projectId));
 			$proj_default_cc_row = $proj_default_cc_res->fetch_assoc();
 			$defaultCC = $proj_default_cc_row['cclist'];
 
-			$company_default_cc = "SELECT c.`cclist` FROM `companies` c,`projects` p WHERE p.`id`='" .$projectId ."' AND p.`company` = c.`id`";
-			$company_default_cc_res = $mysql->query($company_default_cc);
+			$company_default_cc = "SELECT c.`cclist` FROM `companies` c,`projects` p WHERE p.`id`= ? AND p.`company` = c.`id`";
+			$company_default_cc_res = $mysql->sqlprepare($company_default_cc, array($projectId));
 			$company_default_cc_row = $company_default_cc_res->fetch_assoc();
 			$companyDefaultCC = $company_default_cc_row['cclist'];
 
@@ -204,7 +204,7 @@
 				."('$projectId','$woAssignedTo',$woTypeId,'$woStatus','$woTitle',"
 				."'$woExampleURL','$woDesc','$requestedId',$assignedDate,'$sql_date',"
 				."NOW(), '$rallyType','$rallyProject','$sql_date','$cc_arrayData','$insertsql_draft_date','$isActive')";
-			@$mysql->query($insert_wo);
+			@$mysql->sqlordie($insert_wo);
 			$getWoId = $mysql->insert_id;
 			
 			if(!empty($getWoId))
@@ -229,7 +229,7 @@
 				{
 					$QRY_MASTER_SELECT ="SELECT `field_name`,`field_id` FROM `lnk_custom_fields_value` cfv,`lnk_custom_fields` cf where cfv.`field_key` ='CRITICAL' and cfv.field_key = cf.field_key and cf.active='1' and cf.deleted='0' order by sort_order";
 
-					$fields_list = $mysql->query($QRY_MASTER_SELECT);
+					$fields_list = $mysql->sqlordie($QRY_MASTER_SELECT);
 
 					$critical_feild_arr;
 					while($row = $fields_list->fetch_assoc()){
@@ -293,11 +293,11 @@
 				.$updatesql_draft_date
 				."`active`='$isActive' "
 				."WHERE `id`='$woId'";
-			@$mysql->query($update_wo);
+			@$mysql->sqlordie($update_wo);
 			$getWoId = $woId;
 
 			$select_wo_req_type = "SELECT field_id from workorder_custom_fields where field_id IN('1','2','3') and workorder_id IN('$woId')";
-			$old_req_type = $mysql->query($select_wo_req_type);
+			$old_req_type = $mysql->sqlordie($select_wo_req_type);
 			$old_req_type_row = $old_req_type->fetch_assoc();
 			if($woREQ_TYPE != $old_req_type_row['field_id']){
 				insertWorkorderAudit_req_type($mysql,$woId,'6',$_SESSION['user_id'],$woAssignedTo,$woStatus,$woREQ_TYPE);	
@@ -323,7 +323,7 @@
 			{
 					$QRY_MASTER_SELECT ="SELECT `field_name`,`field_id` FROM `lnk_custom_fields_value` cfv,`lnk_custom_fields` cf where cfv.`field_key` ='CRITICAL' and cfv.field_key = cf.field_key and cf.active='1' and cf.deleted='0' order by sort_order";
 
-					$fields_list = $mysql->query($QRY_MASTER_SELECT);
+					$fields_list = $mysql->sqlordie($QRY_MASTER_SELECT);
 
 					$critical_feild_arr;
 					while($row = $fields_list->fetch_assoc()){
@@ -347,14 +347,14 @@
 			@rename($_SERVER['DOCUMENT_ROOT']."/files/" .$dirName,  $_SERVER['DOCUMENT_ROOT']."/files/" .$getWoId);
 			
 			$update_files = "UPDATE `workorder_files` SET `workorder_id`='$getWoId', `directory`='$getWoId' WHERE `directory`='" .str_replace("/", "", $dirName) ."'";
-			@$mysql->query($update_files);
+			@$mysql->sqlordie($update_files);
 		}
 		
 		$select_wo = "SELECT * FROM `workorders` WHERE `id`='" .$getWoId ."'";
-		$wo_res = $mysql->query($select_wo);
+		$wo_res = $mysql->sqlordie($select_wo);
 		$wo_row = $wo_res->fetch_assoc();
 		$select_user = "SELECT * FROM `users` WHERE `id`='" .$woAssignedTo ."'";
-		$user_res = $mysql->query($select_user);
+		$user_res = $mysql->sqlordie($select_user);
 		$assigned_user_row = $user_res->fetch_assoc();
 
 		// To change the assigned To field when the client is providing a feedback.
@@ -443,19 +443,19 @@
 		$user_keys = array_keys($users_email);
 		$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
 		$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
-		$project_res = $mysql->query($select_project);
+		$project_res = $mysql->sqlordie($select_project);
 		$project_row = $project_res->fetch_assoc();
 
 		$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-		$company_res = $mysql->query($select_company);
+		$company_res = $mysql->sqlordie($select_company);
 		$company_row = $company_res->fetch_assoc();
 
 		$wo_status = "SELECT * FROM `lnk_workorder_status_types` WHERE `id`='" .$woStatus ."'";
-		$wo_status_res = $mysql->query($wo_status);
+		$wo_status_res = $mysql->sqlordie($wo_status);
 		$wo_status_row = $wo_status_res->fetch_assoc();
 
 		$wo_req_type = "SELECT * FROM `lnk_custom_fields_value` WHERE `field_id`='".$woREQ_TYPE."'";
-		$wo_req_type_res = $mysql->query($wo_req_type);
+		$wo_req_type_res = $mysql->sqlordie($wo_req_type);
 		$wo_req_type_row = $wo_req_type_res->fetch_assoc();
 
 		//$subject = "".$getWoId." - ".$wo_req_type_row['field_name']." - " . $woDesc . "";
@@ -463,17 +463,17 @@
 		$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 
 		$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
-		$requestor_user_res = $mysql->query($requestor_qry);
+		$requestor_user_res = $mysql->sqlordie($requestor_qry);
 		$requestor_user_row = $requestor_user_res->fetch_assoc();
 
 
 		$site_name_qry = "SELECT `field_name`,`field_id` FROM `lnk_custom_fields_value` cfv,`lnk_custom_fields` cf where cfv.`field_key` ='SITE_NAME' and cfv.field_key = cf.field_key and cf.active='1' and cf.deleted='0' and cfv.`field_id` = '".$woSITE_NAME."' order by sort_order";
-		$site_name_res = $mysql->query($site_name_qry);
+		$site_name_res = $mysql->sqlordie($site_name_qry);
 		$site_name_row = $site_name_res->fetch_assoc();
 
 			$file_list = "";
 			$select_file = "SELECT * FROM `workorder_files` WHERE workorder_id='" . $getWoId . "' order by upload_date desc";
-			$file_res = $mysql->query($select_file);
+			$file_res = $mysql->sqlordie($select_file);
 			if($file_res->num_rows > 0) {
 				$file_list = "<u><b>Attachment:</b></u><br>";
 				$fileCount = 1;
@@ -569,7 +569,7 @@
 					if($emailSendFlag)
 					{
 						$select_email_addr = "SELECT * FROM `users` WHERE `id`='" . $user ."' LIMIT 1";
-						$email_addr_res = $mysql->query($select_email_addr);
+						$email_addr_res = $mysql->sqlordie($select_email_addr);
 						$email_addr_row = $email_addr_res->fetch_assoc();
 						$to = $email_addr_row['email'];
 
@@ -593,7 +593,7 @@
 							
 							
 				
-			            $severity_name_res = $mysql->query($severity_name_qry);
+			            $severity_name_res = $mysql->sqlordie($severity_name_qry);
 			            $severity_name_row = $severity_name_res->fetch_assoc();
 		
 				        if($request_type_arr[$wo_req_type_row['field_name']]=='Problem')
@@ -643,17 +643,17 @@
 	function insertCustomFeild($mysql,$field_key, $field_id, $wo_id)
 	{
 		$insert_custom_feild = "INSERT INTO  `workorder_custom_fields` (`field_key`,`field_id`,	`workorder_id`)  values ('".$field_key."','".$field_id."','".$wo_id."')";
-		@$mysql->query($insert_custom_feild);
+		@$mysql->sqlordie($insert_custom_feild);
 	}
 
 	function updateCustomFeild($mysql,$field_key, $field_id, $wo_id)
 	{
 		$update_custom_feild = "select * from `workorder_custom_fields` where workorder_id = '".$wo_id."' and field_key = '".$field_key."'";
-		$updateFlag = @$mysql->query($update_custom_feild);
+		$updateFlag = @$mysql->sqlordie($update_custom_feild);
 		
 		if($updateFlag->num_rows == 1) {
 			$update_custom_feild = "UPDATE `workorder_custom_fields` set `field_id` = '".$field_id."' where workorder_id = '".$wo_id."' and field_key = '".$field_key."'";
-			@$mysql->query($update_custom_feild);		
+			@$mysql->sqlordie($update_custom_feild);		
 		}
 		else if($updateFlag->num_rows == 0)
 		{
@@ -666,14 +666,14 @@
 		
 		$insert_custom_feild = "INSERT INTO  `workorder_audit` (`workorder_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$wo_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
 //		echo "qry=".$insert_custom_feild;die();
-		@$mysql->query($insert_custom_feild);
+		@$mysql->sqlordie($insert_custom_feild);
 	}
 
 	function insertWorkorderAudit_req_type($mysql,$wo_id, $audit_id, $log_user_id,$assign_user_id,$status,$request_type)
 	{
 		
 		$insert_custom_feild = "INSERT INTO  `workorder_audit` (`workorder_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`,`Request_type`)  values ('".$wo_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW(),'".$request_type."')";
-		@$mysql->query($insert_custom_feild);
+		@$mysql->sqlordie($insert_custom_feild);
 	}
 	
 	function dateTimeToSql($date,$time,$ampm,$min)
