@@ -3,13 +3,13 @@
 	include('../_inc/config.inc');
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 	if(isset($_SESSION['user_id'])) {
-		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 		
 		$wo_id = $mysql->real_escape_string($_GET['id']);
 		$status_id = $mysql->real_escape_string($_GET['status_id']);
 		
 		$select_wo_old = "SELECT * FROM `workorders` WHERE `id`='" .$wo_id ."'";
-		$wo_old_res = $mysql->query($select_wo_old);
+		$wo_old_res = $mysql->sqlordie($select_wo_old);
 		$wo_old_row = $wo_old_res->fetch_assoc();
 		
 
@@ -24,7 +24,7 @@
 		}
 
 		$update_status = "UPDATE `workorders` SET $close_date $complete_date `status`='$status_id' WHERE `id`='$wo_id'";
-		@$mysql->query($update_status);
+		@$mysql->sqlordie($update_status);
 		
 		/********************Email new Change*****************/
 		
@@ -33,19 +33,19 @@
 		$pri_row = $pri_res->fetch_assoc();*/
 
 		$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$wo_id' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
-		$req_type_res = $mysql->query($select_req_type_qry);
+		$req_type_res = $mysql->sqlordie($select_req_type_qry);
 		$req_type_row = $req_type_res->fetch_assoc();
 
 		
 		$select_wo = "SELECT * FROM `workorders` WHERE `id`='" .$wo_id ."'";
-		$wo_res = $mysql->query($select_wo);
+		$wo_res = $mysql->sqlordie($select_wo);
 		$wo_row = $wo_res->fetch_assoc();
 		
 
 		insertWorkorderAudit($mysql,$wo_id, '3', $_SESSION['user_id'],$wo_row['assigned_to'],$wo_row['status']);
 		$date_time_part = explode(" ", $row['closed_date']);
 		$select_user = "SELECT * FROM `users` WHERE `id`='" .$assigned_id ."'";
-		$user_res = $mysql->query($select_user);
+		$user_res = $mysql->sqlordie($select_user);
 		$user_row = $user_res->fetch_assoc();
 		
 		$cclist = explode(",", $wo_row['cclist']);
@@ -61,11 +61,11 @@
 		
 		$user_keys = array_keys($users_email);
 		$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_old_row['project_id'] ."'";
-		$project_res = $mysql->query($select_project);
+		$project_res = $mysql->sqlordie($select_project);
 		$project_row = $project_res->fetch_assoc();
 
 		$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-		$company_res = $mysql->query($select_company);
+		$company_res = $mysql->sqlordie($select_company);
 		$company_row = $company_res->fetch_assoc();
 
 		
@@ -73,18 +73,18 @@
 
 
 		$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
-		$requestor_user_res = $mysql->query($requestor_qry);
+		$requestor_user_res = $mysql->sqlordie($requestor_qry);
 		$requestor_user_row = $requestor_user_res->fetch_assoc();
 		
 
 		$site_name_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$wo_id' and a.field_key='SITE_NAME' and a.field_id = b.field_id";
-		$site_name_res = $mysql->query($site_name_qry);
+		$site_name_res = $mysql->sqlordie($site_name_qry);
 		$site_name_row = $site_name_res->fetch_assoc();
 		
 		$woStatus = $wo_row['status'];
 
 		$wo_status = "SELECT * FROM `lnk_workorder_status_types` WHERE `id`='" .$woStatus ."'";
-		$wo_status_res = $mysql->query($wo_status);
+		$wo_status_res = $mysql->sqlordie($wo_status);
 		$wo_status_row = $wo_status_res->fetch_assoc();
 
 		$woStatusText = $wo_status_row['name'];
@@ -153,8 +153,8 @@
 			}
 			if($emailSendFlag)
 			{
-				$select_email_addr = "SELECT `email` FROM `users` WHERE `id`='" .$user ."' LIMIT 1";
-				$email_addr_res = $mysql->query($select_email_addr);
+				$select_email_addr = "SELECT `email` FROM `users` WHERE `id`= ? LIMIT 1";
+				$email_addr_res = $mysql->sqlprepare($select_email_addr, array($user) );
 				$email_addr_row = $email_addr_res->fetch_assoc();				
 				$to = $email_addr_row['email'];
 
@@ -172,8 +172,8 @@
 				$msg .="<b>Request Type: </b>" .$request_type_arr[$req_type_row['field_name']] ."<br>";
 
 //code for lh 18306
-				$severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SEVERITY' and cu.field_key = 'SEVERITY' and cu.workorder_id = '" .$wo_id ."'";
-			    $severity_name_res = $mysql->query($severity_name_qry);
+				$severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SEVERITY' and cu.field_key = 'SEVERITY' and cu.workorder_id = ?";
+			    $severity_name_res = $mysql->sqlprepare($severity_name_qry, array($wo_id));
 			    $severity_name_row = $severity_name_res->fetch_assoc();
 				
 				if($request_type_arr[$req_type_row['field_name']]=='Problem')
@@ -199,6 +199,6 @@
 	function insertWorkorderAudit($mysql,$wo_id, $audit_id, $log_user_id,$assign_user_id,$status)
 	{
 		$insert_custom_feild = "INSERT INTO  `workorder_audit` (`workorder_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$wo_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
-		@$mysql->query($insert_custom_feild);
+		@$mysql->sqlordie($insert_custom_feild);
 	}
 ?>
