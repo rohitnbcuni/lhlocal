@@ -5,18 +5,18 @@
 	include('../_ajaxphp/util.php');
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 	if(isset($_SESSION['user_id'])) {
-		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 		$woId = $mysql->real_escape_string($_POST['wid']);
 		$last_wid = $mysql->real_escape_string($_POST['last_wid']);
 		$select_comments = "SELECT * FROM `workorder_comments` WHERE `workorder_id`='$woId' AND id = $last_wid AND deleted ='0' order by id LIMIT 0, 1";
-		$comm_result = $mysql->sqlordie($select_comments);
+		$comm_result = @$mysql->query($select_comments);
 		$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";	
 		$comment_id =0;
 		if($comm_result->num_rows > 0){
 		while($comRow = $comm_result->fetch_assoc()) {
 			$comment_id = $comRow["id"]; 
-			$select_user = "SELECT * FROM `users` WHERE `id`= ? LIMIT 1";
-			$user_result = $mysql->sqlprepare($select_user, array($comRow['user_id']));
+			$select_user = "SELECT * FROM `users` WHERE `id`='" .$comRow['user_id'] ."' LIMIT 1";
+			$user_result = @$mysql->query($select_user);
 			$user_row = $user_result->fetch_assoc();
 			
 			$date_time_split = explode(" ", $comRow['date']);
