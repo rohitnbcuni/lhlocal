@@ -1,14 +1,14 @@
 <?PHP
 	include('../_inc/config.inc');
-	include("sessionHandler.php");
-	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+
+	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 
 	$status_id = $mysql->real_escape_string($_GET['status_id']);
 	$responseType= $_GET['responseType'] ;
 	$html = '<option value="-1">-Select-</option>';
 	
 	$wo_status_query = "SELECT * FROM `lnk_workorder_status_types` WHERE `active`='1' ORDER BY `name`";
-	$wo_status_result = $mysql->sqlordie($wo_status_query);
+	$wo_status_result = $mysql->query($wo_status_query);
 	
 
 	$displayStatusArray = array();
