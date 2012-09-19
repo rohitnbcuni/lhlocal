@@ -3,7 +3,7 @@ session_start();
 if(!(isset($from_action) && $from_action))
 include('../_inc/config.inc');
 //$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
+global $mysql;
 $postingList = Array();
 // filters from frontend for archieve workorders
 $client_sql = "";
@@ -25,6 +25,7 @@ if(array_key_exists("report", $_GET)){
 }
 $archive_sql = " AND b.`archived`='0' and b.`active`='1'";
 $project_archive = " AND b.`archived`='0'";
+$pjt_sql = " JOIN `projects` a ON a.`id`=b.`project_id`";
 if('1' == $_GET['status']){         // for active workorders
 	$archive_sql = " AND b.`archived`='0' and b.`active`='1'";
 	$project_archive = " AND b.`archived`='0'";
@@ -244,8 +245,9 @@ if($workorder_result->num_rows > 0) {
 		if(!array_key_exists('workorders', $postingList[$i]))
 			$postingList[$i]['workorders'] = Array();
 		if(!array_key_exists($workorder_row['requested_by'], $wo_user_list)){
-			$select_wo_requested_by = "SELECT * FROM `users` WHERE `id`=?";
-			$requested_result = $mysql->sqlprepare($select_wo_requested_by , array($workorder_row['requested_by']));
+			$select_wo_requested_by = "SELECT * FROM `users` WHERE `id`= ?";
+			$requested_result = $mysql->sqlprepare($select_wo_requested_by, array($workorder_row['requested_by']));
+			//if($requested_result->num_rows > 0){
 			$requested_row = $requested_result->fetch_assoc();
 			$userName = '';
 			if(!empty($requested_row['last_name'])){
@@ -328,7 +330,7 @@ if($workorder_result->num_rows > 0) {
 
 			if(!array_key_exists($wo_last_comment_user_id, $wo_user_list)){
 				$select_wo_last_comment = "SELECT * FROM `users` WHERE `id`= ? ";
-				$last_comment_result = $mysql->sqlprepare($select_wo_last_comment,$wo_last_comment_user_id );
+				$last_comment_result = $mysql->sqlprepare($select_wo_last_comment,array($wo_last_comment_user_id) );
 				$last_comment_row = $last_comment_result->fetch_assoc();
 
 				$userName ='';
