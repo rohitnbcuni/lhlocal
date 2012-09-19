@@ -124,7 +124,7 @@ $date_range_filter_sql = " AND b.`closed_date` >= '".date('Y-m-d',strtotime($_RE
   $pjt_sql = " JOIN `projects` a ON a.`id`=b.`project_id`";
   $where_clause = " WHERE c.`user_id`='" .$_SESSION['user_id']."' ";
   $count_wo = "select count(distinct b.`id`) as cnt from   `workorders` b " .$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql .$req_filter_sql. $date_range_filter_sql . $search_filter_sql;
-  $count_result = $mysql->query($count_wo);
+  $count_result = $mysql->sqlordie($count_wo);
   if($count_result->num_rows == 1){
      $count_row = $count_result->fetch_assoc();
   }
@@ -134,7 +134,7 @@ $date_range_filter_sql = " AND b.`closed_date` >= '".date('Y-m-d',strtotime($_RE
 }
 
 $distinct_project_list_sql = "select distinct project_name,a.id,project_code from `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_sql . $client_filter_sql .$req_filter_sql. $status_filter_sql . $date_range_filter_sql  . "order by `project_code`"; //  $project_filter_sql   $assigned_to_filter_sql  $search_filter_sql
-$distinct_project_list_result = $mysql->query($distinct_project_list_sql);
+$distinct_project_list_result = $mysql->sqlordie($distinct_project_list_sql);
 	if($distinct_project_list_result->num_rows > 0){
 		while($project_list_row = $distinct_project_list_result->fetch_assoc()){
 		  $project_id_array[] = $project_list_row['id'];
@@ -147,7 +147,7 @@ $distinct_project_list_result = $mysql->query($distinct_project_list_sql);
 	
 $distinct_assigned_to_sql = "select distinct assigned_to as assigned from `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_sql . $client_filter_sql .$req_filter_sql. $status_filter_sql . $date_range_filter_sql ; //  $project_filter_sql $assigned_to_filter_sql  $search_filter_sql
 $distinct_assigned_to_sql = "select id,last_name,first_name from (".$distinct_assigned_to_sql.") as assigned_table,users where users.id = assigned order by last_name";
-$distinct_assigned_to_sql_result = $mysql->query($distinct_assigned_to_sql);
+$distinct_assigned_to_sql_result = $mysql->sqlordie($distinct_assigned_to_sql);
 	if($distinct_assigned_to_sql_result->num_rows > 0){
 		while($assigned_to_row = $distinct_assigned_to_sql_result->fetch_assoc()){
 			$assigned_to_user_id_array[] = $assigned_to_row['id'];
@@ -159,7 +159,7 @@ $distinct_assigned_to_sql_result = $mysql->query($distinct_assigned_to_sql);
 
 $distinct_requested_by_sql = "select distinct requested_by as requested_by from `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$requested_by_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_sql . $client_filter_sql .$req_filter_sql. $status_filter_sql . $date_range_filter_sql ; //  $project_filter_sql $assigned_to_filter_sql  $search_filter_sql
 $distinct_requested_by_sql = "select id,last_name,first_name from (".$distinct_requested_by_sql.") as assigned_table,users where users.id = requested_by order by last_name";
-$distinct_requested_by_sql_result = $mysql->query($distinct_requested_by_sql);
+$distinct_requested_by_sql_result = $mysql->sqlordie($distinct_requested_by_sql);
 	if($distinct_requested_by_sql_result->num_rows > 0){
 		while($requested_by_row = $distinct_requested_by_sql_result->fetch_assoc()){
 			$requested_by_user_id_array[] = $requested_by_row['id'];
@@ -176,7 +176,7 @@ if('0' == $_GET['status']){
   $workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM `projects` a, `workorders` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND c.`user_id`='" .$_SESSION['user_id'] ."'  " . $archive_sql . " ORDER BY a.`company`, a.`project_name`, b.`title` ASC";
 }	
 //echo "qry".$workorder_list_query;
-$workorder_result = $mysql->query($workorder_list_query);
+$workorder_result = $mysql->sqlordie($workorder_list_query);
 $i=-1;
 
 $wo_status_array = array();
@@ -186,7 +186,7 @@ $wo_last_comment_array = array();
 if($workorder_result->num_rows > 0) {
 
 	$select_wo_status = "SELECT `id`, `name` FROM `lnk_workorder_status_types`";
-	$status_result = $mysql->query($select_wo_status);
+	$status_result = $mysql->sqlordie($select_wo_status);
 	if($status_result->num_rows > 0){
 		while($status_row = $status_result->fetch_assoc()){
 			$wo_status_array[$status_row['id']] = $status_row['name'];
@@ -195,7 +195,7 @@ if($workorder_result->num_rows > 0) {
 
 	$wo_last_comment = "SELECT wc.`id`,wc.`workorder_id`,wc.`user_id`,wc.`comment`,wc.`date` FROM `workorder_comments` wc, (select max(id) id from `workorder_comments` WHERE deleted ='0' group by workorder_id ) tab1,workorders b where wc.id=tab1.id and b.id = wc.workorder_id  AND b.deleted ='0' $project_archive";
 	
-	$wo_last_comment_result = $mysql->query($wo_last_comment);
+	$wo_last_comment_result = $mysql->sqlordie($wo_last_comment);
 
 	if($wo_last_comment_result->num_rows > 0){
 		while($last_comment_row = $wo_last_comment_result->fetch_assoc()){
@@ -204,7 +204,7 @@ if($workorder_result->num_rows > 0) {
 	}
 
 	$company_query = "SELECT * FROM `companies`";
-	$company_result = $mysql->query($company_query);
+	$company_result = $mysql->sqlordie($company_query);
 	$companyListArr;
 
 	if($company_result->num_rows > 0){
@@ -216,7 +216,7 @@ if($workorder_result->num_rows > 0) {
 	$custom_feild_arr;
 	$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
 
-	$wo_custom_data = $mysql->query("SELECT `workorder_id`,a.`field_key`,a.`field_id`,c.`field_name` FROM `workorder_custom_fields` a,`workorders` b,`lnk_custom_fields_value` c where a.`workorder_id`=b.`id` and (a.`field_key`='REQ_TYPE' OR a.`field_key`='SEVERITY') and a.`field_id`= c.`field_id` $project_archive");
+	$wo_custom_data = $mysql->sqlordie("SELECT `workorder_id`,a.`field_key`,a.`field_id`,c.`field_name` FROM `workorder_custom_fields` a,`workorders` b,`lnk_custom_fields_value` c where a.`workorder_id`=b.`id` and (a.`field_key`='REQ_TYPE' OR a.`field_key`='SEVERITY') and a.`field_id`= c.`field_id` $project_archive");
 
 	while($row = $wo_custom_data->fetch_assoc()){
 		$custom_feild_arr[$row['workorder_id']][$row['field_key']] = $row['field_name'];
@@ -244,8 +244,8 @@ if($workorder_result->num_rows > 0) {
 		if(!array_key_exists('workorders', $postingList[$i]))
 			$postingList[$i]['workorders'] = Array();
 		if(!array_key_exists($workorder_row['requested_by'], $wo_user_list)){
-			$select_wo_requested_by = "SELECT * FROM `users` WHERE `id`='" .$workorder_row['requested_by'] ."'";
-			$requested_result = $mysql->query($select_wo_requested_by);
+			$select_wo_requested_by = "SELECT * FROM `users` WHERE `id`=?";
+			$requested_result = $mysql->sqlprepare($select_wo_requested_by , array($workorder_row['requested_by']));
 			$requested_row = $requested_result->fetch_assoc();
 			$userName = '';
 			if(!empty($requested_row['last_name'])){
@@ -256,8 +256,8 @@ if($workorder_result->num_rows > 0) {
 			$wo_user_list[$workorder_row['requested_by']] = $userName;
 		}
 		if(!array_key_exists($workorder_row['assigned_to'], $wo_user_list)){
-			$select_wo_assigned_to = "SELECT * FROM `users` WHERE `id`='" .$workorder_row['assigned_to'] ."'";
-			$assigned_result = $mysql->query($select_wo_assigned_to);
+			$select_wo_assigned_to = "SELECT * FROM `users` WHERE `id`= ? ";
+			$assigned_result = $mysql->sqlprepare($select_wo_assigned_to,array($workorder_row['assigned_to']));
 			$assigned_row = $assigned_result->fetch_assoc();
 			$userName ='';
 			if(!empty($assigned_row['last_name'])){
@@ -327,8 +327,8 @@ if($workorder_result->num_rows > 0) {
 			}
 
 			if(!array_key_exists($wo_last_comment_user_id, $wo_user_list)){
-				$select_wo_last_comment = "SELECT * FROM `users` WHERE `id`='" .$wo_last_comment_user_id ."'";
-				$last_comment_result = $mysql->query($select_wo_last_comment);
+				$select_wo_last_comment = "SELECT * FROM `users` WHERE `id`= ? ";
+				$last_comment_result = $mysql->sqlprepare($select_wo_last_comment,$wo_last_comment_user_id );
 				$last_comment_row = $last_comment_result->fetch_assoc();
 
 				$userName ='';
