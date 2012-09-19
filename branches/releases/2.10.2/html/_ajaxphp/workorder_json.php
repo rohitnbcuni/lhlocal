@@ -2,7 +2,7 @@
 session_start();
 if(!(isset($from_action) && $from_action))
 include('../_inc/config.inc');
-$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 
 $postingList = Array();
 // filters from frontend for archieve workorders
@@ -38,8 +38,9 @@ if('1' == $_GET['status']){         // for active workorders
   	$project_filter_sql = " AND a.`id` = ".$_REQUEST['proj_id'];
   } 
   	if(isset($_REQUEST['status_filter']) && $_REQUEST['status_filter'] != '-1'){  
-    $status_table_sql = "select `id` from `lnk_workorder_status_types` where name = '".$_REQUEST['status_filter']."'";
-  	$status_result = $mysql->query($status_table_sql);
+    $status_table_sql = "select `id` from `lnk_workorder_status_types` where name = ?";
+  	$status_result = $mysql->sqlprepare($status_table_sql, array($_REQUEST['status_filter']));
+	print_r($status_result );
     if($status_result->num_rows == 1){
        $status_row = $status_result->fetch_assoc();
     }	
