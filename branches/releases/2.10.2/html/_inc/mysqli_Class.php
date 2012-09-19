@@ -15,7 +15,7 @@ class MySQLiDB
     private static $single_state;
 
     // Our constructor method. A little different...
-    public function __construct($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, $DB_PORT)
+   public function __construct($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, $DB_PORT)
         {
         $this->mySql=new mysqli($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, $DB_PORT);
 
@@ -26,16 +26,16 @@ class MySQLiDB
             }
         }
 
-    public static function getInstance($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, $DB_PORT)
+   /* public static function getInstance($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, $DB_PORT)
         {
         if (!self::$single_state)
             {
             self::$single_state=new MySQLiDB($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, $DB_PORT);
             }
-
-        return self::$single_state;
+		self::$mySql = self::$single_state;
+        return $this->mySql;
         }
-
+*/
 
     /*
     * This is a simple Select method.
