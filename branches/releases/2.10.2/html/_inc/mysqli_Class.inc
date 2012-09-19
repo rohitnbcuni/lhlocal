@@ -343,7 +343,7 @@ class MySQLiDB
 				echo $this->sql_error($query);
 			
 			}
-			return $results;
+			return $parameters;
 			
 		}
 
