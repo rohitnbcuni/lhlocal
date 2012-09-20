@@ -142,7 +142,8 @@
 							echo '<input name="hours_type" class="hours_type" id="hours_type_scheduled" type="radio" value="scheduled" /><label class="small">Scheduled</label>
 								<input name="hours_type" class="hours_type" id="hours_type_actual" type="radio" value="actual" CHECKED /><label class="small">Actual</label>';
 						}else if($_SESSION['user_id'] == $userID){
-							echo '<input name="hours_type" class="hours_type" id="hours_type_actual" type="radio" value="actual" CHECKED /><label class="small">Actual</label>';
+							echo '<input name="hours_type" class="hours_type" id="hours_type_scheduled" type="radio" value="scheduled" /><label class="small">Scheduled</label>
+							<input name="hours_type" class="hours_type" id="hours_type_actual" type="radio" value="actual" CHECKED /><label class="small">Actual</label>';
 						}else{
 							echo '<input name="hours_type" class="hours_type" id="hours_type_scheduled" type="radio" value="scheduled" CHECKED /><label class="small">Scheduled</label>';
 						}
