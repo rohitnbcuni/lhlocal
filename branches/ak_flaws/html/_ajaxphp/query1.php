@@ -1,10 +1,12 @@
 <?PHP
 	include('../_inc/config.inc');
 	
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);	
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//Defining Global mysql connection values
+	global $mysql;
 
 	$project_all = "SELECT * FROM `projects` WHERE `archived` = '0' AND `active` = '1' AND `deleted` = '0'";
-	$project_list = $mysql->query($project_all);
+	$project_list = $mysql->sqlprepare($project_all);
 	$current_year = current_year;//'2010';//date("Y");
 	$i=0;
 	if(@$project_list->num_rows > 0) {

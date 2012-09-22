@@ -4,8 +4,9 @@
 	include('../_ajaxphp/util.php');
 	if(isset($_SESSION['user_id'])) {
 		
-		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-		
+		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		//Defining Global mysql connection values
+		global $mysql;
 		$user = $_SESSION['lh_username'];
 	    $password = $_SESSION['lh_password'];
 		
@@ -21,7 +22,7 @@
 		if(!empty($comment)){
 
 			$bc_id_query = "SELECT  `project_id`, `title`, `status`,`assigned_to` FROM  `qa_defects` WHERE `id`='" .$mysql->real_escape_string($defectId) ."' LIMIT 1";
-			$bc_id_result = $mysql->query($bc_id_query);
+			$bc_id_result = $mysql->sqlprepare($bc_id_query,array($defectId));
 			$bc_id_row = $bc_id_result->fetch_assoc();
 
 
@@ -29,18 +30,18 @@
 				."(`defect_id`,`user_id`,`comment`,`date`) "
 				."VALUES "
 				."('$defectId','$userId','$comment',NOW())";
-			@$mysql->query($update_wo_comment);
+			@$mysql->sqlordie();
 		
 			insertWorkorderAudit($mysql,$defectId, '4', $_SESSION['user_id'],$bc_id_row['assigned_to'],$bc_id_row['status']);
 		}
 		
 		$select_comments = "SELECT * FROM `qa_comments` WHERE `defect_id`='$defectId' order by date desc";
-		$comm_result = @$mysql->query($select_comments);
+		$comm_result = @$mysql->sqlprepare($select_comments,array($defectId));
 
 		
 		while($comRow = $comm_result->fetch_assoc()) {
 			$select_user = "SELECT * FROM `users` WHERE `id`='" .$comRow['user_id'] ."' LIMIT 1";
-			$user_result = @$mysql->query($select_user);
+			$user_result = @$mysql->sqlprepare($select_user,array($comRow['user_id']));
 			$user_row = $user_result->fetch_assoc();
 			
 			$date_time_split = explode(" ", $comRow['date']);
@@ -61,10 +62,10 @@
 		}
 		
 		$select_email_users = "SELECT * FROM `qa_defects` WHERE `id`='$defectId' LIMIT 1";
-		$email_res = $mysql->query($select_email_users);
+		$email_res = $mysql->sqlprepare($select_email_users,array($defectId));
 		if($email_res->num_rows > 0) {
 			$new_commenter = "SELECT * FROM `users` WHERE `id`='$userId' LIMIT 1";
-			$commenter_res = $mysql->query($new_commenter);
+			$commenter_res = $mysql->sqlprepare($new_commenter,array($userId));
 			$commenter_row = $commenter_res->fetch_assoc();
 		
 			$email_row = $email_res->fetch_assoc();
@@ -88,15 +89,15 @@
 			}
 			$user_keys = array_keys($users_email);
 			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$bc_id_row['project_id'] ."'";
-			$project_res = $mysql->query($select_project);
+			$project_res = $mysql->sqlprepare($select_project,array($bc_id_row['project_id']));
 			$project_row = $project_res->fetch_assoc();
 
 			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-			$company_res = $mysql->query($select_company);
+			$company_res = $mysql->sqlprepare($select_company,array($project_row['company']));
 			$company_row = $company_res->fetch_assoc();
 
 			$qa_status = "SELECT * FROM `lnk_qa_status_types` WHERE `id`='" .$status ."'";
-			$qa_status_res = $mysql->query($qa_status);
+			$qa_status_res = $mysql->sqlprepare($qa_status,array($status));
 			$qa_status_row = $qa_status_res->fetch_assoc();
             $description=($email_row['body']);
             $desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES,'UTF-8'));
@@ -105,7 +106,7 @@
 				{
 					// No Email for the person who posts comments
 					$select_email_addr = "SELECT `email` FROM `users` WHERE `id`='" .$user_keys[$u] ."' LIMIT 1";
-					$email_addr_res = $mysql->query($select_email_addr);
+					$email_addr_res = $mysql->sqlprepare($select_email_addr,array($user_keys[$u]));
 					$email_addr_row = $email_addr_res->fetch_assoc();
 					
 					$to = $email_addr_row['email'];
@@ -141,6 +142,6 @@
 	function insertWorkorderAudit($mysql,$wo_id, $audit_id, $log_user_id,$assign_user_id,$status)
 	{
 		$insert_custom_feild = "INSERT INTO  `workorder_audit` (`workorder_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$wo_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
-		@$mysql->query($insert_custom_feild);
+		@$mysql->sqlordie();
 	}
 ?>

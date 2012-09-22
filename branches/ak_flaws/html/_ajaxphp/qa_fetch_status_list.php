@@ -1,7 +1,9 @@
 <?PHP
 	include('../_inc/config.inc');
 	
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//Defining Global mysql connection values
+	global $mysql;
 	$defectID= $_GET['defectID'] ;
 	$qaStatus= $_GET['qaStatus'] ;
 
@@ -9,7 +11,7 @@
 
 	$QRY_STATUS_SELECT ="SELECT id, name FROM `lnk_qa_status_types` WHERE `active`='1' AND `deleted`='0' ORDER BY `sort_order` ASC";
 
-	$result = $mysql->query($QRY_STATUS_SELECT);	
+	$result = $mysql->sqlordie();	
 	$statusList = Array();
 
 	if($result->num_rows > 0) {
