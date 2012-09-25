@@ -8,7 +8,7 @@
 	
 	$defectId = $mysql->real_escape_string($_GET['defectId']);
 	
-	$wo_selecte_query = "SELECT * from  `qa_defects` WHERE `id`='$defectId' and deleted='0' LIMIT 1";
+	$wo_selecte_query = "SELECT * from  `qa_defects` WHERE `id`= ? and deleted='0' LIMIT 1";
 	$result = $mysql->sqlprepare($wo_selecte_query,array($defectId));
 	if($result->num_rows == 1){
 		echo "1";

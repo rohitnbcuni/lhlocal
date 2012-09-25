@@ -14,7 +14,7 @@
                               
                 if(!empty($project_id))
                 {
-                $wo_query = "SELECT `qccclist` FROM `projects` WHERE `id`='$project_id' LIMIT 1";
+                $wo_query = "SELECT `qccclist` FROM `projects` WHERE `id`= ? LIMIT 1";
 				$wo_result = $mysql->sqlprepare($wo_query,array($project_id));
                 $wo_row = $wo_result->fetch_assoc();
 				$list = explode(",", $wo_row[qccclist]);
@@ -22,7 +22,7 @@
                 for($x = 0; $x < sizeof($list); $x++) {
                 if(!empty($list[$x])) {
 				
-                                        $select_cc_user = "SELECT * FROM `users` WHERE `id`='" .$list[$x] ."' LIMIT 1";
+                                        $select_cc_user = "SELECT * FROM `users` WHERE `id`= ? LIMIT 1";
                                         $cc_user_result = @$mysql->sqlprepare($select_cc_user,array($list[$x]));
                                         $cc_user_row = @$cc_user_result->fetch_assoc();
 

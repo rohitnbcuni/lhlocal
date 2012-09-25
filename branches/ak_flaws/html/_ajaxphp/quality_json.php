@@ -59,7 +59,7 @@ $qa_project_version = array();
 if($project_result->num_rows > 0) {
 
   $select_wo_status = "SELECT `id`, `name` FROM `lnk_qa_status_types`";
-  $status_result = $mysql->qlprepare($select_wo_status);
+  $status_result = $mysql->sqlprepare($select_wo_status);
   if($status_result->num_rows > 0){
     while($status_row = $status_result->fetch_assoc()){
       $wo_status_array[$status_row['id']] = $status_row['name'];
@@ -103,7 +103,7 @@ if($project_result->num_rows > 0) {
     }
   }
 
-  $qa_custom_data = $mysql->query("SELECT * FROM `lnk_custom_fields_value` where field_key in ('QA_CATEGORY','QA_SEVERITY','QA_OS','QA_BROWSER','QA_ORIGIN') order by field_key ");
+  $qa_custom_data = $mysql->sqlprepare("SELECT * FROM `lnk_custom_fields_value` where field_key in ('QA_CATEGORY','QA_SEVERITY','QA_OS','QA_BROWSER','QA_ORIGIN') order by field_key ");
   $custom_feild_arr;
   while($row = $qa_custom_data->fetch_assoc())
   {
@@ -130,7 +130,7 @@ if($project_result->num_rows > 0) {
 
 		  
          if(!array_key_exists($quality['version'], $qa_project_version)){
-	          $select_qa_version = "SELECT * FROM `qa_project_version` WHERE `id`='" .$quality['version'] ."'";
+	          $select_qa_version = "SELECT * FROM `qa_project_version` WHERE `id`= ? ";
 			  $version_result = $mysql->sqlprepare($select_qa_version,array($quality['version']));
 			  $version_row = $version_result->fetch_assoc();
 			  $userName = '';
@@ -140,7 +140,7 @@ if($project_result->num_rows > 0) {
 			  }
 		 }
         if(!array_key_exists($quality['detected_by'], $wo_user_list)){
-          $select_wo_requested_by = "SELECT * FROM `users` WHERE `id`='" .$quality['detected_by'] ."'";
+          $select_wo_requested_by = "SELECT * FROM `users` WHERE `id`= ? ";
           $requested_result = $mysql->sqlprepare($select_wo_requested_by,array($quality['detected_by']));
           $requested_row = $requested_result->fetch_assoc();
           $userName = '';
@@ -155,7 +155,7 @@ if($project_result->num_rows > 0) {
           $wo_user_list[$quality['detected_by']] = $userName;
         }
         if(!array_key_exists($quality['assigned_to'], $wo_user_list)){
-          $select_wo_assigned_to = "SELECT * FROM `users` WHERE `id`='" .$quality['assigned_to'] ."'";
+          $select_wo_assigned_to = "SELECT * FROM `users` WHERE `id`= ? ";
           $assigned_result = $mysql->sqlprepare($select_wo_assigned_to,array($quality['assigned_to']));
           $assigned_row = $assigned_result->fetch_assoc();
           $userName ='';
@@ -221,7 +221,7 @@ if($project_result->num_rows > 0) {
           }
 
           if(!array_key_exists($wo_last_comment_user_id, $wo_user_list)){
-            $select_wo_last_comment = "SELECT * FROM `users` WHERE `id`='" .$wo_last_comment_user_id ."'";
+            $select_wo_last_comment = "SELECT * FROM `users` WHERE `id`= ? ";
             $last_comment_result = $mysql->sqlprepare($select_wo_last_comment,array($wo_last_comment_user_id));
             $last_comment_row = $last_comment_result->fetch_assoc();
 
