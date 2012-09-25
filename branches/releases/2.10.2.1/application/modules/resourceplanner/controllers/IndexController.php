@@ -302,7 +302,7 @@
 										<option value="">All Companies</option>
 										'.RpDisplay::fullCompanyListHTML($savedCompany).'
 									</select>
-									<div class="week_label" style="font-size: 15px; font-weight: bold; padding-top: 9px; width: 375px;*width:141px;"></div>
+									<div class="week_label" style="font-size: 13px; font-weight: bold; padding-top: 10px; width: 376px;"></div>
 								</div>
 							</div>
 							<div style="float:right;width:250px;">
