@@ -21,7 +21,7 @@
 		
 		if(!empty($comment)){
 
-			$bc_id_query = "SELECT  `project_id`, `title`, `status`,`assigned_to` FROM  `qa_defects` WHERE `id`='" .$mysql->real_escape_string($defectId) ."' LIMIT 1";
+			$bc_id_query = "SELECT  `project_id`, `title`, `status`,`assigned_to` FROM  `qa_defects` WHERE `id`= ? LIMIT 1";
 			$bc_id_result = $mysql->sqlprepare($bc_id_query,array($defectId));
 			$bc_id_row = $bc_id_result->fetch_assoc();
 
@@ -35,12 +35,12 @@
 			insertWorkorderAudit($mysql,$defectId, '4', $_SESSION['user_id'],$bc_id_row['assigned_to'],$bc_id_row['status']);
 		}
 		
-		$select_comments = "SELECT * FROM `qa_comments` WHERE `defect_id`='$defectId' order by date desc";
+		$select_comments = "SELECT * FROM `qa_comments` WHERE `defect_id`= ? order by date desc";
 		$comm_result = @$mysql->sqlprepare($select_comments,array($defectId));
 
 		
 		while($comRow = $comm_result->fetch_assoc()) {
-			$select_user = "SELECT * FROM `users` WHERE `id`='" .$comRow['user_id'] ."' LIMIT 1";
+			$select_user = "SELECT * FROM `users` WHERE `id`= ? LIMIT 1";
 			$user_result = @$mysql->sqlprepare($select_user,array($comRow['user_id']));
 			$user_row = $user_result->fetch_assoc();
 			
@@ -61,10 +61,10 @@
 			</li>';
 		}
 		
-		$select_email_users = "SELECT * FROM `qa_defects` WHERE `id`='$defectId' LIMIT 1";
+		$select_email_users = "SELECT * FROM `qa_defects` WHERE `id`= ? LIMIT 1";
 		$email_res = $mysql->sqlprepare($select_email_users,array($defectId));
 		if($email_res->num_rows > 0) {
-			$new_commenter = "SELECT * FROM `users` WHERE `id`='$userId' LIMIT 1";
+			$new_commenter = "SELECT * FROM `users` WHERE `id`= ? LIMIT 1";
 			$commenter_res = $mysql->sqlprepare($new_commenter,array($userId));
 			$commenter_row = $commenter_res->fetch_assoc();
 		
@@ -88,15 +88,15 @@
 				}
 			}
 			$user_keys = array_keys($users_email);
-			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$bc_id_row['project_id'] ."'";
+			$select_project = "SELECT * FROM `projects` WHERE `id`= ? ";
 			$project_res = $mysql->sqlprepare($select_project,array($bc_id_row['project_id']));
 			$project_row = $project_res->fetch_assoc();
 
-			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
+			$select_company = "SELECT * FROM `companies` WHERE `id`= ? ";
 			$company_res = $mysql->sqlprepare($select_company,array($project_row['company']));
 			$company_row = $company_res->fetch_assoc();
 
-			$qa_status = "SELECT * FROM `lnk_qa_status_types` WHERE `id`='" .$status ."'";
+			$qa_status = "SELECT * FROM `lnk_qa_status_types` WHERE `id`= ? ";
 			$qa_status_res = $mysql->sqlprepare($qa_status,array($status));
 			$qa_status_row = $qa_status_res->fetch_assoc();
             $description=($email_row['body']);
@@ -105,7 +105,7 @@
 				if($commenter_row['id'] != $user_keys[$u] )
 				{
 					// No Email for the person who posts comments
-					$select_email_addr = "SELECT `email` FROM `users` WHERE `id`='" .$user_keys[$u] ."' LIMIT 1";
+					$select_email_addr = "SELECT `email` FROM `users` WHERE `id`= ? LIMIT 1";
 					$email_addr_res = $mysql->sqlprepare($select_email_addr,array($user_keys[$u]));
 					$email_addr_row = $email_addr_res->fetch_assoc();
 					

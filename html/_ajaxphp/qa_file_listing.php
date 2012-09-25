@@ -8,7 +8,7 @@
 	$dirname = str_replace("/", "", $mysql->real_escape_string(@$_GET['dirname']));
 	$html = "";
 	
-	$select_files_in_dir = "SELECT * FROM `qa_files` WHERE `directory`='$dirname'";
+	$select_files_in_dir = "SELECT * FROM `qa_files` WHERE `directory`= ? ";
 	$result = $mysql->sqlprepare($select_files_in_dir,array($dirname));
 	
 	if($result->num_rows > 0) {

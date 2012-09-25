@@ -130,10 +130,10 @@
 			@$mysql->sqlordie();
 		}
 		
-		$select_wo = "SELECT * FROM `qa_defects` WHERE `id`='" .$getdefectID ."'";
+		$select_wo = "SELECT * FROM `qa_defects` WHERE `id`= ? ";
 		$wo_res = $mysql->sqlprepare($select_wo,array($getdefectID));
 		$wo_row = $wo_res->fetch_assoc();
-		$select_user = "SELECT * FROM `users` WHERE `id`='" .$woAssignedTo ."'";
+		$select_user = "SELECT * FROM `users` WHERE `id`= ? ";
 		$user_res = $mysql->sqlprepare($select_user,array($woAssignedTo));
 		$user_row = $user_res->fetch_assoc();		
 		
@@ -152,15 +152,15 @@
 
 		$user_keys = array_keys($users_email);
 
-		$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
+		$select_project = "SELECT * FROM `projects` WHERE `id`= ? ";
 		$project_res = $mysql->sqlprepare($select_project,array($wo_row['project_id']));
 		$project_row = $project_res->fetch_assoc();
 
-		$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
+		$select_company = "SELECT * FROM `companies` WHERE `id`= ? ";
 		$company_res = $mysql->sqlprepare($select_company,array($project_row['company']));
 		$company_row = $company_res->fetch_assoc();
 
-		$wo_status = "SELECT * FROM `lnk_qa_status_types` WHERE `id`='" .$woStatus ."'";
+		$wo_status = "SELECT * FROM `lnk_qa_status_types` WHERE `id`= ? ";
 		$wo_status_res = $mysql->sqlprepare($wo_status,array($woStatus));
 		$wo_status_row = $wo_status_res->fetch_assoc();
 
@@ -169,7 +169,7 @@
 
 
 		$file_list = "";
-		$select_file = "SELECT * FROM `qa_files` WHERE defect_id='" . $getdefectID . "' order by upload_date desc";
+		$select_file = "SELECT * FROM `qa_files` WHERE defect_id= ? order by upload_date desc";
 		$file_res = $mysql->sqlprepare($select_file,array($getdefectID));
 		if($file_res->num_rows > 0) {
 			$file_list = "<u><b>Attachment:</b></u><br>";
@@ -192,7 +192,7 @@
 				 if($user!= $requestedId)
 				{
 
-					$select_email_addr = "SELECT `email` FROM `users` WHERE `id`='" . $user ."' LIMIT 1";
+					$select_email_addr = "SELECT `email` FROM `users` WHERE `id`= ? LIMIT 1";
 					$email_addr_res = $mysql->sqlprepare($select_email_addr,array($user));
 					$email_addr_row = $email_addr_res->fetch_assoc();
 					$to = $email_addr_row['email'];
@@ -223,7 +223,7 @@
 			$msg = '';
 			foreach($sendList as $user){
 
-				$select_email_addr = "SELECT `email` FROM `users` WHERE `id`='" . $user ."' LIMIT 1";
+				$select_email_addr = "SELECT `email` FROM `users` WHERE `id`= ? LIMIT 1";
 				$email_addr_res = $mysql->sqlprepare($select_email_addr,array($user));
 				$email_addr_row = $email_addr_res->fetch_assoc();
 				$to = $email_addr_row['email'];
