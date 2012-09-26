@@ -737,7 +737,11 @@ function saveWorkOrder(from) {
 		
 	if(valid) {
 		data = {woId:woId,dirName:dirName,requestedId:requestedId,projectId:projectId,woTypeId:woTypeId,priorityId:priorityId,timeSens:timeSens,timeSensDate:timeSensDate,timeSensTime:timeSensTime,ampm:ampm,wo_draft:wo_draft,timeSensDate_draft:timeSensDate_draft,timeSensTime_draft:timeSensTime_draft,ampm_draft:ampm_draft,woTitle:woTitle,woExampleURL:woExampleURL,woDesc:woDesc,woStatus:woStatus,woAssignedTo:woAssignedTo,woStartDate:woStartDate,woEstDate:woEstDate,rallyType:rallyType,rallyProject:rallyProject,rallyFlag:rallyFlag,woREQ_TYPE:woREQ_TYPE,woSEVERITY:woSEVERITY,woSITE_NAME:woSITE_NAME,woINFRA_TYPE:woINFRA_TYPE,woCRITICAL:woCRITICAL,woCCList:woCCList,launchDate:launchDate,currmin:currmin,draftDate:draftDate,commentSubmit:from};
+		//LH34096 if request type is request then estimate time will same launch date
+		if(woREQ_TYPE == '3'){
+			$('#estimated_completion_date').val(timeSensDate+" "+timeSensTime);
 
+		}
 		$('#wo_dimmer').css({display:'block'});
 		$('#wo_dimmer').css({backgroundColor:'#FFFFFF'});
 		$('#wo_dimmer').css({opacity:'0.7'});
