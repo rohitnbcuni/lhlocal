@@ -268,6 +268,10 @@
 			if($woStatus == 3){
 				$complete_date = "`completed_date`=NOW(), ";
 			}
+			$estimated_date = '';
+			if($woREQ_TYPE == '3'){
+				$estimated_date =  " `estimated_date` = '$sql_date', ";
+			}
 			// When a draft WO is getting activated
 			$createdDate = "";
 			if($wo_old_row['active'] == '0' && $isActive == '1'){
@@ -280,6 +284,7 @@
 				.$close_date
 				.$complete_date
 				.$createdDate
+				.$estimated_date
 				."`type`=$woTypeId, "
 				."`status`='$woStatus', "
 				."`title`='$woTitle', "
