@@ -45,7 +45,7 @@ global $mysql;
 
 $project_query = "SELECT DISTINCT a.`id`, a.`project_name`, a.`project_code`, a.`company` FROM `projects` a, `qa_defects` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND a.qa_permission ='1' AND c.`user_id`='" .$_SESSION['user_id'] ."'  ORDER BY a.`company`, a.`project_name` ASC";
 //echo "qry".$project_query;
-$project_result = $mysql->sqlordie();
+$project_result = $mysql->sqlordie($project_query);
 $project_result->num_rows;
 $i=0;
 
@@ -68,7 +68,7 @@ if($project_result->num_rows > 0) {
 
   $wo_last_comment = "SELECT wc.`id`,wc.`defect_id`,wc.`user_id`,wc.`comment`,wc.`date` FROM `qa_comments` wc, (select max(id) id from `qa_comments` group by `defect_id` ) tab1,`qa_defects` b where wc.id=tab1.id and b.id = wc.`defect_id` $project_archive";
 
-  $wo_last_comment_result = $mysql->sqlordie();
+  $wo_last_comment_result = $mysql->sqlordie($wo_last_comment);
 
   if($wo_last_comment_result->num_rows > 0){
     while($last_comment_row = $wo_last_comment_result->fetch_assoc()){
@@ -78,7 +78,7 @@ if($project_result->num_rows > 0) {
 
     $qa_last_action_sql = "SELECT audit.`defect_id`,audit.`audit_id`,audit.`log_user_id`,audit.`assign_user_id`,audit.`status`,audit.`log_date` FROM `quality_audit` audit, (select max(id) id from `quality_audit` group by `defect_id` ) tab1,`qa_defects` b where audit.id=tab1.id and b.id = audit.`defect_id` $project_archive";
 
-	$qa_last_action_audit = $mysql->sqlordie();
+	$qa_last_action_audit = $mysql->sqlordie($qa_last_action_sql);
 
 	if($qa_last_action_audit->num_rows > 0){
 		while($qa_last_action_row = $qa_last_action_audit->fetch_assoc()){
@@ -122,7 +122,7 @@ if($project_result->num_rows > 0) {
 
     $select_project_workorders = "SELECT * FROM `qa_defects` WHERE `project_id`='" .$project_row['id'] ."'$archive_sql ORDER BY `title` ";
 
-    $project_workorders_result = $mysql->sqlordie();
+    $project_workorders_result = $mysql->sqlordie($select_project_workorders);
     	
     if($project_workorders_result->num_rows > 0) {
       while($quality = $project_workorders_result->fetch_assoc()) {

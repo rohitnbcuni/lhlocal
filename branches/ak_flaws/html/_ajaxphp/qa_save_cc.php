@@ -1,6 +1,7 @@
 <?PHP
 	session_start();
 	include('../_inc/config.inc');
+	include("sessionHandler.php");
 	
 		$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";	
 	if(isset($_SESSION['user_id'])) {		

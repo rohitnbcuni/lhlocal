@@ -8,7 +8,7 @@
 
 	$QRY_MASTER_SELECT ="SELECT `id`,`project_id`,`version_name` FROM `qa_project_version` where `project_id` in ('".$project_id."','0') order by project_id ='0' DESC, version_name ASC";
 
-	$result = $mysql->sqlordie();	
+	$result = $mysql->sqlordie($QRY_MASTER_SELECT);	
 	$versionList = Array();
 	if($result->num_rows > 0) {
 		$i = '0';
