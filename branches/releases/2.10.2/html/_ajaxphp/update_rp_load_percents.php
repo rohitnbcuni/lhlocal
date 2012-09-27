@@ -1,10 +1,10 @@
 <?PHP
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-	
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	if(isset($_GET['date'])) {
-		$date=@$_GET['date'];
+		$date=$mysql->real_escape_string($_GET['date']);
 	} else {
 		$date='';
 	}
@@ -14,12 +14,12 @@
 		$program_filter = '';
 	}
 	if(isset($_GET['part'])) {
-		$part=@$_GET['part'];
+		$part=$mysql->real_escape_string($_GET['part']);
 	} else {
 		$part='';
 	}
 	$character = $_GET['showUser'];
-	$role = $_GET['role'];
+	$role = $mysql->real_escape_string($_GET['role']);
 
 	if(!empty($_REQUEST['role']) || !empty($_REQUEST['program_type'] )){
 		$character = 'all';
@@ -49,6 +49,7 @@
 		$quarter=floor($d['yday']/91.25); //starts at zero
 		$start=strtotime($d['year'].'-01-01');
 
+
 		$qstart=date('Y-m-d',strtotime('+'.round($quarter*91.25).' day',$start));
 		$qend=date('Y-m-d',strtotime('+'.round((($quarter+1)*91.25)-1).' day',$start));
 
@@ -59,14 +60,14 @@
 		$ystart=$d['year'].'-01-01';
 		$yend=$d['year'].'-12-31';
 		
-		$y_res = $mysql->query("SELECT COUNT(rb.Daypart), COUNT(DISTINCT rb.UserID) FROM resource_blocks rb, users u WHERE $program_filter u.id=rb.userid " . $charLimit . $sql_user . " AND rb.Datestamp>='$ystart' AND rb.Datestamp<='$yend' AND Status!=0");
-		$q_res = $mysql->query("SELECT COUNT(rb.Daypart), COUNT(DISTINCT rb.UserID) FROM resource_blocks rb, users u WHERE $program_filter u.id=rb.userid " . $charLimit . $sql_user . " AND rb.Datestamp>='$qstart' AND rb.Datestamp<='$qend' AND Status!=0");
-		$w_res = $mysql->query("SELECT COUNT(rb.Daypart), COUNT(DISTINCT rb.UserID) FROM resource_blocks rb, users u WHERE $program_filter u.id=rb.userid " . $charLimit . $sql_user . " AND rb.Datestamp>='$wstart' AND rb.Datestamp<='$wend' AND Status!=0");
+		$y_res = $mysql->sqlordie("SELECT COUNT(rb.Daypart), COUNT(DISTINCT rb.UserID) FROM resource_blocks rb, users u WHERE $program_filter u.id=rb.userid " . $charLimit . $sql_user . " AND rb.Datestamp>='$ystart' AND rb.Datestamp<='$yend' AND Status!=0");
+		$q_res = $mysql->sqlordie("SELECT COUNT(rb.Daypart), COUNT(DISTINCT rb.UserID) FROM resource_blocks rb, users u WHERE $program_filter u.id=rb.userid " . $charLimit . $sql_user . " AND rb.Datestamp>='$qstart' AND rb.Datestamp<='$qend' AND Status!=0");
+		$w_res = $mysql->sqlordie("SELECT COUNT(rb.Daypart), COUNT(DISTINCT rb.UserID) FROM resource_blocks rb, users u WHERE $program_filter u.id=rb.userid " . $charLimit . $sql_user . " AND rb.Datestamp>='$wstart' AND rb.Datestamp<='$wend' AND Status!=0");
 		
 		//list($y_booked,$y_uid)=$this->db->query("SELECT COUNT(Daypart), COUNT(DISTINCT UserID) FROM resource_block WHERE Datestamp>='$ystart' AND Datestamp<='$yend' AND Status!=0")->fetch(PDO::FETCH_NUM);
 		//list($q_booked,$q_uid)=$this->db->query("SELECT COUNT(Daypart), COUNT(DISTINCT UserID) FROM resource_block WHERE Datestamp>='$qstart' AND Datestamp<='$qend' AND Status!=0")->fetch(PDO::FETCH_NUM);
 		//list($w_booked,$w_uid)=$this->db->query("SELECT COUNT(Daypart), COUNT(DISTINCT UserID) FROM resource_block WHERE Datestamp>='$wstart' AND Datestamp<='$wend' AND Status!=0")->fetch(PDO::FETCH_NUM);
-		echo $mysql->error;
+		//echo $mysql->error;
 		list($y_booked,$y_uid)=$y_res->fetch_row();
 		list($q_booked,$q_uid)=$q_res->fetch_row();
 		list($w_booked,$w_uid)=$w_res->fetch_row();
@@ -100,7 +101,7 @@
 			FROM resource_blocks rb, users u 
 			WHERE $program_filter u.id=rb.userid " . $charLimit . $sql_user . " AND rb.Datestamp <= DATE_SUB( NOW( ) , INTERVAL ".$i." WEEK )
 			AND rb.Datestamp > DATE_SUB( NOW( ) , INTERVAL ".($i+1)." WEEK )";
-			$hlf = $mysql->query($query);
+			$hlf = $mysql->sqlordie($query);
 			$row=$hlf->fetch_row();
 			if($row[2]!=0)
 			{

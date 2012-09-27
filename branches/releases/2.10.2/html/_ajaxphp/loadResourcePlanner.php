@@ -2,20 +2,21 @@
   session_start();		
   include("../_inc/config.inc");
   include("sessionHandler.php");		
-  $mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);		
+  //$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);		
+  global $mysql;
   $html = "";		
-  $character = trim(urldecode($_POST['showUser']));		
-  $startDate = $_POST['startDate'];		
-  $endDate = $_POST['endDate'];		
-  $fromArrow = $_POST['fromArrow'];	    
-  $basicValue = $_POST['basicValue'];					
-  $role = $_POST['role'];	
+  $character = trim(urldecode($mysql->real_escape_string($_POST['showUser'])));		
+  $startDate = $mysql->real_escape_string($_POST['startDate']);		
+  $endDate = $mysql->real_escape_string($_POST['endDate']);		
+  $fromArrow = $mysql->real_escape_string($_POST['fromArrow']);	    
+  $basicValue = $mysql->real_escape_string($_POST['basicValue']);					
+  $role = $mysql->real_escape_string($_POST['role']);	
   $selectedRole = $role;	
-  $savedCompany = $_POST['company'];		
+  $savedCompany = $mysql->real_escape_string($_POST['company']);		
   $loopCount = 0;
   $start_date_part = explode("-", $startDate);		
   $end_date_part = explode("-", $endDate);
-  $savedProgram = $_REQUEST['programType'];	
+  $savedProgram = $mysql->real_escape_string($_REQUEST['programType']);	
   
 
 /*if(isset($savedProgram) || isset($role) ||isset($savedCompany)) {
@@ -118,7 +119,7 @@
 		}
   }    
   $schedule_width_header = $schedule_width + 10;	
-  $user_res = $mysql->query($sql_user);   
+  $user_res = $mysql->sqlordie($sql_user);   
   $htmlHeader = '<div class="resources_controller" style="width:'.$schedule_width_header.'px;padding-left:119px;min-width:515px;"><ul class="days_container" style="width:100%;"><li class="arrows"><button class="arrows arrows_left"></button></li>';		
   if($user_res->num_rows > 0) {			
   $alpha = "";			
@@ -132,13 +133,13 @@
     $sel_class_flag = false;			
   }				
   $sql_title = "SELECT * FROM `lnk_user_titles` WHERE `id`='" .$user_row['user_title'] ."' LIMIT 1";
-  $title_res = $mysql->query($sql_title);		
+  $title_res = $mysql->sqlordie($sql_title);		
   $title_row = $title_res->fetch_assoc();			
   //if($alpha != ucfirst(substr($user_row['last_name'], 0, 1))) {					
   $id = ucfirst(substr($user_row['last_name'], 0, 1));				
   //}				
   $sqlrpOt = "SELECT COUNT(a.`id`) as total FROM `resource_blocks` a WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '9' AND `hours` > 0 ORDER BY a.`datestamp`";				
-  $resrpOt = @$mysql->query($sqlrpOt);			
+  $resrpOt = @$mysql->sqlordie($sqlrpOt);			
   if($resrpOt->num_rows > 0) {					
     $resrpOt_row = $resrpOt->fetch_assoc();					
   if(@$resrpOt_row['total'] > 0) {						
@@ -203,10 +204,10 @@
   $html .= '<li class="schedule_day">							            								
   <ul>';
   //$sqlrp = "SELECT COUNT(a.`id`) FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' ORDER BY a.`datestamp`, a.`daypart`";
-  //$resrp = $mysql->query($sqlrp);								
+  //$resrp = $mysql->sqlordie($sqlrp);								
   for($i = 0; $i < 8; $i++) {								
   $sqlrp = "SELECT * FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '" .($i+1) ."' ORDER BY a.`datestamp`, a.projectid desc Limit 0,1 ";								
-  $resrp = $mysql->query($sqlrp);							
+  $resrp = $mysql->sqlordie($sqlrp);							
   if($resrp->num_rows == 1) {						
     $rpRow = $resrp->fetch_assoc();			
     $status = "";									
@@ -298,7 +299,7 @@
   function resourceBlockLockHtml($date, $week, $user, $first_week_flag, $mysql){				  
     $date_array = explode("-", $date);			
     $resourceBlockSql = 'SELECT 1 from `resource_planner_lock` WHERE `user_id`="' .$user. '" AND `week_num`="' .$week. '" AND `year`="' .$date_array[2]. '" AND `active`="1"';			
-    $result = $mysql->query($resourceBlockSql);			
+    $result = $mysql->sqlordie($resourceBlockSql);			
     if($result->num_rows == 0){				
       $offset = array("1" => '0', "2" => '1', "3" => '2', "4" => '3', "5" => '4');
       if($first_week_flag == '1'){
