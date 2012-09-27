@@ -2,10 +2,10 @@
 	session_start();
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
-	$userid = $_POST['userid'];
-	$postDate = $_POST['date'];
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	$userid = $mysql->real_escape_string($_POST['userid']);
+	$postDate = $mysql->real_escape_string($_POST['date']);
 	$postDatePart = explode("/", $postDate);
 
 //	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
@@ -45,9 +45,8 @@
 			if($d == 1 && $firstMonthDay < 7) {
 				$sel_class = 'sel';
 				$open = true;
-				$sqlOt = "SELECT * FROM `resource_blocks` WHERE `userid`='$userid' AND `datestamp` = '"
-				.date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))  ."' AND `daypart` = '9' AND `hours` > 0";
-				$resOt = $mysql->query($sqlOt);
+				$sqlOt = "SELECT * FROM `resource_blocks` WHERE `userid`='$userid' AND `datestamp` = ? AND `daypart` = '9' AND `hours` > 0";
+				$resOt = $mysql->sqlprepare($sqlOt, array(date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))));
 				if($resOt->num_rows > 0) {
 					$otClass = "cancel";
 				} else {
@@ -79,9 +78,8 @@
 			if($currentDay == 1 && $currentDay != $d) {
 				$sel_class = 'sel';
 				$open = true;
-				$sqlOt = "SELECT * FROM `resource_blocks` WHERE `userid`='$userid' AND `datestamp` = '"
-				.date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))  ."' AND `daypart` = '9' AND `hours` > 0";
-				$resOt = $mysql->query($sqlOt);
+				$sqlOt = "SELECT * FROM `resource_blocks` WHERE `userid`='$userid' AND `datestamp` = ? AND `daypart` = '9' AND `hours` > 0";
+				$resOt = $mysql->sqlprepare($sqlOt,  array(date('Y/n/j', mktime(0, 0, 0, $currentMonth, $d, $currentYear))));
 				if($resOt->num_rows > 0) {
 					$otClass = "cancel";
 				} else {
@@ -115,8 +113,8 @@
 						for($it = 0; $it < 8; $it++) {
 
 							$sqlrp = "SELECT * FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`='$userid' AND a.`datestamp` = '"
-							.$dayDate  ."' AND a.`daypart` = '" .($it+1) ."'";
-							$resrp = $mysql->query($sqlrp);
+							.$dayDate  ."' AND a.`daypart` = ? ";
+							$resrp = $mysql->sqlprepare($sqlrp, array(($it+1)));
 							$rpRow = $resrp->fetch_assoc();
 
 							$status = "";
@@ -188,8 +186,8 @@
 
 	function resourceBlockLockHtml($date, $week, $user, $first_week_flag, $mysql){
 		$date_array = explode("-", $date);
-		$resourceBlockSql = 'SELECT 1 from `resource_planner_lock` WHERE `user_id`="' .$user. '" AND `week_num`="' .$week. '" AND `year`="' .$date_array[2]. '" AND `active`="1"';
-		$result = $mysql->query($resourceBlockSql);
+		$resourceBlockSql = 'SELECT 1 from `resource_planner_lock` WHERE `user_id`= ? AND `week_num`= ? AND `year`= ? AND `active`="1"';
+		$result = $mysql->sqlprepare($resourceBlockSql, array($user, $week, $date_array[2]));
 		$offset = array("1" => '0', "2" => '1', "3" => '2', "4" => '3', "5" => '4');
 		if($first_week_flag == '1'){
 			$start_day = date('w', mktime(0, 0, 0, $date_array[0], $date_array[1], $date_array[2]));

@@ -142,12 +142,12 @@
 		
 
 			$proj_default_cc = "SELECT `cclist` FROM `projects` WHERE `id`= ?";
-			$proj_default_cc_res = $mysql->sqlordie($proj_default_cc, array($projectId));
+			$proj_default_cc_res = $mysql->sqlprepare($proj_default_cc, array($projectId));
 			$proj_default_cc_row = $proj_default_cc_res->fetch_assoc();
 			$defaultCC = $proj_default_cc_row['cclist'];
 
 			$company_default_cc = "SELECT c.`cclist` FROM `companies` c,`projects` p WHERE p.`id`= ? AND p.`company` = c.`id`";
-			$company_default_cc_res = $mysql->sqlordie($company_default_cc,array($projectId));
+			$company_default_cc_res = $mysql->sqlprepare($company_default_cc,array($projectId));
 			$company_default_cc_row = $company_default_cc_res->fetch_assoc();
 			$companyDefaultCC = $company_default_cc_row['cclist'];
 
@@ -268,6 +268,10 @@
 			if($woStatus == 3){
 				$complete_date = "`completed_date`=NOW(), ";
 			}
+			$estimated_date = '';
+			if($woREQ_TYPE == '3'){
+				$estimated_date =  " `estimated_date` = '$sql_date', ";
+			}
 			// When a draft WO is getting activated
 			$createdDate = "";
 			if($wo_old_row['active'] == '0' && $isActive == '1'){
@@ -280,6 +284,7 @@
 				.$close_date
 				.$complete_date
 				.$createdDate
+				.$estimated_date
 				."`type`=$woTypeId, "
 				."`status`='$woStatus', "
 				."`title`='$woTitle', "
@@ -362,6 +367,15 @@
 			$assigned_option_html = '<option value="'.$assigned_user_row['id'].'">'. $assigned_user_row['last_name'] .', '. $assigned_user_row['first_name'] .'</option>';
 		}else{
 			$assigned_option_html = '';
+		}
+		
+		if($wo_row['launch_date'] != $wo_old_row['launch_date'] && ($wo_old_row['launch_date']) != ''){
+				//echo $wo_row['launch_date'];
+			if(($wo_old_row['launch_date'] != '0000-00-00 00:00:00') || ( $wo_old_row['launch_date'] != '') || ($wo_row['launch_date'] != '0000-00-00 00:00:00')||( $wo_old_row['launch_date'] != '')){
+				insertWorkorderAudit($mysql,$getWoId, '10', $_SESSION['user_id'],$wo_row['assigned_to'],$woStatus);
+				$last_audit_id = $mysql->insert_id;
+				$mysql->sqlordie("INSERT INTO `workorder_date_log` SET previous_launch_date = '".$wo_old_row['launch_date']."' , audit_id = '".$last_audit_id."',  new_launch_date = '".$wo_row['launch_date']."' , user_id ='".$_SESSION['user_id']."' , wid ='".$getWoId."'");
+			}
 		}
 		
 		
@@ -621,15 +635,10 @@
 			}
 			
 			insertWorkorderAudit($mysql,$getWoId, '3', $_SESSION['user_id'],$wo_row['assigned_to'],$woStatus);
+			
 		}
 		
-		if($wo_row['launch_date'] != $wo_old_row['launch_date']){
-			//echo $wo_row['launch_date'];
-			
-			insertWorkorderAudit($mysql,$getWoId, '10', $_SESSION['user_id'],$wo_row['assigned_to'],$woStatus);
-			$last_audit_id = $mysql->insert_id;
-			$mysql->sqlordie("INSERT INTO `workorder_date_log` SET previous_launch_date = '".$wo_old_row['launch_date']."' , audit_id = '".$last_audit_id."',  new_launch_date = '".$wo_row['launch_date']."' , user_id ='".$_SESSION['user_id']."' , wid ='".$getWoId."'");
-		}
+		
 /*		else
 		{
 			insertWorkorderAudit($mysql,$getWoId, '3', $_SESSION['user_id'],$wo_row['assigned_to'],$woStatus);

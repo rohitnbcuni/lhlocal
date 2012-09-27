@@ -1,19 +1,18 @@
 <?php
 
-include('../_inc/config.inc');
+		include('../_inc/config.inc');
         include("sessionHandler.php");
-        //$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, 'lhdev_live2' , DB_PORT);
-		   $mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-		   
+       // $mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		  global $mysql; 
 		$duplicate_2011 = "UPDATE  `resource_blocks` SET status='0' ,daypart='0', datestamp='0',dateadded='0' where projectid >= '14699' AND YEAR(datestamp) = '2011'";
-		$mysql->query($duplicate_2011);
+		$mysql->sqlordie($duplicate_2011);
 		$duplicate_2010 ="UPDATE  `resource_blocks` SET status='0' ,daypart='0', datestamp='0',dateadded='0' where projectid >= '14699' AND YEAR(datestamp) = '2010'";
-		$mysql->query($duplicate_2010);
+		$mysql->sqlordie($duplicate_2010);
 		$duplicate_2012 = "UPDATE  `resource_blocks` SET status='0' ,daypart='0', datestamp='0',dateadded='0' where projectid < '14699' AND `projectid` NOT IN(14692,14695) AND YEAR(datestamp) = '2012'";
-		$mysql->query($duplicate_2012);
+		$mysql->sqlordie($duplicate_2012);
      
         $resource_all = "SELECT * FROM `resource_blocks` WHERE `projectid` > '14699' AND status = '3' AND YEAR(datestamp) ='2012' AND month(datestamp)='01'";
-        $resource_list = $mysql->query($resource_all);
+        $resource_list = $mysql->sqlordie($resource_all);
         
         if($resource_list->num_rows > 0) {
                 echo "<center> <b> Resource Planner cleanup<b></center>";
@@ -24,13 +23,13 @@ include('../_inc/config.inc');
                 while($row1 = $resource_list->fetch_assoc()) {
                         $duplicate_resource = "SELECT * FROM `resource_blocks` WHERE   userid ='".$row1['userid']."' AND
                         projectid ='".$row1['projectid']."' AND daypart ='".$row1['daypart']."' AND datestamp ='".$row1['datestamp']."' AND id <> '".$row1['id']."' ";
-                        $duplicate_resource_list = $mysql->query($duplicate_resource);
+                        $duplicate_resource_list = $mysql->sqlordie($duplicate_resource);
                         if($duplicate_resource_list->num_rows > 0) {
                                         while($row2 = $duplicate_resource_list->fetch_assoc()) {
                                                 echo "Update record id :".$row1['id']."-----New exist id : ".$row2['id'];
                                                 print_r($row2);
                                                 $update_sql = "UPDATE  `resource_blocks` SET status='0' ,daypart='0', datestamp='0',dateadded='0' where id ='".$row1['id']."'";
-                                                $mysql->query($update_sql);
+                                                $mysql->sqlordie($update_sql);
                                                 echo "<br/>";
                                         }
                                 }
@@ -39,5 +38,5 @@ include('../_inc/config.inc');
                 }
 
 		 $notin_jan_sql = "UPDATE  `resource_blocks` SET status='0' ,daypart='0', datestamp='0',dateadded='0' where `projectid` > '14699'  AND YEAR(datestamp) ='2012' AND month(datestamp) > '01'";
-         $mysql->query($notin_jan_sql);
+         $mysql->sqlordie($notin_jan_sql);
 ?>
