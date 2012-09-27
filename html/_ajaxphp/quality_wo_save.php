@@ -1,6 +1,7 @@
 <?PHP
 	session_start();
 	include('../_inc/config.inc');
+	include("sessionHandler.php");
 	include('../_ajaxphp/util.php');
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 	if(isset($_SESSION['user_id'])) {
@@ -40,7 +41,7 @@
 		$qaPRODUCT = $mysql->real_escape_string(@$_POST['qaPRODUCT']);
 		if($timeSens == "true") {
 
-		$select_wo_old = "SELECT * FROM `qa_defects` WHERE `id`='" .$defectID ."'";
+		$select_wo_old = "SELECT * FROM `qa_defects` WHERE `id`= ? ";
 		$wo_old_res = $mysql->sqlprepare($select_wo_old,array($defectID));
 		$wo_old_row = $wo_old_res->fetch_assoc();		
 
@@ -75,10 +76,10 @@
 				."(`project_id`, `status`, `title`, `example_url`, `body`, `assigned_to`, `requested_by`, `detected_by`, `assigned_date`,`cclist`, `category`, `os`,`origin`, `browser`,  `severity`, `version`,  `creation_date`, `launch_date`,`iteration`,`product`)"
 				."VALUES "
 				."('$projectId','$woStatus','$woTitle','$woExampleURL','$woDesc','$woAssignedTo','$requestedId','$qaDETECTED_BY',$assignedDate,'$qaCCList','$qaCATEGORY','$qaOS','$qaORIGIN','$qaBROWSER','$qaSEVERITY','$qaVERSION',$dtStart,$dtEnd,'$qaITERATION','$qaPRODUCT')";
-				@$mysql->sqlordie();
+				@$mysql->sqlordie($insert_qa);
 				$getdefectID = $mysql->insert_id;			
 				$update_wo = "UPDATE `projects` SET `qa_permission`='1' WHERE `id`='$projectId'";
-			        @$mysql->sqlordie();	
+			        @$mysql->sqlordie($update_wo);	
 		} else {			
 			$qaDETECTED_BY = $wo_old_row['detected_by'];
 			$requestedId = $wo_old_row['requested_by'] ;
@@ -116,7 +117,7 @@
 				."`product`='$qaPRODUCT'"
 				."WHERE `id`='$defectID'";
 
-			@$mysql->sqlordie();
+			@$mysql->sqlordie($update_wo);
 			$getdefectID = $defectID;		
 
 		}					
@@ -127,7 +128,7 @@
 			@rename($_SERVER['DOCUMENT_ROOT']."/qafiles/" .$dirName,  $_SERVER['DOCUMENT_ROOT']."/qafiles/" .$getdefectID);
 			
 			$update_files = "UPDATE `qa_files` SET `defect_id`='$getdefectID', `directory`='$getdefectID' WHERE `directory`='" .str_replace("/", "", $dirName) ."'";
-			@$mysql->sqlordie();
+			@$mysql->sqlordie($update_files);
 		}
 		
 		$select_wo = "SELECT * FROM `qa_defects` WHERE `id`= ? ";
@@ -281,7 +282,7 @@
 	function insertWorkorderAudit($mysql,$defect_id, $audit_id, $log_user_id,$assign_user_id,$status)
 	{
 		$insert_custom_feild = "INSERT INTO  `quality_audit` (`defect_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$defect_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
-		@$mysql->sqlordie();
+		@$mysql->sqlordie($insert_custom_feild);
 	}
 	
 ?>

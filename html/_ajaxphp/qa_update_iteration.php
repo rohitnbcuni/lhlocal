@@ -8,7 +8,7 @@
 
 	$QRY_MASTER_SELECT ="SELECT `id`,`project_id`,`iteration_name` FROM `qa_project_iteration` where `project_id` in ('".$project_id."','0') AND active ='1' AND deleted ='0' order by project_id ='0' DESC, iteration_name ASC   ";
 
-	$result = $mysql->sqlordie();	
+	$result = $mysql->sqlordie($QRY_MASTER_SELECT);	
 	$versionList = Array();
 	if($result->num_rows > 0) {
 		$i = '0';

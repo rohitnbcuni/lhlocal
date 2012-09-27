@@ -1,6 +1,7 @@
 <?PHP
 	session_start();
 	include('../_inc/config.inc');
+	include("sessionHandler.php");
 	include('../_ajaxphp/util.php');
 	if(isset($_SESSION['user_id'])) {
 		
@@ -30,7 +31,7 @@
 				."(`defect_id`,`user_id`,`comment`,`date`) "
 				."VALUES "
 				."('$defectId','$userId','$comment',NOW())";
-			@$mysql->sqlordie();
+			@$mysql->sqlordie($update_wo_comment);
 		
 			insertWorkorderAudit($mysql,$defectId, '4', $_SESSION['user_id'],$bc_id_row['assigned_to'],$bc_id_row['status']);
 		}
@@ -142,6 +143,6 @@
 	function insertWorkorderAudit($mysql,$wo_id, $audit_id, $log_user_id,$assign_user_id,$status)
 	{
 		$insert_custom_feild = "INSERT INTO  `workorder_audit` (`workorder_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$wo_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
-		@$mysql->sqlordie();
+		@$mysql->sqlordie($insert_custom_feild);
 	}
 ?>

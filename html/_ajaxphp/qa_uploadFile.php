@@ -2,6 +2,7 @@
 	if(isset($_POST['dirName'])) {
 		@session_start();
 		include('../_inc/config.inc');
+		include("sessionHandler.php");
 	
 		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 		//Defining Global mysql connection values
@@ -40,7 +41,7 @@
 		}
 
 		$select_file = "SELECT * FROM `qa_files` WHERE `directory`='" .str_replace("/", "", $dirName) ."' AND `file_name`='" .$cleaned_filename ."' LIMIT 1";
-		$result = $mysql->sqlordie();	
+		$result = $mysql->sqlordie($select_file);	
 
 		if (!copy($_FILES['upload_file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] .'/qafiles/' .$dirName .$cleaned_filename)) {
 			echo "fail";
@@ -49,13 +50,13 @@
 			if($result->num_rows == 1) {
 				$row = $result->fetch_assoc();
 				$update_row = "UPDATE `qa_files` SET `defect_id`='$defectId', `upload_date`=NOW() WHERE `id`='" .$row['id'] ."'";
-				$mysql->sqlordie();
+				$mysql->sqlordie($update_row);
 			} else {
 				$insert_image = "INSERT INTO `qa_files` "
 					."(`defect_id`,`directory`,`file_name`,`upload_date`,`deleted`) "
 					."VALUES "
 					."($defectId,'" .str_replace("/", "", $dirName) ."','" .$cleaned_filename ."',NOW(),'1')";
-				$mysql->sqlordie();	
+				$mysql->sqlordie($insert_image);	
 			}
 			echo "success";
 		}

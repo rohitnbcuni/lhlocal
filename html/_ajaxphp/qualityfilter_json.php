@@ -80,7 +80,7 @@ if(array_key_exists("report", $_GET)){
 
 $project_query = "SELECT DISTINCT a.`id`, a.`project_name`, a.`project_code`, a.`company` FROM `projects` a, `qa_defects` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND a.qa_permission ='1' AND c.`user_id`='" .$_SESSION['user_id'] ."'  ".$CLIENT_SQL."  ORDER BY a.`company`, a.`project_name` ASC";
 //echo "qry".$project_query;
-$project_result = $mysql->sqlordie();
+$project_result = $mysql->sqlordie($project_query);
 $project_result->num_rows;
 $i=0;
 
@@ -104,7 +104,7 @@ if($project_result->num_rows > 0) {
 
   $wo_last_comment = "SELECT wc.`id`,wc.`defect_id`,wc.`user_id`,wc.`comment`,wc.`date` FROM `qa_comments` wc, (select max(id) id from `qa_comments` group by `defect_id` ) tab1,`qa_defects` b where wc.id=tab1.id and b.id = wc.`defect_id` $project_archive";
 
-  $wo_last_comment_result = $mysql->sqlordie();
+  $wo_last_comment_result = $mysql->sqlordie($wo_last_comment);
 
   if($wo_last_comment_result->num_rows > 0){
     while($last_comment_row = $wo_last_comment_result->fetch_assoc()){
@@ -114,7 +114,7 @@ if($project_result->num_rows > 0) {
 
     $qa_last_action_sql = "SELECT audit.`defect_id`,audit.`audit_id`,audit.`log_user_id`,audit.`assign_user_id`,audit.`status`,audit.`log_date` FROM `quality_audit` audit, (select max(id) id from `quality_audit` group by `defect_id` ) tab1,`qa_defects` b where audit.id=tab1.id and b.id = audit.`defect_id` $project_archive";
 
-	$qa_last_action_audit = $mysql->sqlordie();
+	$qa_last_action_audit = $mysql->sqlordie($qa_last_action_sql);
 
 	if($qa_last_action_audit->num_rows > 0){
 		while($qa_last_action_row = $qa_last_action_audit->fetch_assoc()){
@@ -139,7 +139,7 @@ if($project_result->num_rows > 0) {
     }
   }
 
-  $qa_custom_data = $mysql->query("SELECT field_key,field_id,field_name FROM `lnk_custom_fields_value` where field_key in ('QA_CATEGORY','QA_SEVERITY','QA_OS','QA_BROWSER','QA_ORIGIN') order by field_key ");
+  $qa_custom_data = $mysql->sqlprepare("SELECT field_key,field_id,field_name FROM `lnk_custom_fields_value` where field_key in ('QA_CATEGORY','QA_SEVERITY','QA_OS','QA_BROWSER','QA_ORIGIN') order by field_key ");
   $custom_feild_arr;
   while($row = $qa_custom_data->fetch_assoc())
   {
@@ -158,7 +158,7 @@ if($project_result->num_rows > 0) {
     
     $select_project_workorders = "SELECT * FROM `qa_defects` WHERE `project_id`='" .$project_row['id'] ."' ".$archive_sql." AND ".$WHERE_SQL." ORDER BY `title` ";
 
-    $project_workorders_result = $mysql->sqlordie();
+    $project_workorders_result = $mysql->sqlordie($select_project_workorders);
     	
     if($project_workorders_result->num_rows > 0) {
       while($quality = $project_workorders_result->fetch_assoc()) {
@@ -166,7 +166,7 @@ if($project_result->num_rows > 0) {
 
 		  
          if(!array_key_exists($quality['version'], $qa_project_version)){
-	          $select_qa_version = "SELECT * FROM `qa_project_version` WHERE `id`='" .$quality['version'] ."'";
+	          $select_qa_version = "SELECT * FROM `qa_project_version` WHERE `id`= ? ";
 			  $version_result = $mysql->sqlprepare($select_qa_version,array($quality['version']));
 			  $version_row = $version_result->fetch_assoc();
 			  $userName = '';
@@ -184,7 +184,7 @@ if($project_result->num_rows > 0) {
 		 }
 		 //For qa_project_iteration
 		 if(!array_key_exists($quality['iteration'], $qa_project_iteration)){
-	          $select_qa_version = "SELECT * FROM `qa_project_iteration` WHERE `id`='" .$quality['iteration'] ."'";
+	          $select_qa_version = "SELECT * FROM `qa_project_iteration` WHERE `id`= ? ";
 			  $version_result = $mysql->sqlprepare($select_qa_version,array($quality['iteration']));
 			  $version_row = $version_result->fetch_assoc();
 			  
@@ -196,7 +196,7 @@ if($project_result->num_rows > 0) {
 		 }
 		 //for product
 		 if(!array_key_exists($quality['product'], $qa_project_product)){
-	          $select_qa_version = "SELECT * FROM `qa_project_product` WHERE `id`='" .$quality['product'] ."'";
+	          $select_qa_version = "SELECT * FROM `qa_project_product` WHERE `id`= ? ";
 			  $version_result = $mysql->sqlprepare($select_qa_version,array($quality['product']));
 			  $version_row = $version_result->fetch_assoc();
 			  $userName = '';
@@ -206,7 +206,7 @@ if($project_result->num_rows > 0) {
 			  }
 		 }
         if(!array_key_exists($quality['detected_by'], $wo_user_list)){
-          $select_wo_requested_by = "SELECT * FROM `users` WHERE `id`='" .$quality['detected_by'] ."'";
+          $select_wo_requested_by = "SELECT * FROM `users` WHERE `id`= ? ";
           $requested_result = $mysql->sqlprepare($select_wo_requested_by,array($quality['detected_by']));
           $requested_row = $requested_result->fetch_assoc();
           $userName = '';
@@ -221,7 +221,7 @@ if($project_result->num_rows > 0) {
           $wo_user_list[$quality['detected_by']] = $userName;
         }
         if(!array_key_exists($quality['assigned_to'], $wo_user_list)){
-          $select_wo_assigned_to = "SELECT * FROM `users` WHERE `id`='" .$quality['assigned_to'] ."'";
+          $select_wo_assigned_to = "SELECT * FROM `users` WHERE `id`= ? ";
           $assigned_result = $mysql->sqlprepare($select_wo_assigned_to,array($quality['assigned_to']));
           $assigned_row = $assigned_result->fetch_assoc();
           $userName ='';
@@ -287,7 +287,7 @@ if($project_result->num_rows > 0) {
           }
 
           if(!array_key_exists($wo_last_comment_user_id, $wo_user_list)){
-            $select_wo_last_comment = "SELECT * FROM `users` WHERE `id`='" .$wo_last_comment_user_id ."'";
+            $select_wo_last_comment = "SELECT * FROM `users` WHERE `id`= ? ";
             $last_comment_result = $mysql->sqlprepare($select_wo_last_comment,array($wo_last_comment_user_id));
             $last_comment_row = $last_comment_result->fetch_assoc();
 
@@ -328,15 +328,15 @@ if($project_result->num_rows > 0) {
       if($quality['deleted']!=0){$deleted='Yes';}else{$deleted='No';}
       if($quality['archived']!=0){$archived='Yes';}else{$archived='No';}
       if ((!empty($quality['closed_date']))){$closed_date=format_date($quality['closed_date']);}else {$closed_date='No';}
-		  $select_qa_browser = "SELECT * FROM `lnk_custom_fields_value` WHERE `field_id`='" .$quality['browser'] ."'";
-          $assigned_result = $mysql->sqlprepare($select_qa_browser,array($wo_last_comment_user_id));
+		  $select_qa_browser = "SELECT * FROM `lnk_custom_fields_value` WHERE `field_id`= ? ";
+          $assigned_result = $mysql->sqlprepare($select_qa_browser,array($quality['browser']));
           $assigned_row_qa_browser = $assigned_result->fetch_assoc();
           
-          $select_qa_os = "SELECT * FROM `lnk_custom_fields_value` WHERE `field_id`='" .$quality['os'] ."'";
+          $select_qa_os = "SELECT * FROM `lnk_custom_fields_value` WHERE `field_id`= ? ";
           $assigned_result_os = $mysql->sqlprepare($select_qa_os,array($quality['os']));
           $assigned_row_qa_os = $assigned_result_os->fetch_assoc();
           
-           $select_qa_origin = "SELECT * FROM `lnk_custom_fields_value` WHERE `field_id`='" .$quality['origin'] ."'";
+           $select_qa_origin = "SELECT * FROM `lnk_custom_fields_value` WHERE `field_id`= ? ";
           $assigned_result_origin = $mysql->sqlprepare($select_qa_origin,array($quality['origin']));
           $assigned_row_qa_origin = $assigned_result_origin->fetch_assoc();
 		 
@@ -458,7 +458,7 @@ if(isset($from_action) && $from_action){
 
 function getQualityStatus($name,$mysql){
 	//global $mysql;
-	$select_wo_status = "SELECT `id` FROM `lnk_qa_status_types` WHERE name ='$name'";
+	$select_wo_status = "SELECT `id` FROM `lnk_qa_status_types` WHERE name = ? ";
   	$status_result = $mysql->sqlprepare($select_wo_status,array($name));
   	if($status_result->num_rows > 0){
     	$status_row = $status_result->fetch_assoc();

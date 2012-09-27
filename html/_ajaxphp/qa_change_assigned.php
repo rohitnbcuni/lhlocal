@@ -1,6 +1,7 @@
 <?PHP
 	session_start();
 	include('../_inc/config.inc');
+	include("sessionHandler.php");
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 	if(isset($_SESSION['user_id'])) {
 		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
@@ -10,7 +11,7 @@
 		$defect_id = $mysql->real_escape_string($_GET['id']);
 		$assigned_id = $mysql->real_escape_string($_GET['user_id']);
 		
-		$select_qa_old = "SELECT * FROM `qa_defects` WHERE `id`='" .$defect_id ."'";
+		$select_qa_old = "SELECT * FROM `qa_defects` WHERE `id`= ? ";
 		$qa_old_res = $mysql->sqlprepare($select_qa_old,array($defect_id));
 		$qa_old_row = $qa_old_res->fetch_assoc();
 		
@@ -21,17 +22,17 @@
 		}
 		
 		$update_assigned = "UPDATE `qa_defects` SET `assigned_to`='$assigned_id'$assigned_query WHERE `id`='$defect_id'";
-		@$mysql->sqlprepare($update_assigned,array($defect_id));
+		@$mysql->sqlordie($update_assigned);
 		
 		/********************Email new Change*****************/
 
-		$select_qa = "SELECT * FROM `qa_defects` WHERE `id`='" .$defect_id ."'";
+		$select_qa = "SELECT * FROM `qa_defects` WHERE `id`= ? ";
 		$qa_res = $mysql->sqlprepare($select_qa,array($defect_id));
 		$qa_row = $qa_res->fetch_assoc();
 
 		insertWorkorderAudit($mysql,$defect_id, '2', $_SESSION['user_id'],$qa_row['assigned_to'],$qa_row['status']);
 		
-		$select_user = "SELECT * FROM `users` WHERE `id`='" .$assigned_id ."'";
+		$select_user = "SELECT * FROM `users` WHERE `id`= ? ";
 		$user_res = $mysql->sqlprepare($select_user,array($assigned_id));
 		$user_row = $user_res->fetch_assoc();
 		
@@ -44,20 +45,20 @@
 		//$users_email[$qa_row['requested_by']] = true;
 		
 		$user_keys = array_keys($users_email);
-		$select_project = "SELECT * FROM `projects` WHERE `id`='" .$qa_old_row['project_id'] ."'";
+		$select_project = "SELECT * FROM `projects` WHERE `id`= ? ";
 		$project_res = $mysql->sqlprepare($select_project,array($qa_old_row['project_id']));
 		$project_row = $project_res->fetch_assoc();
 		
-		$wo_status = "SELECT * FROM `lnk_qa_status_types` WHERE `id`='" .$qa_row['status'] ."'";
+		$wo_status = "SELECT * FROM `lnk_qa_status_types` WHERE `id`= ? ";
 		$wo_status_res = $mysql->sqlprepare($wo_status,array($qa_row['status']));
 		$wo_status_row = $wo_status_res->fetch_assoc();
 
-		$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
+		$select_company = "SELECT * FROM `companies` WHERE `id`= ? ";
 		$company_res = $mysql->sqlprepare($select_company,array($project_row['company']));
 		$company_row = $company_res->fetch_assoc();
 
 		for($u = 0; $u < sizeof($user_keys); $u++) {
-			$select_email_addr = "SELECT `email` FROM `users` WHERE `id`='" .$user_keys[$u] ."' LIMIT 1";
+			$select_email_addr = "SELECT `email` FROM `users` WHERE `id`= ? LIMIT 1";
 			$email_addr_res = $mysql->sqlprepare($select_email_addr,array($user_keys[$u]));
 			$email_addr_row = $email_addr_res->fetch_assoc();
 			
@@ -86,6 +87,6 @@
 	function insertWorkorderAudit($mysql,$defect_id, $audit_id, $log_user_id,$assign_user_id,$status)
 	{
 		$insert_custom_feild = "INSERT INTO  `quality_audit` (`defect_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$defect_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
-		@$mysql->sqlordie();
+		@$mysql->sqlordie($insert_custom_feild);
 	}
 ?>
