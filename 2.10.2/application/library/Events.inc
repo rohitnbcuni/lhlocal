@@ -493,13 +493,15 @@
 			}
 			$evenTrial = array();
 			$evenTrial2 = array();
+			  //Last Insert Id of event table
+                        $evenTrial['event_id'] = $db->lastInsertId();
 			$sql = "SELECT id, name FROM lnk_event_audit_trial_types WHERE active ='1' AND deleted = '0' AND name = 'New'"; 
 			$trialStatusId = $db->fetchOne($sql);
 			
 			$sql = "SELECT id, name FROM lnk_event_audit_trial_types WHERE active ='1' AND deleted = '0' AND name = 'Assigned To'"; 
 			$trialAssignedId = $db->fetchOne($sql);
 			//Last Insert Id of event table
-			$evenTrial['event_id'] = $db->lastInsertId();
+			//$evenTrial['event_id'] = $db->lastInsertId();
 			$evenTrial['status'] = $dataArray['status'];
 			$evenTrial['audit_id'] = $trialStatusId;
 			//$evenTrial['audit_id'] = $this->getEventTrailStatus("New");
