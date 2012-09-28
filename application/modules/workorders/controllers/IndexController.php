@@ -1239,7 +1239,19 @@
 					else if($row['audit_id']=='9')
 					{
 						echo "- ".$row['name']." by ".$audit_user_list[$row['log_user_id']]." and the Work order Status is ".$audit_status[$row['status']]." on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
-					}	
+					}
+					//Audit log for chnage request log
+					else if($row['audit_id']=='10')
+					{
+						$audit_date_log = array();
+						$audit_date_log = WoDisplay::getQuery("SELECT * FROM `workorder_date_log` WHERE `audit_id`='" .$row['id'] ."' AND wid = '".$wo_id."' LIMIT 1");
+						if(count($audit_date_log[0]) > 0){
+							echo "- Work Order Due Date changed from ".date("Y-m-d h:i:s A",strtotime($audit_date_log[0]['previous_launch_date']))." to ".date("Y-m-d h:i:s A",strtotime($audit_date_log[0]['new_launch_date']))." by ".$audit_user_list[$row['log_user_id']]."<br />";
+						
+						
+						}
+						
+					}			
 					//echo "- "."Work order ".$row['name']." to ".$audit_status[$row['status']]." by ".$audit_user_list[$row['log_user_id']]." on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
 					}
 					if($row['Request_type'] != '')
