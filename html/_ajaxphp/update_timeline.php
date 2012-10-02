@@ -1,7 +1,9 @@
 <?PHP
 	include('../_inc/config.inc');
-	
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	include("sessionHandler.php");
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//Defining Global mysql connection values
+	global $mysql;
 	
 	$phases = @$_GET['phase'];
 	$phaseKeys = array_keys($phases);
@@ -15,7 +17,7 @@
 		$end = $mysql->real_escape_string(@$end_part[2] ."-" .@$end_part[0] ."-" .@$end_part[1]);
 		
 		$select_entry = "SELECT * FROM `project_phases` WHERE `project_id`='$project' AND `phase_type`='$phase' LIMIT 1";
-		$entry_result = $mysql->query($select_entry);
+		$entry_result = $mysql->sqlordie($select_entry);
 		
 		if($entry_result->num_rows == 1) {
 			$row = $entry_result->fetch_assoc();
@@ -23,13 +25,13 @@
 				."`start_date`='$start',"
 				."`projected_end_date`='$end' "
 				."WHERE `id`='" .$row['id'] ."'";
-			$mysql->query($update_timeline);
+			$mysql->sqlordie($update_timeline);
 		} else if ($entry_result->num_rows == 0) {
 			$insert_timeline = "INSERT INTO `project_phases` "
 				."(`project_id`,`phase_type`,`start_date`,`projected_end_date`) "
 				."VALUES "
 				."('$project','$phase','$start','$end')";
-			$mysql->query($insert_timeline);
+			$mysql->sqlordie($insert_timeline);
 		}
 	}
 	
@@ -42,7 +44,7 @@
 	
 	$check_complete = "SELECT * FROM `project_brief_sections` WHERE `project_id`='" 
 		.$project ."' AND `section_type`='" .$section[1] ."' LIMIT 1";
-	$complete_res = $mysql->query($check_complete);
+	$complete_res = $mysql->sqlordie($check_complete);
 	
 	if($complete_res->num_rows == 1) {
 		$row = $complete_res->fetch_assoc();
@@ -57,16 +59,16 @@
 				$flag = 2;
 			}
 			$update = "UPDATE `project_brief_sections` set `flag`='$flag' WHERE `id`='" .$row['id'] ."'";
-			@$mysql->query($update);
+			@$mysql->sqlordie($update);
 		} else {
 			$update = "UPDATE `project_brief_sections` set `flag`='1' WHERE `id`='" .$row['id'] ."'";
-			@$mysql->query($update);
+			@$mysql->sqlordie($update);
 		}
 	} else if($complete_res->num_rows == 0) {
 		$insert = "INSERT INTO `project_brief_sections` "
 			."(`project_id`,`section_type`,`flag`) "
 			."VALUES "
 			."('$project','" .$section[1]  ."','$complete_status')";
-		@$mysql->query($insert);
+		@$mysql->sqlordie($insert);
 	}
 ?>

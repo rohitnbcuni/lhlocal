@@ -1,14 +1,17 @@
 <?PHP
 	include('../_inc/config.inc');
-	
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	include("sessionHandler.php");
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//Defining Global mysql connection values
+	global $mysql; 
+
 	$html = '';
 	$wo_id = $mysql->real_escape_string($_GET['id']);
 	//$user_query = "SELECT id,last_name, first_name FROM `users` WHERE `company`='2' ORDER BY `last_name`";
 	$user_query = "SELECT id,last_name, first_name FROM `users` WHERE `active`='1' AND `deleted`='0'  ORDER BY `last_name`";
-	$user_result = $mysql->query($user_query);
+	$user_result = $mysql->sqlordie($user_query);
 	$assigned_query= "SELECT `assigned_to` FROM `workorders` WHERE `id`=$wo_id";
-    $assigned_result = $mysql->query($assigned_query);
+    $assigned_result = $mysql->sqlordie($assigned_query);
 	$assigned_row = $assigned_result->fetch_assoc();
 
 	if($user_result->num_rows > 0) {

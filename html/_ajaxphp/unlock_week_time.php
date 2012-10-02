@@ -1,6 +1,9 @@
 <?PHP 
 	include("../_inc/config.inc");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	include("sessionHandler.php");
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//Defining Global mysql connection values
+	global $mysql;
 
 	$start_date = $_GET['start_date'];
 	$week_number = $_GET['week_number'];
@@ -9,6 +12,6 @@
 
 	$insertSql = "DELETE FROM `resource_planner_lock` where `user_id` = '$user_id' AND `week_num` = '$week_number' AND `year` =  '$start_date_array[0]'";
 
-	$mysql->query($insertSql);
+	$mysql->sqlordie($insertSql);
 	echo $mysql->affected_rows;
 ?>

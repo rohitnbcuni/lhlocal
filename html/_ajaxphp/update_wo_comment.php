@@ -2,10 +2,14 @@
 	session_start();
 	include('../_inc/config.inc');
 	include('../_ajaxphp/util.php');
+	include("sessionHandler.php");
 		
 	if(isset($_SESSION['user_id'])) {
 		
-		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//Defining Global mysql connection values
+	global $mysql;
 		
 		//$user = $_SESSION['lh_username'];
 	    //$password = $_SESSION['lh_password'];
@@ -24,17 +28,17 @@
 		 if(ISSET($_POST['del'])){
 			if($_POST['del'] == 'lhcommentdelete'){
 				$select_comments = "SELECT workorder_id FROM `workorder_comments` WHERE `id`='$comment_id' LIMIT 1";
-				$comm_result = @$mysql->query($select_comments);
+				$comm_result = @$mysql->sqlordie($select_comments);
 				if($comm_result->num_rows > 0){
 					$wo_res = $comm_result->fetch_assoc();
 					$woId = $wo_res['workorder_id'];
 					$update_wo_comment = "UPDATE `workorder_comments`  SET `active` = '0',`deleted` = '1' WHERE id ='$comment_id'";
-					@$mysql->query($update_wo_comment);
+					@$mysql->sqlordie($update_wo_comment);
 					$bc_id_query = "SELECT  `bcid`, `project_id`, `title`, `priority`,`status`,`assigned_to`,`body` FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($woId) ."' LIMIT 1";
-					$bc_id_result = $mysql->query($bc_id_query);
+					$bc_id_result = $mysql->sqlordie($bc_id_query);
 					$bc_id_row = $bc_id_result->fetch_assoc();
 					$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$woId' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
-					$req_type_res = $mysql->query($select_req_type_qry);
+					$req_type_res = $mysql->sqlordie($select_req_type_qry);
 					$req_type_row = $req_type_res->fetch_assoc();
 					insertWorkorderAudit($mysql,$woId, '8', $_SESSION['user_id'],$bc_id_row['assigned_to'],$bc_id_row['status']);
 					die("ok");
@@ -54,7 +58,7 @@
 			$userId = $_SESSION['user_id'];
 		}
 		$select_comments = "SELECT workorder_id FROM `workorder_comments` WHERE `id`='$comment_id' AND deleted = '0' LIMIT 1";
-		$comm_result = @$mysql->query($select_comments);
+		$comm_result = @$mysql->sqlordie($select_comments);
 		if($comm_result->num_rows > 0){
 			$comRow = $comm_result->fetch_assoc(); 
 			$woId = $comRow['workorder_id'];
@@ -63,28 +67,28 @@
 		
 		if((!empty($comment)) && ($woId != '')){
 			$update_wo_comment = "UPDATE `workorder_comments`  SET `comment` = '$comment',`date`=NOW() WHERE id ='$comment_id'";
-			@$mysql->query($update_wo_comment);
+			@$mysql->sqlordie($update_wo_comment);
 						
 			$bc_id_query = "SELECT  `bcid`, `project_id`, `title`, `priority`,`status`,`assigned_to`,`body` FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($woId) ."' LIMIT 1";
-			$bc_id_result = $mysql->query($bc_id_query);
+			$bc_id_result = $mysql->sqlordie($bc_id_query);
 			$bc_id_row = $bc_id_result->fetch_assoc();
 			
 
 			$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$woId' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
-			$req_type_res = $mysql->query($select_req_type_qry);
+			$req_type_res = $mysql->sqlordie($select_req_type_qry);
 			$req_type_row = $req_type_res->fetch_assoc();
 			insertWorkorderAudit($mysql,$woId, '9', $_SESSION['user_id'],$bc_id_row['assigned_to'],$bc_id_row['status']);
 			$select_email_users = "SELECT * FROM `workorders` WHERE `id`='$woId' LIMIT 1";
-			$email_res = $mysql->query($select_email_users);
+			$email_res = $mysql->sqlordie($select_email_users);
 			$select_comments = "SELECT * FROM `workorder_comments` WHERE `id`='$comment_id' AND deleted = '0' LIMIT 1";
-			$comm_result = @$mysql->query($select_comments);
+			$comm_result = @$mysql->sqlordie($select_comments);
 			if($comm_result->num_rows > 0){
 				while($comRow = $comm_result->fetch_assoc()) {
 					$woId = $comRow['workorder_id'];
 					$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 					$comment_id = $comRow["id"]; 
 					$select_user = "SELECT * FROM `users` WHERE `id`='" .$comRow['user_id'] ."' LIMIT 1";
-					$user_result = @$mysql->query($select_user);
+					$user_result = @$mysql->sqlordie($select_user);
 					$user_row = $user_result->fetch_assoc();
 					
 					$date_time_split = explode(" ", $comRow['date']);
@@ -140,7 +144,7 @@
 
 		if($email_res->num_rows > 0) {
 			$new_commenter = "SELECT * FROM `users` WHERE `id`='$userId' LIMIT 1";
-			$commenter_res = $mysql->query($new_commenter);
+			$commenter_res = $mysql->sqlordie($new_commenter);
 			$commenter_row = $commenter_res->fetch_assoc();
 		
 			$email_row = $email_res->fetch_assoc();
@@ -154,11 +158,11 @@
 			$requestedId = $email_row['requested_by'];
 
 			$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
-			$requestor_user_res = $mysql->query($requestor_qry);
+			$requestor_user_res = $mysql->sqlordie($requestor_qry);
 			$requestor_user_row = $requestor_user_res->fetch_assoc();
 		
 			$site_name_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$woId' and a.field_key='SITE_NAME' and a.field_id = b.field_id";
-			$site_name_res = $mysql->query($site_name_qry);
+			$site_name_res = $mysql->sqlordie($site_name_qry);
 			$site_name_row = $site_name_res->fetch_assoc();
 			
 			$users_email[$at] = true;
@@ -172,11 +176,11 @@
 			$user_keys = array_keys($users_email);
 			$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
 			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$bc_id_row['project_id'] ."'";
-			$project_res = $mysql->query($select_project);
+			$project_res = $mysql->sqlordie($select_project);
 			$project_row = $project_res->fetch_assoc();
 
 			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-			$company_res = $mysql->query($select_company);
+			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
 			$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
             
@@ -186,7 +190,7 @@
             $desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES, 'UTF-8'));
 			for($u = 0; $u < sizeof($user_keys); $u++) {
 				$select_email_addr = "SELECT `email` FROM `users` WHERE `id`='" .$user_keys[$u] ."' LIMIT 1";
-				$email_addr_res = $mysql->query($select_email_addr);
+				$email_addr_res = $mysql->sqlordie($select_email_addr);
 				$email_addr_row = $email_addr_res->fetch_assoc();
 				
 				$to = $email_addr_row['email'];
@@ -209,7 +213,7 @@
 //code for lh 18306		 
 				$severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SEVERITY' and cu.field_key = 'SEVERITY' and cu.workorder_id = '$woId'";
 				
-			    $severity_name_res = $mysql->query($severity_name_qry);
+			    $severity_name_res = $mysql->sqlordie($severity_name_qry);
 			    $severity_name_row = $severity_name_res->fetch_assoc();
 		
 				if($request_type_arr[$req_type_row['field_name']]=='Problem')
@@ -243,6 +247,6 @@
 	function insertWorkorderAudit($mysql,$wo_id, $audit_id, $log_user_id,$assign_user_id,$status)
 	{
 		$insert_custom_feild = "INSERT INTO  `workorder_audit` (`workorder_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$wo_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
-		@$mysql->query($insert_custom_feild);
+		@$mysql->sqlordie($insert_custom_feild);
 	}
 ?>
