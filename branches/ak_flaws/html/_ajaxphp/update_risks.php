@@ -1,7 +1,9 @@
 <?PHP 
 	include("../_inc/config.inc");
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//Defining Global mysql connection values
+	global $mysql; 
 
 	$type = $_GET['type'];
 	$riskId = $_GET['riskId'];
@@ -18,10 +20,10 @@
 	}
 	$updateSql = "UPDATE project_risks SET $update WHERE id='$riskId'";
 
-	$mysql->query($updateSql);
+	$mysql->sqlordie($updateSql);
 	if($type == 'active' && $value == '0'){
 		$closedDate = '';
-		$riskResult = $mysql->query("SELECT date_format(closed_date, '%m-%d-%Y') AS closed_date FROM project_risks WHERE id='$riskId'");
+		$riskResult = $mysql->sqlordie("SELECT date_format(closed_date, '%m-%d-%Y') AS closed_date FROM project_risks WHERE id='$riskId'");
 
 		if($riskResult){
 			$risk = $riskResult->fetch_assoc();

@@ -1,14 +1,16 @@
 <?PHP
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//Defining Global mysql connection values
+	global $mysql; 
 	
 	switch(@$_REQUEST['data_set']) {
 		case 'project_code': {
 			//$link = mysql_connect('localhost', 'generic', 'generic');
 			//mysql_select_db('nbc_lighthouse', $link);
 			$query = "SELECT * FROM `projects` WHERE `company` = '" .$mysql->real_escape_string(@$_REQUEST['comp_id']) ."' ORDER BY `project_code` DESC LIMIT 1";
-			$result = $mysql->query($query);
+			$result = $mysql->sqlordie($query);
 			$data = $result->fetch_assoc();
 			
 			//echo "testcode001:" .@$_REQUEST['comp_id'] .":" .mysql_num_rows($result);
@@ -34,10 +36,10 @@
 			$project_program = $mysql->real_escape_string(@$_REQUEST['project_program']);
 		    if($project_program != ''){
 				$update_allocation_type = "UPDATE `projects` SET `program` = '$project_program' WHERE `id`='" .$id ."'";
-				$mysql->query($update_allocation_type);
+				$mysql->sqlordie($update_allocation_type);
 			}
 			$query = "SELECT * FROM `project_brief_sections` WHERE `project_id`='" .$id ."' AND `section_type`='" .$section[1] ."'";
-			$result = $mysql->query($query);		
+			$result = $mysql->sqlordie($query);		
 			
 			if($result) {
 				if($result->num_rows == 1) {
@@ -54,12 +56,12 @@
 						}
 						$update_desc = "UPDATE `project_brief_sections` SET "
 							."`desc` = '$desc', `flag`='$flag' WHERE `id`='" .$row['id'] ."'";
-						$mysql->query($update_desc);
+						$mysql->sqlordie($update_desc);
 						$bool = 1;
 					} else {
 						$update_desc = "UPDATE `project_brief_sections` SET "
 							."`desc` = '$desc', `flag`='1' WHERE `id`='" .$row['id'] ."'";
-						$mysql->query($update_desc);
+						$mysql->sqlordie($update_desc);
 						$bool = 1;
 					}
 				} else if(mysql_num_rows($result) == 0) {
@@ -68,14 +70,14 @@
 							."(`project_id`,`desc`,`section_type`,`flag`) "
 							."VALUES "
 							."('$id','$desc','" .$section[1] ."','2')";
-						$mysql->query($insert_desc);
+						$mysql->sqlordie($insert_desc);
 						$bool = 1;
 					} else {
 						$insert_desc = "INSERT INTO `project_brief_sections` "
 							."(`project_id`,`desc`,`section_type`,`flag`) "
 							."VALUES "
 							."('$id','$desc','" .$section[1] ."','1')";
-						$mysql->query($insert_desc);
+						$mysql->sqlordie($insert_desc);
 						$bool = 1;
 					}
 				}
@@ -91,7 +93,7 @@
 			$bool = 0;
 			
 			$query = "SELECT * FROM `project_brief_sections` WHERE `project_id`='" .$id ."' AND `section_type`='" .$section[1] ."'";
-			$result = $mysql->query($query);
+			$result = $mysql->sqlordie($query);
 			
 			if($result) {
 				if($result->num_rows == 1) {
@@ -108,12 +110,12 @@
 						}
 						$update_desc = "UPDATE `project_brief_sections` SET "
 							."`desc` = '$desc', `flag`='$flag' WHERE `id`='" .$row['id'] ."'";
-						$mysql->query($update_desc);
+						$mysql->sqlordie($update_desc);
 						$bool = 1;
 					} else {
 						$update_desc = "UPDATE `project_brief_sections` SET "
 							."`desc` = '$desc', `flag`='1' WHERE `id`='" .$row['id'] ."'";
-						$mysql->query($update_desc);
+						$mysql->sqlordie($update_desc);
 						$bool = 1;
 					}
 				} else if($result->num_rows == 0) {
@@ -122,14 +124,14 @@
 							."(`project_id`,`desc`,`section_type`,`flag`) "
 							."VALUES "
 							."('$id','$desc','" .$section[1] ."','2')";
-						$mysql->query($insert_desc);
+						$mysql->sqlordie($insert_desc);
 						$bool = 1;
 					} else {
 						$insert_desc = "INSERT INTO `project_brief_sections` "
 							."(`project_id`,`desc`,`section_type`,`flag`) "
 							."VALUES "
 							."('$id','$desc','" .$section[1] ."','1')";
-						$mysql->query($insert_desc);
+						$mysql->sqlordie($insert_desc);
 						$bool = 1;
 					}
 				}
@@ -145,7 +147,7 @@
 			$bool = 0;
 			
 			$query = "SELECT * FROM `project_brief_sections` WHERE `project_id`='" .$id ."' AND `section_type`='" .$section[1] ."'";
-			$result = $mysql->query($query);
+			$result = $mysql->sqlordie($query);
 			
 			if($result) {
 				if($result->num_rows == 1) {
@@ -162,12 +164,12 @@
 						}
 						$update_desc = "UPDATE `project_brief_sections` SET "
 							."`desc` = '$desc', `flag`='$flag' WHERE `id`='" .$row['id'] ."'";
-						$mysql->query($update_desc);
+						$mysql->sqlordie($update_desc);
 						$bool = 1;
 					} else {
 						$update_desc = "UPDATE `project_brief_sections` SET "
 							."`desc` = '$desc', `flag`='1' WHERE `id`='" .$row['id'] ."'";
-						$mysql->query($update_desc);
+						$mysql->sqlordie($update_desc);
 						$bool = 1;
 					}
 				} else if($result->num_rows == 0) {
@@ -176,14 +178,14 @@
 							."(`project_id`,`desc`,`section_type`,`flag`) "
 							."VALUES "
 							."('$id','$desc','" .$section[1] ."','2')";
-						$mysql->query($insert_desc);
+						$mysql->sqlordie($insert_desc);
 						$bool = 1;
 					} else {
 						$insert_desc = "INSERT INTO `project_brief_sections` "
 							."(`project_id`,`desc`,`section_type`,`flag`) "
 							."VALUES "
 							."('$id','$desc','" .$section[1] ."','1')";
-						$mysql->query($insert_desc);
+						$mysql->sqlordie($insert_desc);
 						$bool = 1;
 					}
 				}
@@ -199,7 +201,7 @@
 			$bool = 0;
 			
 			$query = "SELECT * FROM `project_brief_sections` WHERE `project_id`='" .$id ."' AND `section_type`='" .$section[1] ."'";
-			$result = $mysql->query($query);
+			$result = $mysql->sqlordie($query);
 			
 			if($result) {
 				if($result->num_rows == 1) {
@@ -216,12 +218,12 @@
 						}
 						$update_desc = "UPDATE `project_brief_sections` SET "
 							."`desc` = '$desc', `flag`='$flag' WHERE `id`='" .$row['id'] ."'";
-						$mysql->query($update_desc);
+						$mysql->sqlordie($update_desc);
 						$bool = 1;
 					} else {
 						$update_desc = "UPDATE `project_brief_sections` SET "
 							."`desc` = '$desc', `flag`='1' WHERE `id`='" .$row['id'] ."'";
-						$mysql->query($update_desc);
+						$mysql->sqlordie($update_desc);
 						$bool = 1;
 					}
 				} else if($result->num_rows == 0) {
@@ -230,14 +232,14 @@
 							."(`project_id`,`desc`,`section_type`,`flag`) "
 							."VALUES "
 							."('$id','$desc','" .$section[1] ."','2')";
-						$mysql->query($insert_desc);
+						$mysql->sqlordie($insert_desc);
 						$bool = 1;
 					} else {
 						$insert_desc = "INSERT INTO `project_brief_sections` "
 							."(`project_id`,`desc`,`section_type`,`flag`) "
 							."VALUES "
 							."('$id','$desc','" .$section[1] ."','1')";
-						$mysql->query($insert_desc);
+						$mysql->sqlordie($insert_desc);
 						$bool = 1;
 					}
 				}
@@ -253,7 +255,7 @@
 			$bool = 0;
 			
 			$query = "SELECT * FROM `project_brief_sections` WHERE `project_id`='" .$id ."' AND `section_type`='" .$section[1] ."'";
-			$result = $mysql->query($query);
+			$result = $mysql->sqlordie($query);
 			
 			if($result) {
 				if($result->num_rows == 1) {
@@ -270,12 +272,12 @@
 						}
 						$update_desc = "UPDATE `project_brief_sections` SET "
 							."`desc` = '$desc', `flag`='$flag' WHERE `id`='" .$row['id'] ."'";
-						$mysql->query($update_desc);
+						$mysql->sqlordie($update_desc);
 						$bool = 1;
 					} else {
 						$update_desc = "UPDATE `project_brief_sections` SET "
 							."`desc` = '$desc', `flag`='1' WHERE `id`='" .$row['id'] ."'";
-						$mysql->query($update_desc);
+						$mysql->sqlordie($update_desc);
 						$bool = 1;
 					}
 				} else if($result->num_rows == 0) {
@@ -284,14 +286,14 @@
 							."(`project_id`,`desc`,`section_type`,`flag`) "
 							."VALUES "
 							."('$id','$desc','" .$section[1] ."','2')";
-						$mysql->query($insert_desc);
+						$mysql->sqlordie($insert_desc);
 						$bool = 1;
 					} else {
 						$insert_desc = "INSERT INTO `project_brief_sections` "
 							."(`project_id`,`desc`,`section_type`,`flag`) "
 							."VALUES "
 							."('$id','$desc','" .$section[1] ."','1')";
-						$mysql->query($insert_desc);
+						$mysql->sqlordie($insert_desc);
 						$bool = 1;
 					}
 				}

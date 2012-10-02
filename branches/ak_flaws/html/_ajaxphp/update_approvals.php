@@ -1,7 +1,9 @@
 <?PHP
 	include('../_inc/config.inc');
-	
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	include("sessionHandler.php");
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//Defining Global mysql connection values
+	global $mysql;
 	
 	$project = $mysql->real_escape_string(@$_GET['project_id']);
 	
@@ -22,7 +24,7 @@
 					switch($appr[$appr_keys[$i]]['phase']) {
 						case 'nbcux': {
 							$select_non_phase_nbc = "SELECT * FROM `project_phase_approvals` WHERE `project_id`='$project' AND `non_phase`='nbcuxd'";
-							$non_phase_result_nbc = $mysql->query($select_non_phase_nbc);
+							$non_phase_result_nbc = $mysql->sqlordie($select_non_phase_nbc);
 							
 							if($non_phase_result_nbc->num_rows == 1) {
 								$row = $non_phase_result_nbc->fetch_assoc();
@@ -31,7 +33,7 @@
 									.$appr[$appr_keys[$i]]['title'] ."',`phone`='" .$mysql->real_escape_string($appr[$appr_keys[$i]]['phone'])
 									."',`approval_date`='$appr_date',`approved`='$approved' "
 									."WHERE `id`='" .$row['id'] ."'";
-								@$mysql->query($update_uxd);
+								@$mysql->sqlordie($update_uxd);
 							} else if(mysql_num_rows($non_phase_result_nbc) == 0) {
 								$insert_uxd = "INSERT INTO `project_phase_approvals` "
 									."(`project_id`,`name`,`title`,`phone`,`approval_date`,`approved`,`non_phase`) "
@@ -39,14 +41,14 @@
 									."('$project','" .$mysql->real_escape_string($appr[$appr_keys[$i]]['name']) ."','" 
 									.$mysql->real_escape_string($appr[$appr_keys[$i]]['title']) ."','" 
 									.$mysql->real_escape_string($appr[$appr_keys[$i]]['phone']) ."','$appr_date','$approved','nbcuxd')";
-								@$mysql->query($insert_uxd);
+								@$mysql->sqlordie($insert_uxd);
 							}
 							
 							break;
 						}
 						case 'client': {
 							$select_non_phase_cli = "SELECT * FROM `project_phase_approvals` WHERE `project_id`='$project' AND `non_phase`='client'";
-							$non_phase_result_cli = $mysql->query($select_non_phase_cli);
+							$non_phase_result_cli = $mysql->sqlordie($select_non_phase_cli);
 							
 							if($non_phase_result_cli->num_rows == 1) {
 								$row = $non_phase_result_cli->fetch_assoc();
@@ -56,7 +58,7 @@
 									.$mysql->real_escape_string($appr[$appr_keys[$i]]['phone']) 
 									."',`approval_date`='$appr_date',`approved`='$approved' "
 									."WHERE `id`='" .$row['id'] ."'";
-								@$mysql->query($update_cli);
+								@$mysql->sqlordie($update_cli);
 							} else if($non_phase_result_cli->num_rows == 0) {
 								$insert_cli = "INSERT INTO `project_phase_approvals` "
 									."(`project_id`,`name`,`title`,`phone`,`approval_date`,`approved`,`non_phase`) "
@@ -64,7 +66,7 @@
 									."('$project','" .$mysql->real_escape_string($appr[$appr_keys[$i]]['name']) ."','" 
 									.$mysql->real_escape_string($appr[$appr_keys[$i]]['title']) ."','" 
 									.$mysql->real_escape_string($appr[$appr_keys[$i]]['phone']) ."','$appr_date','$approved','client')";
-								@$mysql->query($insert_cli);
+								@$mysql->sqlordie($insert_cli);
 							}
 							
 							break;
@@ -72,7 +74,7 @@
 					}
 				} else {
 					echo $select_phase = "SELECT * FROM `project_phase_approvals` WHERE `project_id`='$project' AND `project_phase`='" .$mysql->real_escape_string($appr[$appr_keys[$i]]['phase']) ."'";
-					$phase_result = $mysql->query($select_phase);
+					$phase_result = $mysql->sqlordie($select_phase);
 					
 					if($phase_result->num_rows == 1) {
 						$row = $phase_result->fetch_assoc();
@@ -82,7 +84,7 @@
 							.$mysql->real_escape_string($appr[$appr_keys[$i]]['phone'])
 							."',`approval_date`='$appr_date',`approved`='$approved' "
 							."WHERE `id`='" .$row['id'] ."'";
-						@$mysql->query($update_phase);
+						@$mysql->sqlordie($update_phase);
 					} else if($phase_result->num_rows == 0) {
 						echo $insert_phase = "INSERT INTO `project_phase_approvals` "
 							."(`project_id`,`name`,`title`,`phone`,`approval_date`,`approved`,`project_phase`) "
@@ -91,7 +93,7 @@
 							.$mysql->real_escape_string($appr[$appr_keys[$i]]['title']) ."','" 
 							.$mysql->real_escape_string($appr[$appr_keys[$i]]['phone']) ."','$appr_date','$approved','" 
 							.$mysql->real_escape_string($appr[$appr_keys[$i]]['phase']) ."')";
-						@$mysql->query($insert_phase);
+						@$mysql->sqlordie($insert_phase);
 					}
 				}
 			}
@@ -104,7 +106,7 @@
 			
 			$check_complete = "SELECT * FROM `project_brief_sections` WHERE `project_id`='" 
 				.$project ."' AND `section_type`='" .$mysql->real_escape_string($section[1]) ."' LIMIT 1";
-			$complete_res = $mysql->query($check_complete);
+			$complete_res = $mysql->sqlordie($check_complete);
 			
 			if($complete_res->num_rows == 1) {
 				$row = $complete_res->fetch_assoc();
@@ -119,17 +121,17 @@
 						$flag = 2;
 					}
 					$update = "UPDATE `project_brief_sections` set `flag`='$flag' WHERE `id`='" .$row['id'] ."'";
-					@$mysql->query($update);
+					@$mysql->sqlordie($update);
 				} else {
 					$update = "UPDATE `project_brief_sections` set `flag`='1' WHERE `id`='" .$row['id'] ."'";
-					@$mysql->query($update);
+					@$mysql->sqlordie($update);
 				}
 			} else if($complete_res->num_rows == 0) {
 				$insert = "INSERT INTO `project_brief_sections` "
 					."(`project_id`,`section_type`,`flag`) "
 					."VALUES "
 					."('$project','" .$mysql->real_escape_string($section[1])  ."','$complete_status')";
-				@$mysql->query($insert);
+				@$mysql->sqlordie($insert);
 			}
 			break;
 		}
@@ -137,7 +139,7 @@
 			$appr_keys = array_keys($appr);
 			for($i = 0; $i < sizeof($appr_keys); $i++) {
 				echo $delete_phase = "DELETE FROM `project_phase_approvals` WHERE `project_id`='$project' AND `project_phase`='" .$mysql->real_escape_string($appr[$appr_keys[$i]]['phase']) ."'";
-				@$mysql->query($delete_phase);
+				@$mysql->sqlordie($delete_phase);
 			}
 			break;
 		}

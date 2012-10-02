@@ -2,8 +2,10 @@
 	if(isset($_POST['dirName'])) {
 		@session_start();
 		include('../_inc/config.inc');
-	
-		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		include("sessionHandler.php");
+		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		//Defining Global mysql connection values
+		global $mysql;
 
 		$woIdClean = $mysql->real_escape_string(@$_POST['workorder_id']);
 		$woId = "'" .$woIdClean ."'";
@@ -38,7 +40,7 @@
 		}
 
 		$select_file = "SELECT * FROM `workorder_files` WHERE `directory`='" .str_replace("/", "", $dirName) ."' AND `file_name`='" .$cleaned_filename ."' LIMIT 1";
-		$result = $mysql->query($select_file);
+		$result = $mysql->sqlordie($select_file);
 		
 		//if (!copy($_FILES['upload_file']['tmp_name'], WEBPATH .'/files/'.md5($_FILES['upload_file']['name']))) {
 		if (!copy($_FILES['upload_file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName .$cleaned_filename)) {
@@ -49,13 +51,13 @@
 				if($result->num_rows == 1) {
 				$row = $result->fetch_assoc();
 				$update_row = "UPDATE `workorder_files` SET `workorder_id`='$woId', `upload_date`=NOW() WHERE `id`='" .$row['id'] ."'";
-				$mysql->query($update_row);
+				$mysql->sqlordie($update_row);
 			} else {
 				$insert_image = "INSERT INTO `workorder_files` "
 					."(`workorder_id`,`directory`,`file_name`,`upload_date`,`deleted`) "
 					."VALUES "
 					."($woId,'" .str_replace("/", "", $dirName) ."','" .$cleaned_filename ."',NOW(),'1')";
-				$mysql->query($insert_image);
+				$mysql->sqlordie($insert_image);
 				//$entryId = $mysql->insert_id;
 			}
 			echo "success";
