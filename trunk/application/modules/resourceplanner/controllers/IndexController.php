@@ -142,7 +142,7 @@
 							echo '<input name="hours_type" class="hours_type" id="hours_type_scheduled" type="radio" value="scheduled" /><label class="small">Scheduled</label>
 								<input name="hours_type" class="hours_type" id="hours_type_actual" type="radio" value="actual" CHECKED /><label class="small">Actual</label>';
 						}else if($_SESSION['user_id'] == $userID){
-							echo '<input name="hours_type" class="hours_type" id="hours_type_actual" type="radio" value="actual" CHECKED /><label class="small">Actual</label>';
+							echo '<input name="hours_type" class="hours_type" id="hours_type_scheduled" type="radio" value="scheduled" /><label class="small">Scheduled</label><input name="hours_type" class="hours_type" id="hours_type_actual" type="radio" value="actual" CHECKED /><label class="small">Actual</label>';
 						}else{
 							echo '<input name="hours_type" class="hours_type" id="hours_type_scheduled" type="radio" value="scheduled" CHECKED /><label class="small">Scheduled</label>';
 						}
@@ -302,7 +302,7 @@
 										<option value="">All Companies</option>
 										'.RpDisplay::fullCompanyListHTML($savedCompany).'
 									</select>
-									<div class="week_label" style="font-size: 15px; font-weight: bold; padding-top: 9px; width: 371px;*width:141px;"></div>
+									<div class="week_label" style="font-size: 13px; font-weight: bold; padding-top: 14px; width: 376px;"></div>
 								</div>
 							</div>
 							<div style="float:right;width:250px;">
