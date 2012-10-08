@@ -55,6 +55,9 @@
 									$current_class .= " last";
 								}
 							}
+							 /*
+                            * Enter the condition to hide the search tab*/
+                            if ($conf_controller!='search' ){
 							echo "<li class=\"$current_class\">$openlink"; 
 							if($_SESSION['login_status'] == "client" && $conf_controller == "controltower" ) {
 								echo "Account Info";
@@ -62,7 +65,7 @@
 								echo $menu_array_values['name'] ;
 							}									
 							echo "$closelink</li>\n\t\t\t";
-							
+						 }/*End of if condition for search tab*/
 						}							
 						$i++;
 					}
