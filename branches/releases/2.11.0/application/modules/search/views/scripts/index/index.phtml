@@ -1,0 +1,61 @@
+<?PHP
+	/*
+	Base Zend index file loaded for the index.php file
+	*/
+
+?>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+$('#paging_container7').pajinate({
+num_page_links_to_display : 3,
+items_per_page : 10
+});});
+$(document).ready(function(){
+$('#paging_container71').pajinate({
+num_page_links_to_display : 3,
+items_per_page : 10
+});});
+$(document).ready(function(){
+$('#paging_container72').pajinate({
+num_page_links_to_display : 3,
+items_per_page : 10
+});});
+
+function load_all_search(){
+$('#paging_container7').css({display:'block'});
+$('.search_results_content_defect').css({display:'none'});
+$('.search_results_content_wo').css({display:'none'});
+$("li.active_defect").css("background-color","#FFFFFF");
+$("li.active_wo").css("background-color","#FFFFFF");
+$("li.active").css("background-color","#848484");
+$("li.active_defect a").css("color","#358FCE");
+$("li.active a").css("color","#FFFFFF");
+$("li.active_wo a").css("color","#358FCE");
+}
+function load_defect_search(){
+$('#paging_container7').css({display:'none'});
+$('.search_results_content_defect').css({display:'block'});
+$('.search_results_content_wo').css({display:'none'});
+$("li.active_defect").css("background-color","#848484");
+$("li.active_wo").css("background-color","#FFFFFF");
+$("li.active").css("background-color","#FFFFFF");
+$("li.active_defect a").css("color","#FFFFFF");
+$("li.active a").css("color","#358FCE");
+$("li.active_wo a").css("color","#358FCE");
+}
+function load_workorder_search(){
+$('#paging_container7').css({display:'none'});
+$('.search_results_content_defect').css({display:'none'});
+$('.search_results_content_wo').css({display:'block'});
+$("li.active_defect").css("background-color","#FFFFFF");
+$("li.active_wo").css("background-color","#848484");
+$("li.active").css("background-color","#FFFFFF");
+$("li.active_wo a").css("color","#FFFFFF");
+$("li.active_defect a").css("color","#358FCE");
+$("li.active a").css("color","#358FCE");
+
+}
+
+</script>
