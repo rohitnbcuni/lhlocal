@@ -443,18 +443,18 @@
 						// "LH#23699Security Risk: Sensitive Information ...";
 						//echo '<input type="hidden" name="user_id" id="user_id" value="' .$_SESSION['user_id'] .'" />
 						//<input type="hidden" id="assignedToUserIdHidden" value="' .$wo_data[0]['assigned_to'] .'" />';
+						$requested_by_prev = ($wo_data[0]['requested_by'] != '')?$wo_data[0]['requested_by']:'';
+						echo '<input type="hidden" name="woRequestedByPrev" id="woRequestedByPrev" value="'.$requested_by_prev.'" />';	
 						echo'<input type="hidden" id="woStatusIdHidden" value="' .$wo_data[0]['status'] .'" />
 						<ul>
 							<li>
 								<label for="wo_requested_by" id="wo_requested_by_label">Requested By:</label>
-								<select "'.$closed_wo_style.'" class="field_medium" name="wo_requested_by" id="wo_requested_by" onchange="getRequestorsInfo(this.value);">';
-									if(isset($_REQUEST['wo_id'])) {
-										echo WoDisplay::getUserOptionEditHTML($wo_data[0]['requested_by']);
-									} else {
-										echo WoDisplay::getUserOptionHTML();
-									}
-								echo '</select>
-							</li>
+								<div id="requestor_loader" style="margin-left:186px"><img  src="/_images/loading.gif" alt="loading.." /></div>
+								<div id="requestor_loader_field" style="display:none;">';
+								echo '<select "'.$closed_wo_style.'" class="field_medium" name="wo_requested_by" id="wo_requested_by" onchange="getRequestorsInfo(this.value);">
+								</select>
+								</div>
+								</li>
 							<li>
 								<label for="wo_request_type" id="wo_request_type_label">I\'d Like To:</label>';
 									if(isset($_REQUEST['wo_id'])) {
@@ -541,18 +541,15 @@
 								}
 						echo'</ul><div '.$pageLoadHide.' id="pageLoadHide"> <ul>
 							<li>
-
-								<label for="wo_project" id="wo_project_label">Project:</label>
+								<label for="wo_project" id="wo_project_label">Project:</label>';
+								$project_by_prev = ($wo_data[0]['project_id'] != '')?$wo_data[0]['project_id']:'';
+								echo '<input type="hidden" name="hidden_projecd_id" id="hidden_projecd_id" value="'.$project_by_prev.'">
+								<div id="project_loader" style="margin-left:186px"><img  src="/_images/loading.gif" alt="loading.." /></div>
+								<div id="project_loader_field" style="display:none;">
 								<select "'.$closed_wo_style.'" class="field_medium" name="wo_project" id="wo_project">';
-									if(isset($_REQUEST['wo_id']) || isset($_REQUEST['copyWO'])) {
-										echo WoDisplay::getProjectOptionHTML($wo_data[0]['project_id']);
-									} else if($proj_select != ""){
-										echo WoDisplay::getProjectOptionHTML($proj_select);
-									}else {  
-										$pj = @$_REQUEST['project'];
-										echo WoDisplay::getProjectOptionHTML($pj);
-									}
+									
 								echo '</select>
+								</div>
 							</li>
 							<li id="li_CRITICAL" '.$li_CRITICAL.' >
 								<label for="wo_critical" id="wo_critical_label">Critical:</label>
@@ -1954,7 +1951,28 @@
 						
 			}
 
-
+		public function requestorselectAction(){
+			if(isset($_REQUEST['wid'])) {
+					echo WoDisplay::getUserOptionEditHTML($_REQUEST['woRequestedByPrev']);
+				} else {
+					echo WoDisplay::getUserOptionHTML();
+				}
+			$this->_helper->layout->disableLayout();
+		}
+		
+		public function projectselectAction(){
+			$proj_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
+			if(isset($_REQUEST['wid']) || isset($_REQUEST['copyWO'])) {
+				echo WoDisplay::getProjectOptionHTML($_REQUEST['project_id']);
+			} else if($proj_select != ""){
+				echo WoDisplay::getProjectOptionHTML($proj_select);
+			}else {  
+				$pj = @$_REQUEST['project'];
+				echo WoDisplay::getProjectOptionHTML($pj);
+			}
+		$this->_helper->layout->disableLayout();
+		}
+		
 }		       	
 
 
