@@ -50,6 +50,38 @@ $(document).ready(function() {
 	if($('#workorder_id').val() != ''){
 		setInterval("showNewComment()", 5000);
 	}
+/*------ ------Lazy Load Rquestor and Project drop down------------*/
+	var workorder_id = $('#workorder_id').val();
+	var woRequestedByPrev = $('#woRequestedByPrev').val();
+	$.ajax({
+	type: "POST",
+	url:"/workorders/index/requestorselect", 
+	data:{wid:workorder_id,woRequestedByPrev:woRequestedByPrev},
+	success: function(data){
+		$('#requestor_loader').css('display','none');
+		
+		$('#wo_requested_by').html(data);
+		//$('#wo_requested_by').addClass('chzn-select');
+		$('#requestor_loader_field').css('display','block');
+		
+		}
+	});
+	var copyWO = $('#copyWO').val();
+	var hidden_projecd_id = $('#hidden_projecd_id').val();
+	$.ajax({
+	type: "POST",
+	url:"/workorders/index/projectselect", 
+	data:{wid:workorder_id,project_id:hidden_projecd_id,copyWO:copyWO},
+	success: function(data){
+		$('#project_loader').css('display','none');
+		
+		$('#wo_project').html(data);
+		//$('#wo_requested_by').addClass('chzn-select');
+		$('#project_loader_field').css('display','block');
+		
+		}
+	});
+/*------ ------Lazy Load------------*/
 });
 
 function showHideTime() {
@@ -499,7 +531,21 @@ function saveWorkOrder(from) {
 	var woSITE_NAME = document.getElementById('SITE_NAME').value;
 	var woINFRA_TYPE = document.getElementById('INFRA_TYPE').value;
 	var woCCList = document.getElementById('cclist').value;
-
+	/*################COnfirm box if requestor change##################*/
+	if($('#woRequestedByPrev').val() != ''){
+		if($('#woRequestedByPrev').val() != $('#wo_requested_by').val()){
+			var r = confirm("You have changed the requestor.Do you want to continue");
+			if (r == false)
+			{
+				$('#wo_requested_by').val($('#woRequestedByPrev').val());
+				getRequestorsInfo($('#woRequestedByPrev').val());
+			  return ;
+			}else{
+				$('#woRequestedByPrev').val($('#wo_requested_by').val());
+			}
+		}
+	}
+	/*###################################*/
 	$('#prompt_save').val(1);
 	if(from == 'submit'){
 		window.onbeforeunload = 'undifined';
