@@ -130,8 +130,8 @@ $pageURL = BASE_URL;
 					if($cat[$i][0]=='quality'){$link = $pageURL.'/quality/index/edit/?defect_id=';$text='DEFECTS';}else{$link = $pageURL.'/workorders/index/edit/?wo_id=';$text='WORKORDERS'; }?>
 					<li> 
 						<div class='search_result'>
-						<h2><a href='<?php echo $link.$id[$i][0]; ?>'><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr($title[$i][0],0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
-						<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>'><?php echo $link.$id[$i][0]; ?></a></span>
+						<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr($title[$i][0],0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
+						<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><?php echo $link.$id[$i][0]; ?></a></span>
 						<p class='defect_desc'><?php echo  ucfirst(substr($desc[$i][0],0,300));if(strlen($desc[$i][0])>300){echo '...';}?></p>
 						</div> <!-- END search_result -->
 					</li>
@@ -149,8 +149,8 @@ $pageURL = BASE_URL;
 							if($cat[$i][0]=='quality'){
 							$link = $pageURL.'/quality/index/edit/?defect_id=';$text='DEFECTS';?>
 							<li> <div class='search_result'>
-							<h2><a href='<?php echo $link.$id[$i][0]; ?>'><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr($title[$i][0],0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
-							<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>'><?php echo $link.$id[$i][0]; ?></a></span>
+							<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr($title[$i][0],0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
+							<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><?php echo $link.$id[$i][0]; ?></a></span>
 							<p class='defect_desc'><?php echo  ucfirst(substr($desc[$i][0],0,300));if(strlen($desc[$i][0])>300){echo '...';}?></p>
 							</div> <!-- END search_result --></li>
 							<?php } 
@@ -166,8 +166,8 @@ $pageURL = BASE_URL;
 					for($i =0 ; $i<count($id); $i++){
 						if($cat[$i][0]=='workorder'){$link = $pageURL.'/workorders/index/edit/?wo_id=';$text='WORKORDERS'; ?>
 						<li> <div class='search_result'>
-						<h2><a href='<?php echo $link.$id[$i][0]; ?>'><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr($title[$i][0],0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
-						<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>'><?php echo $link.$id[$i][0]; ?></a></span>
+						<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr($title[$i][0],0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
+						<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><?php echo $link.$id[$i][0]; ?></a></span>
 						<p class='defect_desc'><?php echo  ucfirst(substr($desc[$i][0],0,300));if(strlen($desc[$i][0])>300){echo '...';}?></p>
 						</div> <!-- END search_result --></li>
 						<?php }
