@@ -38,7 +38,6 @@
         padding: 17px 15px 0px;
         position: relative;
 }
-img { border: 0px;}
 .bt_close {
         position: absolute;
         right:10px;
@@ -48,7 +47,7 @@ img { border: 0px;}
         height: 20px;
         border: 0px
 }
-input {
+#search_top input {
         border: 0px;
         padding: 0px;
         margin: 0px;
