@@ -109,9 +109,7 @@ $pageURL .= $_SERVER["SERVER_NAME"];
 <div class="title_med2 workorders_filter">
 	<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE="" />
 	<?php if($result_found!=0){ ?>
-		<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label">
-		<?php echo $result_found;?> Search results for "<?php echo  ucfirst($query); ?>"</label>
-		<?php } else{?>
+		<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label"><?php echo $result_found;?> Search results for "<?php echo  ucfirst($query); ?>"</label><?php } else{?>
 		<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label">No result found</label>
 	<?php }?>
 </div>
@@ -119,11 +117,7 @@ $pageURL .= $_SERVER["SERVER_NAME"];
 	<div id='search_results_wrapper' class='search_results_wrapper' style='margin-top:20px;'>
 	<?php if ($result_found > 0){?> <div class='search_results_nav'>
 		<ul>
-		<li  <?php if($search_par[0]!='All'){
-		echo "style='background-color:#FFFFFF; color: #358FCE;;'";} 
-		else {echo "class='active'";} ?>>
-		<a href='#'  <?php if($search_par[0]!='All')
-		{echo " onclick='return false;'";}else{ echo ' onclick="load_all_search();"';};?>>All</a></li>
+		<li  <?php if($search_par[0]!='All'){echo "style='background-color:#FFFFFF; color: #358FCE;;'";} else {echo "class='active'";} ?>><a href='#'  <?php if($search_par[0]!='All'){echo " onclick='return false;'";}else{ echo ' onclick="load_all_search();"';};?>>All</a></li>
 		<li  class='active_defect' <?php if($search_par[0]=='Defect'){echo "style='background-color:#848484; color: #FFFFFF;'";} ?>><a href='#'  <?php if($search_par[0]=='WorkO'){echo " onclick='return false;'";}else{ echo ' onclick="load_defect_search();"';}; if($search_par[0]=='Defect'){echo "style='color: #FFFFFF;'";} ?> >Defects (<?php echo $count_qa;?>)</a></li>
 		<li class="active_wo"  <?php if($search_par[0]=='WorkO'){echo "style='background-color:#848484;'";} ?>><a href='#'  <?php if($search_par[0]=='Defect'){echo " onclick='return false;'";}else{ echo ' onclick="load_workorder_search();"';}; if($search_par[0]=='WorkO'){echo "style='color: #FFFFFF;'";} ?>>Work Orders(<?php echo $count_wo;?>)</a></li>
 		</ul>
@@ -183,9 +177,8 @@ $pageURL .= $_SERVER["SERVER_NAME"];
 					<div class="page_navigation"></div>
 				</div>
 			</div>
-			</div>
+
 		</div>
 	</div><!-- END search_results_content -->
 	<?php } ?>
 	</div> <!-- END search_results_wrapper -->
-</div>
