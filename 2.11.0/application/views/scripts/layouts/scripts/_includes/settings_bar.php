@@ -26,7 +26,7 @@
 $pageURL .= $_SERVER["SERVER_NAME"];
 
 		?><li><div id="search_top">
-	<div><form action="<?php echo $pageURL;?>/search" method="post" name="search_box_form"><input name="search_text" id="search_text" type="text" class="search_bg"><input name="" type="button" class="bt_search" onClick="document.search_box_form.submit();"><div class="bt_advSearch"> <a href="javascript:toggleDiv();"><img src="/_images/images/adv_option.png" /></a> 
+	<div><form action="<?php echo $pageURL;?>/search/index" method="post" name="search_box_form"><input name="search_text" id="search_text" type="text" class="search_bg"><input name="" type="button" class="bt_search" onClick="document.search_box_form.submit();"><div class="bt_advSearch"> <a href="javascript:toggleDiv();"><img src="/_images/images/adv_option.png" /></a> 
         <div id="popup_top" > 
           <div class="search_popupTop"> <a class="bt_close"  href="javascript:hide_searchpopup();"><img src="/_images/images/bt_close.png" /></a> 
             <input  type="checkbox" name="search_par[]" id="search_par" value="All"  checked="checked"/>
