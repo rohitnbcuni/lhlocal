@@ -1,6 +1,6 @@
 <?PHP
 
-	include('search.inc');
+	include('Search.inc');
 	define('NBCDOTCOM' , 8);
 	class Search_IndexController extends LighthouseController { 
 		public function indexAction() {
