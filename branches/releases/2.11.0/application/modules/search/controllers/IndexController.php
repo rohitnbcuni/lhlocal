@@ -11,7 +11,7 @@
 						
 			$searchResult = SearchDisplay::Searchresult( $search_text,$search_par);
 			
-			$this->view->assign("searchResult",$searchResult);
+			$this->view->assign("searchResult",$searchResult,$search_text);
 		}
 	}
 			
