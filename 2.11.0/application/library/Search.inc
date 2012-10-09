@@ -2,7 +2,6 @@
 	/*
 		Search classes parent and child
 	*/
-	define("SOLR_URL_STRING","http://ec2-75-101-162-191.compute-1.amazonaws.com:8080/solr/lighthouse_active/select?q=");
 	class SearchDisplay {
 		public function Searchresult($query,$search_par) {
 			if($search_par[0]=='All'){
