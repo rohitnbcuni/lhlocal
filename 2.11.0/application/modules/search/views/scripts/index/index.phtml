@@ -100,10 +100,10 @@ if(count($xml) > 0){
 	}
 }
 
- $pageURL = 'http';
- if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
- $pageURL .= "://";
-$pageURL .= $_SERVER["SERVER_NAME"];
+// $pageURL = 'http';
+// if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+// $pageURL .= "://";
+$pageURL = BASE_URL;
 
 ?>
 <div class="title_med2 workorders_filter">
