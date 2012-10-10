@@ -24,8 +24,8 @@
 		$pageURL = BASE_URL; 
 
 		?><li><div id="search_top">
-		<div><form action="<?php echo $pageURL;?>/search/index" method="post" name="search_box_form" id="search_box_form" >
-		<input name="search_text" id="search_text" type="text" class="search_bg"  tabindex="1" placeholder="search"  autocomplete="off">
+		<div><form action="<?php echo $pageURL;?>/search" method="post" name="search_box_form" id="search_box_form" >
+		<input name="search_text" id="search_text" type="text" class="search_bg"  tabindex="1" placeholder="search" class="textbox"  autocomplete="off">
 		<input name="bt_search" type="button" class="bt_search" id="bt_search"  >
 		<div class="bt_advSearch"> <a href="javascript:toggleDiv();">
 		<img src="/_images/images/adv_option.png" /></a> 
