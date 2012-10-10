@@ -10,15 +10,16 @@ function hide_searchpopup(){
 	
 $(document).ready(function(){	
 	
-	$('#search_par').change(function () {
-    
+	/*$('#search_par').change(function () {
+   
     if($(this).attr("checked")) {
         
         $("input:checkbox[@name=search_par[]]").attr('checked','checked');
     }
-    else 
+    else {
         $("input:checkbox[@name=search_par[]]").removeAttr('checked');
-	});
+		}
+	});*/
 
 	$('div.bt_advSearch').mouseover(function(){
 	$('#popup_top').toggle();
