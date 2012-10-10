@@ -10,7 +10,7 @@ function hide_searchpopup(){
 $(document).ready(function(){	
 	$("#bt_search").click(function(){
 	
-		if($('#search_text').val() == ''){
+		if($.trim($('#search_text').val()) == ''){
 			$('#search_text').focus();
 		
 		}else{
