@@ -23,7 +23,7 @@
 		
 		$pageURL = BASE_URL; 
 
-		?><li style="border-left:none;"><div id="search_top">
+		?><li style="border-left:none;padding: 0 4px;"><div id="search_top">
 		<div><form action="<?php echo $pageURL;?>/search" method="post" name="search_box_form" id="search_box_form" >
 		<input name="search_text" id="search_text" type="text" class="search_bg"  tabindex="1" placeholder="   search" class="textbox"  autocomplete="off">
 		<input name="bt_search" type="button" class="bt_search" id="bt_search"  >
