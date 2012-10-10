@@ -126,7 +126,7 @@ $pageURL = BASE_URL;
 			<div id="paging_container7">
 				<ul class="content">
 					<?php   
-					for($i = count($id) ; $i>0; $i--){ 
+					for($i =0 ; $i<count($id); $i++){ 
 					if($cat[$i][0]=='quality'){$link = $pageURL.'/quality/index/edit/?defect_id=';$text='DEFECTS';}else{$link = $pageURL.'/workorders/index/edit/?wo_id=';$text='WORKORDERS'; }?>
 					<li> 
 						<div class='search_result'>
