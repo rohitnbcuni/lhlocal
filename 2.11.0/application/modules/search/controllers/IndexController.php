@@ -1,6 +1,7 @@
 <?PHP
 
 	include('Search.inc');
+	include("_ajaxphp/util.php");
 	class Search_IndexController extends LighthouseController { 
 		public function indexAction() {
 			$searchResult = array();
