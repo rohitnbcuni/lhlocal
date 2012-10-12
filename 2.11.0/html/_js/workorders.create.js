@@ -61,6 +61,7 @@ $(document).ready(function() {
 		$('#requestor_loader').css('display','none');
 		
 		$('#wo_requested_by').html(data);
+                changeImage($('#wo_requested_by').val());		
 		//$('#wo_requested_by').addClass('chzn-select');
 		$('#requestor_loader_field').css('display','block');
 		
