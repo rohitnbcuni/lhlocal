@@ -39,7 +39,7 @@ class createSolrXml{
 	public function workorders($path){
 		
 			$mysql = self::singleton();
-			$workorders = "SELECT id,project_id,title,example_url,body,requested_by FROM workorders where id!='28317' ORDER BY id DESC";  
+			$workorders = "SELECT id,project_id,title,example_url,body,requested_by,creation_date FROM workorders where id!='28317' ORDER BY id DESC";  
 			$workorders_res = $mysql->query($workorders);
 							
 			$doc = new DOMDocument("1.0");
@@ -89,7 +89,12 @@ class createSolrXml{
 			$author->appendChild( $doc->createTextNode(htmlentities($this->escapewordquotes($workorders_row['requested_by']), ENT_QUOTES, "UTF-8") ) ); 
 			$b->appendChild( $author ); 
 			
-			$workorders_comment = "SELECT comment FROM `workorder_comments` WHERE `workorder_id`='" .$workorders_row['id'] ."'";
+			$createdDate = $doc->createElement( "field" );
+                        $createdDate->setAttribute('name', 'createdDate');
+                        $createdDate->appendChild( $doc->createTextNode(htmlentities($this->escapewordquotes($workorders_row['creation_date']), ENT_QUOTES, "UTF-8") ) );
+                        $b->appendChild( $createdDate );
+			
+			$workorders_comment = "SELECT comment,date FROM `workorder_comments` WHERE `workorder_id`='" .$workorders_row['id'] ."'";
 			$workorders_comment_res = $mysql->query($workorders_comment);
 			
 			
@@ -99,6 +104,11 @@ class createSolrXml{
 			$commentTextList->appendChild( $doc->createCDATASection( htmlentities($this->escapewordquotes($workorders_comment_row['comment'] ), ENT_QUOTES, "UTF-8")) ); 
 			$b->appendChild($commentTextList); 
 			
+
+			$commentLastUpdatedDate = $doc->createElement( "field" );
+                        $commentLastUpdatedDate->setAttribute('name', 'commentLastUpdatedDate');
+                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( htmlentities($this->escapewordquotes($workorders_comment_row['date'] ), ENT_QUOTES, "UTF-8")) );
+                        $b->appendChild($commentLastUpdatedDate);
 			}
 			
 			
@@ -114,7 +124,7 @@ class createSolrXml{
 	
 	public function quality($path){
 			$mysql = self::singleton();
-			$quality = "SELECT id,project_id,title,example_url,body,requested_by FROM qa_defects ORDER BY id DESC";  
+			$quality = "SELECT id,project_id,title,example_url,body,requested_by,creation_date FROM qa_defects ORDER BY id DESC";  
 			$quality_res = $mysql->query($quality);
 			$doc = new DOMDocument("1.0");
 			$doc->formatOutput = true; 
@@ -164,7 +174,12 @@ class createSolrXml{
 			$author->appendChild( $doc->createTextNode(htmlentities($this->escapewordquotes($quality_row['requested_by']), ENT_QUOTES, "UTF-8") ) ); 
 			$b->appendChild( $author ); 
 			
-			$quality_comment = "SELECT comment FROM `qa_comments` WHERE `defect_id`='" .$quality_row['id'] ."'";
+			 $createdDate = $doc->createElement( "field" );
+                        $createdDate->setAttribute('name', 'createdDate');
+                        $createdDate->appendChild( $doc->createTextNode(htmlentities($this->escapewordquotes($workorders_row['creation_date']), ENT_QUOTES, "UTF-8") ) );
+                        $b->appendChild( $createdDate );
+			
+			$quality_comment = "SELECT comment,date FROM `qa_comments` WHERE `defect_id`='" .$quality_row['id'] ."'";
 			$quality_comment_res = $mysql->query($quality_comment);
 			
 			
@@ -174,6 +189,10 @@ class createSolrXml{
 			$commentTextList->appendChild( $doc->createCDATASection( htmlentities($this->escapewordquotes($quality_comment_row['comment'] ), ENT_QUOTES, "UTF-8")) ); 
 			$b->appendChild($commentTextList); 
 			
+			$commentLastUpdatedDate = $doc->createElement( "field" );
+                        $commentLastUpdatedDate->setAttribute('name', 'commentLastUpdatedDate');
+                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( htmlentities($this->escapewordquotes($workorders_comment_row['date'] ), ENT_QUOTES, "UTF-8")) );
+                        $b->appendChild($commentLastUpdatedDate);
 			} 
 			$r->appendChild($b); 
 			} 
@@ -185,9 +204,9 @@ class createSolrXml{
 
 	}
 			
-			require_once('/var/www/lighthouse-uxd/lighthouse/current/html/_inc/config.inc');
-			require_once('/var/www/lighthouse-uxd/lighthouse/current/html/_ajaxphp/util.php');
-			$path = '/var/www/lighthouse-uxd/lighthouse/current/Solarxml/';
+			require_once('/var/www/lighthouse-uxd/dev2/current/html/_inc/config.inc');
+			require_once('/var/www/lighthouse-uxd/dev2/current/html/_ajaxphp/util.php');
+			$path = '/var/www/lighthouse-uxd/dev2/current/Solarxml/';
 
 			$c = new createSolrXml();
 			$u = new stdClass();
