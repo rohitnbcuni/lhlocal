@@ -106,14 +106,15 @@ class createSolrXml{
 			
 			}
 			
-			$workorders_date_comment = "SELECT comment,date FROM `workorder_comments` WHERE `workorder_id`='" .$workorders_row['id'] ."'order by DESC limit 0,1";
+			$workorders_date_comment = "SELECT date FROM `workorder_comments` WHERE `workorder_id`='" .$workorders_row['id'] ."'order by id DESC limit 1";
                         $workorders_comment_date_res = $mysql->query($workorders_date_comment);
 
-
+			while($workorders_comment_date_value = $workorders_comment_date_res->fetch_row()){
                         $commentLastUpdatedDate = $doc->createElement( "field" );
                         $commentLastUpdatedDate->setAttribute('name', 'commentLastUpdatedDate');
-                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( date('Y-m-d\TH:i:s\Z', strtotime($workorders_comment_date_res['date']))));
+                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( date('Y-m-d\TH:i:s\Z', strtotime($workorders_comment_date_value[0]))));
                         $b->appendChild($commentLastUpdatedDate);
+			}
 
 			$r->appendChild($b); 
 			} 
@@ -194,14 +195,15 @@ class createSolrXml{
 			
 			}
 			
-			$quality_comment_date = "SELECT date FROM `qa_comments` WHERE `defect_id`='" .$quality_row['id'] ."' order by DESC limit 0,1";
+			$quality_comment_date = "SELECT date FROM `qa_comments` WHERE `defect_id`='" .$quality_row['id'] ."' order by id DESC limit 0";
                         $quality_comment_date_res = $mysql->query($quality_comment_date);
 			
+			while($quality_comment_date_value =  $quality_comment_date_res->fetch_row()){
 			$commentLastUpdatedDate = $doc->createElement( "field" );
                         $commentLastUpdatedDate->setAttribute('name', 'commentLastUpdatedDate');
-                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( date('Y-m-d\TH:i:s\Z', strtotime($quality_comment_date_res['date']))) );
+                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( date('Y-m-d\TH:i:s\Z', strtotime($quality_comment_date_value[0]))) );
                         $b->appendChild($commentLastUpdatedDate);
-
+			}
  
 			$r->appendChild($b); 
 			} 
