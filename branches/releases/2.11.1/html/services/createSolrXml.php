@@ -91,7 +91,7 @@ class createSolrXml{
 			
 			$createdDate = $doc->createElement( "field" );
                         $createdDate->setAttribute('name', 'createdDate');
-                        $createdDate->appendChild( $doc->createTextNode(htmlentities($this->escapewordquotes($workorders_row['creation_date']), ENT_QUOTES, "UTF-8") ) );
+                        $createdDate->appendChild( $doc->createTextNode( date('Y-m-d\TH:i:s\Z', strtotime($workorders_row['creation_date'])) ) );
                         $b->appendChild( $createdDate );
 			
 			$workorders_comment = "SELECT comment,date FROM `workorder_comments` WHERE `workorder_id`='" .$workorders_row['id'] ."'";
@@ -104,14 +104,17 @@ class createSolrXml{
 			$commentTextList->appendChild( $doc->createCDATASection( htmlentities($this->escapewordquotes($workorders_comment_row['comment'] ), ENT_QUOTES, "UTF-8")) ); 
 			$b->appendChild($commentTextList); 
 			
-
-			$commentLastUpdatedDate = $doc->createElement( "field" );
-                        $commentLastUpdatedDate->setAttribute('name', 'commentLastUpdatedDate');
-                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( htmlentities($this->escapewordquotes($workorders_comment_row['date'] ), ENT_QUOTES, "UTF-8")) );
-                        $b->appendChild($commentLastUpdatedDate);
 			}
 			
-			
+			$workorders_date_comment = "SELECT comment,date FROM `workorder_comments` WHERE `workorder_id`='" .$workorders_row['id'] ."'order by DESC limit 0,1";
+                        $workorders_comment_date_res = $mysql->query($workorders_date_comment);
+
+
+                        $commentLastUpdatedDate = $doc->createElement( "field" );
+                        $commentLastUpdatedDate->setAttribute('name', 'commentLastUpdatedDate');
+                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( date('Y-m-d\TH:i:s\Z', strtotime($workorders_comment_date_res['date']))));
+                        $b->appendChild($commentLastUpdatedDate);
+
 			$r->appendChild($b); 
 			} 
 			
@@ -176,10 +179,10 @@ class createSolrXml{
 			
 			 $createdDate = $doc->createElement( "field" );
                         $createdDate->setAttribute('name', 'createdDate');
-                        $createdDate->appendChild( $doc->createTextNode(htmlentities($this->escapewordquotes($workorders_row['creation_date']), ENT_QUOTES, "UTF-8") ) );
+                        $createdDate->appendChild( $doc->createTextNode(date('Y-m-d\TH:i:s\Z', strtotime($quality_row['creation_date']))) );
                         $b->appendChild( $createdDate );
 			
-			$quality_comment = "SELECT comment,date FROM `qa_comments` WHERE `defect_id`='" .$quality_row['id'] ."'";
+			$quality_comment = "SELECT comment FROM `qa_comments` WHERE `defect_id`='" .$quality_row['id'] ."'";
 			$quality_comment_res = $mysql->query($quality_comment);
 			
 			
@@ -189,11 +192,17 @@ class createSolrXml{
 			$commentTextList->appendChild( $doc->createCDATASection( htmlentities($this->escapewordquotes($quality_comment_row['comment'] ), ENT_QUOTES, "UTF-8")) ); 
 			$b->appendChild($commentTextList); 
 			
+			}
+			
+			$quality_comment_date = "SELECT date FROM `qa_comments` WHERE `defect_id`='" .$quality_row['id'] ."' order by DESC limit 0,1";
+                        $quality_comment_date_res = $mysql->query($quality_comment_date);
+			
 			$commentLastUpdatedDate = $doc->createElement( "field" );
                         $commentLastUpdatedDate->setAttribute('name', 'commentLastUpdatedDate');
-                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( htmlentities($this->escapewordquotes($workorders_comment_row['date'] ), ENT_QUOTES, "UTF-8")) );
+                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( date('Y-m-d\TH:i:s\Z', strtotime($quality_comment_date_res['date']))) );
                         $b->appendChild($commentLastUpdatedDate);
-			} 
+
+ 
 			$r->appendChild($b); 
 			} 
 			
