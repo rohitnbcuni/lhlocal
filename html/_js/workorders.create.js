@@ -59,8 +59,10 @@ $(document).ready(function() {
 	data:{wid:workorder_id,woRequestedByPrev:woRequestedByPrev},
 	success: function(data){
 		$('#requestor_loader').css('display','none');
-		
 		$('#wo_requested_by').html(data);
+		//changeImage($('#wo_requested_by').val());
+		changeImage($('#wo_requested_by').val());
+		getRequestorsInfo($('#wo_requested_by').val());
 		//$('#wo_requested_by').addClass('chzn-select');
 		$('#requestor_loader_field').css('display','block');
 		
@@ -76,6 +78,8 @@ $(document).ready(function() {
 		$('#project_loader').css('display','none');
 		
 		$('#wo_project').html(data);
+		changeImage($('#wo_requested_by').val());
+		getRequestorsInfo($('#wo_requested_by').val());
 		//$('#wo_requested_by').addClass('chzn-select');
 		$('#project_loader_field').css('display','block');
 		
