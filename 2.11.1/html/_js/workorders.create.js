@@ -59,7 +59,7 @@ $(document).ready(function() {
 	data:{wid:workorder_id,woRequestedByPrev:woRequestedByPrev},
 	success: function(data){
 		$('#requestor_loader').css('display','none');
-		
+		changeImage($('#wo_requested_by').val());
 		$('#wo_requested_by').html(data);
 		//$('#wo_requested_by').addClass('chzn-select');
 		$('#requestor_loader_field').css('display','block');
