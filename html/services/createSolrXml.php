@@ -39,7 +39,7 @@ class createSolrXml{
 	public function workorders($path){
 		
 			$mysql = self::singleton();
-			$workorders = "SELECT * FROM workorders where id!='28317'";  
+			$workorders = "SELECT id,project_id,title,example_url,body,requested_by FROM workorders where id!='28317' ORDER BY id DESC";  
 			$workorders_res = $mysql->query($workorders);
 							
 			$doc = new DOMDocument("1.0");
@@ -89,7 +89,7 @@ class createSolrXml{
 			$author->appendChild( $doc->createTextNode(htmlentities($this->escapewordquotes($workorders_row['requested_by']), ENT_QUOTES, "UTF-8") ) ); 
 			$b->appendChild( $author ); 
 			
-			$workorders_comment = "SELECT * FROM `workorder_comments` WHERE `workorder_id`='" .$workorders_row['id'] ."'";
+			$workorders_comment = "SELECT comment FROM `workorder_comments` WHERE `workorder_id`='" .$workorders_row['id'] ."'";
 			$workorders_comment_res = $mysql->query($workorders_comment);
 			
 			
@@ -114,7 +114,7 @@ class createSolrXml{
 	
 	public function quality($path){
 			$mysql = self::singleton();
-			$quality = "SELECT * FROM qa_defects";  
+			$quality = "SELECT id,project_id,title,example_url,body,requested_by FROM qa_defects ORDER BY id DESC";  
 			$quality_res = $mysql->query($quality);
 			$doc = new DOMDocument("1.0");
 			$doc->formatOutput = true; 
@@ -164,7 +164,7 @@ class createSolrXml{
 			$author->appendChild( $doc->createTextNode(htmlentities($this->escapewordquotes($quality_row['requested_by']), ENT_QUOTES, "UTF-8") ) ); 
 			$b->appendChild( $author ); 
 			
-			$quality_comment = "SELECT * FROM `qa_comments` WHERE `defect_id`='" .$quality_row['id'] ."'";
+			$quality_comment = "SELECT comment FROM `qa_comments` WHERE `defect_id`='" .$quality_row['id'] ."'";
 			$quality_comment_res = $mysql->query($quality_comment);
 			
 			
@@ -185,9 +185,10 @@ class createSolrXml{
 
 	}
 			
-			require_once('/var/www/lighthouse-uxd/dev3/current/html/_inc/config.inc');
-			require_once('/var/www/lighthouse-uxd/dev3/current/html/_ajaxphp/util.php');
-			$path = '/var/www/lighthouse-uxd/dev3/current/Solarxml/';
+			require_once('/var/www/lighthouse-uxd/lighthouse/current/html/_inc/config.inc');
+			require_once('/var/www/lighthouse-uxd/lighthouse/current/html/_ajaxphp/util.php');
+			$path = '/var/www/lighthouse-uxd/lighthouse/current/Solarxml/';
+
 			$c = new createSolrXml();
 			$u = new stdClass();
 	    		$w = new stdClass();

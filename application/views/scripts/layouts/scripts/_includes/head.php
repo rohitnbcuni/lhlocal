@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<?PHP	$randNum = "20120929"; ?>
+<?PHP	$randNum = "201210120550"; ?>
 <title><?echo DEV_TEAM_NAME?>: Lighthouse</title>
 	<link rel="stylesheet" href="/_css/style.css?<?PHP echo $randNum; ?>" type="text/css" />
 	<link rel="stylesheet" href="/_css/ui.datepicker.css" type="text/css" />
@@ -263,6 +263,17 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 				} 
 			break;
 			}
+
+			case "search": {
+			    echo "<script src=\"/_js/jquery.min.js\"></script>"; 
+			    echo "<script src=\"/_js/ui.core.js\" type=\"text/javascript\"></script>\n"
+					 ."\t<script src=\"/_js/ui.selectable.js\" type=\"text/javascript\"></script>\n"
+					 ."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
+		            echo "<script src=\"/_js/jquery.pajinate.js\"></script>";
+	
+			    echo "<link rel=\"stylesheet\" href=\"/_css/search_style.css?". $randNum. "\" type=\"text/css\" />";
+			break;
+			}
 		}
 		if($_controller == "login") {
 			echo "<style>"
@@ -272,6 +283,8 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 			echo "<script src=\"/_js/lh_login.js\" type=\"text/javascript\"></script>\n";
 		}	
 ?>
+<script src="/_js/search_box.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/_css/search_box.css?".<?php echo $randNum; ?>" type="text/css" />
 <?php
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $checker = array(
