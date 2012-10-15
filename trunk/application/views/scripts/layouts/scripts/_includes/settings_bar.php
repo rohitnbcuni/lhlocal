@@ -17,15 +17,41 @@
 				//@$menu_array[5]['url']
 				if(@$menu_url[0] != "login") {
 					echo '<li class="risk"><button style="display:none" onclick="showUserRisks(\'' . $_SESSION['user_id'] . '\');" id="back_button"><span class="my_risk">you have ' . $my_risk_count . '</span></button></li>';
-					echo '<li class="first">' .@$_SESSION['lh_username'] .'</li>
+				 echo '<li class="first">' .@$_SESSION['lh_username'] .'</li>
+                                        <!--<li><a href="">My Profile</a></li>-->
+                                        <li><a href="/login/?signout=true">Sign Out</a></li>';		
+		
+		$pageURL = BASE_URL; 
+
+		?><li style="border-left:none;padding: 0 4px;"><div id="search_top">
+		<div><form action="<?php echo $pageURL;?>/search" method="post" name="search_box_form" id="search_box_form" >
+		<input name="search_text" id="search_text" type="text" class="search_bg"  tabindex="1" placeholder="  search" class="textbox"  autocomplete="off">
+		<input name="bt_search" type="button" class="bt_search" id="bt_search"  >
+		<div class="bt_advSearch" id="bt_advSearch" > <a href="javascript:void();" >
+		<img src="/_images/images/adv_option.png" /></a> 
+        <div id="popup_top" > 
+          <div class="search_popupTop"> <a class="bt_close"  href="javascript:hide_searchpopup();"><img src="/_images/images/bt_close.png" /></a> 
+            <input  type="checkbox" name="search_par[]" id="search_par" value="All"  checked="checked"/>
+            All<br />
+            <input type="checkbox"  name="search_par[]"  id="search_par1" value="Defect" />
+            Defects<br />
+            <input  type="checkbox" name="search_par[]" id="search_par2"  value="WorkO" />
+            Work Orders</div>
+          <div class="search_popupBottom"></div>
+        </div>
+      </div>
+		</form>
+	</div>
+</div></li><?php 
+					/*echo '<li class="first">' .@$_SESSION['lh_username'] .'</li>
 					<!--<li><a href="">My Profile</a></li>-->
-					<li><a href="/login/?signout=true">Sign Out</a></li>';
+					<li><a href="/login/?signout=true">Sign Out</a></li>';*/
 				}
 			?>
 			</ul>
 		</div>
 	</div>
-	<div class="user_risk_container">
+	<!--<div class="user_risk_container">
 		<div class="close_risk">X</div>
 		<div class="user_risk_content">
 			<ul class="risk_results" id="user_risk_list">
@@ -48,6 +74,6 @@
 			<button onClick="$('.message_risk_create').css({display:'none'}); return false;"><span>OK</span></button>
 			<div style="clear: both;"></div>
 		</div>
-	</div>
+	</div>-->
 	<!----| END: Setting Bar |---->
 
