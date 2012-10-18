@@ -57,7 +57,10 @@ $(document).ready(function(){
 
 $(document).ready(function(){
 	//$(".ui-multiselect").removeClass('button');
-	$("#userProjectArray").multiselect({create: function(){ $(this).next().width(200); }}).multiselectfilter();
+	if($("#userProjectArray")){
+		$("#userProjectArray").multiselect({create: function(){ $(this).next().width(200); }}).multiselectfilter();
+	
+	}
 	
 		
 	});
