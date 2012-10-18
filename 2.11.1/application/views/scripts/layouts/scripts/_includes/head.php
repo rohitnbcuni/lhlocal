@@ -32,7 +32,8 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 <script src="/_js/jquery.pack.js" type="text/javascript"></script>
 <script src="/_js/lh_global.js" type="text/javascript"></script>
  <script src="/_js/s_code.js" type="text/javascript"></script>
-<script language="JavaScript" type="text/javascript"><!--
+<script src="/_js/search_box.js" type="text/javascript"></script>
+ <script language="JavaScript" type="text/javascript"><!--
 
 	//s.pageName=document.title; 
 	s.pageType="";  // used for 404 Error message page only
@@ -217,8 +218,15 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 		
 				default: {
 					echo "<script src=\"/_js/ui/jquery.ui.all.js\" type=\"text/javascript\"></script>\n"
-						."\t<script src=\"/_js/admin.js?" . $randNum . "\" type=\"text/javascript\"></script>\n"
-						."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
+						."\t<script src=\"/_js/admin.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
+						echo "<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n"
+						."\t<script src=\"/_js/ui/jquery-ui-1.8.13.custom.min.js\" type=\"text/javascript\"></script>\n";
+						echo "<link href=\"/_css/jquery.multiselect_new.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
+						."\t<link href=\"/_css/jquery.multiselect.filter.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
+						."\t<link href=\"/_css/jquery.ui.multiselect.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
+						."\t<script src=\"/_js/ui/jquery.multiselect_new.js\" type=\"text/javascript\"></script>\n"
+						//."\t<script src=\"/_js/ui/jquery.multiselect.js\" type=\"text/javascript\"></script>\n"
+						."\t<script src=\"/_js/ui/jquery.multiselect.filter.js\" type=\"text/javascript\"></script>\n";
 					break;
 				}
 				break;
@@ -283,7 +291,7 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 			echo "<script src=\"/_js/lh_login.js\" type=\"text/javascript\"></script>\n";
 		}	
 ?>
-<script src="/_js/search_box.js" type="text/javascript"></script>
+
 <link rel="stylesheet" href="/_css/search_box.css?".<?php echo $randNum; ?>" type="text/css" />
 <?php
 $ua = $_SERVER['HTTP_USER_AGENT'];
