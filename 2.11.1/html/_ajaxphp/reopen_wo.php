@@ -3,19 +3,19 @@
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
     $pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-	
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	$woId = @$_GET['woId'];
 	
-	$update_wo = "UPDATE `workorders` SET `closed_date`=NULL, `status`='6',`archived`='0' WHERE `id`='$woId'";
-	@$mysql->query($update_wo);
+	$update_wo = "UPDATE `workorders` SET `closed_date`=NULL, `status`='6',`archived`='0' WHERE `id`= ?";
+	@$mysql->sqlprepare($update_wo, array($woId));
 
-	$select_wo = "SELECT * FROM `workorders` WHERE `id`='" .$woId ."'";
-	$wo_res = $mysql->query($select_wo);
+	$select_wo = "SELECT * FROM `workorders` WHERE `id`= ?";
+	$wo_res = $mysql->sqlprepare($select_wo, array($woId));
 	$wo_row = $wo_res->fetch_assoc();
 
 	$audit_insert_query = "INSERT INTO  `workorder_audit` (`id`,`workorder_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('','".$woId."','3','".$_SESSION['user_id']."','".$wo_row['assigned_to']."','12',NOW())";
-	$mysql->query($audit_insert_query);
+	$mysql->sqlordie($audit_insert_query);
 
 	$cclist = explode(",", $wo_row['cclist']);
 		
@@ -29,29 +29,29 @@
 	$requestedId = $wo_row['requested_by'];
 
 	$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
-	$project_res = $mysql->query($select_project);
+	$project_res = $mysql->sqlordie($select_project);
 	$project_row = $project_res->fetch_assoc();
 
 	$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-	$company_res = $mysql->query($select_company);
+	$company_res = $mysql->sqlordie($select_company);
 	$company_row = $company_res->fetch_assoc();
 
 	$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
-	$requestor_user_res = $mysql->query($requestor_qry);
+	$requestor_user_res = $mysql->sqlordie($requestor_qry);
 	$requestor_user_row = $requestor_user_res->fetch_assoc();
 
-	$site_name_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$woId' and a.field_key='SITE_NAME' and a.field_id = b.field_id";
-	$site_name_res = $mysql->query($site_name_qry);
+	$site_name_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`= ? and a.field_key='SITE_NAME' and a.field_id = b.field_id";
+	$site_name_res = $mysql->sqlprepare($site_name_qry, array($woId));
 	$site_name_row = $site_name_res->fetch_assoc();
 
 	$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
 
-	$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$woId' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
-	$req_type_res = $mysql->query($select_req_type_qry);
+	$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`= ? and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
+	$req_type_res = $mysql->sqlprepare($select_req_type_qry, array($woId));
 	$req_type_row = $req_type_res->fetch_assoc();
 	
 	$select_user = "SELECT * FROM `users` WHERE `id`='" .$wo_row['assigned_to'] ."'";
-	$user_res = $mysql->query($select_user);
+	$user_res = $mysql->sqlordie($select_user);
 	$assigned_user_row = $user_res->fetch_assoc();
 	//LH 20679 #remove special characters from title
 	 $subject = "WO ".$woId.": reopen - ".$req_type_row['field_name']." - ".$wo_row['title']. "";
@@ -85,7 +85,7 @@
 				if($emailSendFlag)
 				{
 					$select_email_addr = "SELECT * FROM `users` WHERE `id`='" . $user ."' LIMIT 1";
-					$email_addr_res = $mysql->query($select_email_addr);
+					$email_addr_res = $mysql->sqlordie($select_email_addr);
 					$email_addr_row = $email_addr_res->fetch_assoc();
 					$to = $email_addr_row['email'];
 
