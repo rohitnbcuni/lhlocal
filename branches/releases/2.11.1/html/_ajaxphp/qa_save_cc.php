@@ -1,10 +1,13 @@
 <?PHP
 	session_start();
 	include('../_inc/config.inc');
+	include("sessionHandler.php");
 	
 		$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";	
 	if(isset($_SESSION['user_id'])) {		
-		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		//Defining Global mysql connection values
+		global $mysql;
 		
 		$user = $_SESSION['lh_username'];
 	    $password = $_SESSION['lh_password'];
@@ -21,9 +24,9 @@
                 {
                 //LH 18474
 				//$wo_query = "SELECT `cclist` FROM `projects` WHERE `id`='$project_id' LIMIT 1";
-				$wo_query = "SELECT `qccclist` FROM `projects` WHERE `id`='$project_id' LIMIT 1";
+				$wo_query = "SELECT `qccclist` FROM `projects` WHERE `id`= ? LIMIT 1";
 				
-				$wo_result = $mysql->query($wo_query);
+				$wo_result = $mysql->sqlprepare($wo_query,array($project_id));
                 $wo_row = $wo_result->fetch_assoc();
 				//$listold = explode(",", $wo_row[cclist]);
 				$listold = explode(",", $wo_row[qccclist]);
@@ -39,8 +42,8 @@
 		$ccArray = array();
 		if(!empty($defectId))
 		{
-		$wo_query = "SELECT * FROM `qa_defects` WHERE `id`='$defectId' LIMIT 1";
-		$wo_result = $mysql->query($wo_query);
+		$wo_query = "SELECT * FROM `qa_defects` WHERE `id`= ? LIMIT 1";
+		$wo_result = $mysql->sqlprepare($wo_query,array($defectId));
 		$wo_row = $wo_result->fetch_assoc();
 		$list = explode(",", $cc);
 		for($i = 0; $i < sizeof($list); $i++) {
@@ -57,27 +60,27 @@
 			$arrayData .= $listKeys[$z] .",";
 		}
 		
-		$update_cc = "UPDATE `qa_defects` SET `cclist`='$arrayData' WHERE `id`='$defectId'";
+		$update_cc = "UPDATE `qa_defects` SET `cclist`='$arrayData' WHERE `id`= ? ";
 		
-		$mysql->query($update_cc);
-		$select_cc = "SELECT `cclist` FROM `qa_defects` WHERE `id`='$defectId' LIMIT 1";
-		$result = $mysql->query($select_cc);
+		$mysql->sqlprepare($update_cc,array($defectId));
+		$select_cc = "SELECT `cclist` FROM `qa_defects` WHERE `id`= ? LIMIT 1";
+		$result = $mysql->sqlprepare($select_cc,array($defectId));
 		$row = $result->fetch_assoc();
 		
-		$bc_id_query = "SELECT  `body`, `project_id`, `title` FROM `qa_defects` WHERE `id`='$defectId' LIMIT 1";
+		$bc_id_query = "SELECT  `body`, `project_id`, `title` FROM `qa_defects` WHERE `id`= ? LIMIT 1";
 		
-				$bc_id_result = $mysql->query($bc_id_query);
+				$bc_id_result = $mysql->sqlprepare($bc_id_query,array($defectId));
 				$bc_id_result1=$bc_id_result->fetch_assoc();
 				$bc_id_row = $bc_id_result1;
 			
 		
-				$select_project = "SELECT * FROM `projects` WHERE `id`='" . $bc_id_row['project_id'] ."'";
+				$select_project = "SELECT * FROM `projects` WHERE `id`= ? ";
 			
-				$project_res = $mysql->query($select_project);
+				$project_res = $mysql->sqlprepare($select_project,array($bc_id_row['project_id']));
 				$project_res1= $project_res->fetch_assoc();
 				$project_row = $project_res1;
-				$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-				$company_res = $mysql->query($select_company);
+				$select_company = "SELECT * FROM `companies` WHERE `id`= ? ";
+				$company_res = $mysql->sqlprepare($select_company,array($project_row['company']));
 				$company_res1 = $company_res->fetch_assoc();
 				$company_row = $company_res1;
 				
@@ -96,8 +99,8 @@
                 $desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description));
 				for($x = 0; $x < sizeof($new_list); $x++) {
 				if(!empty($new_list[$x])) {
-					$select_cc_user = "SELECT * FROM `users` WHERE `id`='" .$new_list[$x] ."' LIMIT 1";
-					$cc_user_result = @$mysql->query($select_cc_user);
+					$select_cc_user = "SELECT * FROM `users` WHERE `id`= ? LIMIT 1";
+					$cc_user_result = @$mysql->sqlprepare($select_cc_user,array($new_list[$x]));
 					$cc_user_row = @$cc_user_result->fetch_assoc();
 					
 					$list .= "<li>"
@@ -145,8 +148,8 @@ else
 				$arrayData .= $listKeys[$z] .",";
 			
 				if(!empty($listKeys[$z])) {
-					$select_cc_user = "SELECT * FROM `users` WHERE `id`='" .$listKeys[$z] ."' LIMIT 1";
-					$cc_user_result = @$mysql->query($select_cc_user);
+					$select_cc_user = "SELECT * FROM `users` WHERE `id`= ? LIMIT 1";
+					$cc_user_result = @$mysql->sqlprepare($select_cc_user,array($listKeys[$z]));
 					$cc_user_row = @$cc_user_result->fetch_assoc();
 					
 					$list .= "<li>"
