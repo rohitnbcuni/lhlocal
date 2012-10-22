@@ -33,7 +33,7 @@
 				."('$defectId','$userId','$comment',NOW())";
 			@$mysql->sqlordie($update_wo_comment);
 		
-			insertWorkorderAudit($mysql,$defectId, '4', $_SESSION['user_id'],$bc_id_row['assigned_to'],$bc_id_row['status']);
+			//insertWorkorderAudit($mysql,$defectId, '4', $_SESSION['user_id'],$bc_id_row['assigned_to'],$bc_id_row['status']);
 		}
 		
 		$select_comments = "SELECT * FROM `qa_comments` WHERE `defect_id`= ? order by date desc";
