@@ -161,7 +161,8 @@ $pageURL = BASE_URL;
 							<?php } 
 						}?>
 					</ul>
-				<div class="page_navigation"></div>
+				 <?php if($count_qa!=''){ ?>
+				<div class="page_navigation"></div><?php } ?>
 				</div>
 			</div>
 			<div class="search_results_content_wo" style="display:none" >
@@ -177,8 +178,9 @@ $pageURL = BASE_URL;
 						</div> <!-- END search_result --></li>
 						<?php }
 					} ?>
-					</ul>
-					<div class="page_navigation"></div>
+					</ul> 
+					 <?php if($count_wo!=''){ ?>
+					<div class="page_navigation"></div><?php } ?>
 				</div>
 			</div>
 
