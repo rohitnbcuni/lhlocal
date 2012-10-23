@@ -51,9 +51,14 @@ class createSolrXml{
 			$b = $doc->createElement( "doc" ); 
 			$id = $doc->createElement( "field" );
 			$id->setAttribute('name', 'id');
-			$id->appendChild( $doc->createTextNode( $workorders_row['id'] ) );
+			$id->appendChild( $doc->createCDATASection('WO'.$workorders_row['id'] ) );
 			$b->appendChild($id); 
 			
+			$docid = $doc->createElement( "field" );
+                        $docid->setAttribute('name', 'docid');
+                        $docid->appendChild( $doc->createTextNode($workorders_row['id'] ) );
+                        $b->appendChild($docid);
+	
 			$guid = $doc->createElement( "field" ); 
 			$guid->setAttribute('name', 'guid');
 			$guid->appendChild( $doc->createTextNode( $workorders_row['project_id'] ) ); 
@@ -140,9 +145,14 @@ class createSolrXml{
 			
 			$id = $doc->createElement( "field" );
 			$id->setAttribute('name', 'id');			
-			$id->appendChild( $doc->createTextNode( $quality_row['id'] ) ); 
+			$id->appendChild( $doc->createCDATASection('QA'.$quality_row['id'] ) ); 
 			$b->appendChild($id); 
 			
+			$docid = $doc->createElement( "field" );
+                        $docid->setAttribute('name', 'docid');
+                        $docid->appendChild( $doc->createTextNode($quality_row['id'] ) );
+                        $b->appendChild($docid);
+
 			$guid = $doc->createElement( "field" ); 
 			$guid->setAttribute('name', 'guid');
 			$guid->appendChild( $doc->createTextNode( $quality_row['project_id'] ) ); 
