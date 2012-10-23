@@ -14,7 +14,7 @@
 		    $wo_id = $wo_row['id'];
 
 			$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$wo_id' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
-			$req_type_res = $mysql->query($select_req_type_qry);
+			$req_type_res = $mysql->sqlordie($select_req_type_qry);
 			$req_type_row = $req_type_res->fetch_assoc();		
 
 			$cclist = array();	  	
@@ -37,30 +37,30 @@
 										"Report a Problem" => "Problem",
 										"Report an Outage" => "Outage");
 			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
-			$project_res = $mysql->query($select_project);
+			$project_res = $mysql->sqlordie($select_project);
 			$project_row = $project_res->fetch_assoc();
 	  
 			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-			$company_res = $mysql->query($select_company);
+			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
 	  
 			$wo_status = "SELECT * FROM `lnk_workorder_status_types` WHERE `id`='" .$woStatus ."'";
-			$wo_status_res = $mysql->query($wo_status);
+			$wo_status_res = $mysql->sqlordie($wo_status);
 			$wo_status_row = $wo_status_res->fetch_assoc();			
 			
 			//$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1";
 			$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 			$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
-			$requestor_user_res = $mysql->query($requestor_qry);
+			$requestor_user_res = $mysql->sqlordie($requestor_qry);
 			$requestor_user_row = $requestor_user_res->fetch_assoc();
 			
 			$site_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SITE_NAME' and cu.field_key = 'SITE_NAME' and cu.workorder_id = '" .$wo_id ."'";
-			$site_name_res = $mysql->query($site_name_qry);
+			$site_name_res = $mysql->sqlordie($site_name_qry);
 			$site_name_row = $site_name_res->fetch_assoc();
 	  
 			$file_list = "";
 			$select_file = "SELECT * FROM `workorder_files` WHERE workorder_id='" . $wo_id . "' order by upload_date desc";
-			$file_res = $mysql->query($select_file);
+			$file_res = $mysql->sqlordie($select_file);
 			if($file_res->num_rows > 0) {
 				$file_list = "<u><b>Attachment:</b></u><br>";
 				$fileCount = 1;
@@ -76,7 +76,7 @@
             $desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES,'UTF-8'));
 			foreach($users_email as $user => $val){
 				$select_email_addr = "SELECT email FROM `users` WHERE `id`='" . $user ."' LIMIT 1";
-				$email_addr_res = $mysql->query($select_email_addr);
+				$email_addr_res = $mysql->sqlordie($select_email_addr);
 				$email_addr_row = $email_addr_res->fetch_assoc();
 				$to = $email_addr_row['email'];
 				$link = "<a href='".BASE_URL ."/workorders/index/edit/?wo_id=" .$wo_id."'>".$wo_id."</a>";
@@ -106,7 +106,7 @@
 //code for lh 18306
 
 $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SEVERITY' and cu.field_key = 'SEVERITY' and cu.workorder_id = '" .$wo_id ."'";
-			$severity_name_res = $mysql->query($severity_name_qry);
+			$severity_name_res = $mysql->sqlordie($severity_name_qry);
 			$severity_name_row = $severity_name_res->fetch_assoc();
 				
 				if($request_type_arr[$req_type_row['field_name']]=='Problem')
@@ -137,7 +137,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 		    $wo_id = $wo_row['id'];
 
 			$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$wo_id' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
-			$req_type_res = $mysql->query($select_req_type_qry);
+			$req_type_res = $mysql->sqlordie($select_req_type_qry);
 			$req_type_row = $req_type_res->fetch_assoc();		
 
 			$cclist = array();	  	
@@ -160,34 +160,34 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 										"Report a Problem" => "Problem",
 										"Report an Outage" => "Outage");
 			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
-			$project_res = $mysql->query($select_project);
+			$project_res = $mysql->sqlordie($select_project);
 			$project_row = $project_res->fetch_assoc();
 	  
 			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-			$company_res = $mysql->query($select_company);
+			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
 	  
 			$wo_status = "SELECT * FROM `lnk_workorder_status_types` WHERE `id`='" .$woStatus ."'";
-			$wo_status_res = $mysql->query($wo_status);
+			$wo_status_res = $mysql->sqlordie($wo_status);
 			$wo_status_row = $wo_status_res->fetch_assoc();			
 			$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 			//$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1";
 	  
 			$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
-			$requestor_user_res = $mysql->query($requestor_qry);
+			$requestor_user_res = $mysql->sqlordie($requestor_qry);
 			$requestor_user_row = $requestor_user_res->fetch_assoc();
 
 			$select_user = "SELECT * FROM `users` WHERE `id`='" .$woAssignedTo ."'";
-			$user_res = $mysql->query($select_user);
+			$user_res = $mysql->sqlordie($select_user);
 			$assigned_user_row = $user_res->fetch_assoc();
 			
 			$site_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SITE_NAME' and cu.field_key = 'SITE_NAME' and cu.workorder_id = '" .$wo_id ."'";
-			$site_name_res = $mysql->query($site_name_qry);
+			$site_name_res = $mysql->sqlordie($site_name_qry);
 			$site_name_row = $site_name_res->fetch_assoc();
 	  
 			$file_list = "";
 			$select_file = "SELECT * FROM `workorder_files` WHERE workorder_id='" . $wo_id . "' order by upload_date desc";
-			$file_res = $mysql->query($select_file);
+			$file_res = $mysql->sqlordie($select_file);
 			if($file_res->num_rows > 0) {
 				$file_list = "<u><b>Attachment:</b></u><br>";
 				$fileCount = 1;
@@ -207,7 +207,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			//foreach($users_email as $user => $val){
 				$user = $woAssignedTo; // Send email only to the assigned person.
 				$select_email_addr = "SELECT `email` FROM `users` WHERE `id`='" . $user ."' LIMIT 1";
-				$email_addr_res = $mysql->query($select_email_addr);
+				$email_addr_res = $mysql->sqlordie($select_email_addr);
 				$email_addr_row = $email_addr_res->fetch_assoc();
 				$to = $email_addr_row['email'];
 				$msg =  "<b>Requestor: </b>" . $requestor_user_row['first_name'].' '. $requestor_user_row['last_name']. "<br><br>";
@@ -235,7 +235,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 
 
 $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SEVERITY' and cu.field_key = 'SEVERITY' and cu.workorder_id = '" .$wo_id ."'";
-			$severity_name_res = $mysql->query($severity_name_qry);
+			$severity_name_res = $mysql->sqlordie($severity_name_qry);
 			$severity_name_row = $severity_name_res->fetch_assoc();
 				
 				if($request_type_arr[$req_type_row['field_name']]=='Problem')
@@ -266,7 +266,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 		    $wo_id = $wo_row['id'];
 
 			$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$wo_id' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
-			$req_type_res = $mysql->query($select_req_type_qry);
+			$req_type_res = $mysql->sqlordie($select_req_type_qry);
 			$req_type_row = $req_type_res->fetch_assoc();		
 
 			/*$cclist = array();	  	
@@ -289,25 +289,25 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 										"Report a Problem" => "Problem",
 										"Report an Outage" => "Outage");
 			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
-			$project_res = $mysql->query($select_project);
+			$project_res = $mysql->sqlordie($select_project);
 			$project_row = $project_res->fetch_assoc();
 	  
 			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-			$company_res = $mysql->query($select_company);
+			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
 	  
 			$wo_status = "SELECT * FROM `lnk_workorder_status_types` WHERE `id`='" .$woStatus ."'";
-			$wo_status_res = $mysql->query($wo_status);
+			$wo_status_res = $mysql->sqlordie($wo_status);
 			$wo_status_row = $wo_status_res->fetch_assoc();			
 			
 			//$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1";
 			$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 			$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
-			$requestor_user_res = $mysql->query($requestor_qry);
+			$requestor_user_res = $mysql->sqlordie($requestor_qry);
 			$requestor_user_row = $requestor_user_res->fetch_assoc();
 			
 			$site_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SITE_NAME' and cu.field_key = 'SITE_NAME' and cu.workorder_id = '" .$wo_id ."'";
-			$site_name_res = $mysql->query($site_name_qry);
+			$site_name_res = $mysql->sqlordie($site_name_qry);
 			$site_name_row = $site_name_res->fetch_assoc();
 			/*$file_list = "";
 			$select_file = "SELECT * FROM `workorder_files` WHERE workorder_id='" . $wo_id . "' order by upload_date desc";
@@ -325,7 +325,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
             $desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES,'UTF-8'));
 			foreach($users_email as $user => $val){
 				$select_email_addr = "SELECT email FROM `users` WHERE `id`='" . $user ."' LIMIT 1";
-				$email_addr_res = $mysql->query($select_email_addr);
+				$email_addr_res = $mysql->sqlordie($select_email_addr);
 				$email_addr_row = $email_addr_res->fetch_assoc();
 				$to = $email_addr_row['email'];
 				$link = "<a href='".BASE_URL ."/workorders/index/edit/?wo_id=" .$wo_id."'>".$wo_id."</a>";
@@ -341,7 +341,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			   $msg .="<b>Request Type: </b>" .$request_type_arr[$req_type_row['field_name']] ."<br>";
 			   //code for lh 18306
 			   $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SEVERITY' and cu.field_key = 'SEVERITY' and cu.workorder_id = '" .$wo_id ."'";
-			   $severity_name_res = $mysql->query($severity_name_qry);
+			   $severity_name_res = $mysql->sqlordie($severity_name_qry);
 			   $severity_name_row = $severity_name_res->fetch_assoc();
 				
 				if($request_type_arr[$req_type_row['field_name']]=='Problem')
@@ -375,7 +375,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 		    $wo_id = $wo_row['id'];
 
 			$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$wo_id' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
-			$req_type_res = $mysql->query($select_req_type_qry);
+			$req_type_res = $mysql->sqlordie($select_req_type_qry);
 			$req_type_row = $req_type_res->fetch_assoc();		
 
 			/*$cclist = array();	  	
@@ -398,25 +398,25 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 										"Report a Problem" => "Problem",
 										"Report an Outage" => "Outage");
 			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
-			$project_res = $mysql->query($select_project);
+			$project_res = $mysql->sqlordie($select_project);
 			$project_row = $project_res->fetch_assoc();
 	  
 			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-			$company_res = $mysql->query($select_company);
+			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
 	  
 			$wo_status = "SELECT * FROM `lnk_workorder_status_types` WHERE `id`='" .$woStatus ."'";
-			$wo_status_res = $mysql->query($wo_status);
+			$wo_status_res = $mysql->sqlordie($wo_status);
 			$wo_status_row = $wo_status_res->fetch_assoc();			
 			//LH 20679 change the header type
 			//$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1";
 			$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 			$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
-			$requestor_user_res = $mysql->query($requestor_qry);
+			$requestor_user_res = $mysql->sqlordie($requestor_qry);
 			$requestor_user_row = $requestor_user_res->fetch_assoc();
 			
 			$site_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SITE_NAME' and cu.field_key = 'SITE_NAME' and cu.workorder_id = '" .$wo_id ."'";
-			$site_name_res = $mysql->query($site_name_qry);
+			$site_name_res = $mysql->sqlordie($site_name_qry);
 			$site_name_row = $site_name_res->fetch_assoc();
 			/*$file_list = "";
 			$select_file = "SELECT * FROM `workorder_files` WHERE workorder_id='" . $wo_id . "' order by upload_date desc";
@@ -434,7 +434,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
             $desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES,'UTF-8'));
 			foreach($users_email as $user => $val){
 				$select_email_addr = "SELECT email FROM `users` WHERE `id`='" . $user ."' LIMIT 1";
-				$email_addr_res = $mysql->query($select_email_addr);
+				$email_addr_res = $mysql->sqlordie($select_email_addr);
 				$email_addr_row = $email_addr_res->fetch_assoc();
 				$to = $email_addr_row['email'];
 				$link = "<a href='".BASE_URL ."/workorders/index/edit/?wo_id=" .$wo_id."'>".$wo_id."</a>";
@@ -455,7 +455,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			   $msg .="<b>Request Type: </b>" .$request_type_arr[$req_type_row['field_name']] ."<br>";
 			   //code for lh 18306
 			   $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SEVERITY' and cu.field_key = 'SEVERITY' and cu.workorder_id = '" .$wo_id ."'";
-			   $severity_name_res = $mysql->query($severity_name_qry);
+			   $severity_name_res = $mysql->sqlordie($severity_name_qry);
 			   $severity_name_row = $severity_name_res->fetch_assoc();
 				
 				if($request_type_arr[$req_type_row['field_name']]=='Problem')
