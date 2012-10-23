@@ -10,15 +10,12 @@
 //	print("<br>\n\n\nStart of Users");
 //	$starttime = getTime();
 	include "cron.config.php";
-	//Production
-	//$rootPath = '/var/www/lighthouse-uxd/lighthouse';
-	//dev
-	//$rootPath = '/var/www/lighthouse-uxd/lhdev';
+
 
 	define('AJAX_CALL', '0');
 	include($rootPath . '/html/_inc/config.inc');
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	if (!is_file($rootPath . "/html/crons/cron_15.log"))
 	{
 		if (!is_dir($rootPath . "/html/crons/"))
@@ -85,7 +82,7 @@
 	}
 
 	$select_companies = "SELECT `id`,`bc_id` FROM `companies`";
-	$companies_res = $mysql->query($select_companies);
+	$companies_res = $mysql->sqlordie($select_companies);
 	
 	while($comp_row = $companies_res->fetch_assoc()) {
 //		$xml = bcXML("/contacts/people/".$comp_row['bc_id'], "");
@@ -157,7 +154,7 @@
 				
 				if(!empty($uData['user_name']) && !empty($uData['email']) )
 				{	
-					$mysql->query($update_user_query);
+					$mysql->sqlordie($update_user_query);
 				}
 				
 				if ($mysql->error) {
@@ -186,16 +183,16 @@
 
 								if($uData['company'] == '2' || $uData['company'] == '136' || $uData['company'] == '141')
 								{
-									$user_access_bits = "11110010"; // Client Access
+									$user_access_bits = "11110011"; // Client Access
 								}
 								else
 								{
-									$user_access_bits = "00100010"; // Client Access
+									$user_access_bits = "00100011"; // Client Access
 								}
 							}
 						$insert_user_query .= "'" .$uData['bc_uuid'] ."', '" .$uData['im_handle'] 
 							."', '" .$uData['im_service'] ."','".UNASSIGNED_PHASE."','".$avatar_img."','".$user_access_bits."')";
-						$mysql->query($insert_user_query);
+						$mysql->sqlordie($insert_user_query);
 						if ($mysql->error) {
 							writeLog($mysql, $insert_user_query, $rootPath);
 						}
