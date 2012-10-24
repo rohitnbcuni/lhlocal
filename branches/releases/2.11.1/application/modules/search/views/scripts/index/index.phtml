@@ -113,7 +113,7 @@ $pageURL = BASE_URL;
 <div class="title_med2 workorders_filter">
 	<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE="" />
 	<?php if($result_found!=0){ ?>
-		<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label"><?php echo $result_found;?> Search results for "<?php echo ucfirst(substr(Util::escapewordquotes($this->search_text),0,70));if(strlen($this->search_text)>70){echo '...';} ?>"</label><?php } else{?>
+		<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label" title="<?php echo $this->search_text;?>"><?php echo $result_found;?> Search results for "<?php echo ucfirst(substr(Util::escapewordquotes($this->search_text),0,70));if(strlen($this->search_text)>70){echo '...';} ?>"</label><?php } else{?>
 		<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label">No result found</label>
 	<?php }?>
 </div>
