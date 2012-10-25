@@ -225,10 +225,13 @@ class createSolrXml{
 
 	}
 			
-			require_once('/var/www/lighthouse-uxd/dev2/current/html/_inc/config.inc');
-			require_once('/var/www/lighthouse-uxd/dev2/current/html/_ajaxphp/util.php');
-			$path = '/var/www/lighthouse-uxd/dev2/current/Solarxml/';
-
+			//require_once('/var/www/lighthouse-uxd/dev2/current/html/_inc/config.inc');
+			//require_once('/var/www/lighthouse-uxd/dev2/current/html/_ajaxphp/util.php');
+			//$path = '/var/www/lighthouse-uxd/dev2/current/Solarxml/';
+			$config_path = str_replace("/html/services","",dirname(__FILE__));
+			require_once($config_path.'/html/_inc/config.inc');
+			require_once($config_path.'/html/_ajaxphp/util.php');
+			$path = $config_path.'/Solarxml/';
 			$c = new createSolrXml();
 			$u = new stdClass();
 	    		$w = new stdClass();
