@@ -86,7 +86,7 @@ if(count($xml) > 0){
 						{$no = $i+1;
 						$comments .= $no.'.'. $eVal->arr[1]->str[$i].'</br>';
 						}*/
-						$id[] =   $eVal->str[0];
+						$id[] =   $eVal->long[0];
 						$project_id[] =  $eVal->str[1];
 						$title[] = $eVal->str[2];
 						$urllink[] =  $eVal->arr->str[1];
@@ -141,8 +141,9 @@ $pageURL = BASE_URL;
 						</div> <!-- END search_result -->
 					</li>
 					<?php } ?>
-				</ul>	
-			<div class="page_navigation"></div>	
+				</ul>
+			 <?php if($count_wo > 10 || $count_qa > 10 ){ ?>	
+			<div class="page_navigation"></div><?php } ?>	
 			</div>				
 			<div class="search_results_content_defect" style="display:none">
 				<div id="paging_container71">
@@ -161,7 +162,7 @@ $pageURL = BASE_URL;
 							<?php } 
 						}?>
 					</ul>
-				 <?php if($count_qa!=''){ ?>
+				 <?php if($count_qa>10){ ?>
 				<div class="page_navigation"></div><?php } ?>
 				</div>
 			</div>
@@ -179,7 +180,7 @@ $pageURL = BASE_URL;
 						<?php }
 					} ?>
 					</ul> 
-					 <?php if($count_wo!=''){ ?>
+					 <?php if($count_wo>10){ ?>
 					<div class="page_navigation"></div><?php } ?>
 				</div>
 			</div>
