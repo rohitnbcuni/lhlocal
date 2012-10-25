@@ -144,7 +144,9 @@ $search_text= str_replace("'", "",$search_text);
 					</li>
 					<?php } ?>
 				</ul>
-			 <?php if($count_wo > 10 || $count_qa > 10 ){ ?>	
+			 <?php
+				$count_sum=$count_qa + $count_wo;	
+				 if($count_sum > 10 ){ ?>	
 			<div class="page_navigation"></div><?php } ?>	
 			</div>				
 			<div class="search_results_content_defect" style="display:none">
