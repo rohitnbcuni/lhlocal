@@ -9,7 +9,7 @@
 		$status_id = $mysql->real_escape_string($_GET['status_id']);
 		
 		$select_wo_old = "SELECT * FROM `workorders` WHERE `id`= ?";
-		$wo_old_res = $mysql->sqlprepare($select_wo_olda, array($wo_id));
+		$wo_old_res = $mysql->sqlprepare($select_wo_old, array($wo_id));
 		$wo_old_row = $wo_old_res->fetch_assoc();
 		
 
