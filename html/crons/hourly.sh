@@ -1,7 +1,7 @@
 time=$(date +%c)
 echo $stime "Hourly Cron started ..." >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/hour.log
 echo "########################" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/hour.log
-php /var/www/lighthouse-uxd/lighthouse/current/html/crons/cron_wo_feedback_alerts.php
+php /var/www/lighthouse-uxd/qa/current/html/crons/cron_wo_feedback_alerts.php
 if [ $? != 0 ]; then
 /bin/mail -s "Hourly Cron Failed - cron_wo_feedback_alerts.php" ots-tools-support@nbcuni.com
 else

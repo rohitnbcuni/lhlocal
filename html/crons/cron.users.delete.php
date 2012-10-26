@@ -14,8 +14,8 @@ function getTime(){
 
 	define('AJAX_CALL', '0');
 	include($rootPath . '/html/_inc/config.inc');
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-	
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	function bcXML($file, $body) {
 		$out  = "GET $file HTTP/1.1\r\n";
 		$out .= "Host: ".BASECAMP_HOST_URL."t\r\n";
@@ -98,7 +98,7 @@ function getTime(){
 	}
 
 	$select_companies = "SELECT `id`,`bc_id`,name FROM `companies` ";
-	$companies_res = $mysql->query($select_companies);
+	$companies_res = $mysql->sqlordie($select_companies);
 	
 	while($comp_row = $companies_res->fetch_assoc()) {
 		$baseCamp_user = array();
@@ -125,7 +125,7 @@ function getTime(){
 							try{
 								if($lh_val != '9203498'){
 									$sql = "UPDATE users SET  active = '0' , deleted ='1' WHERE company ='$cid' AND bc_id ='$lh_val' ";
-									$user_sql = $mysql->query($sql);
+									$user_sql = $mysql->sqlordie($sql);
 									if(!$user_sql){
 										throw new Exception($sql);
 									}else{
@@ -145,7 +145,7 @@ function getTime(){
 function getCompanyUsers($cid){
 	global $mysql;
 	$sql = "SELECT id, bc_id,user_name  FROM users WHERE company ='$cid' AND active = '1' AND deleted ='0'";
-	$user_sql = $mysql->query($sql);
+	$user_sql = $mysql->sqlordie($sql);
  	$user_array = array();
 	while($user_sql_row = $user_sql->fetch_assoc()) {
 		$user_array[$user_sql_row['id']."-".$user_sql_row['user_name']] = $user_sql_row['bc_id'];

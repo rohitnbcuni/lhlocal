@@ -9,18 +9,13 @@
 	}
 //	$starttime = getTime();
 	include "cron.config.php";
-//	Production
-	//$rootPath = '/var/www/lighthouse-uxd/lighthouse';
-//	dev
-	//$rootPath = str_replace("html\crons", "", dirname(__FILE__));
-    	//$rootPath = '/var/www/lighthouse-uxd/qa';
 
 	define('AJAX_CALL', '0');
 	include($rootPath . '/html/_inc/config.inc');
 	// This file is for just sending the Email.
 	include($rootPath . '/html/_ajaxphp/sendEmail.php');
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	if (!is_file($rootPath . "/html/crons/cron_wo_feedback_alerts.log"))
 	{
 		if (!is_dir($rootPath . "/html/crons/"))
@@ -32,7 +27,7 @@
 	//check for status need info and feedback provided
 	$curDate = time();
 	$getWOQuery = "SELECT * FROM `workorders` WHERE `active` = '1'  AND archived ='0' AND status IN (5,10) ";
-	$woArray = $mysql->query($getWOQuery);
+	$woArray = $mysql->sqlordie($getWOQuery);
 	
 	if ($mysql->error) {
 		writeLog($mysql, $getWOQuery, $rootPath);
@@ -42,7 +37,7 @@
 				$woId = $woRow['id'];
 						
 				$getWOAuditQuery = "SELECT log_date  FROM `workorder_audit` WHERE `workorder_id` = $woId ORDER BY id DESC LIMIT 0,1";
-				$woAuArray = $mysql->query($getWOAuditQuery);
+				$woAuArray = $mysql->sqlordie($getWOAuditQuery);
 				if ($mysql->error) {
 					writeLog($mysql, $getWOAuditQuery, $rootPath);
 				}else{

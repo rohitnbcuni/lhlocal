@@ -2,15 +2,15 @@
 	session_start();
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-	
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	$defectId = @$_GET['defectId'];
 
 	$update_wo = "UPDATE `qa_defects` SET `closed_date`=NOW(), `completed_date`=NOW(), `status`='8' WHERE `id`='$defectId'";
-	@$mysql->query($update_wo);
+	@$mysql->sqlordie($update_wo);
 
 	$select_wo = "SELECT `closed_date`, `assigned_to`, `detected_by`, `cclist`, `project_id`, `body`, `title` FROM `qa_defects` WHERE `id`='$defectId' LIMIT 1";
-	$result = @$mysql->query($select_wo);
+	$result = @$mysql->sqlordie($select_wo);
 	$row = @$result->fetch_assoc();
 	
 	insertWorkorderAudit($mysql,$defectId, '3', $_SESSION['user_id'],$row['assigned_to'],'8');
@@ -39,15 +39,15 @@
 		$users_email[$row['assigned_to']] = true;
 
 	$select_project = "SELECT * FROM `projects` WHERE `id`='" .$row['project_id'] ."'";
-	$project_res = $mysql->query($select_project);
+	$project_res = $mysql->sqlordie($select_project);
 	$project_row = $project_res->fetch_assoc();
 
 	$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-	$company_res = $mysql->query($select_company);
+	$company_res = $mysql->sqlordie($select_company);
 	$company_row = $company_res->fetch_assoc();
 
 	$wo_status = "SELECT * FROM `lnk_qa_status_types` WHERE `id`='8'";
-	$wo_status_res = $mysql->query($wo_status);
+	$wo_status_res = $mysql->sqlordie($wo_status);
 	$wo_status_row = $wo_status_res->fetch_assoc();
 
 	$subject = "Defect: ".$wo_status_row['name']." - This is my summary";
@@ -78,6 +78,6 @@
 	function insertWorkorderAudit($mysql,$defect_id, $audit_id, $log_user_id,$assign_user_id,$status)
 	{
 		$insert_custom_feild = "INSERT INTO  `quality_audit` (`defect_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$defect_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
-		@$mysql->query($insert_custom_feild);		
+		@$mysql->sqlordie($insert_custom_feild);		
 	}
 ?>

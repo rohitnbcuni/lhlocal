@@ -17,7 +17,8 @@
 
 	define('AJAX_CALL', '0');
 	include($rootPath . '/html/_inc/config.inc');
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 //print("\n\nRoot Path in Perms Cron : " . $rootPath . "\n");die();		
 
 	if (!is_file($rootPath . "/html/crons/cron_15.log"))
@@ -31,7 +32,7 @@
 	function execute($user, $project, $mysql){
 			$insert_perm = "INSERT INTO `user_project_permissions` (`user_id`,`project_id`) VALUES "
 			."('" . $user ."','" . $project ."')";
-			$mysql->query($insert_perm);
+			$mysql->sqlordie($insert_perm);
 	}
 	function writeLog($mysql, $sql='', $rootPath=''){
 		$a = fopen($rootPath . "/html/crons/cron_15.log", "a");
@@ -46,7 +47,7 @@
 	$getProjectQuery = "SELECT * FROM `projects` WHERE active='1' AND deleted='0' AND archived='0'";
 
 	$projCOunt = 0;
-	$projResult = $mysql->query($getProjectQuery);
+	$projResult = $mysql->sqlordie($getProjectQuery);
 	if ($mysql->error) {
 			writeLog($mysql, $getProjectQuery, $rootPath);
 	}else{
@@ -55,7 +56,7 @@
 				$read = '';
 				$usrCount = 0;
 				$getUsers = "SELECT id FROM `users` WHERE id NOT IN (SELECT user_id FROM `user_project_permissions` WHERE project_id='" . $projRow['id'] . "')  AND `company`='" . $projRow['company'] . "'";
-				$userResult = $mysql->query($getUsers);
+				$userResult = $mysql->sqlordie($getUsers);
 				if ($mysql->error) {
 						writeLog($mysql, $getUsers, $rootPath);
 				}else{
@@ -71,7 +72,7 @@
 				{
 					$read = 'for company 2';
 					$getUsers = "SELECT id FROM `users` WHERE id NOT IN (SELECT user_id FROM `user_project_permissions` WHERE project_id='" . $projRow['id'] . "')  AND `company`='2'";
-					$userResult = $mysql->query($getUsers);
+					$userResult = $mysql->sqlordie($getUsers);
 					if ($mysql->error) {
 						writeLog($mysql, $getUsers, $rootPath);
 					}else{

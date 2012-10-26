@@ -18,7 +18,7 @@ else
 echo "cron.companies.php exit status good" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
 fi
 
-php /var/www/lighthouse-uxd/lighthouse/current/html/crons/cron.users.php
+php /var/www/lighthouse-uxd/lighthouse/lighthouse/html/crons/cron.users.php
 if [ $? != 0 ]; then
 /bin/mail -s "15 Min Cron Failed - cron.users.php" ots-tools-support@nbcuni.com
 else
@@ -40,14 +40,14 @@ echo "cron.perms.php exit status good" >> /var/www/lighthouse-uxd/lighthouse/cur
 fi
 
 
-php /var/www/lighthouse-uxd/lighthouse/current/html/crons/cron_wo_alerts.php
+php /var/www/lighthouse-uxd/lighthouse/lighthouse/html/crons/cron_wo_alerts.php
 if [ $? != 0 ]; then
 /bin/mail -s "15 Min Cron Failed - cron_wo_alerts.php" ots-tools-support@nbcuni.com
 else
 echo "cron_wo_alerts.php exit status good" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
 fi
 
-php /var/www/lighthouse-uxd/lighthouse/current/html/crons/cron.users.delete.php
+php /var/www/lighthouse-uxd/lighthouse/lighthouse/html/crons/cron.users.delete.php
 if [ $? != 0 ]; then
 /bin/mail -s "15 Min Cron Failed - cron.users.delete.php" ots-tools-support@nbcuni.com
 else
@@ -57,6 +57,6 @@ fi
 etime=$(date +%c)
 echo $etime "15 Min Cron Completed ..." >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
 echo "###########################" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
-echo "" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
+echo "" >> /var/www/lighthouse-uxd/lighthouse/lighthouse/html/crons/fifteen_minutes.log
 
 

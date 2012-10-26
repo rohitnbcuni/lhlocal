@@ -2,8 +2,8 @@
 	session_start();
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	$userid = $_POST['userid'];
 	$postDate = $_POST['date'];
 	$postDatePart = explode("/", $postDate);
@@ -75,6 +75,7 @@
 			//p($day_data_cal);
 			//echo fetStatusColor($day_data_cal['status']);
 			//echo $currentDay; die;
+			$html_see_more ='';
 			$display = "block";
 			$see_display = "none";
 			$show_ticket_counter = ($ticket_counter>0)?$ticket_counter:"";
@@ -219,8 +220,8 @@
 			$client_filter_sql = " AND P.`company` = ".$_REQUEST['client'];
 		}
 		if(isset($_REQUEST['status_filter']) && $_REQUEST['status_filter'] != '-1'){  
-		    $status_table_sql = "select `id` from `lnk_workorder_status_types` where name = '".$_REQUEST['status_filter']."'";
-		  	$status_result = $mysql->query($status_table_sql);
+		    $status_table_sql = "select `id` from `lnk_workorder_status_types` where name = ?";
+		  	$status_result = $mysql->prepare($status_table_sql, array($_REQUEST['status_filter']));
 		    if($status_result->num_rows == 1){
 		       $status_row = $status_result->fetch_assoc();
 		    		       $status_filter_sql = " AND W.`status` = ".$status_row['id'];
@@ -303,7 +304,7 @@
 		//echo $pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql .$req_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql . $requestedby_filter_sql .$date_range_filter_sql .$search_filter_sql;
 		try{
 			
-			if(!$workorder_result = $mysql->query($workorder_list_query)){
+			if(!$workorder_result = $mysql->sqlordie($workorder_list_query)){
 				throw new Exception("MYsql Error:".mysqli_error($mysql));
 			}
 			$i = 0;

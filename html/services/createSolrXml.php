@@ -51,9 +51,14 @@ class createSolrXml{
 			$b = $doc->createElement( "doc" ); 
 			$id = $doc->createElement( "field" );
 			$id->setAttribute('name', 'id');
-			$id->appendChild( $doc->createTextNode( $workorders_row['id'] ) );
+			$id->appendChild( $doc->createCDATASection('WO'.$workorders_row['id'] ) );
 			$b->appendChild($id); 
 			
+			$docid = $doc->createElement( "field" );
+                        $docid->setAttribute('name', 'docid');
+                        $docid->appendChild( $doc->createTextNode($workorders_row['id'] ) );
+                        $b->appendChild($docid);
+	
 			$guid = $doc->createElement( "field" ); 
 			$guid->setAttribute('name', 'guid');
 			$guid->appendChild( $doc->createTextNode( $workorders_row['project_id'] ) ); 
@@ -106,14 +111,15 @@ class createSolrXml{
 			
 			}
 			
-			$workorders_date_comment = "SELECT comment,date FROM `workorder_comments` WHERE `workorder_id`='" .$workorders_row['id'] ."'order by DESC limit 0,1";
+			$workorders_date_comment = "SELECT date FROM `workorder_comments` WHERE `workorder_id`='" .$workorders_row['id'] ."'order by id DESC limit 1";
                         $workorders_comment_date_res = $mysql->query($workorders_date_comment);
 
-
+			while($workorders_comment_date_value = $workorders_comment_date_res->fetch_row()){
                         $commentLastUpdatedDate = $doc->createElement( "field" );
                         $commentLastUpdatedDate->setAttribute('name', 'commentLastUpdatedDate');
-                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( date('Y-m-d\TH:i:s\Z', strtotime($workorders_comment_date_res['date']))));
+                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( date('Y-m-d\TH:i:s\Z', strtotime($workorders_comment_date_value[0]))));
                         $b->appendChild($commentLastUpdatedDate);
+			}
 
 			$r->appendChild($b); 
 			} 
@@ -139,9 +145,14 @@ class createSolrXml{
 			
 			$id = $doc->createElement( "field" );
 			$id->setAttribute('name', 'id');			
-			$id->appendChild( $doc->createTextNode( $quality_row['id'] ) ); 
+			$id->appendChild( $doc->createCDATASection('QA'.$quality_row['id'] ) ); 
 			$b->appendChild($id); 
 			
+			$docid = $doc->createElement( "field" );
+                        $docid->setAttribute('name', 'docid');
+                        $docid->appendChild( $doc->createTextNode($quality_row['id'] ) );
+                        $b->appendChild($docid);
+
 			$guid = $doc->createElement( "field" ); 
 			$guid->setAttribute('name', 'guid');
 			$guid->appendChild( $doc->createTextNode( $quality_row['project_id'] ) ); 
@@ -194,14 +205,15 @@ class createSolrXml{
 			
 			}
 			
-			$quality_comment_date = "SELECT date FROM `qa_comments` WHERE `defect_id`='" .$quality_row['id'] ."' order by DESC limit 0,1";
+			$quality_comment_date = "SELECT date FROM `qa_comments` WHERE `defect_id`='" .$quality_row['id'] ."' order by id DESC limit 0";
                         $quality_comment_date_res = $mysql->query($quality_comment_date);
 			
+			while($quality_comment_date_value =  $quality_comment_date_res->fetch_row()){
 			$commentLastUpdatedDate = $doc->createElement( "field" );
                         $commentLastUpdatedDate->setAttribute('name', 'commentLastUpdatedDate');
-                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( date('Y-m-d\TH:i:s\Z', strtotime($quality_comment_date_res['date']))) );
+                        $commentLastUpdatedDate->appendChild( $doc->createCDATASection( date('Y-m-d\TH:i:s\Z', strtotime($quality_comment_date_value[0]))) );
                         $b->appendChild($commentLastUpdatedDate);
-
+			}
  
 			$r->appendChild($b); 
 			} 
@@ -213,10 +225,13 @@ class createSolrXml{
 
 	}
 			
-			require_once('/var/www/lighthouse-uxd/dev2/current/html/_inc/config.inc');
-			require_once('/var/www/lighthouse-uxd/dev2/current/html/_ajaxphp/util.php');
-			$path = '/var/www/lighthouse-uxd/dev2/current/Solarxml/';
-
+			//require_once('/var/www/lighthouse-uxd/dev2/current/html/_inc/config.inc');
+			//require_once('/var/www/lighthouse-uxd/dev2/current/html/_ajaxphp/util.php');
+			//$path = '/var/www/lighthouse-uxd/dev2/current/Solarxml/';
+			$config_path = str_replace("/html/services","",dirname(__FILE__));
+			require_once($config_path.'/html/_inc/config.inc');
+			require_once($config_path.'/html/_ajaxphp/util.php');
+			$path = $config_path.'/Solarxml/';
 			$c = new createSolrXml();
 			$u = new stdClass();
 	    		$w = new stdClass();

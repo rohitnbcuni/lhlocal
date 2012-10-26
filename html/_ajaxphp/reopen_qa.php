@@ -3,36 +3,36 @@
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-	
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	$defectId = @$_GET['defectId'];
 	
 	$update_wo = "UPDATE `qa_defects` SET `closed_date`=NULL, `status`='2' WHERE `id`='$defectId'";
-	@$mysql->query($update_wo);
+	@$mysql->sqlordie($update_wo);
 	
 
 	$select_wo = "SELECT * FROM `qa_defects` WHERE `id`='" .$defectId ."'";
-	$wo_res = $mysql->query($select_wo);
+	$wo_res = $mysql->sqlordie($select_wo);
 	$wo_row = $wo_res->fetch_assoc();
 
 	$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
-	$project_res = $mysql->query($select_project);
+	$project_res = $mysql->sqlordie($select_project);
 	$project_row = $project_res->fetch_assoc();
 
 	$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-	$company_res = $mysql->query($select_company);
+	$company_res = $mysql->sqlordie($select_company);
 	$company_row = $company_res->fetch_assoc();
 
 	$select_priority = "SELECT * FROM `lnk_workorder_priority_types` WHERE `id`='" .$wo_row['priority'] ."'";
-	$pri_res = $mysql->query($select_priority);
+	$pri_res = $mysql->sqlordie($select_priority);
 	$pri_row = $pri_res->fetch_assoc();
 
 	$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$defectId' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
-	$req_type_res = $mysql->query($select_req_type_qry);
+	$req_type_res = $mysql->sqlordie($select_req_type_qry);
 	$req_type_row = $req_type_res->fetch_assoc();
 	
 	$select_user = "SELECT * FROM `users` WHERE `id`='" .$wo_row['assigned_to'] ."'";
-	$user_res = $mysql->query($select_user);
+	$user_res = $mysql->sqlordie($select_user);
 	$user_row = $user_res->fetch_assoc();
 
 	$subject = "WO: Reopen - " . $wo_row['title'] . " - Lighthouse Work Order Message";
