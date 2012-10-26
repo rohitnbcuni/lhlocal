@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<?PHP	$randNum = "201210120550"; ?>
+<?PHP	$randNum = "201210260500"; ?>
 <title><?echo DEV_TEAM_NAME?>: Lighthouse</title>
 	<link rel="stylesheet" href="/_css/style.css?<?PHP echo $randNum; ?>" type="text/css" />
 	<link rel="stylesheet" href="/_css/ui.datepicker.css" type="text/css" />
