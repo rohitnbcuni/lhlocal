@@ -57,6 +57,6 @@ fi
 etime=$(date +%c)
 echo $etime "15 Min Cron Completed ..." >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
 echo "###########################" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
-echo "" >> /var/www/lighthouse-uxd/lighthouse/lighthouse/current/html/crons/fifteen_minutes.log
+echo "" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
 
 
