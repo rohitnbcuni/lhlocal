@@ -1,10 +1,11 @@
 <?PHP
 	session_start();
 	include('../_inc/config.inc');
+	include("sessionHandler.php");
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";	
 	if(isset($_SESSION['user_id'])) {		
-		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-		
+		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		global $mysql;
 		$user = $_SESSION['lh_username'];
 	    $password = $_SESSION['lh_password'];
 		
@@ -17,11 +18,11 @@
 		if(!empty($woId))
 		{			
 			$wo_query = "SELECT * FROM `workorders` WHERE `id`='$woId' LIMIT 1";
-			$wo_result = $mysql->query($wo_query);
+			$wo_result = $mysql->sqlordie($wo_query);
 			$wo_row = $wo_result->fetch_assoc();
 			
 			$getProjectQuery = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."' LIMIT 1";
-			$projResult = $mysql->query($getProjectQuery);
+			$projResult = $mysql->sqlordie($getProjectQuery);
 			$projRow = $projResult->fetch_assoc();
 			
 
@@ -112,7 +113,7 @@
 			}
 			
 			$update_cc = "UPDATE `workorders` SET `cclist`='$arrayData' WHERE `id`='$woId'";
-			@$mysql->query($update_cc);
+			@$mysql->sqlordie($update_cc);
 				
 				
 
@@ -127,7 +128,7 @@
 					</post>';
 					for($z = 0; $z < sizeof($listKeys); $z++) {
 						$select_user_bc = "SELECT * FROM `users` WHERE `id`='" .$listKeys[$z] ."' LIMIT 1";
-						$user_bc_res = $mysql->query($select_user_bc);
+						$user_bc_res = $mysql->sqlordie($select_user_bc);
 						$user_bc_row = $user_bc_res->fetch_assoc();
 						
 						if(!empty($user_bc_row['bc_id'])){
@@ -135,7 +136,7 @@
 						}
 					}
 					$getRB_AT_users = "SELECT * FROM `users` WHERE `id`='" .$wo_row['assigned_to'] . "' OR `id`='" .$wo_row['requested_by'] . "'";
-					$RB_AT_res = $mysql->query($getRB_AT_users);
+					$RB_AT_res = $mysql->sqlordie($getRB_AT_users);
 					if($RB_AT_res->num_rows > 0) {
 						while($rb_at_row = $RB_AT_res->fetch_assoc()) {
 							$xml .= '<notify>' .$rb_at_row['bc_id'] .'</notify>';
@@ -170,33 +171,33 @@
 					curl_close($session);
 				}
 			$select_cc = "SELECT * FROM `workorders` WHERE `id`='$woId' LIMIT 1";
-			$result = @$mysql->query($select_cc);
+			$result = @$mysql->sqlordie($select_cc);
 			$row = @$result->fetch_assoc();
 
 			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$row['project_id'] ."'";
-			$project_res = $mysql->query($select_project);
+			$project_res = $mysql->sqlordie($select_project);
 			$project_row = $project_res->fetch_assoc();
 
 			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-			$company_res = $mysql->query($select_company);
+			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
 
 			$wo_status = "SELECT * FROM `lnk_workorder_status_types` WHERE `id`='" .$row['status'] ."'";
-			$wo_status_res = $mysql->query($wo_status);
+			$wo_status_res = $mysql->sqlordie($wo_status);
 			$wo_status_row = $wo_status_res->fetch_assoc();
 
 			$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$woId' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
-			$req_type_res = $mysql->query($select_req_type_qry);
+			$req_type_res = $mysql->sqlordie($select_req_type_qry);
 			$req_type_row = $req_type_res->fetch_assoc();
 
 			$requestedId = $row['requested_by'];
 
 			$site_name_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$woId' and a.field_key='SITE_NAME' and a.field_id = b.field_id";
-			$site_name_res = $mysql->query($site_name_qry);
+			$site_name_res = $mysql->sqlordie($site_name_qry);
 			$site_name_row = $site_name_res->fetch_assoc();
 
 			$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
-			$requestor_user_res = $mysql->query($requestor_qry);
+			$requestor_user_res = $mysql->sqlordie($requestor_qry);
 			$requestor_user_row = $requestor_user_res->fetch_assoc();
 
 			if($result->num_rows > 0) {		
@@ -211,8 +212,8 @@
                 $desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES,'UTF-8'));
 				for($x = 0; $x < sizeof($new_list); $x++) {
 					if(!empty($new_list[$x])) {
-						$select_cc_user = "SELECT * FROM `users` WHERE `id`='" .$new_list[$x] ."' LIMIT 1";
-						$cc_user_result = @$mysql->query($select_cc_user);
+						$select_cc_user = "SELECT * FROM `users` WHERE `id`= ? LIMIT 1";
+						$cc_user_result = @$mysql->sqlprepare($select_cc_user,array($new_list[$x]) );
 						$cc_user_row = @$cc_user_result->fetch_assoc();
 						
 						$list .= "<li>"
@@ -238,7 +239,7 @@
 							
 							 $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SEVERITY' and cu.field_key = 'SEVERITY' and cu.workorder_id = '$woId'";
 				
-			                 $severity_name_res = $mysql->query($severity_name_qry);
+			                 $severity_name_res = $mysql->sqlordie($severity_name_qry);
 			                 $severity_name_row = $severity_name_res->fetch_assoc();
 		
 				             if($request_type_arr[$req_type_row['field_name']]=='Problem')
@@ -280,7 +281,7 @@
 			
 				if(!empty($listKeys[$z])) {
 					$select_cc_user = "SELECT * FROM `users` WHERE `id`='" .$listKeys[$z] ."' LIMIT 1";
-					$cc_user_result = @$mysql->query($select_cc_user);
+					$cc_user_result = @$mysql->sqlordie($select_cc_user);
 					$cc_user_row = @$cc_user_result->fetch_assoc();
 					
 					$list .= "<li>"

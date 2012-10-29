@@ -86,7 +86,7 @@ if(count($xml) > 0){
 						{$no = $i+1;
 						$comments .= $no.'.'. $eVal->arr[1]->str[$i].'</br>';
 						}*/
-						$id[] =   $eVal->str[0];
+						$id[] =   $eVal->long[0];
 						$project_id[] =  $eVal->str[1];
 						$title[] = $eVal->str[2];
 						$urllink[] =  $eVal->arr->str[1];
@@ -108,15 +108,14 @@ if(count($xml) > 0){
 	}
 }
 
-// $pageURL = 'http';
-// if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
-// $pageURL .= "://";
 $pageURL = BASE_URL;
+$search_text= str_replace('"', "", $this->search_text);
+$search_text= str_replace("'", "",$search_text);
 ?>
 <div class="title_med2 workorders_filter">
 	<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE="" />
 	<?php if($result_found!=0){ ?>
-		<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label"><?php echo $result_found;?> Search results for "<?php echo  ucfirst($this->escape($this->search_text)); ?>"</label><?php } else{?>
+		<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label" title="<?php echo $search_text;?>"><?php echo $result_found;?> Search results for "<?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?>"</label><?php } else{?>
 		<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label">No result found</label>
 	<?php }?>
 </div>
@@ -138,14 +137,17 @@ $pageURL = BASE_URL;
 					if($cat[$i][0]=='quality'){$link = $pageURL.'/quality/index/edit/?defect_id=';$text='DEFECTS';}else{$link = $pageURL.'/workorders/index/edit/?wo_id=';$text='WORKORDERS'; }?>
 					<li> 
 						<div class='search_result'>
-						<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr(Util::escapewordquotes($title[$i][0]),0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
+						<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank" title="<?php echo $title[$i][0];?>"><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr(Util::escapewordquotes($title[$i][0]),0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
 						<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><?php echo $link.$id[$i][0]; ?></a></span>
 						<p class='defect_desc'><?php echo  ucfirst(substr(Util::escapewordquotes($desc[$i][0]),0,300));if(strlen($desc[$i][0])>300){echo '...';}?></p>
 						</div> <!-- END search_result -->
 					</li>
 					<?php } ?>
-				</ul>	
-			<div class="page_navigation"></div>	
+				</ul>
+			 <?php
+				$count_sum=$count_qa + $count_wo;	
+				 if($count_sum > 10 ){ ?>	
+			<div class="page_navigation"></div><?php } ?>	
 			</div>				
 			<div class="search_results_content_defect" style="display:none">
 				<div id="paging_container71">
@@ -157,14 +159,15 @@ $pageURL = BASE_URL;
 							if($cat[$i][0]=='quality'){
 							$link = $pageURL.'/quality/index/edit/?defect_id=';$text='DEFECTS';?>
 							<li> <div class='search_result'>
-							<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr(Util::escapewordquotes($title[$i][0]),0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
+							<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"  title="<?php echo $title[$i][0];?>"><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr(Util::escapewordquotes($title[$i][0]),0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
 							<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><?php echo $link.$id[$i][0]; ?></a></span>
 							<p class='defect_desc'><?php echo  ucfirst(substr(Util::escapewordquotes($desc[$i][0]),0,300));if(strlen($desc[$i][0])>300){echo '...';}?></p>
 							</div> <!-- END search_result --></li>
 							<?php } 
 						}?>
 					</ul>
-				<div class="page_navigation"></div>
+				 <?php if($count_qa>10){ ?>
+				<div class="page_navigation"></div><?php } ?>
 				</div>
 			</div>
 			<div class="search_results_content_wo" style="display:none" >
@@ -174,14 +177,15 @@ $pageURL = BASE_URL;
 					for($i =0 ; $i<count($id); $i++){
 						if($cat[$i][0]=='workorder'){$link = $pageURL.'/workorders/index/edit/?wo_id=';$text='WORKORDERS'; ?>
 						<li> <div class='search_result'>
-						<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr(Util::escapewordquotes($title[$i][0]),0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
+						<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank" title="<?php echo $title[$i][0];?>" ><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr(Util::escapewordquotes($title[$i][0]),0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
 						<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><?php echo $link.$id[$i][0]; ?></a></span>
 						<p class='defect_desc'><?php echo  ucfirst(substr(Util::escapewordquotes($desc[$i][0]),0,300));if(strlen($desc[$i][0])>300){echo '...';}?></p>
 						</div> <!-- END search_result --></li>
 						<?php }
 					} ?>
-					</ul>
-					<div class="page_navigation"></div>
+					</ul> 
+					 <?php if($count_wo>10){ ?>
+					<div class="page_navigation"></div><?php } ?>
 				</div>
 			</div>
 

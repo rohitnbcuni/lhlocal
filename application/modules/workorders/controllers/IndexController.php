@@ -1962,7 +1962,8 @@
 		
 		public function projectselectAction(){
 			$proj_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
-			if(isset($_REQUEST['wid']) || isset($_REQUEST['copyWO'])) {
+			if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
+			//if(isset($_REQUEST['wid']) || isset($_REQUEST['copyWO'])) {
 				echo WoDisplay::getProjectOptionHTML($_REQUEST['project_id']);
 			} else if($proj_select != ""){
 				echo WoDisplay::getProjectOptionHTML($proj_select);

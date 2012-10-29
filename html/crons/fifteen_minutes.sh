@@ -18,7 +18,7 @@ else
 echo "cron.companies.php exit status good" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
 fi
 
-php /var/www/lighthouse-uxd/lighthouse/current/html/crons/cron.users.php
+php /var/www/lighthouse-uxd/lighthouse/lighthouse/html/crons/cron.users.php
 if [ $? != 0 ]; then
 /bin/mail -s "15 Min Cron Failed - cron.users.php" ots-tools-support@nbcuni.com
 else

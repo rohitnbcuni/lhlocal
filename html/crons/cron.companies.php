@@ -18,7 +18,8 @@
 
 	define('AJAX_CALL', '0');
 	include($rootPath . '/html/_inc/config.inc');
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 //print("\n\nRoot Path in Companies Cron : " . $rootPath . "\n");die();	
 
 	if (!is_file($rootPath . "/html/crons/cron_15.log"))
@@ -100,8 +101,8 @@
 	foreach($feed->company as $comp) {
 		$select_state = "SELECT * FROM `lnk_iso_state_codes` WHERE `iso_code`='" .$mysql->real_escape_string($comp->state) ."' LIMIT 1";
 		$select_country = "SELECT * FROM `lnk_iso_country_codes` WHERE LOWER(`name`)=LOWER('" .$mysql->real_escape_string($comp->country) ."') LIMIT 1";
-		$state_res = $mysql->query($select_state);
-		$country_res = $mysql->query($select_country);
+		$state_res = $mysql->sqlordie($select_state);
+		$country_res = $mysql->sqlordie($select_country);
 		if($state_res->num_rows == 1) {
 			$state_row = $state_res->fetch_assoc();
 		}
@@ -133,7 +134,7 @@
 		
 		$query_check = "SELECT `id` FROM `companies` WHERE `bc_id`='" .$cData['bc_id'] ."'";
 
-		$check_res = $mysql->query($query_check);
+		$check_res = $mysql->sqlordie($query_check);
 		if ($mysql->error) {
 			writeLog($mysql, $query_check, $rootPath);
 		}else{
@@ -155,7 +156,7 @@
 					."`bc_uuid`='" .$cData['bc_uuid'] ."' "
 					."WHERE `id`='" .$row['id'] ."'";
 					
-				$mysql->query($update_query);
+				$mysql->sqlordie($update_query);
 				if ($mysql->error) {
 					writeLog($mysql, $update_query, $rootPath);
 				}
@@ -172,7 +173,7 @@
 						."','" .$cData['web_address'] ."','" .$cData['phone'] ."','" .$cData['fax'] 
 						."','" .$cData['time_zone'] ."','" .$cData['bc_uuid'] ."')";
 						
-					$mysql->query($insert_query);
+					$mysql->sqlordie($insert_query);
 					if ($mysql->error) {
 						writeLog($mysql, $insert_query, $rootPath);
 					}

@@ -1,12 +1,12 @@
 <?PHP
 	include('../_inc/config.inc');
-	
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
+	include("sessionHandler.php");
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	$id = $mysql->real_escape_string(@$_GET['id']);
 	
 	$getEntry = "SELECT * FROM `workorder_files` WHERE `id`='$id' LIMIT 1";
-	$result = $mysql->query($getEntry);
+	$result = $mysql->sqlordie($getEntry);
 	
 	if($result->num_rows == 1) {
 		$row = $result->fetch_assoc();
@@ -16,7 +16,7 @@
 		
 		if(!is_file($dir)) {
 			$remove_entry = "DELETE FROM `workorder_files` WHERE `id`='$id'";
-			$mysql->query($remove_entry);
+			$mysql->sqlordie($remove_entry);
 		}
 	}
 ?>
