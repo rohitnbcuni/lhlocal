@@ -38,11 +38,14 @@ if(array_key_exists("report", $_GET)){
 }
 
 
-$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+
+//Defining Global mysql connection values
+global $mysql;
 
 $project_query = "SELECT DISTINCT a.`id`, a.`project_name`, a.`project_code`, a.`company` FROM `projects` a, `qa_defects` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND a.qa_permission ='1' AND c.`user_id`='" .$_SESSION['user_id'] ."'  ORDER BY a.`company`, a.`project_name` ASC";
 //echo "qry".$project_query;
-$project_result = $mysql->query($project_query);
+$project_result = $mysql->sqlordie($project_query);
 $project_result->num_rows;
 $i=0;
 
@@ -56,7 +59,7 @@ $qa_project_version = array();
 if($project_result->num_rows > 0) {
 
   $select_wo_status = "SELECT `id`, `name` FROM `lnk_qa_status_types`";
-  $status_result = $mysql->query($select_wo_status);
+  $status_result = $mysql->sqlordie($select_wo_status);
   if($status_result->num_rows > 0){
     while($status_row = $status_result->fetch_assoc()){
       $wo_status_array[$status_row['id']] = $status_row['name'];
@@ -65,7 +68,7 @@ if($project_result->num_rows > 0) {
 
   $wo_last_comment = "SELECT wc.`id`,wc.`defect_id`,wc.`user_id`,wc.`comment`,wc.`date` FROM `qa_comments` wc, (select max(id) id from `qa_comments` group by `defect_id` ) tab1,`qa_defects` b where wc.id=tab1.id and b.id = wc.`defect_id` $project_archive";
 
-  $wo_last_comment_result = $mysql->query($wo_last_comment);
+  $wo_last_comment_result = $mysql->sqlordie($wo_last_comment);
 
   if($wo_last_comment_result->num_rows > 0){
     while($last_comment_row = $wo_last_comment_result->fetch_assoc()){
@@ -75,7 +78,7 @@ if($project_result->num_rows > 0) {
 
     $qa_last_action_sql = "SELECT audit.`defect_id`,audit.`audit_id`,audit.`log_user_id`,audit.`assign_user_id`,audit.`status`,audit.`log_date` FROM `quality_audit` audit, (select max(id) id from `quality_audit` group by `defect_id` ) tab1,`qa_defects` b where audit.id=tab1.id and b.id = audit.`defect_id` $project_archive";
 
-	$qa_last_action_audit = $mysql->query($qa_last_action_sql);
+	$qa_last_action_audit = $mysql->sqlordie($qa_last_action_sql);
 
 	if($qa_last_action_audit->num_rows > 0){
 		while($qa_last_action_row = $qa_last_action_audit->fetch_assoc()){
@@ -91,7 +94,7 @@ if($project_result->num_rows > 0) {
 	}
 
   $select_project_company = "SELECT * FROM `companies`";
-  $project_company_res = $mysql->query($select_project_company);
+  $project_company_res = $mysql->sqlordie($select_project_company);
   $companyListArr;
 
   if($project_company_res->num_rows > 0){
@@ -100,7 +103,7 @@ if($project_result->num_rows > 0) {
     }
   }
 
-  $qa_custom_data = $mysql->query("SELECT * FROM `lnk_custom_fields_value` where field_key in ('QA_CATEGORY','QA_SEVERITY','QA_OS','QA_BROWSER','QA_ORIGIN') order by field_key ");
+  $qa_custom_data = $mysql->sqlordie("SELECT * FROM `lnk_custom_fields_value` where field_key in ('QA_CATEGORY','QA_SEVERITY','QA_OS','QA_BROWSER','QA_ORIGIN') order by field_key ");
   $custom_feild_arr;
   while($row = $qa_custom_data->fetch_assoc())
   {
@@ -119,7 +122,7 @@ if($project_result->num_rows > 0) {
 
     $select_project_workorders = "SELECT * FROM `qa_defects` WHERE `project_id`='" .$project_row['id'] ."'$archive_sql ORDER BY `title` ";
 
-    $project_workorders_result = $mysql->query($select_project_workorders);
+    $project_workorders_result = $mysql->sqlordie($select_project_workorders);
     	
     if($project_workorders_result->num_rows > 0) {
       while($quality = $project_workorders_result->fetch_assoc()) {
@@ -127,8 +130,8 @@ if($project_result->num_rows > 0) {
 
 		  
          if(!array_key_exists($quality['version'], $qa_project_version)){
-	          $select_qa_version = "SELECT * FROM `qa_project_version` WHERE `id`='" .$quality['version'] ."'";
-			  $version_result = $mysql->query($select_qa_version);
+	          $select_qa_version = "SELECT * FROM `qa_project_version` WHERE `id`= ? ";
+			  $version_result = $mysql->sqlprepare($select_qa_version,array($quality['version']));
 			  $version_row = $version_result->fetch_assoc();
 			  $userName = '';
 			  if(!empty($version_row['version_name']))
@@ -137,8 +140,8 @@ if($project_result->num_rows > 0) {
 			  }
 		 }
         if(!array_key_exists($quality['detected_by'], $wo_user_list)){
-          $select_wo_requested_by = "SELECT * FROM `users` WHERE `id`='" .$quality['detected_by'] ."'";
-          $requested_result = $mysql->query($select_wo_requested_by);
+          $select_wo_requested_by = "SELECT * FROM `users` WHERE `id`= ? ";
+          $requested_result = $mysql->sqlprepare($select_wo_requested_by,array($quality['detected_by']));
           $requested_row = $requested_result->fetch_assoc();
           $userName = '';
           if(!empty($requested_row['last_name']))
@@ -152,8 +155,8 @@ if($project_result->num_rows > 0) {
           $wo_user_list[$quality['detected_by']] = $userName;
         }
         if(!array_key_exists($quality['assigned_to'], $wo_user_list)){
-          $select_wo_assigned_to = "SELECT * FROM `users` WHERE `id`='" .$quality['assigned_to'] ."'";
-          $assigned_result = $mysql->query($select_wo_assigned_to);
+          $select_wo_assigned_to = "SELECT * FROM `users` WHERE `id`= ? ";
+          $assigned_result = $mysql->sqlprepare($select_wo_assigned_to,array($quality['assigned_to']));
           $assigned_row = $assigned_result->fetch_assoc();
           $userName ='';
           if(!empty($assigned_row['last_name']))
@@ -218,8 +221,8 @@ if($project_result->num_rows > 0) {
           }
 
           if(!array_key_exists($wo_last_comment_user_id, $wo_user_list)){
-            $select_wo_last_comment = "SELECT * FROM `users` WHERE `id`='" .$wo_last_comment_user_id ."'";
-            $last_comment_result = $mysql->query($select_wo_last_comment);
+            $select_wo_last_comment = "SELECT * FROM `users` WHERE `id`= ? ";
+            $last_comment_result = $mysql->sqlprepare($select_wo_last_comment,array($wo_last_comment_user_id));
             $last_comment_row = $last_comment_result->fetch_assoc();
 
             $userName ='';

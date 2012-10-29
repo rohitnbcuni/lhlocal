@@ -1,12 +1,15 @@
 <?PHP
 	session_start();
 	include('../_inc/config.inc');
+	include("sessionHandler.php");
 	include('../_ajaxphp/util.php');
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 	if(isset($_SESSION['user_id'])) {
 		$user = $_SESSION['lh_username'];
 	    $password = $_SESSION['lh_password'];
-		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		//Defining Global mysql connection values
+		global $mysql;
 			
 		$defectID = $mysql->real_escape_string(@$_POST['defectID']);
 		$dirName = $mysql->real_escape_string(@$_POST['dirName']);
@@ -38,8 +41,8 @@
 		$qaPRODUCT = $mysql->real_escape_string(@$_POST['qaPRODUCT']);
 		if($timeSens == "true") {
 
-		$select_wo_old = "SELECT * FROM `qa_defects` WHERE `id`='" .$defectID ."'";
-		$wo_old_res = $mysql->query($select_wo_old);
+		$select_wo_old = "SELECT * FROM `qa_defects` WHERE `id`= ? ";
+		$wo_old_res = $mysql->sqlprepare($select_wo_old,array($defectID));
 		$wo_old_row = $wo_old_res->fetch_assoc();		
 
 		
@@ -73,10 +76,10 @@
 				."(`project_id`, `status`, `title`, `example_url`, `body`, `assigned_to`, `requested_by`, `detected_by`, `assigned_date`,`cclist`, `category`, `os`,`origin`, `browser`,  `severity`, `version`,  `creation_date`, `launch_date`,`iteration`,`product`)"
 				."VALUES "
 				."('$projectId','$woStatus','$woTitle','$woExampleURL','$woDesc','$woAssignedTo','$requestedId','$qaDETECTED_BY',$assignedDate,'$qaCCList','$qaCATEGORY','$qaOS','$qaORIGIN','$qaBROWSER','$qaSEVERITY','$qaVERSION',$dtStart,$dtEnd,'$qaITERATION','$qaPRODUCT')";
-				@$mysql->query($insert_qa);
+				@$mysql->sqlordie($insert_qa);
 				$getdefectID = $mysql->insert_id;			
 				$update_wo = "UPDATE `projects` SET `qa_permission`='1' WHERE `id`='$projectId'";
-			        @$mysql->query($update_wo);	
+			        @$mysql->sqlordie($update_wo);	
 		} else {			
 			$qaDETECTED_BY = $wo_old_row['detected_by'];
 			$requestedId = $wo_old_row['requested_by'] ;
@@ -114,7 +117,7 @@
 				."`product`='$qaPRODUCT'"
 				."WHERE `id`='$defectID'";
 
-			@$mysql->query($update_wo);
+			@$mysql->sqlordie($update_wo);
 			$getdefectID = $defectID;		
 
 		}					
@@ -125,14 +128,14 @@
 			@rename($_SERVER['DOCUMENT_ROOT']."/qafiles/" .$dirName,  $_SERVER['DOCUMENT_ROOT']."/qafiles/" .$getdefectID);
 			
 			$update_files = "UPDATE `qa_files` SET `defect_id`='$getdefectID', `directory`='$getdefectID' WHERE `directory`='" .str_replace("/", "", $dirName) ."'";
-			@$mysql->query($update_files);
+			@$mysql->sqlordie($update_files);
 		}
 		
-		$select_wo = "SELECT * FROM `qa_defects` WHERE `id`='" .$getdefectID ."'";
-		$wo_res = $mysql->query($select_wo);
+		$select_wo = "SELECT * FROM `qa_defects` WHERE `id`= ? ";
+		$wo_res = $mysql->sqlprepare($select_wo,array($getdefectID));
 		$wo_row = $wo_res->fetch_assoc();
-		$select_user = "SELECT * FROM `users` WHERE `id`='" .$woAssignedTo ."'";
-		$user_res = $mysql->query($select_user);
+		$select_user = "SELECT * FROM `users` WHERE `id`= ? ";
+		$user_res = $mysql->sqlprepare($select_user,array($woAssignedTo));
 		$user_row = $user_res->fetch_assoc();		
 		
 		$cclist = array();
@@ -150,16 +153,16 @@
 
 		$user_keys = array_keys($users_email);
 
-		$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
-		$project_res = $mysql->query($select_project);
+		$select_project = "SELECT * FROM `projects` WHERE `id`= ? ";
+		$project_res = $mysql->sqlprepare($select_project,array($wo_row['project_id']));
 		$project_row = $project_res->fetch_assoc();
 
-		$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-		$company_res = $mysql->query($select_company);
+		$select_company = "SELECT * FROM `companies` WHERE `id`= ? ";
+		$company_res = $mysql->sqlprepare($select_company,array($project_row['company']));
 		$company_row = $company_res->fetch_assoc();
 
-		$wo_status = "SELECT * FROM `lnk_qa_status_types` WHERE `id`='" .$woStatus ."'";
-		$wo_status_res = $mysql->query($wo_status);
+		$wo_status = "SELECT * FROM `lnk_qa_status_types` WHERE `id`= ? ";
+		$wo_status_res = $mysql->sqlprepare($wo_status,array($woStatus));
 		$wo_status_row = $wo_status_res->fetch_assoc();
 
 		$subject = "Defect ".$getdefectID.": ".$wo_status_row['name']." - ".$wo_row['title'];
@@ -167,8 +170,8 @@
 
 
 		$file_list = "";
-		$select_file = "SELECT * FROM `qa_files` WHERE defect_id='" . $getdefectID . "' order by upload_date desc";
-		$file_res = $mysql->query($select_file);
+		$select_file = "SELECT * FROM `qa_files` WHERE defect_id= ? order by upload_date desc";
+		$file_res = $mysql->sqlprepare($select_file,array($getdefectID));
 		if($file_res->num_rows > 0) {
 			$file_list = "<u><b>Attachment:</b></u><br>";
 			$fileCount = 1;
@@ -190,8 +193,8 @@
 				 if($user!= $requestedId)
 				{
 
-					$select_email_addr = "SELECT `email` FROM `users` WHERE `id`='" . $user ."' LIMIT 1";
-					$email_addr_res = $mysql->query($select_email_addr);
+					$select_email_addr = "SELECT `email` FROM `users` WHERE `id`= ? LIMIT 1";
+					$email_addr_res = $mysql->sqlprepare($select_email_addr,array($user));
 					$email_addr_row = $email_addr_res->fetch_assoc();
 					$to = $email_addr_row['email'];
 					$link = "<a href='".BASE_URL ."/quality/index/edit/?defect_id=" .$getdefectID."'>".$getdefectID."</a>";
@@ -221,8 +224,8 @@
 			$msg = '';
 			foreach($sendList as $user){
 
-				$select_email_addr = "SELECT `email` FROM `users` WHERE `id`='" . $user ."' LIMIT 1";
-				$email_addr_res = $mysql->query($select_email_addr);
+				$select_email_addr = "SELECT `email` FROM `users` WHERE `id`= ? LIMIT 1";
+				$email_addr_res = $mysql->sqlprepare($select_email_addr,array($user));
 				$email_addr_row = $email_addr_res->fetch_assoc();
 				$to = $email_addr_row['email'];
 
@@ -279,7 +282,7 @@
 	function insertWorkorderAudit($mysql,$defect_id, $audit_id, $log_user_id,$assign_user_id,$status)
 	{
 		$insert_custom_feild = "INSERT INTO  `quality_audit` (`defect_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$defect_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
-		@$mysql->query($insert_custom_feild);
+		@$mysql->sqlordie($insert_custom_feild);
 	}
 	
 ?>

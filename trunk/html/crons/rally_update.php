@@ -1,12 +1,12 @@
 <?PHP
 	//Production
-	$rootPath = '/var/www/lighthouse-uxd/lighthouse';
-	//dev
-//	$rootPath = '/var/www/lighthouse-uxd/lhdev';
+	include "cron.config.php";
+
 
 	define('AJAX_CALL', '0');
 	include($rootPath . '/html/_inc/config.inc');
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	$logFileName = $rootPath . "/html/crons/rally_timestamp.log.old";
 
 	function getResult($set_request_url){
@@ -98,7 +98,7 @@
 	);
 
 	$user_sql = 'SELECT `id` FROM `users` WHERE `user_name`="' . BASECAMP_RALLY_USERNAME . '"';
-	$user_result = $mysql->query($user_sql);
+	$user_result = $mysql->sqlordie($user_sql);
 	$user_row = $user_result->fetch_assoc();
 
 	foreach($rally as $type=>$url){
@@ -149,8 +149,8 @@
 						}
 					}
 					
-					$bc_id_query = "SELECT  `bcid`, `project_id`, `title`, `priority`, `status`, `body` FROM `workorders` WHERE `id`='" . $lh_wo_id ."' LIMIT 1";
-					$bc_id_result = $mysql->query($bc_id_query);
+					$bc_id_sqlordie = "SELECT  `bcid`, `project_id`, `title`, `priority`, `status`, `body` FROM `workorders` WHERE `id`='" . $lh_wo_id ."' LIMIT 1";
+					$bc_id_result = $mysql->sqlordie($bc_id_sqlordie);
 					$bc_id_row_before = $bc_id_result->fetch_assoc();
 
 					$update_wo_sql = 'UPDATE `workorders` SET ';
@@ -159,7 +159,7 @@
 					}
 
 					$wo_sql = "SELECT * FROM `workorders` WHERE `id`='" . $lh_wo_id . "'";
-					$wo_result = $mysql->query($wo_sql);
+					$wo_result = $mysql->sqlordie($wo_sql);
 					$wo_row = $wo_result->fetch_assoc();
 					if($defect_rally_release != "" && $defect_rally_release != $wo_row['rally_release']){
 						$update_wo_sql .= ' `rally_release`="' . $defect_rally_release . '", ';
@@ -168,10 +168,10 @@
 						$release_comment = "This ticket is being reviewed and a timeline for implementation will be reported out.";
 					}
 					$update_wo_sql .= ' `status`="' . $lh_status[$status] . '" WHERE `id`="' . $lh_wo_id . '"';
-					$mysql->query($update_wo_sql);
+					$mysql->sqlordie($update_wo_sql);
 
-					$bc_id_query = "SELECT  `bcid`, `project_id`, `title`, `priority`, `status`, `body` FROM `workorders` WHERE `id`='" . $lh_wo_id ."' LIMIT 1";
-					$bc_id_result = $mysql->query($bc_id_query);
+					$bc_id_sqlordie = "SELECT  `bcid`, `project_id`, `title`, `priority`, `status`, `body` FROM `workorders` WHERE `id`='" . $lh_wo_id ."' LIMIT 1";
+					$bc_id_result = $mysql->sqlordie($bc_id_sqlordie);
 					$bc_id_row = $bc_id_result->fetch_assoc();
 
 					$notes_flag="0";
@@ -184,7 +184,7 @@
 
 					if($defect_rally_comment != ""){
 						$lh_wo_comment_sql = 'SELECT `comment`,`id` FROM `workorder_comments` WHERE `user_id`="' . $user_row['id'] . '" AND `workorder_id`="' . $lh_wo_id . '" AND `rally_notes_flag`="1" ORDER BY `date` DESC LIMIT 1';
-						$lh_wo_comment_result = $mysql->query($lh_wo_comment_sql);
+						$lh_wo_comment_result = $mysql->sqlordie($lh_wo_comment_sql);
 						$lh_wo_comment_row = $lh_wo_comment_result->fetch_assoc();
 					
 						if($lh_wo_comment_result->num_rows > 0){
@@ -247,14 +247,14 @@
 	function sendMail($wo_id, $userID, $bc_id_row, $comment, $mysql, $updateType=''){
 
 		$select_priority = "SELECT * FROM `lnk_workorder_priority_types` WHERE `id`='" . $bc_id_row['priority'] ."'";
-		$pri_res = $mysql->query($select_priority);
+		$pri_res = $mysql->sqlordie($select_priority);
 		$pri_row = $pri_res->fetch_assoc();
 		
 		$select_email_users = "SELECT * FROM `workorders` WHERE `id`='" . $wo_id . "' LIMIT 1";
-		$email_res = $mysql->query($select_email_users);
+		$email_res = $mysql->sqlordie($select_email_users);
 		if($email_res->num_rows > 0) {
 			$new_commenter = "SELECT * FROM `users` WHERE `id`='" . $userID . "' LIMIT 1";
-			$commenter_res = $mysql->query($new_commenter);
+			$commenter_res = $mysql->sqlordie($new_commenter);
 			$commenter_row = $commenter_res->fetch_assoc();
 
 			$email_row = $email_res->fetch_assoc();
@@ -274,16 +274,16 @@
 			}
 			$user_keys = array_keys($users_email);
 			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$bc_id_row['project_id'] ."'";
-			$project_res = $mysql->query($select_project);
+			$project_res = $mysql->sqlordie($select_project);
 			$project_row = $project_res->fetch_assoc();
 
 			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-			$company_res = $mysql->query($select_company);
+			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
 
 			for($u = 0; $u < sizeof($user_keys); $u++) {
 				$select_email_addr = "SELECT `email` FROM `users` WHERE `id`='" .$user_keys[$u] ."' LIMIT 1";
-				$email_addr_res = $mysql->query($select_email_addr);
+				$email_addr_res = $mysql->sqlordie($select_email_addr);
 				$email_addr_row = $email_addr_res->fetch_assoc();
 				
 				$to = $email_addr_row['email'];
@@ -316,7 +316,7 @@
 	function sendMessage($wo_id, $userID, $comment, $bc_id_row, $mysql,$notes_flag){
 
 		$wo_comment_sql = 'INSERT INTO `workorder_comments` (`workorder_id`, `user_id`, `comment`, `rally_notes_flag`, `date`) VALUES ("' . $wo_id . '", "' . $userID . '", "' . $comment . '", "' . $notes_flag . '", NOW())';
-		$mysql->query($wo_comment_sql);
+		$mysql->sqlordie($wo_comment_sql);
 		sendBasecampMessage($comment, $bc_id_row['bcid']);
 		sendMail($wo_id, $userID, $bc_id_row, $comment, $mysql);
 	}
@@ -324,7 +324,7 @@
 	function updateWOComment($comment_id,$wo_id, $userID, $comment, $bc_id_row, $mysql){
 
 		$wo_comment_sql = 'update `workorder_comments` set `comment`="' . $comment . '", `date`= NOW() where `id`="' . $comment_id . '"';
-		$mysql->query($wo_comment_sql);
+		$mysql->sqlordie($wo_comment_sql);
 		sendBasecampMessage($comment, $bc_id_row['bcid']);
 		sendMail($wo_id, $userID, $bc_id_row, $comment, $mysql);
 	}

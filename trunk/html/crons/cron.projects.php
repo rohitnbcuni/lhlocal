@@ -19,7 +19,8 @@
 
 	define('AJAX_CALL', '0');
 	include($rootPath . '/html/_inc/config.inc');
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 //print("\n\nRoot Path in Projects Cron : " . $rootPath . "\n");die();		
 
 	if (!is_file($rootPath . "/html/crons/cron_15.log"))
@@ -105,7 +106,7 @@
 		$name_split = explode(" - ", $name);
 		$comp_id = $mysql->real_escape_string($project->company->id);
 		$select_proj = "SELECT * FROM `projects` WHERE `bc_id`='$bc_id' and `YEAR`='".$curr_year."'";
-		$proj_res = $mysql->query($select_proj);
+		$proj_res = $mysql->sqlordie($select_proj);
 		if ($mysql->error) {
 			writeLog($mysql, $select_proj, $rootPath);
 		}else{
@@ -125,7 +126,7 @@
 				$company = $companyArray[$comp_id];
 			}else{
 				$select_comp = "SELECT * FROM `companies` WHERE `bc_id`='$comp_id'";
-				$comp_res = $mysql->query($select_comp);
+				$comp_res = $mysql->sqlordie($select_comp);
 				
 				if($comp_res->num_rows == 1) {
 					$comp_row = $comp_res->fetch_assoc();
@@ -140,7 +141,7 @@
 				$proj_row = $proj_res->fetch_assoc();
 				$update_proj = "UPDATE `projects` SET `project_code`='$project_code',`project_name`='$project_name',"
 				."`company`='$company' WHERE `id`='" .$proj_row['id'] ."'";
-				$mysql->query($update_proj);
+				$mysql->sqlordie($update_proj);
 				if ($mysql->error) {
 					writeLog($mysql, $update_proj, $rootPath);
 				}
@@ -150,19 +151,19 @@
 					."(`project_code`,`project_name`,`company`,`archived`,`bc_id`, `project_status`,`YEAR`) "
 					."VALUES "
 					."('$project_code','$project_name','$company','$archive','$bc_id', '1','$curr_year')";
-					$mysql->query($insert_proj);
+					$mysql->sqlordie($insert_proj);
 					if ($mysql->error) {
 						writeLog($mysql, $insert_proj, $rootPath);
 					}else{
 						$new_id = $mysql->insert_id;
 						$statusInsertSql = 'INSERT INTO `project_status` (`project_id`, `status_id`, `created_user`, `created_date`) VALUES ("' . $new_id . '", "1", "83", NOW())';
-						$mysql->query($statusInsertSql);
+						$mysql->sqlordie($statusInsertSql);
 						if ($mysql->error) {
 							writeLog($mysql, $statusInsertSql, $rootPath);
 						}
 						
 						$unAssignedPhaseInsertSql = 'INSERT INTO `project_phase_finance` (`project_id`, `phase`, `hours`, `rate`,`creation_date`) VALUES ("'.$new_id.'", "'.UNASSIGNED_PHASE.'", "0", "'.UNASSIGNED_PHASE_RATE.'", NOW())';
-						$mysql->query($unAssignedPhaseInsertSql);
+						$mysql->sqlordie($unAssignedPhaseInsertSql);
 						if ($mysql->error) {
 							writeLog($mysql, $unAssignedPhaseInsertSql, $rootPath);
 						}

@@ -27,15 +27,15 @@
 		<div><form action="<?php echo $pageURL;?>/search" method="post" name="search_box_form" id="search_box_form" >
 		<input name="search_text" id="search_text" type="text" class="search_bg"  tabindex="1" placeholder="  search" class="textbox"  autocomplete="off">
 		<input name="bt_search" type="button" class="bt_search" id="bt_search"  >
-		<div class="bt_advSearch" id="bt_advSearch" > <a href="javascript:void();" >
+		<div class="bt_advSearch" id="bt_advSearch" > <a href="javascript:void(null);" >
 		<img src="/_images/images/adv_option.png" /></a> 
         <div id="popup_top" > 
           <div class="search_popupTop"> <a class="bt_close"  href="javascript:hide_searchpopup();"><img src="/_images/images/bt_close.png" /></a> 
-            <input  type="checkbox" name="search_par[]" id="search_par" value="All"  checked="checked"/>
+            <input  type="radio" name="search_par[]" id="search_par" value="All"  checked="checked"/>
             All<br />
-            <input type="checkbox"  name="search_par[]"  id="search_par1" value="Defect" />
+            <input type="radio"  name="search_par[]"  id="search_par1" value="Defect" />
             Defects<br />
-            <input  type="checkbox" name="search_par[]" id="search_par2"  value="WorkO" />
+            <input  type="radio" name="search_par[]" id="search_par2"  value="WorkO" />
             Work Orders</div>
           <div class="search_popupBottom"></div>
         </div>
