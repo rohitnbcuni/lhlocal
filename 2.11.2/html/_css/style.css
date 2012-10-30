@@ -1321,7 +1321,7 @@ a:hover { text-decoration: underline; }
 
 			/*----- START: Schedules --------------------------------------------------------------*/
 			.schedules_container { position:absolute; height: 855px; width: 648px; margin: 6px 4px 6px 0; overflow-y: scroll; }
-			.month_container { position: relative; height: 855px; width: 655px; margin: 6px 4px 6px 0; }
+			.month_container { position: relative; height: 855px; width: 652px; margin: 6px 4px 6px 0;overflow: scroll; }
 
 				.schedules_row { float: left; position: relative; height: auto; width: 628px; padding-bottom: 3px; margin: 0 3px 6px 0; border-bottom: 1px solid #ccc; color: #246495; }
 				.schedules_row_wide { width: 647px; }
