@@ -1994,6 +1994,21 @@
 		
 		}
 		
+		public function wostatusupdateAction(){
+		
+			$wid = $_REQUEST['woId'];
+			$wo_status = $_REQUEST['woStatus'];
+			$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`='$wid' LIMIT 1");
+			//print_r($wo_data);
+			if($wo_status !=  $wo_data[0]['status']){ 
+				echo $new_status = $wo_data[0]['status']."~".$wo_data[0]['assigned_to'];
+				
+			}
+			$this->_helper->layout->disableLayout();
+		
+		
+		}
+		
 		
 		
 		
