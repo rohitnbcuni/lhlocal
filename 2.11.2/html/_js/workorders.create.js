@@ -1033,25 +1033,7 @@ function submitComment() {
 	//var assignedToHidden = $('#assignedToUserIdHidden').val();
 	var woStatusHidden = $('#woStatusIdHidden').val();
 	var woStatus = $('#wo_status').val();
-	$.ajax({
-				type: "POST",
-				async: false,
-				url: "/workorders/index/wostatus",
-				//Adding one more parameter for private users id
-				//LH#23699
-				//data: { woId : woId, userId : userId, comment : comment}
-				data: { woId : woId, woStatus : woStatus},
-				success: function(msg) {
-					if(msg != ''){
-						$container = $("#new_comment_notification").notify();
-						create("sticky", { title:'New Comment Notification', text:msg},{ expires:false });
-					}
-				},
-				error: function (XMLHttpRequest, textStatus, errorThrown) {
-					alert('Comment has not saved. Please try again..'); 
-				}		
-			});
-	
+		
 									
    /*
     * Private Comment
@@ -1085,6 +1067,7 @@ function submitComment() {
 	//if(comment != "" && userId != "" && woId != "") {
 		var status = saveWorkOrder('comment');		
 		if(status != false){
+		statusChangeNotifiction();
 			$.ajax({
 				type: "POST",
 				async: false,
@@ -1099,6 +1082,7 @@ function submitComment() {
 					$('.message_required p').html('The comment is saved successfully.');
 					$('.message_required').css({display:'block'});
 					updateComments();
+					
 				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
 					alert('Comment has not saved. Please try again..'); 
@@ -1118,6 +1102,27 @@ function submitComment() {
 	
 	return false;
 }
+
+function statusChangeNotifiction(){
+	var woId = document.getElementById('workorder_id').value;
+	var woStatus = $('#wo_status').val();
+$.ajax({
+				type: "POST",
+				async: false,
+				url: "/workorders/index/wostatus",
+				//Adding one more parameter for private users id
+				//LH#23699
+				//data: { woId : woId, userId : userId, comment : comment}
+				data: { woId : woId, woStatus : woStatus},
+				success: function(msg) {
+					if(msg != ''){
+						$container = $("#new_comment_notification").notify();
+						create("sticky", { title:'New Comment Notification', text:msg},{ expires:false });
+					}
+				}		
+			});
+
+}			
 
 function addCcUser() {
 	var woId = document.getElementById('workorder_id').value;
@@ -1324,6 +1329,7 @@ function showNewComment() {
 							data: 'wid='+wid+'&last_wid='+last_comment_id,
 							success: function(msg) {
 									if($.trim(msg) !=''){
+									
 									$('#comments_list').prepend(msg);
 									//$("#new_comment_notification").css("display","none")
 									$container = $("#new_comment_notification").notify();
@@ -1334,10 +1340,13 @@ function showNewComment() {
 									// $("#BeeperBox").html('<strong><span onclick="openAnimated('+last_comment_id+');" id="span_'+last_comment_id+'" >'+last_comment_username+' posted a <a title="notifications panel"  hef="javascrip:void(null);">comment</a>.');
 									// showTip();
 									
-									
+									statusupdatNotifiction();
 								}
+								
+								
 							}
 							});
+							
 						}
 						
 					}
@@ -1477,6 +1486,35 @@ function checkEditCommentTimeDisable(last_comment_id){
 				// Your code here
 		});
  
+
+}
+
+function statusupdatNotifiction(){
+	var woId = $('#workorder_id').val();
+	var woStatus = $('#wo_status').val();
+			$.ajax({
+				type: "POST",
+				async: false,
+				url: "/workorders/index/wostatusupdate",
+				//Adding one more parameter for private users id
+				//LH#23699
+				//data: { woId : woId, userId : userId, comment : comment}
+				data: { woId : woId, woStatus : woStatus},
+				success: function(msg) {
+					if(msg != ''){
+						
+						var responseValue = msg.split('~');
+						
+						var res_woStatusID = responseValue[0];
+						var res_woAssignedID = responseValue[1];
+						$('#woStatusIdHidden').val(res_woStatusID);
+						$('#wo_assigned_user').val(res_woAssignedID);
+						$('#wo_status').val(res_woStatusID);
+						//$container = $("#new_comment_notification").notify();
+						//create("sticky", { title:'New Comment Notification', text:msg},{ expires:false });
+					}
+				}		
+			});
 
 }
 
