@@ -49,6 +49,7 @@ $(document).ready(function() {
 	//document.getElementById('workorder_id').value;
 	if($('#workorder_id').val() != ''){
 		setInterval("showNewComment()", 5000);
+		
 	}
 /*------ ------Lazy Load Rquestor and Project drop down------------*/
 	var workorder_id = $('#workorder_id').val();
@@ -1032,7 +1033,26 @@ function submitComment() {
 	//var assignedToHidden = $('#assignedToUserIdHidden').val();
 	var woStatusHidden = $('#woStatusIdHidden').val();
 	var woStatus = $('#wo_status').val();
+	$.ajax({
+				type: "POST",
+				async: false,
+				url: "/workorders/index/wostatus",
+				//Adding one more parameter for private users id
+				//LH#23699
+				//data: { woId : woId, userId : userId, comment : comment}
+				data: { woId : woId, woStatus : woStatus},
+				success: function(msg) {
+					if(msg != ''){
+						$container = $("#new_comment_notification").notify();
+						create("sticky", { title:'New Comment Notification', text:msg},{ expires:false });
+					}
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					alert('Comment has not saved. Please try again..'); 
+				}		
+			});
 	
+									
    /*
     * Private Comment
     * Select all checked users
@@ -1459,3 +1479,5 @@ function checkEditCommentTimeDisable(last_comment_id){
  
 
 }
+
+
