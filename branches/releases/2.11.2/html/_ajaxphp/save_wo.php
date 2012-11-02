@@ -53,6 +53,8 @@
 		$woINFRA_TYPE = $mysql->real_escape_string(@$_POST['woINFRA_TYPE']);
 		$woCRITICAL = $mysql->real_escape_string(@$_POST['woCRITICAL']);
 		$woCCList = $mysql->real_escape_string(@$_POST['woCCList']);
+		$woStatusIdHidden = $mysql->real_escape_string(@$_POST['woStatusIdHidden']);
+		
 
 		$updatesql_draft_date = '';
 		$insertsql_draft_date = '';
@@ -263,12 +265,16 @@
 				
 				*/
 				//echo $wo_old_row['status']."---".$woStatus;
-				if($wo_old_row['status'] != $woStatus){
-				//For closed ticket
+				if($wo_old_row['status'] != $woStatusIdHidden && $commentSubmit == 'comment'){
+				
+					$woStatus = $wo_old_row['status'];
+					$woAssignedTo = $wo_old_row['assigned_to'];
+				}			
+				/*//For closed ticket
 					if($wo_old_row['status'] == 1){
 						$displayStatusArray = array('1'=> '1','12'=> '12');
 						if(in_array($woStatus,$displayStatusArray)){
-							$woStatus = $woStatus;
+							//$woStatus = $woStatus;
 						}else{
 							$woStatus = $wo_old_row['status'];
 							$woAssignedTo = $wo_old_row['assigned_to'];
@@ -278,7 +284,7 @@
 				if($wo_old_row['status'] == 3){
 					$displayStatusArray = array('3'=> '3','1'=> '1','11'=>'11');
 					if(in_array($woStatus,$displayStatusArray)){
-						$woStatus = $woStatus;
+						//$woStatus = $woStatus;
 					}else{
 						$woStatus = $wo_old_row['status'];
 						$woAssignedTo = $wo_old_row['assigned_to'];
@@ -290,7 +296,7 @@
 					// For Hold status 
 					$displayStatusArray = array('4'=> '4','5'=> '5','7'=> '7');
 					if(in_array($woStatus,$displayStatusArray)){
-						$woStatus = $woStatus;
+						//$woStatus = $woStatus;
 					}else{
 						$woStatus = $wo_old_row['status'];
 						$woAssignedTo = $wo_old_row['assigned_to'];
@@ -301,7 +307,7 @@
 					// For Need More Info status 
 						$displayStatusArray = array('5'=> '5','10'=> '10','4'=>'4');
 					if(in_array($woStatus,$displayStatusArray)){
-						$woStatus = $woStatus;
+						//$woStatus = $woStatus;
 					}else{
 						$woStatus = $wo_old_row['status'];
 						$woAssignedTo = $wo_old_row['assigned_to'];
@@ -312,7 +318,7 @@
 					// For New status 
 					$displayStatusArray = array('4'=> '4','5'=> '5','6'=> '6','7'=>'7');
 					if(in_array($woStatus,$displayStatusArray)){
-						$woStatus = $woStatus;
+						//$woStatus = $woStatus;
 					}else{
 						$woStatus = $wo_old_row['status'];
 						$woAssignedTo = $wo_old_row['assigned_to'];
@@ -323,7 +329,7 @@
 					// For In Progress
 					$displayStatusArray = array('3'=> '3','4'=> '4','5'=> '5','7'=>'7');
 					if(in_array($woStatus,$displayStatusArray)){
-						$woStatus = $woStatus;
+						//$woStatus = $woStatus;
 					}else{
 						$woStatus = $wo_old_row['status'];
 						$woAssignedTo = $wo_old_row['assigned_to'];
@@ -335,7 +341,7 @@
 					// For Feedback Provided status 
 					$displayStatusArray = array('5'=> '5','7'=> '7','10'=>'10');
 					if(in_array($woStatus,$displayStatusArray)){
-						$woStatus = $woStatus;
+						//$woStatus = $woStatus;
 					}else{
 						$woStatus = $wo_old_row['status'];
 						$woAssignedTo = $wo_old_row['assigned_to'];
@@ -347,7 +353,7 @@
 					// For Rejected status 
 					$displayStatusArray = array('4'=>'4','5'=> '5','7'=> '7','11'=>'11');
 					if(in_array($woStatus,$displayStatusArray)){
-						$woStatus = $woStatus;
+						//$woStatus = $woStatus;
 					}else{
 						$woStatus = $wo_old_row['status'];
 						$woAssignedTo = $wo_old_row['assigned_to'];
@@ -358,7 +364,7 @@
 					// For Reopened status 
 					$displayStatusArray = array('4'=> '4','5'=> '5','7'=>'7','12'=>'12');
 					if(in_array($woStatus,$displayStatusArray)){
-						$woStatus = $woStatus;
+						//$woStatus = $woStatus;
 					}else{
 						$woStatus = $wo_old_row['status'];
 						$woAssignedTo = $wo_old_row['assigned_to'];
@@ -366,7 +372,7 @@
 				}
 				
 				//echo $woStatus."<br/>";
-			}	
+			}*/	
 			
 			if($wo_old_row['assigned_to'] != $woAssignedTo) {
 				$assigned_date = "`assigned_date`=NOW(), ";
