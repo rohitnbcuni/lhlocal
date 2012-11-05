@@ -1,7 +1,9 @@
 <?PHP
 
 include("../_inc/config.inc");
-	
+if(!ISSET($_SESSION['user_id'])){
+	die("<b>You are not allowed to access these files</b>");
+}	
 header("Pragma: public");
 header("Expires: 0");
 header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -10,13 +12,13 @@ header("Content-Type: application/octet-stream");
 header("Content-Disposition: attachment;filename=HoursVarianceReportByProject.xls"); 
 header("Content-Transfer-Encoding: binary");
 
-
-$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+global $mysql;
+//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 
 	//  To fetch the phase names
 
 $sql = "SELECT id,name from lnk_project_phase_types";
-$rp_res = @$mysql->query($sql);
+$rp_res = @$mysql->sqlordie($sql);
 if($rp_res->num_rows > 0) {
 			while($rp_row = $rp_res->fetch_assoc()) {
 				$phase_types[$rp_row['id']] = $rp_row['name'];
@@ -55,7 +57,7 @@ AND ppt.active = '1'
 AND ppt.deleted = '0'
 ORDER BY p.project_code";
 
-$res = $mysql->query($sql);
+$res = $mysql->sqlordie($sql);
 $html = "<table border=1><tr><td><b>Project Code</b></td><td><b>Project Name</b></td><td><b>Project Phase</b></td><td><b>Start</b></td><td><b>End</b></td><td><b>Hours Entered in Finance & Budget</b></td><td><b>Actual Hours in Resources</b></td><td><b>Variance</b></td><td><b>Project Manager</b></td><td><b>Program</b></td><td><b>Company</b></td><td><b>Status</b></tr>";
 
 $i = 0;
@@ -114,12 +116,12 @@ function calculateToDate($projID, $mysql,$phase_types){
 	$toDateArray = array();
 	$todate = 0;
 	$rp_data = "SELECT * FROM `resource_blocks` WHERE `projectid`='" .$projID ."' AND `status`='4'";
-	$rp_res = @$mysql->query($rp_data);
+	$rp_res = @$mysql->sqlordie($rp_data);
 	if($rp_res->num_rows > 0) {
 		while($rp_row = $rp_res->fetch_assoc()) {
 			
 			$select_user_project_phase = "SELECT ppf.phase phase FROM project_phase_finance ppf, user_project_role upr WHERE ppf.project_id = upr.project_id AND ppf.phase = upr.phase_subphase_id AND upr.flag = 'phase' AND upr.user_id = '" .$rp_row['userid'] ."' AND ppf.project_id = '" .$projID ."' LIMIT 1";
-			$result_user_project_phase = $mysql->query($select_user_project_phase);
+			$result_user_project_phase = $mysql->sqlordie($select_user_project_phase);
 
 			if($result_user_project_phase->num_rows > 0){
 				$user_project_phase_row = $result_user_project_phase->fetch_assoc();
@@ -132,7 +134,7 @@ function calculateToDate($projID, $mysql,$phase_types){
 		//		echo $rp_row['userid']."<br>";
 			}else{
 				$select_project_sub_phases = "SELECT  pspf.phase phase FROM project_sub_phase_finance pspf, user_project_role upr WHERE pspf.project_id = upr.project_id AND pspf.sub_phase = upr.phase_subphase_id AND upr.flag = 'subphase' AND upr.user_id = '" .$rp_row['userid'] ."' AND pspf.project_id = '" .$projID ."' LIMIT 1";
-				$result_sub_phases = $mysql->query($select_project_sub_phases);
+				$result_sub_phases = $mysql->sqlordie($select_project_sub_phases);
 
 				if($result_sub_phases->num_rows > 0){
 					$sub_phase_row = $result_sub_phases->fetch_assoc();

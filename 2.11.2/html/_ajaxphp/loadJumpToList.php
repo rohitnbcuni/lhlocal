@@ -1,14 +1,15 @@
 <?PHP 
 		include("../_inc/config.inc");
 		include("sessionHandler.php");
-		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-		$role = $_GET['role'];
-		$start_date = $_GET['startDate'];
-		$end_date = $_GET['endDate'];
-		$company = $_GET['company'];
-		$program = $_GET['programType'];
-		$fromArrow = $_GET['fromArrow'];	
-		$is_filter_changed = $_REQUEST['is_filter_changed'];
+		global $mysql;
+		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		$role = $mysql->real_escape_string($_GET['role']);
+		$start_date = $mysql->real_escape_string($_GET['startDate']);
+		$end_date = $mysql->real_escape_string($_GET['endDate']);
+		$company = $mysql->real_escape_string($_GET['company']);
+		$program = $mysql->real_escape_string($_GET['programType']);
+		$fromArrow = $mysql->real_escape_string($_GET['fromArrow']);	
+		$is_filter_changed = $mysql->real_escape_string($_REQUEST['is_filter_changed']);
   
 /*  if($fromArrow == "right" || $fromArrow == "left"){
     if(isset($_COOKIE['lighthouse_rp_data'])){              
@@ -117,7 +118,7 @@
 		}
 
 		$sql_user = "SELECT last_name FROM `users` WHERE `company`='2' AND $programFilter `deleted`='0' $roleSql $companyFilter ORDER BY `last_name`";
-		$user_res = $mysql->query($sql_user);
+		$user_res = $mysql->sqlordie($sql_user);
 		$firstChar = '';
 		$firstCharFlag = true;
 		if($user_res->num_rows > 0) {

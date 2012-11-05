@@ -1,10 +1,16 @@
 <?PHP
+	
+	
 	include("../_inc/config.inc");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
+	include("sessionHandler.php");
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	if(!ISSET($_SESSION['user_id'])){
+		die("<b>You are not allowed to access these files</b>");
+	}
 	$selectedDate = $mysql->real_escape_string($_GET['monthSelected']);
 
-	$date_split = @explode("/",$selectedDate);
+	$date_split = @explode("/",$selectedDate); 
 	$numOfDays = date("t", mktime("0", "0", "0", $date_split[0], "1", $date_split[1]));
 	$fromDate = "$date_split[1]-$date_split[0]-01";
 	$toDate = "$date_split[1]-$date_split[0]-$numOfDays";
@@ -46,7 +52,7 @@
 	WHERE rb.datestamp >= '".$fromDate."' and rb.datestamp <= '".$toDate."' and rb.daypart <> '9' and rb.status <> '2' and status <> '3' and pb.deleted = '0' and pb.active = '1' 
 	GROUP BY DAY(rb.datestamp),pb.first_name,pb.last_name order by pb.first_name,pb.last_name,DAY(rb.datestamp)";
 	//print("rp_query  ".$rp_query);die();
-	$result = @$mysql->query($rp_query);
+	$result = @$mysql->sqlordie($rp_query);
 	$userList = array();
 	$userArray = array();
 
@@ -70,7 +76,7 @@
 
 
 	// fetch all users from LH who are not deleted and active
-	$result1 = @$mysql->query("select id,agency,first_name,last_name from users where `company` = '2' and `deleted` = '0' and `active` = '1'");
+	$result1 = @$mysql->sqlprepare("select id,agency,first_name,last_name from users where `company` = ? and `deleted` = '0' and `active` = ?", array(2,1));
 	while($row = @$result1->fetch_assoc())
 	{
 		$users_list[$row['id']]['name'] = trim($row['first_name']) . ' ' . trim($row['last_name']); 
@@ -86,8 +92,8 @@
 	uasort($all_users_list, 'compare_name'); 
 	$userArray = $all_users_list;
 
-	$overtime_sql = "SELECT rb.userid AS id, DAY(rb.datestamp) Date, rb.hours AS Hours FROM resource_blocks rb WHERE rb.datestamp >= '".$fromDate."' and rb.datestamp <= '".$toDate."' and rb.status <> '2' and rb.daypart = '9'";
-	$overtime_result = $mysql->query($overtime_sql);
+	$overtime_sql = "SELECT rb.userid AS id, DAY(rb.datestamp) Date, rb.hours AS Hours FROM resource_blocks rb WHERE rb.datestamp >= ? and rb.datestamp <= ? and rb.status <> ? and rb.daypart = ?";
+	$overtime_result = $mysql->sqlprepare($overtime_sql, array($fromDate,$toDate,$toDate,2,9));
 	if($overtime_result->num_rows > 0){
 		while($overtime_row = $overtime_result->fetch_assoc()){
 			if(!empty($userArray[$overtime_row['id']])){

@@ -1,12 +1,13 @@
-<?
+<?php
 			$users = Array();
 			include('../_inc/config.inc');
 			include("sessionHandler.php");
-			$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+			global $mysql;
+			//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 			$result = $mysql->query("SELECT * FROM `users`");
 			
 			while($row = @$result->fetch_assoc()) {
-				$rs_res = $mysql->query("SELECT * FROM `resource_types` WHERE `id`='" .$row['resource'] ."' LIMIT 1");
+				$rs_res = $mysql->sqlprepare("SELECT * FROM `resource_types` WHERE `id`= ? LIMIT 1", array($row['resource']) );
 				$rs_row = $rs_res->fetch_assoc();
 				$row['resource_name'] = $rs_row['name'];
 				array_push($users,$row);
