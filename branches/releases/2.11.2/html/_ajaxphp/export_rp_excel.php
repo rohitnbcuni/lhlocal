@@ -88,7 +88,10 @@
 			unset($users_list[$value]);				// users_list now contains only the deatils of users who has not filled efforts
 		}
 	}
-	$all_users_list = $userArray + $users_list;			// all users
+	//var_dump($userArray);
+	//var_dump($users_list);
+	$all_users_list = array_merge($userArray,$users_list);			// all users
+	//var_dump($all_users_list); die;
 	uasort($all_users_list, 'compare_name'); 
 	$userArray = $all_users_list;
 
