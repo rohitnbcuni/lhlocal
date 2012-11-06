@@ -1,11 +1,11 @@
 <?PHP 
 	include("../_inc/config.inc");
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
-	$riskID = $_GET['riskId'];
-	$page = $_GET['page'];
-	$divID = $_GET['id'];
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	$riskID = $mysql->real_escape_string($_GET['riskId']);
+	$page = $mysql->real_escape_string($_GET['page']);
+	$divID = $mysql->real_escape_string($_GET['id']);
 	$commentPerPage = $_GET['perPage'];
 	$totalComments = 0;
 	$prev = '<div class="prev">&nbsp</div>';
@@ -14,7 +14,7 @@
 	$html = '<dl class="risk_user_comments">';
 
 	$sql = "SELECT count(1) AS total FROM risk_comments WHERE archived='0' AND deleted='0' AND risk_id='$riskID'";
-	$result = $mysql->query($sql);
+	$result = $mysql->sqlordie($sql);
 	if($result){
 		$commentResult = $result->fetch_assoc();
 		$totalComments = $commentResult['total'];
@@ -34,12 +34,12 @@
 
 	$commentSql = "SELECT * FROM risk_comments WHERE archived='0' AND deleted='0' AND risk_id='$riskID' order by created_date desc LIMIT $from, $commentPerPage";
 
-	$commentResult = $mysql->query($commentSql);
+	$commentResult = $mysql->sqlordie($commentSql);
 	if(@$commentResult->num_rows > 0) {
 		while($comment = @$commentResult->fetch_assoc()) {
 			$usrSql = "SELECT * FROM users WHERE id='" . $comment['author_id'] . "' AND active='1' LIMIT 1";
 			$userName = 'None';
-			$userResult = $mysql->query($usrSql);
+			$userResult = $mysql->sqlordie($usrSql);
 			if($userResult) {
 				$user = $userResult->fetch_assoc();
 				$userName = $user['first_name'] . ' ' . $user['last_name'];

@@ -1,19 +1,19 @@
 <?PHP 
 	include("../_inc/config.inc");
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
-	$projectID = $_GET['project'];
-	$phase = $_GET['phase'];
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	$projectID = $mysql->real_escape_string($_GET['project']);
+	$phase = $mysql->real_escape_string($_GET['phase']);
 	$project_phase = array();
 
 	$html = '<dl class="sub_phase_content">';
 
 	$sql = "SELECT * FROM lnk_project_sub_phase_types WHERE active='1' AND phase_id='$phase'";
-	$result = $mysql->query($sql);
+	$result = $mysql->sqlordie($sql);
 
 	$sql = "SELECT sub_phase FROM project_sub_phase_finance WHERE deleted='0' AND active='1' AND phase='$phase' AND project_id='$projectID'";
-	$projectResult = $mysql->query($sql);
+	$projectResult = $mysql->sqlordie($sql);
 	if(@$projectResult->num_rows > 0) {
 		while($phaseData = @$projectResult->fetch_assoc()) {
 			$project_phase[$phaseData['sub_phase']] = '1';

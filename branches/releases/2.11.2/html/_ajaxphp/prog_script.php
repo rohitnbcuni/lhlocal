@@ -2,7 +2,8 @@
 
     include('../_inc/config.inc');
 	include 'reader.php';
-    $mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);	
+	global $mysql;
+    //$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);	
 
 
     // initialize reader object
@@ -18,7 +19,7 @@
 	echo ($x-1)." ".$sql."<br>";
 	++$x; 
 
-   $mysql->query($sql);
+   $mysql->sqlordie($sql);
    }
    echo "<br><br>end of script";
 ?>    

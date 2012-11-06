@@ -4,7 +4,7 @@
 			include("sessionHandler.php");
 			global $mysql;
 			//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-			$result = $mysql->query("SELECT * FROM `users`");
+			$result = $mysql->sqlordie("SELECT * FROM `users`");
 			
 			while($row = @$result->fetch_assoc()) {
 				$rs_res = $mysql->sqlprepare("SELECT * FROM `resource_types` WHERE `id`= ? LIMIT 1", array($row['resource']) );
