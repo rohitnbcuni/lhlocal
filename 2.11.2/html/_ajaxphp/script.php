@@ -2,8 +2,8 @@
 
    include('../_inc/config.inc');
 	include 'reader.php';
-    $mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);	
-
+    //$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);	
+	global $mysql;
     // include class file
   
     
@@ -22,7 +22,7 @@
     $sql="UPDATE users SET program = '".$excel->sheets[0]['cells'][$x][3]."' , agency = '".$excel->sheets[0]['cells'][$x][7]."' , active = '".$excel->sheets[0]['cells'][$x][8]."' , deleted = '".$excel->sheets[0]['cells'][$x][9]."' where id = ".$excel->sheets[0]['cells'][$x][1].";";
     echo $sql."<br>";
 
-   $mysql->query($sql);
+   $mysql->sqlordie($sql);
    }
    echo "end of script";
 ?>    

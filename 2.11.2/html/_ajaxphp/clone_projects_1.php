@@ -6,7 +6,7 @@
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
 	
-	die;
+	exit;
 	//$project_all = "SELECT * FROM `projects` WHERE `archived` = '0' AND `active` = '1' AND `deleted` = '0'";
 	$project_all = "SELECT * FROM `projects` WHERE  YEAR = '2011'";
 	//$project_all = "SELECT * FROM `projects` WHERE `id` IN (9271,9360)";

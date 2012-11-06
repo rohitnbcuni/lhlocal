@@ -4,8 +4,8 @@
 	include("sessionHandler.php");
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
-	$userid = $_POST['userid'];
-	$postDate = $_POST['date'];
+	$userid = $mysql->real_escape_string($_POST['userid']);
+	$postDate = $mysql->real_escape_string($_POST['date']);
 	$postDatePart = explode("/", $postDate);
 
 //	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);

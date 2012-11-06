@@ -1,10 +1,10 @@
 <?PHP 
 	include("../_inc/config.inc");
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
-	$projectID = $_GET['projId'];
-	$page = $_GET['page'];
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	$projectID = $mysql->real_escape_string($_GET['projId']);
+	$page = $mysql->real_escape_string($_GET['page']);
 	$riskPerPage = 1;
 	$totalRisks = 0;
 	$prev = '<span class="prev">&nbsp;</span>';
@@ -13,7 +13,7 @@
 	$html = '';
 
 	$sql = "SELECT count(1) AS total FROM project_risks WHERE active='1' AND archived='0' AND project_id='$projectID'";
-	$result = $mysql->query($sql);
+	$result = $mysql->sqlordie($sql);
 	if($result){
 		$riskCountResult = $result->fetch_assoc();
 		$totalRisks = $riskCountResult['total'];
@@ -33,12 +33,12 @@
 
 	$riskSql = "SELECT * FROM project_risks WHERE active='1' AND archived='0' AND project_id='$projectID' order by created_date desc LIMIT $from, $riskPerPage";
 
-	$riskResult = $mysql->query($riskSql);
+	$riskResult = $mysql->sqlordie($riskSql);
 	if(@$riskResult->num_rows > 0) {
 		while($risk = @$riskResult->fetch_assoc()) {
 			$usrSql = "SELECT * FROM users WHERE id='" . $risk['assigned_to_user_id'] . "' AND active='1' LIMIT 1";
 			$userName = 'None';
-			$userResult = $mysql->query($usrSql);
+			$userResult = $mysql->sqlordie($usrSql);
 			if($userResult->num_rows > 0) {
 				$user = $userResult->fetch_assoc();
 				$userName = $user['first_name'] . ' ' . $user['last_name'];

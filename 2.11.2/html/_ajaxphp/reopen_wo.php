@@ -102,7 +102,7 @@
 
 	                $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SEVERITY' and cu.field_key = 'SEVERITY' and cu.workorder_id = '$woId'";
 				
-			        $severity_name_res = $mysql->query($severity_name_qry);
+			        $severity_name_res = $mysql->sqlordie($severity_name_qry);
 			        $severity_name_row = $severity_name_res->fetch_assoc();
 		
 				    if($request_type_arr[$req_type_row['field_name']]=='Problem')
