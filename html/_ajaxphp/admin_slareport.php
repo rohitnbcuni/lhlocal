@@ -1,13 +1,13 @@
 <?
 include('../_inc/config.inc');
 include("sessionHandler.php");
-$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
-$month = $_GET['month'];
-$year = $_GET['year'];
-$to_month = $_GET['to_month'];
-$to_year = $_GET['to_year'];
-$to_assign = $_GET['assign_to'];
+//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+global $mysql;
+$month = $mysql->real_escape_string($_GET['month']);
+$year = $mysql->real_escape_string($_GET['year']);
+$to_month = $mysql->real_escape_string($_GET['to_month']);
+$to_year = $mysql->real_escape_string($_GET['to_year']);
+$to_assign = $mysql->real_escape_string($_GET['assign_to']);
 $wo_user_list = array();
 $wo_status_array = array();
 $companyListArr = array();
@@ -56,12 +56,12 @@ if($to_month==12)
 
 	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$to_endDate."'  and  assigned_to='".$to_assign."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' and assigned_to='".$to_assign."' END AND p.id=w.project_id";
 	}
-	$sla_report_result = $mysql->query($qry_sla_report_per_month);
+	$sla_report_result = $mysql->sqlordie($qry_sla_report_per_month);
 
  if($sla_report_result->num_rows > 0) {
 
 	   $select_wo_status = "SELECT `id`, `name` FROM `lnk_workorder_status_types`";
-	   $status_result = $mysql->query($select_wo_status);
+	   $status_result = $mysql->sqlordie($select_wo_status);
 	  if($status_result->num_rows > 0){
 		while($status_row = $status_result->fetch_assoc()){
 		  $wo_status_array[$status_row['id']] = $status_row['name'];
@@ -137,7 +137,7 @@ if($to_month==12)
  {
 	  if(!array_key_exists($user_id, $wo_user_list)){
 		  $select_wo_user = "SELECT * FROM `users` WHERE `id`='" .$user_id ."'";
-		  $select_wo_user_result = $mysql->query($select_wo_user);
+		  $select_wo_user_result = $mysql->sqlordie($select_wo_user);
 		  $select_wo_user_row = $select_wo_user_result->fetch_assoc();
 		  $userName = '';
 		  if(!empty($select_wo_user_row['last_name']))
@@ -156,7 +156,7 @@ if($to_month==12)
 
  function getUserTitle($user_id,$mysql){
 	$select_user_title = "SELECT a.name from lnk_user_subtitles a,user_roles b where a.id = b.category_subcategory_id and b.user_id = '$user_id'";
-	$user_title_result = $mysql->query($select_user_title);
+	$user_title_result = $mysql->sqlordie($select_user_title);
 	$user_title = '';
 	while($row = $user_title_result->fetch_assoc()){
 		$user_title.= $row['name'].",";
@@ -178,7 +178,7 @@ function getCompanyName($company_id,$companyListArr,$mysql)
  {
 	  if(!array_key_exists($company_id, $companyListArr)){
 		  $select_project_company = "SELECT * FROM `companies` where id ='" .$company_id ."'";
-		  $project_company_res = $mysql->query($select_project_company);
+		  $project_company_res = $mysql->sqlordie($select_project_company);
 		  if($project_company_res->num_rows > 0){
 			  $row = $project_company_res->fetch_assoc();
 			  $companyListArr[$row['id']] = $row['name'];
@@ -189,7 +189,7 @@ function getCompanyName($company_id,$companyListArr,$mysql)
 
 function getCustomTypeName($workorder_id,$custom_type,$mysql)
 {
-  $wo_custom_data = $mysql->query("SELECT `workorder_id`,a.`field_key`,a.`field_id`,c.`field_name` FROM `workorder_custom_fields` a,`workorders` b,`lnk_custom_fields_value` c where a.`workorder_id`='".$workorder_id."' and a.`field_key`='".$custom_type."' and b.id = a.workorder_id and a.`field_id`= c.`field_id`");
+  $wo_custom_data = $mysql->sqlordie("SELECT `workorder_id`,a.`field_key`,a.`field_id`,c.`field_name` FROM `workorder_custom_fields` a,`workorders` b,`lnk_custom_fields_value` c where a.`workorder_id`='".$workorder_id."' and a.`field_key`='".$custom_type."' and b.id = a.workorder_id and a.`field_id`= c.`field_id`");
   $field_name = 'N/A';
 	  if($wo_custom_data->num_rows > 0){
 		  $row = $wo_custom_data->fetch_assoc();
@@ -201,7 +201,7 @@ function getCustomTypeName($workorder_id,$custom_type,$mysql)
 
 function getAckTimefromAudit($workorder_id,$mysql)
 {	
-  $wo_audit_data = $mysql->query("select `log_date` from `workorder_audit` wa where wa.workorder_id='".$workorder_id."' AND wa.status = '7' order by log_date limit 1");
+  $wo_audit_data = $mysql->sqlordie("select `log_date` from `workorder_audit` wa where wa.workorder_id='".$workorder_id."' AND wa.status = '7' order by log_date limit 1");
   $log_date = 'N/A';
   if($wo_audit_data->num_rows > 0){
 	  $row = $wo_audit_data->fetch_assoc();
@@ -213,7 +213,7 @@ function getAckTimefromAudit($workorder_id,$mysql)
 
 function getFixedDatefromAudit($workorder_id,$mysql)
 {	
-  $wo_latest_reopen_date = $mysql->query("select max(log_date) as log_date from workorder_audit where workorder_id='".$workorder_id."' AND status = 12");
+  $wo_latest_reopen_date = $mysql->sqlordie("select max(log_date) as log_date from workorder_audit where workorder_id='".$workorder_id."' AND status = 12");
   $log_date_string = '';
   if($wo_latest_reopen_date->num_rows > 0){
 	$row = $wo_latest_reopen_date->fetch_assoc();
@@ -221,7 +221,7 @@ function getFixedDatefromAudit($workorder_id,$mysql)
 		$log_date_string = "log_date >= '".$row['log_date']."' AND ";
 	}
   }
-  $wo_audit_data = $mysql->query("select `log_date` from `workorder_audit` wa where wa.workorder_id='".$workorder_id."' AND $log_date_string wa.status = '3' order by log_date asc limit 1");
+  $wo_audit_data = $mysql->sqlordie("select `log_date` from `workorder_audit` wa where wa.workorder_id='".$workorder_id."' AND $log_date_string wa.status = '3' order by log_date asc limit 1");
   $log_date = 'N/A';
   if($wo_audit_data->num_rows > 0){
 	  $row = $wo_audit_data->fetch_assoc();

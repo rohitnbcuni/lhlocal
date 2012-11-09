@@ -49,6 +49,7 @@ $(document).ready(function() {
 	//document.getElementById('workorder_id').value;
 	if($('#workorder_id').val() != ''){
 		setInterval("showNewComment()", 5000);
+		
 	}
 /*------ ------Lazy Load Rquestor and Project drop down------------*/
 	var workorder_id = $('#workorder_id').val();
@@ -535,6 +536,8 @@ function saveWorkOrder(from) {
 	var woSITE_NAME = document.getElementById('SITE_NAME').value;
 	var woINFRA_TYPE = document.getElementById('INFRA_TYPE').value;
 	var woCCList = document.getElementById('cclist').value;
+	var woStatusIdHidden = document.getElementById('woStatusIdHidden').value;
+	
 	/*################COnfirm box if requestor change##################*/
 	if($('#woRequestedByPrev').val() != ''){
 		if($('#woRequestedByPrev').val() != $('#wo_requested_by').val()){
@@ -786,7 +789,7 @@ function saveWorkOrder(from) {
 	
 		
 	if(valid) {
-		data = {woId:woId,dirName:dirName,requestedId:requestedId,projectId:projectId,woTypeId:woTypeId,priorityId:priorityId,timeSens:timeSens,timeSensDate:timeSensDate,timeSensTime:timeSensTime,ampm:ampm,wo_draft:wo_draft,timeSensDate_draft:timeSensDate_draft,timeSensTime_draft:timeSensTime_draft,ampm_draft:ampm_draft,woTitle:woTitle,woExampleURL:woExampleURL,woDesc:woDesc,woStatus:woStatus,woAssignedTo:woAssignedTo,woStartDate:woStartDate,woEstDate:woEstDate,rallyType:rallyType,rallyProject:rallyProject,rallyFlag:rallyFlag,woREQ_TYPE:woREQ_TYPE,woSEVERITY:woSEVERITY,woSITE_NAME:woSITE_NAME,woINFRA_TYPE:woINFRA_TYPE,woCRITICAL:woCRITICAL,woCCList:woCCList,launchDate:launchDate,currmin:currmin,draftDate:draftDate,commentSubmit:from};
+		data = {woId:woId,dirName:dirName,requestedId:requestedId,projectId:projectId,woTypeId:woTypeId,priorityId:priorityId,timeSens:timeSens,timeSensDate:timeSensDate,timeSensTime:timeSensTime,ampm:ampm,wo_draft:wo_draft,timeSensDate_draft:timeSensDate_draft,timeSensTime_draft:timeSensTime_draft,ampm_draft:ampm_draft,woTitle:woTitle,woExampleURL:woExampleURL,woDesc:woDesc,woStatus:woStatus,woAssignedTo:woAssignedTo,woStartDate:woStartDate,woEstDate:woEstDate,rallyType:rallyType,rallyProject:rallyProject,rallyFlag:rallyFlag,woREQ_TYPE:woREQ_TYPE,woSEVERITY:woSEVERITY,woSITE_NAME:woSITE_NAME,woINFRA_TYPE:woINFRA_TYPE,woCRITICAL:woCRITICAL,woCCList:woCCList,launchDate:launchDate,currmin:currmin,draftDate:draftDate,commentSubmit:from,woStatusIdHidden:woStatusIdHidden};
 		//LH34096 if request type is request then estimate time will same launch date
 		if(woREQ_TYPE == '3'){
 			$('#estimated_completion_date').val(timeSensDate+" "+timeSensTime);
@@ -1032,7 +1035,8 @@ function submitComment() {
 	//var assignedToHidden = $('#assignedToUserIdHidden').val();
 	var woStatusHidden = $('#woStatusIdHidden').val();
 	var woStatus = $('#wo_status').val();
-	
+		
+									
    /*
     * Private Comment
     * Select all checked users
@@ -1065,6 +1069,7 @@ function submitComment() {
 	//if(comment != "" && userId != "" && woId != "") {
 		var status = saveWorkOrder('comment');		
 		if(status != false){
+		statusChangeNotifiction();
 			$.ajax({
 				type: "POST",
 				async: false,
@@ -1079,6 +1084,7 @@ function submitComment() {
 					$('.message_required p').html('The comment is saved successfully.');
 					$('.message_required').css({display:'block'});
 					updateComments();
+					
 				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
 					alert('Comment has not saved. Please try again..'); 
@@ -1098,6 +1104,27 @@ function submitComment() {
 	
 	return false;
 }
+
+function statusChangeNotifiction(){
+	var woId = document.getElementById('workorder_id').value;
+	var woStatus = $('#wo_status').val();
+$.ajax({
+				type: "POST",
+				async: false,
+				url: "/workorders/index/wostatus",
+				//Adding one more parameter for private users id
+				//LH#23699
+				//data: { woId : woId, userId : userId, comment : comment}
+				data: { woId : woId, woStatus : woStatus},
+				success: function(msg) {
+					if(msg != ''){
+						$container = $("#new_comment_notification").notify();
+						create("sticky", { title:'New Comment Notification', text:msg},{ expires:false });
+					}
+				}		
+			});
+
+}			
 
 function addCcUser() {
 	var woId = document.getElementById('workorder_id').value;
@@ -1278,6 +1305,7 @@ function showNewComment() {
 	var last_wid = $('#last_comment_id').val(); 
 	//alert("last_wid"+last_wid);
 		//if($.trim(last_wid) != ''){
+		
 		$.ajax({
 			type: "POST",
 			url: "/_ajaxphp/next_new_comment.php",
@@ -1304,6 +1332,7 @@ function showNewComment() {
 							data: 'wid='+wid+'&last_wid='+last_comment_id,
 							success: function(msg) {
 									if($.trim(msg) !=''){
+									
 									$('#comments_list').prepend(msg);
 									//$("#new_comment_notification").css("display","none")
 									$container = $("#new_comment_notification").notify();
@@ -1313,11 +1342,14 @@ function showNewComment() {
 
 									// $("#BeeperBox").html('<strong><span onclick="openAnimated('+last_comment_id+');" id="span_'+last_comment_id+'" >'+last_comment_username+' posted a <a title="notifications panel"  hef="javascrip:void(null);">comment</a>.');
 									// showTip();
-									
+									//statusupdatNotifiction();
 									
 								}
+								
+								
 							}
 							});
+							
 						}
 						
 					}
@@ -1459,3 +1491,34 @@ function checkEditCommentTimeDisable(last_comment_id){
  
 
 }
+
+function statusupdatNotifiction(){
+	var woId = $('#workorder_id').val();
+	var woStatus = $('#wo_status').val();
+			$.ajax({
+				type: "POST",
+				async: false,
+				url: "/workorders/index/wostatusupdate",
+				//Adding one more parameter for private users id
+				//LH#23699
+				//data: { woId : woId, userId : userId, comment : comment}
+				data: { woId : woId, woStatus : woStatus},
+				success: function(msg) {
+					if(msg != ''){
+						
+						var responseValue = msg.split('~');
+						
+						var res_woStatusID = responseValue[0];
+						var res_woAssignedID = responseValue[1];
+						$('#woStatusIdHidden').val(res_woStatusID);
+						//$('#wo_assigned_user').val(res_woAssignedID);
+						//$('#wo_status').val(res_woStatusID);
+						//$container = $("#new_comment_notification").notify();
+						//create("sticky", { title:'New Comment Notification', text:msg},{ expires:false });
+					}
+				}		
+			});
+
+}
+
+
