@@ -1,7 +1,9 @@
 <?
 	session_start();
 	include("../_inc/config.inc");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	include("sessionHandler.php");
+	global $mysql;
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 
 	$todayDate = date("Y-m-d");
 //	$currentYear = @explode("-", $todayDate);
@@ -20,14 +22,14 @@
 	$phaseToDate = calculateToDate($_GET['projID'], $mysql, $quarterID);
 
 	$project_details_sql = "SELECT bc_id from `projects` WHERE id='" . $mysql->real_escape_string($_GET['projID']) . "'";
-	$project_details_result = $mysql->query($project_details_sql);
+	$project_details_result = $mysql->sqlordie($project_details_sql);
 	$project_details_row = $project_details_result->fetch_assoc();
 
 	//Do this but select the finace data and completeness
 //	$select_project_phases = "SELECT * FROM `project_phase_finance` WHERE `project_id` = '" .@$mysql->real_escape_string($_GET['projID']) ."'";
 	$select_project_phases = "SELECT ppf.phase phase, ppf.rate rate, ppf.hours hours FROM project_phase_finance ppf, lnk_project_phase_types lppt where ppf.phase = lppt.id and ppf.project_id = '" .@$mysql->real_escape_string($_GET['projID']) ."' order by lppt.sort_order";
 
-	$result_phases = $mysql->query($select_project_phases);
+	$result_phases = $mysql->sqlordie($select_project_phases);
 	$projectDetail = '<div class="project_results_details" id="' .$mysql->real_escape_string($_GET['projID'])  .'">
 			<!-- SORTING -->
 			<ul class="details_sort">
@@ -44,11 +46,11 @@
 	while($row_phases = $result_phases->fetch_assoc()) {
 		$total_finance = 0;
 		$select_phase_data = "SELECT * FROM `lnk_project_phase_types` WHERE `id`='" .$row_phases['phase'] ."' LIMIT 1";
-		$phase_data_res = @$mysql->query($select_phase_data);
+		$phase_data_res = @$mysql->sqlordie($select_phase_data);
 		$phase_data_row = @$phase_data_res->fetch_assoc();
 		
 		$timeline_query = "SELECT * FROM `project_phases` WHERE `project_id`='" .$mysql->real_escape_string($_GET['projID'])."' AND `phase_type`='" .$row_phases['phase'] ."' LIMIT 1";
-		$timeline_res = @$mysql->query($timeline_query);
+		$timeline_res = @$mysql->sqlordie($timeline_query);
 		$timeline_row = @$timeline_res->fetch_assoc();
 		
 //		$select_user_phase = "SELECT * FROM `users` WHERE `role`='" .$phase_data_row['id'] ."'";
@@ -90,7 +92,7 @@
 		}
 
 		$sub_phase_select = "select * from project_sub_phase_finance where phase='" .$row_phases['phase'] ."' and project_id='" .@$mysql->real_escape_string($_GET['projID']) ."' and active='1'";
-		$result_sub_phase_select = $mysql->query($sub_phase_select);
+		$result_sub_phase_select = $mysql->sqlordie($sub_phase_select);
 		if($result_sub_phase_select->num_rows > 0){
 			while($project_subphase_row = $result_sub_phase_select->fetch_assoc()){
 				$total_finance += $project_subphase_row['hours'] * $project_subphase_row['rate'];
@@ -242,13 +244,13 @@
 		}
 
 		$rp_data = "SELECT * FROM `resource_blocks` WHERE `projectid`='" .$projID ."' AND `status`='4' $quarter_select";
-		$rp_res = @$mysql->query($rp_data);
+		$rp_res = @$mysql->sqlordie($rp_data);
 		if($rp_res->num_rows > 0) {
 			while($rp_row = $rp_res->fetch_assoc()) {
 				$todate = 0;
 				
 				$select_user_project_phase = "SELECT ppf.rate rate, ppf.phase phase FROM project_phase_finance ppf, user_project_role upr WHERE ppf.project_id = upr.project_id AND ppf.phase = upr.phase_subphase_id AND upr.flag = 'phase' AND upr.user_id = '" .$rp_row['userid'] ."' AND ppf.project_id = '" .$projID ."' LIMIT 1";
-				$result_user_project_phase = $mysql->query($select_user_project_phase);
+				$result_user_project_phase = $mysql->sqlordie($select_user_project_phase);
 
 				if($result_user_project_phase->num_rows > 0){
 					$user_project_phase_row = $result_user_project_phase->fetch_assoc();
@@ -264,7 +266,7 @@
 					}
 				}else{
 					$select_project_sub_phases = "SELECT pspf.rate rate, pspf.phase phase FROM project_sub_phase_finance pspf, user_project_role upr WHERE pspf.project_id = upr.project_id AND pspf.sub_phase = upr.phase_subphase_id AND upr.flag = 'subphase' AND upr.user_id = '" .$rp_row['userid'] ."' AND pspf.project_id = '" .$projID ."' LIMIT 1";
-					$result_sub_phases = $mysql->query($select_project_sub_phases);
+					$result_sub_phases = $mysql->sqlordie($select_project_sub_phases);
 
 					if($result_sub_phases->num_rows > 0){
 						$sub_phase_row = $result_sub_phases->fetch_assoc();
@@ -280,7 +282,7 @@
 						}
 					}else{
 						$select_project_phase = "SELECT * FROM `project_phase_finance` WHERE `project_id` = '" . $projID . "' AND `phase`='".UNASSIGNED_PHASE."'";  
-						$result_phases = $mysql->query($select_project_phase);
+						$result_phases = $mysql->sqlordie($select_project_phase);
 						if($result_phases->num_rows > 0){
 							$phase_row = $result_phases->fetch_assoc();
 							if($rp_row['daypart'] == 9) {

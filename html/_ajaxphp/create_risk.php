@@ -1,7 +1,8 @@
 <?PHP 
 	include("../_inc/config.inc");
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	$insertSql = ' test ';
 	$title = $mysql->real_escape_string($_POST['title']);
 	$desc = $mysql->real_escape_string($_POST['desc']);
@@ -15,19 +16,19 @@
 		$insertSql = "INSERT INTO project_risks (project_id, created_by_user_id, title, description) VALUES ('$projectId', '$createdBy', '$title', '$desc')";
 	}
 
-	$mysql->query($insertSql);
+	$mysql->sqlordie($insertSql);
 
 	// html for the newly created risk
 	$getSql = "SELECT * FROM project_risks WHERE title='$title' AND created_by_user_id='$createdBy' AND project_id='$projectId' ORDER BY created_date DESC LIMIT 1";
 	$html = '';
-	$getResult = $mysql->query($getSql);
+	$getResult = $mysql->sqlordie($getSql);
 	if($getResult) {
 		$risks = $getResult->fetch_assoc();
 		$userName = 'None';
 		$image = '/_images/flag_icon_red.png';
 
 		$usrSql = "SELECT * FROM users WHERE id='" . $risks['assigned_to_user_id'] . "' AND active='1' LIMIT 1";
-		$userResult = $mysql->query($usrSql);
+		$userResult = $mysql->sqlordie($usrSql);
 		if($userResult->num_rows > 0) {
 			$user = $userResult->fetch_assoc();
 			$userName = $user['first_name'] . ' ' . $user['last_name'];

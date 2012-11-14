@@ -1,6 +1,8 @@
 <?PHP
 	include("../_inc/config.inc");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	include("sessionHandler.php");
+	global $mysql;
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	// year month day
 
 	$month = intval($_GET['month']);
@@ -60,7 +62,7 @@ SELECT
 	JOIN project_roles pr ON pr.project_id = p.id AND pr.resource_type_id = 3 
 	WHERE rb.datestamp >= '".$fromDate."' and rb.datestamp < '".$toDate."' and rb.daypart = '9' and rb.status <> '2' and status <> '3' and pb.deleted = '0' and pb.active = '1' and p.program='9' and p.archived ='0' and p.active = '1' and p.deleted ='0' GROUP BY project_code,DAY(rb.datestamp),pb.first_name,pb.last_name) as tab group by tab.project_code,tab.Date,tab.FirstName,tab.LastName order by tab.FirstName,tab.LastName,tab.project_code,tab.Date";
 
-		$result = @$mysql->query($rp_query);
+		$result = @$mysql->sqlordie($rp_query);
 	$userList = array();
 	$userArray = array();
 	

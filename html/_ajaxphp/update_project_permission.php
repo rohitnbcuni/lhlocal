@@ -1,7 +1,9 @@
 <?PHP
 	include('../_inc/config.inc');
-	
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	include("sessionHandler.php");
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	
 	$project_id = $mysql->real_escape_string(@$_GET['project_id']);
 	$projectRPPermission = $mysql->real_escape_string(@$_GET['rppermission']);
@@ -12,7 +14,7 @@
 
 	if($projectRPPermission != $currentRPPermission || $projectWOPermission != $currentWOPermission){
 		$query = "UPDATE projects set rp_permission='$projectRPPermission',wo_permission='$projectWOPermission' where `id`='$project_id'";
-		@$mysql->query($query);
+		@$mysql->sqlordie($query);
 	}
 
 ?>

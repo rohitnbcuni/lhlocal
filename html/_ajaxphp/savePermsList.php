@@ -2,7 +2,8 @@
 	session_start();
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	
 	$user = $_SESSION['lh_username'];
 	$password = $_SESSION['lh_password'];
@@ -13,7 +14,7 @@
 	$projectId = $mysql->real_escape_string($_POST['projectId']);
 	if(isset($_POST['edit_0'])) {
 	$delete_query = "DELETE FROM `user_project_permissions` WHERE `project_id`='$projectId'";
-	$mysql->query($delete_query);
+	$mysql->sqlordie($delete_query);
 	}
 	if(sizeof($users) > 0) {		
 		for($i = 0; $i < sizeof($users); $i++) {
@@ -25,7 +26,7 @@
 				$update_perms .= "('" .$mysql->real_escape_string($users[$i]) ."','$projectId','1')";
 				
 				//echo $update_perms;
-				$mysql->query($update_perms);
+				$mysql->sqlordie($update_perms);
 				//echo $mysql->error;
 			//}
 			//$delete_query .= "`user_id`!='" .$mysql->real_escape_string($users[$i]) ."'";
@@ -49,7 +50,7 @@
 					$update_perms .= "('" .$users[$i] ."','$projectId','1')";
 				
 					//echo $update_perms;
-					$mysql->query($update_perms);
+					$mysql->sqlordie($update_perms);
 					//echo $mysql->error;
 				}
 			}
@@ -57,11 +58,11 @@
 	}
 	
 	$projectBc = "SELECT * FROM `projects` WHERE `id`='$projectId' LIMIT 1";
-	$bcRes = $mysql->query($projectBc);
+	$bcRes = $mysql->sqlordie($projectBc);
 	$bcRow = $bcRes->fetch_assoc();
 	
 	$companyBc = "SELECT * FROM `companies` WHERE `id`='$companyPerms' LIMIT 1";
-	$bcComp = $mysql->query($companyBc);
+	$bcComp = $mysql->sqlordie($companyBc);
 	$bcCompRow = $bcComp->fetch_assoc();
 	
 	$LOGINURL = BASECAMP_HOST."/login/authenticate";

@@ -1,7 +1,8 @@
 <?PHP 
 	include("../_inc/config.inc");
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
     $companyID = $_GET['company_id'];
 	if($companyID == '0'){
 		$sql = "";
@@ -10,9 +11,9 @@
 	}
 	$project_archived_Result = array();
 	$project_active_Result = array();
-	$project_perms_archived_result = $mysql->query("SELECT * FROM `projects` WHERE `company`='$companyID' AND `active`='1' AND `deleted`='0' AND `YEAR`=YEAR(CURDATE()) AND `archived`='1' order by project_name");
+	$project_perms_archived_result = $mysql->sqlordie("SELECT * FROM `projects` WHERE `company`='$companyID' AND `active`='1' AND `deleted`='0' AND `YEAR`=YEAR(CURDATE()) AND `archived`='1' order by project_name");
 	
-	$project_perms_active_result = $mysql->query("SELECT * FROM `projects` WHERE `company`='$companyID' AND `active`='1' AND `deleted`='0' AND `YEAR`=YEAR(CURDATE()) AND `archived`='0' order by project_name");
+	$project_perms_active_result = $mysql->sqlordie("SELECT * FROM `projects` WHERE `company`='$companyID' AND `active`='1' AND `deleted`='0' AND `YEAR`=YEAR(CURDATE()) AND `archived`='0' order by project_name");
 
 	if($project_perms_archived_result->num_rows > 0){
 		while($project_perms_archived_row = $project_perms_archived_result->fetch_assoc()){

@@ -2,7 +2,8 @@
 session_start();
 	include("../_inc/config.inc");
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	$perms = array();
 	
 	if($_SESSION['login_status'] == "client") {
@@ -94,7 +95,7 @@ session_start();
 	}
 
 	$select_sections = "SELECT count(`id`) as total FROM `lnk_project_brief_section_types`";
-	$sections_result = $mysql->query($select_sections);
+	$sections_result = $mysql->sqlordie($select_sections);
 	$section_row = $sections_result->fetch_assoc();
 	
 	//$select_perms = "SELECT DISTINCT `project_id` FROM `user_project_permissions` WHERE `user_id`='" .$_SESSION['user_id'] ."'";
@@ -106,7 +107,7 @@ session_start();
 	//}
 
 	$status_sql = 'select * from `lnk_project_status_types`';
-	$status_result = $mysql->query($status_sql);
+	$status_result = $mysql->sqlordie($status_sql);
 	$status_array = array();
 	if(@$status_result->num_rows > 0) {
 		while($row_result = @$status_result->fetch_assoc()) {
@@ -130,7 +131,7 @@ session_start();
 			$select_projects = "SELECT pjt.id id, pjt.project_name project_name, pjt.project_code project_code, pjt.company company, pjt.project_status project_status FROM projects pjt, project_roles pjr WHERE pjt.archived='1' AND pjt.active='1' AND pjt.deleted='0' AND pjr.resource_type_id='" . $lead_split[0] . "' AND pjr.user_id='" . $producerID . "' AND pjt.id=pjr.project_id $project_status_sql $project_program_sql";
 		}
 
-		$result = @$mysql->query($select_projects);
+		$result = @$mysql->sqlordie($select_projects);
 		
 		if(@$result->num_rows > 0) {
 			while($row = @$result->fetch_assoc()) {
@@ -141,11 +142,11 @@ session_start();
 					$project_rate_array = calculateToDate($row['id'], $mysql,$rp_date, $archive);
 				//}			
 				$select_complete = "SELECT count(`id`) as total FROM `project_brief_sections` WHERE `project_id`='" .$row['id'] ."'";
-				$complete_result = $mysql->query($select_complete);
+				$complete_result = $mysql->sqlordie($select_complete);
 				$complete_row = $complete_result->fetch_assoc();
 				
 				$select_budget = "select * from project_budget where project_id='" .$row['id'] ."'";
-				$budget_result = $mysql->query($select_budget);
+				$budget_result = $mysql->sqlordie($select_budget);
 				if($budget_result->num_rows == 1){
 					$result_set = $budget_result->fetch_assoc();
 					if($quarterID == 1){
@@ -162,7 +163,7 @@ session_start();
 					
 				}else if($budget_result->num_rows == 0){
 					$select_finance = "SELECT * FROM `project_phase_finance` WHERE `project_id`='" .$row['id'] ."'";
-					$finance_result = $mysql->query($select_finance);
+					$finance_result = $mysql->sqlordie($select_finance);
 				
 					while($finance_row = $finance_result->fetch_assoc()) {
 						$finance_total += ($finance_row['rate'] * $finance_row['hours']);
@@ -176,13 +177,13 @@ session_start();
 				$producer_userid = '0';
 				$manager_userid = '0';
 				$project_producer = "select * from users u where u.id= (SELECT user_id FROM `project_roles` WHERE `project_id`='" .$row['id'] ."' AND `resource_type_id`='2' LIMIT 1)";
-				$producer_result = $mysql->query($project_producer);
+				$producer_result = $mysql->sqlordie($project_producer);
 				if($producer_result->num_rows == 1){
 				$producer_row = $producer_result->fetch_assoc();
 				$producer_userid = $producer_row['id'];
 				}
 				$project_manager = "select * from users u where u.id= (SELECT user_id FROM `project_roles` WHERE `project_id`='" .$row['id'] ."' AND `resource_type_id`='3' LIMIT 1)";
-				$manager_result = $mysql->query($project_manager);
+				$manager_result = $mysql->sqlordie($project_manager);
 				if($manager_result->num_rows == 1){
 					$manager_row = $manager_result->fetch_assoc();
 					$manager_userid = $manager_row['id'];
@@ -257,7 +258,7 @@ session_start();
 		}
 
 		
-		$result = @$mysql->query($select_projects);
+		$result = @$mysql->sqlordie($select_projects);
 		if(@$result->num_rows > 0) {
 			while($row = @$result->fetch_assoc()) {
 				$finance_total = 0;
@@ -267,11 +268,11 @@ session_start();
 					$project_rate_array = calculateToDate($row['id'], $mysql,$rp_date, $archive);
 				//}
 				$select_complete = "SELECT count(`id`) as total FROM `project_brief_sections` WHERE `project_id`='" .$row['id'] ."' AND `flag`='3'";
-				$complete_result = $mysql->query($select_complete);
+				$complete_result = $mysql->sqlordie($select_complete);
 				$complete_row = $complete_result->fetch_assoc();
 				
 				$select_budget = "select * from project_budget where project_id='" .$row['id'] ."'";
-				$budget_result = $mysql->query($select_budget);
+				$budget_result = $mysql->sqlordie($select_budget);
 				if($budget_result->num_rows == 1){
 					$result_set = $budget_result->fetch_assoc();
 					if($quarterID == 1){
@@ -288,7 +289,7 @@ session_start();
 					
 				}else if($budget_result->num_rows == 0){
 					$select_finance = "SELECT * FROM `project_phase_finance` WHERE `project_id`='" .$row['id'] ."'";
-					$finance_result = $mysql->query($select_finance);
+					$finance_result = $mysql->sqlordie($select_finance);
 				
 					while($finance_row = $finance_result->fetch_assoc()) {
 						$finance_total += ($finance_row['rate'] * $finance_row['hours']);
@@ -297,14 +298,14 @@ session_start();
 				$producer_userid = '0';
 				$manager_userid = '0';
 				$project_producer = "select * from users u where u.id= (SELECT user_id FROM `project_roles` WHERE `project_id`='" .$row['id'] ."' AND `resource_type_id`='2' LIMIT 1)";
-				$producer_result = $mysql->query($project_producer);
+				$producer_result = $mysql->sqlordie($project_producer);
 				if($producer_result->num_rows == 1){
 				$producer_row = $producer_result->fetch_assoc();
 				$producer_userid = $producer_row['id'];
 				}
 
 				$project_manager = "select * from users u where u.id= (SELECT user_id FROM `project_roles` WHERE `project_id`='" .$row['id'] ."' AND `resource_type_id`='3' LIMIT 1)";
-				$manager_result = $mysql->query($project_manager);
+				$manager_result = $mysql->sqlordie($project_manager);
 				if($manager_result->num_rows == 1){
 				$manager_row = $manager_result->fetch_assoc();
 				$manager_userid = $manager_row['id'];
@@ -312,7 +313,7 @@ session_start();
 
 				$project_approved = '0';
 				$project_approval_sql = "SELECT * FROM `project_phase_approvals` WHERE `project_id`='" . $row['id'] . "' AND `non_phase`='client' LIMIT 1";
-				$approval_result = $mysql->query($project_approval_sql);
+				$approval_result = $mysql->sqlordie($project_approval_sql);
 				if($approval_result->num_rows == 1){
 					$project_approvals = $approval_result->fetch_assoc();
 					if($project_approvals['approved'] == 1){
@@ -321,13 +322,13 @@ session_start();
 				}
 
 				$project_risk = "SELECT * FROM project_risks WHERE active='1' AND archived='0' AND project_id='" .$row['id'] ."' ORDER BY created_date DESC";
-				$risk_result = $mysql->query($project_risk);
+				$risk_result = $mysql->sqlordie($project_risk);
 				$risk_row = $risk_result->fetch_assoc();
 				$risk = array();
 				$risk['riskCount'] = @$risk_result->num_rows;
 				if($risk['riskCount'] > 0){
 					$usrSql = "SELECT * FROM users WHERE id='" . $risk_row['assigned_to_user_id'] . "' AND active='1' LIMIT 1";
-					$userResult = $mysql->query($usrSql);
+					$userResult = $mysql->sqlordie($usrSql);
 					$risk['assigned'] = 'None';
 					if($userResult->num_rows > 0) {
 						$user = $userResult->fetch_assoc();
@@ -421,18 +422,18 @@ session_start();
 		}
 
 		$rp_data = "SELECT * FROM `resource_blocks` WHERE `projectid`='" .$projID ."' AND `status`='4' $quarter_select order by userid";
-		$rp_res = @$mysql->query($rp_data);
+		$rp_res = @$mysql->sqlordie($rp_data);
 		if($rp_res->num_rows > 0) {
 			$rates_array = array();
 			$project_phase = "SELECT phase, rate from project_phase_finance WHERE project_id='" . $projID . "'";
-			$res_project_phase = $mysql->query($project_phase);
+			$res_project_phase = $mysql->sqlordie($project_phase);
 			if($res_project_phase->num_rows > 0){
 				while($project_phase_row = $res_project_phase->fetch_assoc()){
 					$rates_array['phase'][$project_phase_row['phase']] = $project_phase_row['rate'];
 				}
 			}
 			$project_sub_phase = "SELECT sub_phase, rate from project_sub_phase_finance WHERE project_id='" . $projID . "'";
-			$res_project_sub_phase = $mysql->query($project_sub_phase);
+			$res_project_sub_phase = $mysql->sqlordie($project_sub_phase);
 			if($res_project_sub_phase->num_rows > 0){
 				while($project_sub_phase_row = $res_project_sub_phase->fetch_assoc()){
 					$rates_array['subphase'][$project_sub_phase_row['sub_phase']] = $project_sub_phase_row['rate'];
@@ -443,14 +444,14 @@ session_start();
 			while($rp_row = $rp_res->fetch_assoc()) {
 				if($prev_user != $rp_row['userid']){
 					$userRole = "SELECT flag, phase_subphase_id FROM user_project_role WHERE project_id='" . $projID . "' AND user_id='" . $rp_row['userid'] . "' LIMIT 1";
-					$userRole_res = $mysql->query($userRole);
+					$userRole_res = $mysql->sqlordie($userRole);
 					if($userRole_res->num_rows > 0){
 						$userRole_row = $userRole_res->fetch_assoc();
 						$user_role_flag = $userRole_row['flag'];
 						$user_role_id = $userRole_row['phase_subphase_id'];
 					}else{
 						$role_sql = "SELECT `role` FROM users WHERE `id`='" .$rp_row['userid'] ."' LIMIT 1";
-						$role_res = $mysql->query($role_sql);
+						$role_res = $mysql->sqlordie($role_sql);
 						$role_row = $role_res->fetch_assoc();
 						$user_role_flag = 'phase';
 						$user_role_id = $role_row['role'];
@@ -492,7 +493,7 @@ session_start();
 		}
 		//Do this but select the finace data and completeness
 		$select_project_phases = "SELECT * FROM `project_phase_finance` WHERE `project_id` = '" .$projID ."'";
-		$result_phases = $mysql->query($select_project_phases);
+		$result_phases = $mysql->sqlordie($select_project_phases);
 		
 		$projectDetail = '';
 		
@@ -500,15 +501,15 @@ session_start();
 		$todate = 0;
 		while($row_phases = $result_phases->fetch_assoc()) {
 			$select_phase_data = "SELECT * FROM `lnk_project_phase_types` WHERE `id`='" .$row_phases['phase'] ."' LIMIT 1";
-			$phase_data_res = @$mysql->query($select_phase_data);
+			$phase_data_res = @$mysql->sqlordie($select_phase_data);
 			$phase_data_row = @$phase_data_res->fetch_assoc();
 			
 			$timeline_query = "SELECT * FROM `project_phases` WHERE `project_id`='" .$projID."' AND `phase_type`='" .$row_phases['phase'] ."' LIMIT 1";
-			$timeline_res = @$mysql->query($timeline_query);
+			$timeline_res = @$mysql->sqlordie($timeline_query);
 			$timeline_row = @$timeline_res->fetch_assoc();
 			
 			$select_user_phase = "SELECT * FROM `users` WHERE `role`='" .$phase_data_row['id'] ."'";
-			$user_phase_res = @$mysql->query($select_user_phase);
+			$user_phase_res = @$mysql->sqlordie($select_user_phase);
 			//$todate = 0;
 			if($user_phase_res->num_rows > 0) {
 				while($user_phase_row = @$user_phase_res->fetch_assoc()) {
@@ -516,7 +517,7 @@ session_start();
 					//calculating the sub phase rate
 					$sup_phase_rate = 0;
 					$select_project_sub_phases = "select a.rate from project_sub_phase_finance a, user_project_sub_phase b where a.project_id = '" .$projID ."' and a.phase = '" .$row_phases['phase'] ."' and  b.user_id = '" .$user_phase_row['id'] ."' and a.project_id = b.project_id and a.sub_phase = b.sub_phase_id";
-					$result_sub_phases = $mysql->query($select_project_sub_phases);
+					$result_sub_phases = $mysql->sqlordie($select_project_sub_phases);
 					if($result_sub_phases->num_rows > 0){
 						while($sub_phase_row = @$result_sub_phases->fetch_assoc()){
 							$sup_phase_rate = $sub_phase_row['rate'];
@@ -524,7 +525,7 @@ session_start();
 					}
 					
 					$rp_data = "SELECT * FROM `resource_blocks` WHERE `userid`='" .$user_phase_row['id'] ."' AND `projectid`='" .$projID ."' AND `status`='4'$quarter_select";
-					$rp_res = @$mysql->query($rp_data);
+					$rp_res = @$mysql->sqlordie($rp_data);
 					if($rp_res->num_rows > 0) {
 						while($rp_row = $rp_res->fetch_assoc()) {
 							if($rp_row['daypart'] == 9) {
@@ -650,13 +651,13 @@ function calculateToDate($projID, $mysql, $rp_date,$archive){
 		rb.status='4' and rb.daypart = 9 AND rb.projectid = '".$projID."' group by pj.id, rb.userid) tab3  group by tab3.projectid, tab3.userid";
 		
 		//$rp_data = "SELECT daypart, hours,userid FROM `resource_blocks` WHERE `projectid`='" .$projID ."' AND `status`='4' $quarter_select";
-		$rp_res = $mysql->query($sql);
+		$rp_res = $mysql->sqlordie($sql);
 		if($rp_res->num_rows > 0) {
 			while($rp_row = $rp_res->fetch_assoc()) {
 				//$todate = 0;
 				//print_r($rp_row);
 				$select_user_project_phase = "SELECT ppf.rate rate, ppf.phase phase FROM project_phase_finance ppf INNER JOIN user_project_role upr ON (ppf.project_id = upr.project_id AND ppf.phase = upr.phase_subphase_id AND upr.flag = 'phase') WHERE upr.user_id = '" .$rp_row['userid'] ."' AND ppf.project_id = '" .$projID ."' LIMIT 1";
-				$result_user_project_phase = $mysql->query($select_user_project_phase);
+				$result_user_project_phase = $mysql->sqlordie($select_user_project_phase);
 
 				if($result_user_project_phase->num_rows > 0){
 					$user_project_phase_row = $result_user_project_phase->fetch_assoc();
@@ -664,14 +665,14 @@ function calculateToDate($projID, $mysql, $rp_date,$archive){
 										
 				}else{
 					$select_project_sub_phases = "SELECT pspf.rate rate, pspf.phase phase FROM project_sub_phase_finance pspf INNER JOIN user_project_role upr ON (pspf.project_id = upr.project_id AND pspf.sub_phase = upr.phase_subphase_id AND upr.flag = 'subphase') WHERE  upr.user_id = '" .$rp_row['userid'] ."' AND pspf.project_id = '" .$projID ."' LIMIT 1";
-					$result_sub_phases = $mysql->query($select_project_sub_phases);
+					$result_sub_phases = $mysql->sqlordie($select_project_sub_phases);
 
 					if($result_sub_phases->num_rows > 0){
 						$sub_phase_row = $result_sub_phases->fetch_assoc();
 						$todate += $rp_row['Total'] * $sub_phase_row['rate'];
 					}else{
 						$select_project_phase = "SELECT rate,phase FROM `project_phase_finance` WHERE `project_id` = '" . $projID . "' AND `phase`='".UNASSIGNED_PHASE."'";  
-						$result_phases = $mysql->query($select_project_phase);
+						$result_phases = $mysql->sqlordie($select_project_phase);
 						if($result_phases->num_rows > 0){
 							$phase_row = $result_phases->fetch_assoc();
 							$todate += $rp_row['Total'] * $phase_row['rate'];

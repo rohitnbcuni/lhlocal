@@ -2,12 +2,12 @@
 	session_start();
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-	
-	$startDate = $_POST['startDate'];
-	$endDate = $_POST['endDate'];
-	$LastDay = $_POST['lastDay'];
-	$character = $_POST['showUser'];
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	$startDate = $mysql->real_escape_string($_POST['startDate']);
+	$endDate = $mysql->real_escape_string($_POST['endDate']);
+	$LastDay = $mysql->real_escape_string($_POST['lastDay']);
+	$character = $mysql->real_escape_string($_POST['showUser']);
 	
 	$startDatePart = explode("-", $startDate);
 	$endDatePart = explode("-", $endDate);
@@ -16,15 +16,15 @@
 	$otClass = "overtime";
 	
 	$sql_user = "SELECT * FROM `users` WHERE `company`='2' AND `deleted`='0' AND `last_name` like '$character%'  ORDER BY `last_name`";
-	$user_res = $mysql->query($sql_user);
+	$user_res = $mysql->sqlordie($sql_user);
 	
 	if($user_res->num_rows > 0) {
 		while($user_row = $user_res->fetch_assoc()) {
 			$start_day = mktime(0,0,0,$startDatePart[0],$startDatePart[1],$startDatePart[2]);
 			$end_day = mktime(0,0,0,$endDatePart[0],$endDatePart[1],$endDatePart[2]);
 			
-			$sqlrpOt = "SELECT COUNT(a.`id`) as total FROM `resource_blocks` a WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '9' ORDER BY a.`datestamp`";
-			$resrpOt = @$mysql->query($sqlrpOt);
+			$sqlrpOt = "SELECT COUNT(a.`id`) as total FROM `resource_blocks` a WHERE a.`userid`= ? AND a.`datestamp` = ? AND a.`daypart` = ? ORDER BY a.`datestamp`";
+			$resrpOt = @$mysql->sqlprepare($sqlrpOt, array($user_row['id'],date("Y-m-d", $start_day) .' 00:00:00',9) );
 			
 			if($resrpOt->num_rows > 0) {
 				$resrpOt_row = $resrpOt->fetch_assoc();
@@ -40,8 +40,8 @@
 			$col = 1;
 			while($start_day<=$end_day) {
 				for($i = 0; $i < 8; $i++) {
-					$sqlrp = "SELECT * FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '" .($i+1) ."' ORDER BY a.`datestamp`";
-					$resrp = $mysql->query($sqlrp);
+					$sqlrp = "SELECT * FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`= ? AND a.`datestamp` = ? AND a.`daypart` = ? ORDER BY a.`datestamp`";
+					$resrp = $mysql->sqlprepare($sqlrp, array($user_row['id'],date("Y-m-d", $start_day) .' 00:00:00', ($i+1)));
 
 					if($resrp->num_rows == 1) {
 						$rpRow = $resrp->fetch_assoc();

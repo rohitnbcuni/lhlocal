@@ -2,8 +2,8 @@
 	session_start();
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-	
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	$woId = $mysql->real_escape_string(@$_POST['woId']);
 	$projectId = $mysql->real_escape_string(@$_POST['projectId']);
 	$priorityId = $mysql->real_escape_string(@$_POST['priorityId']);
@@ -13,11 +13,11 @@
 	$rallyProject = $mysql->real_escape_string(@$_POST['rallyProject']);
 
 	$workorderPriority = "select * from `lnk_workorder_priority_types` where id='".$priorityId."'";
-	$priority_result = $mysql->query($workorderPriority);
+	$priority_result = $mysql->sqlordie($workorderPriority);
 	$priority_row = $priority_result->fetch_assoc();
 
 	$projectDetails = "select * from projects where id='".$rallyProject."'";
-	$project_result = $mysql->query($projectDetails);
+	$project_result = $mysql->sqlordie($projectDetails);
 	$project_row = $project_result->fetch_assoc();
 	
 	$ProjectName = $project_row['project_name']; 
@@ -115,7 +115,7 @@
 		$parseXml = new SimpleXMLElement($curlResultString);  //ok, we have xml, now try to parse it
 		if(empty($parseXml->Errors)){
 			$update_wo_query = "update workorders set rally_flag='1' where id='".$woId."'";
-			@$mysql->query($update_wo_query);
+			@$mysql->sqlordie($update_wo_query);
 		}
 	} 
 	catch (Exception $e)

@@ -2,9 +2,10 @@
 	session_start();
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-	$start_date = $_POST['startDate'];
-	$user_id = $_POST['userid'];
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	$start_date = $mysql->real_escape_string($_POST['startDate']);
+	$user_id = $mysql->real_escape_string($_POST['userid']);
 	
 	//$start_date = $_GET['startDate'];
 	//$user_id = $_GET['userid'];
@@ -17,7 +18,7 @@
 		.$start_date_part[0] ."/"
 		.$start_date_part[1]
 		."' LIMIT 1";
-	$otRes = $mysql->query($select_ot);
+	$otRes = $mysql->sqlordie($select_ot);
 	
 	if($otRes->num_rows == 1) {
 		$otRow = $otRes->fetch_assoc();

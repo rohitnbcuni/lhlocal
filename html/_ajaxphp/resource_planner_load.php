@@ -1,11 +1,11 @@
-<?
-error_reporting(E_ERROR);
+<?php
+//error_reporting(E_ERROR);
 
-session_start();
+@session_start();
 include('../_inc/config.inc');
 include("sessionHandler.php");	
-$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
+//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+global $mysql;
 $blocks = Array();
 			
 if($_SESSION['login_status'] == "client") {
@@ -24,7 +24,7 @@ if ($_POST["userid"]) {
 	$sql = "SELECT a.userid as userid, a.notes as notes, a.hours as hours, a.daypart as daypart, a.status as status, a.datestamp as datestamp, b.id as project_id, b.project_name as project_name, b.project_code as project_code FROM resource_blocks a LEFT JOIN projects b ON a.projectid=b.id WHERE  a.datestamp>='$start' AND a.datestamp<='$end'";	
 }
 
-$res = $mysql->query($sql);
+$res = $mysql->sqlordie($sql);
 	
 if ($res->num_rows > 0) {
 	while ($row = $res ->fetch_assoc()) {

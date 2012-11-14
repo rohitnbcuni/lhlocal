@@ -1163,7 +1163,7 @@
 				$request_types_array = array(2=>"Report a Problem",1=>"Report an Outage",3=>"Submit a Request");
 				$old_status="";
 				$old_status1="";
-				
+							
 				
 				function previous_status($id,$wo_id){
 				$audit_status_data = WoDisplay::getQuery("SELECT * FROM `workorder_audit` WHERE id < '" .$id ."' and workorder_id='".$wo_id."'  order by  `id` DESC LIMIT 1");	
@@ -1172,8 +1172,7 @@
 				$audit_statusold[$row['status']] = $audit_status_dataold[0]['name'] ;	
 				return $audit_statusold[$row['status']];
 				}
-				
-	        	function previous_user($id,$wo_id){
+				function previous_user($id,$wo_id){
 				$audit_status_data = WoDisplay::getQuery("SELECT * FROM `workorder_audit` WHERE id < '" .$id ."' and workorder_id='".$wo_id."' order by `id` DESC LIMIT 1");	
 				return $audit_status_data[0]['assign_user_id'];
 				}
@@ -1973,6 +1972,46 @@
 			}
 		$this->_helper->layout->disableLayout();
 		}
+		
+		
+		public function wostatusAction(){
+		
+			$wid = $_REQUEST['woId'];
+			$wo_status = $_REQUEST['woStatus'];
+			$wo_data = WoDisplay::getQuery("SELECT status FROM `workorders` WHERE `id`='$wid' LIMIT 1");
+			//print_r($wo_data);
+			if($wo_status !=  $wo_data[0]['status']){ 
+				$new_status = $wo_data[0]['status'];
+				//$workorder_audit = WoDisplay::getQuery("SELECT wa.*,at.name  FROM `workorder_audit` wa,`lnk_audit_trial_types` at where workorder_id = '$wid' and at.id = wa.audit_id order by `log_date`");
+				//$audit_status = $workorder_audit[0]['status'] ;
+				//echo "SELECT * FROM `lnk_workorder_status_types` WHERE `id`='" .$new_status ."' LIMIT 1";
+				$audit_status_dataold = WoDisplay::getQuery("SELECT * FROM `lnk_workorder_status_types` WHERE `id`='" .$new_status ."' LIMIT 1");
+				//$audit_statusold[$row['status']] = $audit_status_dataold[0]['name'] ;
+				echo "Your Comment has been saved with status ".$audit_status_dataold[0]['name'] ;
+			}
+			$this->_helper->layout->disableLayout();
+		
+		
+		}
+		
+		public function wostatusupdateAction(){
+		
+			$wid = $_REQUEST['woId'];
+			$wo_status = $_REQUEST['woStatus'];
+			$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`='$wid' LIMIT 1");
+			//print_r($wo_data);
+			if($wo_status !=  $wo_data[0]['status']){ 
+				echo $new_status = $wo_data[0]['status']."~".$wo_data[0]['assigned_to'];
+				
+			}
+			$this->_helper->layout->disableLayout();
+		
+		
+		}
+		
+		
+		
+		
 		
 }		       	
 
