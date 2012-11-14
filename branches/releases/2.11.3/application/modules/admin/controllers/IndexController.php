@@ -1030,11 +1030,11 @@
 						</div>
 			';
 				if(empty($field_id)){
-				$this->buildSiteNameHTML($field,$custom_name );
+				$this->buildSiteNameHTML($field,$screen_name );
 			}else{
 					foreach($field_list as $field){
 						if($field_id == $field['field_id']){
-							$this->buildSiteNameHTML($field,$custom_name);
+							$this->buildSiteNameHTML($field,$screen_name);
 					}
 				}
 			}
@@ -1061,7 +1061,7 @@
 			$this->render('create');
 		}
 
-		public function buildSiteNameHTML($site='',$custom_name){
+		public function buildSiteNameHTML($site='',$screen_name){
 		//	print $custom_name;
 			$activeCheck = '';
 			$deleteCheck = '';
@@ -1078,20 +1078,10 @@
 				$editstatus = 'display:block;';
 				$editType = 'Update';
 			}
-			if($custom_name=='INFRA_TYPE'){$lhsite='Infrastructure Type';}
-			elseif($custom_name=='QA_BROWSER'){$lhsite='QA Browser';}
-			elseif($custom_name=='QA_CATEGORY'){$lhsite='QA Category';}
-			elseif($custom_name=='QA_ORIGIN'){$lhsite='QA Origin';}
-			elseif($custom_name=='QA_OS'){$lhsite='QA OS';}
-			elseif($custom_name=='QA_SEVERITY'){$lhsite='QA Severity';}
-			elseif($custom_name=='SITE_NAME'){$lhsite='Site Name';}
-			elseif($custom_name=='CRITICAL'){$lhsite='Critical';}
-			//elseif($custom_name=='QA_BROWSER'){$lhsite='QA Browser';}
-
 			echo '
 						<div id="fieldnameInfo" class="admindisplayUserInfo"  style="'.$editstatus.'">
 						<div class="row">
-								<div class="label"><label>'.$lhsite.':</label></div>
+								<div class="label"><label>'.$screen_name.':</label></div>
 								<input type="text" class="" name="fieldname" id="fieldname" value="'.$siteName.'" >
 								<input type="hidden" class="" name="fieldid" id="fieldid" value="'.$siteId.'" >
 							</div>
