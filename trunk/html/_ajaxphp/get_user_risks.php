@@ -1,17 +1,17 @@
 <?PHP 
 	include("../_inc/config.inc");
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
-	$userID = $_GET['userID'];
-	$newRiskId = $_GET['newRiskID'];
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
+	$userID = $mysql->real_escape_string($_GET['userID']);
+	$newRiskId = $mysql->real_escape_string($_GET['newRiskID']);
 	$html = '';
 	if($newRiskId != ''){
 		$sql = "SELECT * FROM project_risks WHERE archived='0' AND active='1' AND id='$newRiskId'";
 	}else{
 		$sql = "SELECT * FROM project_risks WHERE archived='0' AND active='1' AND assigned_to_user_id='$userID'";
 	}
-	$result = $mysql->query($sql);
+	$result = $mysql->sqlordie($sql);
 
 	if(@$result->num_rows > 0) {
 		while($risks = @$result->fetch_assoc()) {
@@ -23,18 +23,18 @@
 			$commentsSql = "SELECT count(1) as total FROM risk_comments WHERE risk_id='" . $risks['id'] . "' AND archived='0'";
 			$projectSql = "SELECT project_name, id from projects where id='" . $risks['project_id'] . "'";
 
-			$userResult = $mysql->query($usrSql);
+			$userResult = $mysql->sqlordie($usrSql);
 			if($userResult) {
 				$user = $userResult->fetch_assoc();
 				$userName = $user['first_name'] . ' ' . $user['last_name'];
 			}
 
-			$comments = $mysql->query($commentsSql);
+			$comments = $mysql->sqlordie($commentsSql);
 			if($comments){
 				$riskComments = $comments->fetch_assoc();
 				$totalComments = $riskComments['total'];
 			}
-			$projects = $mysql->query($projectSql);
+			$projects = $mysql->sqlordie($projectSql);
 			if($projects){
 				$project = $projects->fetch_assoc();
 				$projectName = $project['project_name'];

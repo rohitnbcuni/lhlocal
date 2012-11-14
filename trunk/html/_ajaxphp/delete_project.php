@@ -3,15 +3,15 @@
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
 	if(isset($_SESSION['user_id'])) {
-		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-		
+		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		global $mysql;
 		$project_id = $mysql->real_escape_string(@$_GET['project_id']);
 		
 		$set_delete_query = "UPDATE `projects` SET `deleted`='1' WHERE `id`='$project_id'";
-		@$mysql->query($set_delete_query);
+		@$mysql->sqlordie($set_delete_query);
 		
 		$select_project = "SELECT * FROM `projects` WHERE `id`='$project_id'";
-		$proj_res = $mysql->query($select_project);
+		$proj_res = $mysql->sqlordie($select_project);
 		
 		if($proj_res->num_rows > 0) {
 			$proj = $proj_res->fetch_assoc();

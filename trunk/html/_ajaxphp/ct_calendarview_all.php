@@ -2,8 +2,8 @@
 	session_start();
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	$userid = $_POST['userid'];
 	$postDate = $_POST['date'];
 	$postDatePart = explode("/", $postDate);
@@ -295,7 +295,7 @@
 		//echo $client_sql;
 		try{
 			
-			if(!$project_result = $mysql->query($project_list_query)){
+			if(!$project_result = $mysql->sqlordie($project_list_query)){
 				throw new Exception("MYsql Error:".mysqli_error($mysql));
 			}
 			$i = 0;

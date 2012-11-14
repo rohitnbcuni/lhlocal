@@ -53,6 +53,8 @@
 		$woINFRA_TYPE = $mysql->real_escape_string(@$_POST['woINFRA_TYPE']);
 		$woCRITICAL = $mysql->real_escape_string(@$_POST['woCRITICAL']);
 		$woCCList = $mysql->real_escape_string(@$_POST['woCCList']);
+		$woStatusIdHidden = $mysql->real_escape_string(@$_POST['woStatusIdHidden']);
+		
 
 		$updatesql_draft_date = '';
 		$insertsql_draft_date = '';
@@ -253,19 +255,34 @@
 				$dt = "'" .@$dt_part[2] ."-" .@$dt_part[0] ."-" .@$dt_part[1] ."'";
 			} else {
 				$dt = "null";
+			}
+
+				//If ticket is fixed
+				/*
+				$displayStatusArray = array();
+
+				//1-Closed, 3-Fixed,4-On Hold,5-Need More Info,6-New,7-In Progress,10-Feedback Provided,11-Rejected,12-Reopened
+				
+				*/
+			//echo $wo_old_row['status']."---".$woStatus;
+			if($wo_old_row['status'] != $woStatusIdHidden && $commentSubmit == 'comment'){
+			
+				$woStatus = $wo_old_row['status'];
+				$woAssignedTo = $wo_old_row['assigned_to'];
 			}			
+		
 			
 			if($wo_old_row['assigned_to'] != $woAssignedTo) {
 				$assigned_date = "`assigned_date`=NOW(), ";
 			}
 
 			$close_date = "";
-			if($woStatus == 1){
+			if(($woStatusIdHidden != $woStatus) && ($woStatus == 1)){
 				$close_date = "`closed_date`=NOW(), ";
 			}
 			
 			$complete_date = "";
-			if($woStatus == 3){
+			if( ($woStatusIdHidden != $woStatus) && ($woStatus == 3)){
 				$complete_date = "`completed_date`=NOW(), ";
 			}
 			$estimated_date = '';
@@ -277,6 +294,8 @@
 			if($wo_old_row['active'] == '0' && $isActive == '1'){
 				$createdDate = "`creation_date`=NOW(), ";
 			}
+			
+			
 			$update_wo = "UPDATE `workorders` SET "
 				."`project_id`='$projectId', "
 				."`assigned_to`='$woAssignedTo', "
@@ -377,71 +396,6 @@
 				$mysql->sqlordie("INSERT INTO `workorder_date_log` SET previous_launch_date = '".$wo_old_row['launch_date']."' , audit_id = '".$last_audit_id."',  new_launch_date = '".$wo_row['launch_date']."' , user_id ='".$_SESSION['user_id']."' , wid ='".$getWoId."'");
 			}
 		}
-		
-		
-		/*if($wo_row['assigned_to'] != $wo_old_row['assigned_to']) {
-			$xml = '<comment>
-				  <body>
-					Hi ' .ucfirst($assigned_user_row['first_name']) .',
-					Link: ' .BASE_URL .'/workorders/index/edit/?wo_id=' .$getWoId  .'
-					You have been assigned a new workorder in Lighthouse.
-					' .$wo_row['body'] .'
-				  </body>
-				</comment>';
-					
-			$set_request_url =BASECAMP_HOST.'/'.'posts/'.$wo_row['bcid'].'/comments.xml';
-			
-			$session = curl_init();   
-			curl_setopt($session, CURLOPT_URL, $set_request_url); // set url to post to 
-			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($session, CURLOPT_POST, 1); 
-			curl_setopt($session, CURLOPT_POSTFIELDS, $xml); 
-			curl_setopt($session, CURLOPT_HEADER, true);
-			curl_setopt($session, CURLOPT_HTTPHEADER, array('Accept: application/xml', 'Content-Type: application/xml'));
-			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($session,CURLOPT_USERPWD,$user . ":" . $password);
-
-			if(ereg("^(https)",$set_request_url)) curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
-
-			$response = curl_exec($session);
-			//echo $response;
-			$newNumPart1 = explode("/posts/", $response);
-			$newNumPart2 = explode(".xml", @$newNumPart1[1]);
-			
-			$comment_id = $newNumPart2[0];
-			curl_close($session);
-		} else {
-			$xml = '<comment>
-				  <body>
-					Link: ' .BASE_URL .'/workorders/index/edit/?wo_id=' .$getWoId  .'
-					Changes have been made to this workorder in Lighthouse.
-					' .$wo_row['body'] .'
-				  </body>
-				</comment>';
-					
-			$set_request_url =BASECAMP_HOST.'/'.'posts/'.$wo_row['bcid'].'/comments.xml';
-			
-			$session = curl_init();   
-			curl_setopt($session, CURLOPT_URL, $set_request_url); // set url to post to 
-			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($session, CURLOPT_POST, 1); 
-			curl_setopt($session, CURLOPT_POSTFIELDS, $xml); 
-			curl_setopt($session, CURLOPT_HEADER, true);
-			curl_setopt($session, CURLOPT_HTTPHEADER, array('Accept: application/xml', 'Content-Type: application/xml'));
-			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($session,CURLOPT_USERPWD,$user . ":" . $password);
-
-			if(ereg("^(https)",$set_request_url)) curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
-
-			$response = curl_exec($session);
-			//echo $response;
-			$newNumPart1 = explode("/posts/", $response);
-			$newNumPart2 = explode(".xml", @$newNumPart1[1]);
-			
-			$comment_id = $newNumPart2[0];
-			curl_close($session);
-		}*/
-
 		$cclist = array();
 		if("" != trim($wo_row['cclist'])){
 			$cclist = explode(",", $wo_row['cclist']);

@@ -1,12 +1,14 @@
 <?PHP
 	include("../_inc/config.inc");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);	 
+	include("sessionHandler.php");
+	global $mysql;
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);	 
 
 	if(isset($_REQUEST['ct_status']) && isset($_REQUEST['wo_status']) && isset($_REQUEST['quality_status']) && isset($_REQUEST['admin_select_user'])){
-		$ct_status = $_REQUEST['ct_status'];
-		$wo_status = $_REQUEST['wo_status'];
-		$quality_status = $_REQUEST['quality_status'];
-		$admin_selected_user = $_REQUEST['admin_select_user'];    
+		$ct_status = $mysql->real_escape_string($_REQUEST['ct_status']);
+		$wo_status = $mysql->real_escape_string($_REQUEST['wo_status']);
+		$quality_status = $mysql->real_escape_string($_REQUEST['quality_status']);
+		$admin_selected_user = $mysql->real_escape_string($_REQUEST['admin_select_user']);    
 		if($ct_status == "true"){
 			$ct_status = '1';
 		}else{
@@ -46,7 +48,7 @@ function updateDB($project_list,$admin_selected_user,$wo_status,$quality_status,
 	$insert_project_array = array();
 	$update_project_array = array();
 	$select_existing_records_sql = "SELECT project_id from user_project_permissions where user_id={$admin_selected_user} and project_id in ({$project_list_String})";
-	$existing_project_list = $mysql->query($select_existing_records_sql);
+	$existing_project_list = $mysql->sqlordie($select_existing_records_sql);
 	if($existing_project_list->num_rows>0){
 		while($row = $existing_project_list->fetch_assoc()){
 			$update_project_array[] = $row['project_id'];
@@ -68,7 +70,7 @@ function updateDB($project_list,$admin_selected_user,$wo_status,$quality_status,
 	$comma_separated_project_list = implode(",", $update_project_array);
 	$query_update = "UPDATE `user_project_permissions` set {$update_query}`id`=`id` WHERE user_id = '{$admin_selected_user}' AND project_id IN({$comma_separated_project_list})";
 	
-	$mysql->query($query_update);
+	$mysql->sqlordie($query_update);
 
 	if(count($insert_project_array)>0) {
 		$query_insert = "INSERT INTO `user_project_permissions` (`id`,`user_id`,`project_id`,`active`,`deleted`,`workorders`,`quality`,`control_tower`) VALUES "; 
@@ -76,14 +78,14 @@ function updateDB($project_list,$admin_selected_user,$wo_status,$quality_status,
 			$query_insert =$query_insert." (' ','{$admin_selected_user}','{$project_id}','1','0','{$wo_status}','{$quality_status}','{$ct_status}') ,";  
 		}
 		$query_insert = substr($query_insert, 0, -1);
-		$mysql->query($query_insert);    
+		$mysql->sqlordie($query_insert);    
 	}
 }
 
 function updateUserTable($admin_selected_user,$wo_status,$quality_status,$ct_status,$mysql){
 
 	$users_permission_sql = "UPDATE `users` SET `control_tower` = '{$ct_status}' , `workorders` = '{$wo_status}' , `quality` = '{$quality_status}' WHERE `id` = '{$admin_selected_user}'";
-	$mysql->query($users_permission_sql);
+	$mysql->sqlordie($users_permission_sql);
 }
 ?>
 

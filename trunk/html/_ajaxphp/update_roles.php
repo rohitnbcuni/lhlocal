@@ -1,14 +1,14 @@
 <?PHP
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-		
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;	
 	switch(@$_GET['action']) {
 		case 'entry': {
 			switch(@$_GET['data']) {
 				case 'phone': {
 					$query = "SELECT `phone_office` FROM  `users` WHERE `id` = '" .$mysql->real_escape_string(@$_GET['user']) ."'";
-					$result = $mysql->query($query);
+					$result = $mysql->sqlordie($query);
 					
 					$row = $result->fetch_assoc();
 					echo $row['phone_office'];
@@ -16,7 +16,7 @@
 				}
 				case 'email': {
 					$query = "SELECT `email` FROM  `users` WHERE `id` = '" .$mysql->real_escape_string(@$_GET['user']) ."'";
-					$result = $mysql->query($query);
+					$result = $mysql->sqlordie($query);
 					
 					$row = $result->fetch_assoc();
 					echo $row['email'];
@@ -24,7 +24,7 @@
 				}
 				case 'name': {
 					$query = "SELECT `first_name`, `last_name` FROM  `users` WHERE `id` = '" .$mysql->real_escape_string(@$_GET['user']) ."'";
-					$result = $mysql->query($query);
+					$result = $mysql->sqlordie($query);
 					
 					$row = $result->fetch_assoc();
 					echo $row['first_name'] .' ' .$row['last_name'];
@@ -32,7 +32,7 @@
 				}
 				case 'title': {
 					$query = "SELECT `title` FROM  `users` WHERE `id` = '" .$mysql->real_escape_string(@$_GET['user']) ."'";
-					$result = $mysql->query($query);
+					$result = $mysql->sqlordie($query);
 					
 					$row = $result->fetch_assoc();
 					echo $row['title'];
@@ -49,7 +49,7 @@
 				
 				$query = "SELECT * FROM `project_roles` WHERE `project_id` = '" .$mysql->real_escape_string(@$_GET['project_id']) ."' AND "
 				."`resource_type_id`='" .$mysql->real_escape_string($roles[$rolKeys[$i]]['resource_type']) ."' LIMIT 1";
-				$result = $mysql->query($query);
+				$result = $mysql->sqlordie($query);
 				
 				if($result->num_rows == 1) {
 					$row = $result->fetch_assoc();
@@ -59,7 +59,7 @@
 							."',`email`='" .$mysql->real_escape_string($roles[$rolKeys[$i]]['email']) ."' WHERE "
 							."`project_id`='" .$mysql->real_escape_string(@$_GET['project_id']) ."' AND `resource_type_id`='" 
 							.$mysql->real_escape_string($roles[$rolKeys[$i]]['resource_type']) ."'";
-						$mysql->query($update_role);
+						$mysql->sqlordie($update_role);
 					//} else {
 					//	$delete_row = "DELETE FROM `project_roles` WHERE `id`='" .$row['id'] ."'";
 					//	mysql_query($delete_row);
@@ -71,7 +71,7 @@
 						."('" .$mysql->real_escape_string(@$_GET['project_id']) ."','" .$mysql->real_escape_string($roles[$rolKeys[$i]]['resource_type']) ."','" 
 						.$mysql->real_escape_string($roles[$rolKeys[$i]]['user']) ."','" .$mysql->real_escape_string($roles[$rolKeys[$i]]['email']) ."','" 
 						.$mysql->real_escape_string($roles[$rolKeys[$i]]['phone']) ."')";
-					$mysql->query($insert_role);
+					$mysql->sqlordie($insert_role);
 				}
 			}
 			
@@ -84,7 +84,7 @@
 			
 			$check_complete = "SELECT * FROM `project_brief_sections` WHERE `project_id`='" 
 				.$mysql->real_escape_string(@$_GET['project_id']) ."' AND `section_type`='" .$mysql->real_escape_string($section[1]) ."' LIMIT 1";
-			$complete_res = $mysql->query($check_complete);
+			$complete_res = $mysql->sqlordie($check_complete);
 			
 			if($complete_res->num_rows == 1) {
 				$row = $complete_res->fetch_assoc();
@@ -99,17 +99,17 @@
 						$flag = 2;
 					}
 					$update = "UPDATE `project_brief_sections` set `flag`='$flag' WHERE `id`='" .$row['id'] ."'";
-					@$mysql->query($update);
+					@$mysql->sqlordie($update);
 				} else {
 					$update = "UPDATE `project_brief_sections` set `flag`='1' WHERE `id`='" .$row['id'] ."'";
-					@$mysql->query($update);
+					@$mysql->sqlordie($update);
 				}
 			} else if($complete_res->num_rows == 0) {
 				$insert = "INSERT INTO `project_brief_sections` "
 					."(`project_id`,`section_type`,`flag`) "
 					."VALUES "
 					."('" .$mysql->real_escape_string(@$_GET['project_id']) ."','" .$mysql->real_escape_string($section[1])  ."','$complete_status')";
-				@$mysql->query($insert);
+				@$mysql->sqlordie($insert);
 			}
 			break;
 		}
@@ -122,12 +122,12 @@
 			for($i = 0; $i < sizeof($rolKeys); $i++) {
 				$query = "SELECT * FROM `project_roles` WHERE `project_id` = '" .$mysql->real_escape_string(@$_GET['project_id']) ."' AND "
 				."`resource_type_id`='" .$mysql->real_escape_string($roles[$rolKeys[$i]]['resource_type']) ."' LIMIT 1";
-				$result = $mysql->query($query);
+				$result = $mysql->sqlordie($query);
 				
 				if($result->num_rows == 1) {
 					$row = $result->fetch_assoc();
 					$delete_row = "DELETE FROM `project_roles` WHERE `id`='" .$row['id'] ."'";
-					$mysql->query($delete_row);
+					$mysql->sqlordie($delete_row);
 				}
 			}
 			break;

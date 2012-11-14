@@ -4,25 +4,25 @@
 	include("sessionHandler.php");
 	if(isset($_SESSION['user_id'])) {
 		
-		$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-		
+		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+		global $mysql;
 		$user = $_SESSION['lh_username'];
 	    $password = $_SESSION['lh_password'];
 		
 		$getProjectQuery = "SELECT * FROM `projects` WHERE `id`='" .$mysql->real_escape_string($_POST['projectId']) ."' LIMIT 1";
-		$projResult = $mysql->query($getProjectQuery);
+		$projResult = $mysql->sqlordie($getProjectQuery);
 		$projRow = $projResult->fetch_assoc();	
 		
 		$wo_query = "SELECT * FROM `workorders` WHERE `id`='" .$_POST['woId'] ."'";
-		$wo_res = $mysql->query($wo_query);
+		$wo_res = $mysql->sqlordie($wo_query);
 		$wo_row = $wo_res->fetch_assoc();
 		
 		$re_query = "SELECT * FROM `users` WHERE `id`='" .$_POST['requestedId'] ."'";
-		$re_res = $mysql->query($re_query);
+		$re_res = $mysql->sqlordie($re_query);
 		$re_row = $re_res->fetch_assoc();
 		
 		$select_priority = "SELECT * FROM `lnk_workorder_priority_types` WHERE `id`='" .$_POST['priorityId'] ."'";
-		$pri_res = $mysql->query($select_priority);
+		$pri_res = $mysql->sqlordie($select_priority);
 		$pri_row = $pri_res->fetch_assoc();
 		
 		function bcXML($file, $body) {		
@@ -79,7 +79,7 @@
 			."Estimated Completion Date: " .$_POST['woEstDate'] ."\n";
 			
 			$getFilesQuery = "SELECT * FROM `workorder_files` WHERE `workorder_id`='" .$mysql->real_escape_string($_POST['woId']) ."'";
-			$fileResult = $mysql->query($getFilesQuery);
+			$fileResult = $mysql->sqlordie($getFilesQuery);
 			//echo $mysql->error;
 			if($fileResult->num_rows > 0) {
 				$xml .= "Files: ";
@@ -97,7 +97,7 @@
 		<notify>" .$re_row['bc_id'] ."</notify>
 		</request>";
 		$bc_id_query = "SELECT  `bcid` FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($_POST['woId']) ."' LIMIT 1";
-		$bc_id_result = $mysql->query($bc_id_query);
+		$bc_id_result = $mysql->sqlordie($bc_id_query);
 		$bc_id_row = $bc_id_result->fetch_assoc();
 		
 		if(!empty($bc_id_row['bcid'])) {
@@ -147,16 +147,16 @@
 			curl_close($session);
 			
 			$getFilesQuery = "UPDATE `workorders` SET `bcid`='$comment_id' WHERE `id`='" .$mysql->real_escape_string($_POST['woId']) ."'";
-			$mysql->query($getFilesQuery);
+			$mysql->sqlordie($getFilesQuery);
 		}
 		//echo $set_request_url ."\n";
 		
 		$select_bc = "SELECT * FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($_POST['woId']) ."' LIMIT 1";
-		$bc_res = $mysql->query($select_bc);
+		$bc_res = $mysql->sqlordie($select_bc);
 		$bc_row = $bc_res->fetch_assoc();
 		
 		$select_project_bc = "SELECT * FROM `projects` WHERE `id`='" .$bc_row['project_id'] ."' LIMIT 1";
-		$project_bc_res = $mysql->query($select_project_bc);
+		$project_bc_res = $mysql->sqlordie($select_project_bc);
 		$project_bc_row = $project_bc_res->fetch_assoc();
 		
 		echo $project_bc_row['bc_id'] ."/posts/" .$bc_row['bcid'];
