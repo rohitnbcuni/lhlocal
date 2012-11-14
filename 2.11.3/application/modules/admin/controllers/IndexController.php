@@ -1081,7 +1081,7 @@
 			echo '
 						<div id="fieldnameInfo" class="admindisplayUserInfo"  style="'.$editstatus.'">
 						<div class="row">
-								<div class="label"><label>'.$screen_name.':</label></div>
+								<div class="label"><label>'.$screen_name.'*:</label></div>
 								<input type="text" class="" name="fieldname" id="fieldname" value="'.$siteName.'" >
 								<input type="hidden" class="" name="fieldid" id="fieldid" value="'.$siteId.'" >
 							</div>
