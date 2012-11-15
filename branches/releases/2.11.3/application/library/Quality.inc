@@ -218,7 +218,7 @@
 		public function getProjectVersionDropDown($project_id,$qa_version='') {  
 
 			$html = '';					
-			$QRY_MASTER_SELECT ="SELECT `id`,`project_id`,`version_name` FROM `qa_project_version` where `project_id` in ( '".$project_id."' ,'0') order by project_id ='0' DESC, version_name ASC ";
+			$QRY_MASTER_SELECT ="SELECT `id`,`project_id`,`version_name` FROM `qa_project_version` where `project_id` in ( '".$project_id."' ,'0') AND active ='1' AND deleted ='0'  order by project_id ='0' DESC, version_name ASC ";
 			$fields_list = self::getQuery($QRY_MASTER_SELECT);
 
 			for($i = 0; $i < sizeof($fields_list); $i++) {
