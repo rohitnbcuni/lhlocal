@@ -1,7 +1,8 @@
 <?PHP
 	include("_inc/config.inc");
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-	
+	include("sessionHandler.php");
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	$id = $mysql->real_escape_string($_POST['project_id']);
 	
 	//New data
@@ -26,12 +27,12 @@
 		."VALUES "
 		."('" .$num[0] ."','$code','$name','" .$client_part[0] ."', '1','".$_YEAR."')";
 	
-	$create_new_res = $mysql->query($create_new_project_query);
+	$create_new_res = $mysql->sqlordie($create_new_project_query);
 	$new_id = $mysql->insert_id;
 
 	/************Project Status*************/
 	$statusInsertSql = 'INSERT INTO `project_status` (`project_id`, `status_id`, `created_user`, `created_date`) VALUES ("' . $new_id . '", "1", "83", NOW())';
-	$mysql->query($statusInsertSql);
+	$mysql->sqlordie($statusInsertSql);
 	/************Create Perms***************/
 	/*
 	//Commenting out ths as the permissions are given from the admin tab
