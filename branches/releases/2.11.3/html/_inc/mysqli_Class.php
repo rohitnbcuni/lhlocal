@@ -288,7 +288,7 @@ class MySQLiDB
             }
         else
             {
-            $this->sql_error($sql);
+            //$this->sql_error($sql);
             }
         }
 
