@@ -253,7 +253,7 @@
 
 
 							$msg .="<hr><b>Description:</b> " . $desc_string ."<br><br>";
-                            $subject = "WO ".$woId.": You Have Been CC’d on Ticket - ".$req_type_row['field_name']." - " . html_entity_decode($row['title'],ENT_NOQUOTES,'UTF-8') . "";
+                            $subject = "WO ".$woId.": You Have Been CC'd on Ticket - ".$req_type_row['field_name']." - " . html_entity_decode($row['title'],ENT_NOQUOTES,'UTF-8') . "";
 							if(!empty($to)){ 
 								sendEmail($to, $subject, $msg, $headers);
 							}
