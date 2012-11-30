@@ -1,0 +1,76 @@
+<?PHP
+	/*
+	Base Zend index file loaded for the index.php file
+	*/
+	//include('ControlTower.inc');
+	//echo "Hello World Login Index.phtml application/modules/login/views/scripts/index";
+
+
+?>
+
+	<script type="text/javascript">
+		window.onload = function() {
+			 if(typeof document.getElementById("lh_username") != "undefined"){
+				 if( document.getElementById("lh_username")!=null)
+				 {
+					  document.getElementById("lh_username").focus(); 
+				 }
+			}
+		};
+
+		document.onkeyup = KeyCheck; 
+		function KeyCheck(e)
+		{
+			var KeyID = (window.event) ? event.keyCode : e.keyCode;
+			if(KeyID == 13){
+
+				if(document.getElementById("lh_username")!=null)
+				{
+					if(document.getElementById("lh_username").value=='')
+					{
+					  document.getElementById("lh_username").focus(); 
+					  return false;
+					}
+				}
+
+				if(document.getElementById("lh_password")!=null)
+				{
+					if(document.getElementById("lh_password").value=='')
+					{
+					  document.getElementById("lh_password").focus(); 
+					  return false;
+					}
+				}
+
+				if(typeof document.forms["login_form"] != "undefined"){
+				  document.forms["login_form"].submit(); 
+				}
+			}
+		}
+
+		function loginSubmit()
+		{
+			if(typeof document.forms["login_form"] != "undefined"){
+
+				if(document.getElementById("lh_username")!=null)
+				{
+					if(document.getElementById("lh_username").value=='')
+					{
+					  document.getElementById("lh_username").focus(); 
+					  return false;
+					}
+				}
+
+				if(document.getElementById("lh_password")!=null)
+				{
+					if(document.getElementById("lh_password").value=='')
+					{
+					  document.getElementById("lh_password").focus(); 
+					  return false;
+					}
+				}
+			    document.forms["login_form"].submit(); 
+			}
+			return false;
+		}
+	</script>
