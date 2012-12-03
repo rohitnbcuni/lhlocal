@@ -1030,11 +1030,11 @@
 						</div>
 			';
 				if(empty($field_id)){
-				$this->buildSiteNameHTML();
+				$this->buildSiteNameHTML($field,$screen_name );
 			}else{
 					foreach($field_list as $field){
 						if($field_id == $field['field_id']){
-							$this->buildSiteNameHTML($field);
+							$this->buildSiteNameHTML($field,$screen_name);
 					}
 				}
 			}
@@ -1061,7 +1061,8 @@
 			$this->render('create');
 		}
 
-		public function buildSiteNameHTML($site=''){
+		public function buildSiteNameHTML($site='',$screen_name){
+		//	print $custom_name;
 			$activeCheck = '';
 			$deleteCheck = '';
 			$siteName = '';
@@ -1080,7 +1081,7 @@
 			echo '
 						<div id="fieldnameInfo" class="admindisplayUserInfo"  style="'.$editstatus.'">
 						<div class="row">
-								<div class="label"><label>Site Name:</label></div>
+								<div class="label"><label>'.$screen_name.'*:</label></div>
 								<input type="text" class="" name="fieldname" id="fieldname" value="'.$siteName.'" >
 								<input type="hidden" class="" name="fieldid" id="fieldid" value="'.$siteId.'" >
 							</div>

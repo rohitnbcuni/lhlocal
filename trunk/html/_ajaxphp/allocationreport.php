@@ -61,7 +61,7 @@ group by tab1.projectid) budget ON pjt.id=budget.projectid
 WHERE pjt.company <> '0' and pjt.archived='0' and pjt.deleted='0' and pjt.project_status IN (3,6)
 GROUP BY com.name, pjt.project_code, pjt.bc_id";
 //echo "qry".$project_query;
-$project_result = $mysql->sqlordie($project_query) or die(mysql_error());
+$project_result = $mysql->sqlordie($project_query) or die("Mysql Error");
 //$project_result->num_rows;
 
   $header = "Company\t Project\t Project Manager\t Engagement Lead\t Status\t Program\t Total Allocation\t Q1 Allocation\t Q2 Allocation\t Q3 Allocation\t Q4 Allocation\t Charge Code\n";
