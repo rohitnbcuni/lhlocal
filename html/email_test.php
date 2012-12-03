@@ -1,7 +1,7 @@
 <?PHP
 
-//$to = 'vipul.dasaharish@igate.com';
-$to = 'Vipul.Harish@nbcuni.com';
+
+$to = 'shobhitsingh.bhadauria@nbcuni.com';
 $subject = 'Lighthouse test mail please ignore';
 $msg = 'Lighthouse test mail please ignore';
 $headers = "From: "."LH"."\nMIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1";
@@ -12,6 +12,8 @@ if(mail($to, $subject, $msg, $headers)){
 } else {
 	echo "sending failed";
 }
+
+
 
 
 ?>

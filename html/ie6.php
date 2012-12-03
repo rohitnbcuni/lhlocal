@@ -1,6 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 0);
+define('DEV_TEAM_NAME', 'NBCU O&amp;TS');
+//ini_set('error_reporting', E_ALL);
 	$menu_array = array();
 	$menu_array[0]['name'] = "Dashboard";
 	$menu_array[0]['url'] = "";
@@ -30,6 +31,10 @@ ini_set('error_reporting', E_ALL);
 	
 	
 ?>
+<style>
+
+.navigation{display:none;}
+</style>
 	<!--==| START: Content |==-->
 	<div class="wrapper">
 		<div class="content_container<?PHP echo $login_class; ?>">
