@@ -33,6 +33,9 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 <script src="/_js/lh_global.js" type="text/javascript"></script>
  <script src="/_js/s_code.js" type="text/javascript"></script>
 <script src="/_js/search_box.js" type="text/javascript"></script>
+<script src="/_js/autocom-jquery-1.8.3.js"></script>
+<script src="/_js/autocom-jquery-ui.js"></script>
+<link href="/_css/jquery-ui.css" rel="stylesheet" type="text/css"/>
  <script language="JavaScript" type="text/javascript"><!--
 
 	//s.pageName=document.title; 
