@@ -62,7 +62,7 @@ response(data);
 							"Selected: " + ui.item.value  :
 							"Nothing selected, input was " + this.value );
 					},
-			search  : function(){$(this).addClass( "ui-autocomplete-loading" )},
+			search_text  : function(){$(this).addClass( "ui-autocomplete-loading" )},
 
  
 			open: function() {
