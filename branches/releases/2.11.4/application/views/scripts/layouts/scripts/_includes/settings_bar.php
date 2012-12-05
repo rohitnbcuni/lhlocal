@@ -21,7 +21,7 @@ function clearSearchResult(){
 	
 }
 
-	$(function() {
+	$(document).ready(function(){
 		function log( message ) {
 			$( "<div/>" ).text( message ).prependTo( "#log" );
 			$( "#log" ).scrollTop( 0 );
