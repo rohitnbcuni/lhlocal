@@ -10,7 +10,7 @@
 ?>
 	<script>
 function clearText(){
-	document.getElementById("search_text").value="";
+	document.getElementById("search").value="";
 	if(this.value == $(this).attr('title')) {
 		this.value = '';
 		$(this).removeClass('text-label');
@@ -27,7 +27,7 @@ function clearSearchResult(){
 			$( "#log" ).scrollTop( 0 );
 		}
 
-		$( "#search_text" ).autocomplete({
+		$( "#search" ).autocomplete({
 			source: function( request, response ) {
 				$.ajax({
 			                url: "/_ajaxphp/autocall.php?q=title:"+document.getElementById("search_text").value+"*",
@@ -62,7 +62,7 @@ response(data);
 							"Selected: " + ui.item.value  :
 							"Nothing selected, input was " + this.value );
 					},
-			search_text  : function(){$(this).addClass( "ui-autocomplete-loading" )},
+			search  : function(){$(this).addClass( "ui-autocomplete-loading" )},
 
  
 			open: function() {
@@ -92,7 +92,7 @@ response(data);
 
 		?><li style="border-left:none;padding: 0 4px;"><div id="search_top">
 		<div><form action="<?php echo $pageURL;?>/search" method="post" name="search_box_form" id="search_box_form" >
-		<input name="search_text" id="search_text" type="text" class="search_bg"  tabindex="1" placeholder="  search" class="textbox"  autocomplete="off">
+		<input name="search" id="search" type="text" class="search_bg"  tabindex="1" placeholder="  search" class="textbox"  autocomplete="off">
 		<input name="bt_search" type="button" class="bt_search" id="bt_search"  >
 		<div class="bt_advSearch" id="bt_advSearch" > <a href="javascript:void(null);" >
 		<img src="/_images/images/adv_option.png" /></a> 
