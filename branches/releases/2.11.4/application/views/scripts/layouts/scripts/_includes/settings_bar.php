@@ -8,6 +8,73 @@
 		$my_risk_count .= ($my_risk_count == '1') ? ' risk':' risks';
 
 ?>
+	<script>
+function clearText(){
+	document.getElementById("search_text").value="";
+	if(this.value == $(this).attr('title')) {
+		this.value = '';
+		$(this).removeClass('text-label');
+	}
+}
+function clearSearchResult(){
+	document.getElementById("log").value="";
+	
+}
+
+	$(function() {
+		function log( message ) {
+			$( "<div/>" ).text( message ).prependTo( "#log" );
+			$( "#log" ).scrollTop( 0 );
+		}
+
+		$( "#search_text" ).autocomplete({
+			source: function( request, response ) {
+				$.ajax({
+			                url: "/_ajaxphp/autocall.php?q=title:"+document.getElementById("search_text").value+"*",
+					dataType: "html",
+					data: {
+						featureClass: "P",
+						style: "full",
+						maxRows: 15,
+						name_startsWith: request.term
+					},
+					success: function( data ) {
+var data =$( "str", data ).map(function() {
+var $entry = $(this);
+var title;
+var id;
+if( $entry.attr('name')=="title"){
+title= $entry.text();
+return {
+		value: title,
+		//id: id
+	};
+}
+
+	});
+response(data);
+			}
+			});
+			},
+			minLength: 2,
+			select: function( event, ui ) {
+						log( ui.item ?
+							"Selected: " + ui.item.value  :
+							"Nothing selected, input was " + this.value );
+					},
+			search  : function(){$(this).addClass( "ui-autocomplete-loading" )},
+
+ 
+			open: function() {
+				$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+			},
+			close: function() {
+				$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+			}
+		});
+	});
+	</script>
+
 	<!----| START: Setting Bar |---->
 	<div class="settings_bar">
 		<div class="wrapper">
