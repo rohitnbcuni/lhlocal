@@ -674,17 +674,44 @@ function submitCommentANDsave() {
 //added for 18088
 
 function updateCClist(Project_id){
-$.ajax({
-			type: "GET",
-			url: "/_ajaxphp/qa_projectcclist.php",
-			data: "project_id="+Project_id,
-			success: function(msg) {
-				document.getElementById('cc_list').innerHTML = msg;
-				$('#cclist').val($('#temp_cc_list').val());	
+if(Project_id != ''){
+	$.ajax({
+				type: "GET",
+				url: "/_ajaxphp/qa_projectcclist.php",
+				data: "project_id="+Project_id,
+				success: function(msg) {
+					if(document.getElementById('cc_list')){
+					document.getElementById('cc_list').innerHTML = msg;
+					
+					$('#cclist').val($('#temp_cc_list').val());	
+					}
 
-			}
-		});
+				}
+			});
+			
+		}
 }
+
+$(document).ready(function() {
+	var defectId = $('#defect_id').val();
+	if(defectId == ''){
+	var Project_id = $('#wo_project').val();
+		if(Project_id != ''){
+		$.ajax({
+				type: "GET",
+				url: "/_ajaxphp/qa_projectcclist.php",
+				data: "project_id="+Project_id,
+				success: function(msg) {
+					$('#cc_list').html(msg);
+					
+					$('#cclist').val($('#temp_cc_list').val());	
+
+				}
+			});
+		}
+	}	
+
+});
 
 function addCcUser() {
 	var defectId = document.getElementById('defect_id').value;
