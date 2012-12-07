@@ -1,0 +1,72 @@
+#search_top {
+        width: 197px;
+	margin-top: -5px;
+	margin-right: -11px;
+}
+.search_bg {
+        background: url("/_images/images/search_bg.png") no-repeat 0 0;
+        width: 148px;
+        height: 20px;
+        font-family: arial;
+        font-size: 11px;
+        color: #444;
+        position: relative;
+        padding: 0 4px;
+}
+.bt_search {
+        background: url('/_images/images/bt_search.png') no-repeat 0 0;
+        height: 20px;
+        width: 19px;
+        position: absolute;
+        cursor: pointer;
+        border: 0px soild;
+}
+.bt_advSearch {
+        background: url('/_images/images/adv_option.png') no-repeat 0 0;
+        height: 20px;
+        width: 19px;
+        display: block;
+        position: relative;
+        float: right;
+        margin-right: 7px;
+}
+.search_popupTop {
+        background: url('/_images/images/popup_top.png') no-repeat 0 0;
+        font-family: arial;
+        font-size: 11px;
+        line-height: 20px;
+        color: #358fce;
+        padding: 17px 15px 0px;
+        position: relative;
+}
+.bt_close {
+        position: absolute;
+        right:10px;
+        top: 11px;
+        display: none;
+        width: 19px;
+        height: 20px;
+        border: 0px
+}
+#search_top input {
+        border: 0px;
+        padding: 0px;
+        margin: 0px;
+}
+
+#popup_top {
+        width: 118px;
+        position: absolute;
+        right: -52px;
+        top: 20px;
+        display: none;
+	z-index:1000;
+}
+.search_popupBottom {
+        background: url('/_images/images/popup_bottom.png') no-repeat 0 0;
+        height: 18px;
+}
+.show_hide {
+display: none;
+}
+
