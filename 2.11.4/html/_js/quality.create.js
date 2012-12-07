@@ -494,6 +494,9 @@ function updateComments() {
 	});
 }
 
+
+
+
 function closeDefect() {
 	$('.message_close').css({display:'none'});
 	$.ajax({
@@ -692,6 +695,8 @@ if(Project_id != ''){
 		}
 }
 
+
+
 $(document).ready(function() {
 	var defectId = $('#defect_id').val();
 	if(defectId == ''){
@@ -768,6 +773,22 @@ function removeCcUser(userId) {
 				document.getElementById('cc_list').innerHTML = msg;
 			}
 		});
+	}
+	if(defectId == ''){
+	var Project_id = $('#wo_project').val();
+		if(Project_id != ''){
+		$.ajax({
+				type: "GET",
+				url: "/_ajaxphp/qa_projectcclist.php",
+				data: "project_id="+Project_id+"&remove="+userId,
+				success: function(msg) {
+					$('#cc_list').html(msg);
+					
+					//$('#cclist').val($('#temp_cc_list').val());	
+
+				}
+			});
+		}
 	}
 }
 
