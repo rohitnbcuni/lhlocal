@@ -15,33 +15,34 @@
 		$defectId = $mysql->real_escape_string($_GET['defectId']);
 		$cc = $mysql->real_escape_string($_GET['cc']);
 		$addCC = $mysql->real_escape_string($_GET['addCC']);
-        //defect id 3895
+		$list = explode(",", $cc);
+       
         $listold = array();
-		/*changes for 18088*/
-		$project_id=$mysql->real_escape_string($_GET['project_id']);
-				
-				if(!empty($project_id))
-                {
-                //LH 18474
-				//$wo_query = "SELECT `cclist` FROM `projects` WHERE `id`='$project_id' LIMIT 1";
-				$wo_query = "SELECT `qccclist` FROM `projects` WHERE `id`= ? LIMIT 1";
-				
-				$wo_result = $mysql->sqlprepare($wo_query,array($project_id));
-                $wo_row = $wo_result->fetch_assoc();
-				//$listold = explode(",", $wo_row[cclist]);
-				$listold = explode(",", $wo_row[qccclist]);
-				
-				}
-                $list = explode(",", $cc);
-			    
-				
-				$list=array_merge($list,$listold);
-		/*end for 18088*/
-
-
+		
+		
 		$ccArray = array();
 		if(!empty($defectId))
 		{
+		
+		/*changes for 18088*/
+		$project_id=$mysql->real_escape_string($_GET['project_id']);
+				
+		if(!empty($project_id))
+		{
+		//LH 18474
+		//$wo_query = "SELECT `cclist` FROM `projects` WHERE `id`='$project_id' LIMIT 1";
+		$wo_query = "SELECT `qccclist` FROM `projects` WHERE `id`= ? LIMIT 1";
+		
+		$wo_result = $mysql->sqlprepare($wo_query,array($project_id));
+		$wo_row = $wo_result->fetch_assoc();
+		//$listold = explode(",", $wo_row[cclist]);
+		$listold = explode(",", $wo_row['qccclist']);
+		
+		}
+		
+		
+		
+		$list=array_merge($list,$listold);
 		$wo_query = "SELECT * FROM `qa_defects` WHERE `id`= ? LIMIT 1";
 		$wo_result = $mysql->sqlprepare($wo_query,array($defectId));
 		$wo_row = $wo_result->fetch_assoc();
