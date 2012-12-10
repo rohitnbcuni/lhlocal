@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="/_css/jqueryMultiSelect.css" type="text/css" />
 	<link rel="icon" href="<?php echo BASE_URL ;?>/_images/Favicon.ico" type="image/vnd.microsoft.icon" />
 	<link rel="shortcut icon" type=image/x-icon href="<?php echo BASE_URL;?>/_images/Favicon.ico" />
-	<link rel=icon type=image/ico href="<?php echo BASE_URL;?>/_images/Favicon.ico" />
+	<link rel="icon" type="image/ico" href="<?php echo BASE_URL;?>/_images/Favicon.ico" />
 <?PHP
 if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 ?>
@@ -28,14 +28,12 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 <!--[if IE]>
 <link rel="stylesheet" type="text/css" href="/_css/style_ie.css?<?PHP echo $randNum; ?>" />
 <![endif]-->
+
 <script type="text/javascript" src="/_fckeditor/fckeditor.js"></script>
 <script src="/_js/jquery.pack.js" type="text/javascript"></script>
 <script src="/_js/lh_global.js" type="text/javascript"></script>
  <script src="/_js/s_code.js" type="text/javascript"></script>
 <script src="/_js/search_box.js" type="text/javascript"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
-<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
  <script language="JavaScript" type="text/javascript"><!--
 
 	//s.pageName=document.title; 
@@ -57,8 +55,7 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 		if($.browser.msie && $.browser.version<7 && !window.location.href.match(/ie6\.php/)){
 			window.location.href='/ie6.php';
 		}
-	</script>
-	<?PHP
+	</script><?PHP
 	if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 	?>
 		<script src="/_js/lh_global_client.js" type="text/javascript"></script>
@@ -70,20 +67,23 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 		
 			//Resource Planner
 			case 'resourceplanner': {
-
+						
 					echo "<script src=\"/_js/ui.core.js\" type=\"text/javascript\"></script>\n"
 					 ."\t<script src=\"/_js/ui.selectable.js\" type=\"text/javascript\"></script>\n"
 					 ."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
-				
 					echo "\t<script src=\"/_js/resource_planner.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
-
-
+					echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+					//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+					echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
+					
 				break;
 			}
 			//Control Tower
 			case 'controltower': {
 				echo "<script src=\"/_js/ui/jquery.ui.all.js\" type=\"text/javascript\"></script>\n";
-
+				echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+					//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+					echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
 				switch(@$_action) {
 					case 'create': {
 						echo "\t<script src=\"/_js/controltower.create.js?" . $randNum . "\" type=\"text/javascript\"></script>\n"
@@ -114,6 +114,7 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						echo "\t<META HTTP-EQUIV=\"Expires\" CONTENT=\"0\">\n";
 						echo "\t<META HTTP-EQUIV=\"Pragma\" CONTENT=\"no-cache\">\n";
 						echo "\t<script src=\"/_js/ct_quickfilter.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
+						
 						break;
 					}
 				}
@@ -141,6 +142,7 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
               var WO_CREATE_CHANGE = \''.WO_CREATE_CHANGE.'\';
               var WO_CREATE_PROBLEM = \''.WO_CREATE_PROBLEM.'\';
 						</script>';	
+					
 				switch(@$_action) {
 					case 'edit': {}
 					case 'create': {
@@ -154,7 +156,10 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 							."\t<script src=\"/_js/jquery.notify.js\" type=\"text/javascript\"></script>\n"
 							. "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
 						echo  "<link href=\"/_css/ui.notify.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";	
-
+						echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+					//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+					echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
+							
 							
 						break;
 					}//Ticket #7927 Add new js file for calender view :wo_calender_view.js
@@ -176,6 +181,9 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 					echo "\t<script src=\"/_js/jqueryMultiSelect.js\" type=\"text/javascript\"></script>\n"
 						."\t<script src=\"/_js/jquery-ui-1.8.19.custom.min.js\" type=\"text/javascript\"></script>"
 						. "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
+						echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+					//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+					echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
 					//echo "\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
 					}
 				}
@@ -196,6 +204,9 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 					}
 					default: {
 						echo "<script src=\"/_js/quality.filter.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
+						echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+					//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+					echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
 					}
 				}
 
@@ -203,6 +214,7 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 			}
 
 		case "admin": {	
+						
 		switch(@$_action) {
 					case 'fetchUser': {
 						echo "<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n"
@@ -214,6 +226,9 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						//."\t<script src=\"/_js/ui/jquery.multiselect.js\" type=\"text/javascript\"></script>\n"
 						."\t<script src=\"/_js/ui/jquery.multiselect.filter.js\" type=\"text/javascript\"></script>\n"
 						."\t<script src=\"/_js/admin.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
+						echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+						//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+						echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
 						
 						break;
 						
@@ -230,6 +245,10 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						."\t<script src=\"/_js/ui/jquery.multiselect_new.js\" type=\"text/javascript\"></script>\n"
 						//."\t<script src=\"/_js/ui/jquery.multiselect.js\" type=\"text/javascript\"></script>\n"
 						."\t<script src=\"/_js/ui/jquery.multiselect.filter.js\" type=\"text/javascript\"></script>\n";
+						echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+						//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+						echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
+						
 					break;
 				}
 				break;
@@ -243,18 +262,24 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 				break;
 			}
 			case "events": {
-		
+					
 			switch(@$_action) {
 					case "create":{
 					echo "<link rel=\"stylesheet\" href=\"/_css/events.css?". $randNum. "\" type=\"text/css\" />";
 					echo "<script src=\"/_js/tooltip.js\" type=\"text/javascript\"></script>\n"
 					."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
+					echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+					//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+					echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
 					break;
 					}
 					case "listview":{
 					echo "<link rel=\"stylesheet\" href=\"/_css/events.css?". $randNum. "\" type=\"text/css\" />";
 					echo "<script src=\"/_js/tooltip.js\" type=\"text/javascript\"></script>\n"
 					."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
+					echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+					//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+					echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
 					break;
 					}
 					case "calendarview":{
@@ -262,14 +287,24 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 					echo "<link rel=\"stylesheet\" href=\"/_css/events.css?". $randNum. "\" type=\"text/css\" />";
 					echo "<script src=\"/_js/tooltip.js\" type=\"text/javascript\"></script>\n"
 					."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
+					echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+					//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+					echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
+					echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+					//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+					echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
 					break;
 					}
 					case "detail":{
 					echo "<link rel=\"stylesheet\" href=\"/_css/events.css?". $randNum. "\" type=\"text/css\" />";
 					echo "<script src=\"/_js/tooltip.js\" type=\"text/javascript\"></script>\n"
 					."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
+					echo "\t<link rel=\"stylesheet\" href=\"/_css/jquery.autocomplete.css\" />\n";
+					//echo "\t<script src=\"/_js/jquery-1.7.2.min.js\" /></script>\n";
+					echo "\t<script src=\"/_js/jquery.autocomplete.js\" /></script>";
 					break;
 					}
+					
 					
 				} 
 			break;
