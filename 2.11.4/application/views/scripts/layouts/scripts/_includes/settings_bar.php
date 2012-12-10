@@ -8,88 +8,6 @@
 		$my_risk_count .= ($my_risk_count == '1') ? ' risk':' risks';
 
 ?>
-<script language="JavaScript" type="text/javascript">
-function clearText(){
-	document.getElementById("search").value="";
-	if(this.value == $(this).attr('title')) {
-		this.value = '';
-		$(this).removeClass('text-label');
-	}
-}
-function clearSearchResult(){
-	document.getElementById("log").value="";
-	
-}
-
-	$(function() {
-		function log( message ) {
-			$( "<div/>" ).text( message ).prependTo( "#log" );
-			$( "#log" ).scrollTop( 0 );
-		}
-		 $("#search").autocomplete('/_ajaxphp/autocall.php?output=json', {
-        remoteDataType: 'json',
-        processData: function(data) {
-		
-			var i, processed = [];
-			for (i=0; i < data.length; i++) {
-				processed.push([data[i][0] + " - " + data[i][1]]);
-			}
-			return processed;
-        }
-    });
-	});
-		/*$( "#search" ).autocomplete({
-			source: function( request, response ) {
-				$.ajax({
-			                url: "/_ajaxphp/autocall.php?q=title:"+document.getElementById("search").value+"*",
-					dataType: "html",
-					data: {
-						featureClass: "P",
-						style: "full",
-						maxRows: 15,
-						name_startsWith: request.term
-					},
-					success: function( data ) {
-					var data =$( "str", data ).map(function() {
-					var $entry = $(this);
-					var title;
-					var id;
-					if( $entry.attr('name')=="title"){
-					title= $entry.text();
-					return {
-							value: title,
-							//id: id
-						};
-					}
-
-						});
-					response(data);
-								}
-								});
-								},
-								minLength: 2,
-								select: function( event, ui ) {
-											log( ui.item ?
-												"Selected: " + ui.item.value  :
-												"Nothing selected, input was " + this.value );
-										},
-								search  : function(){$(this).addClass( "ui-autocomplete-loading" )},
-
-					 
-								open: function() {
-									$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-								},
-								close: function() {
-									$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-								}
-							});
-						});*/
-						//$("#search").autocomplete('/_ajaxphp/autocall.php', {
-						//	minChars: 3
-						//});
-						//});
-	</script>
-
 	<!----| START: Setting Bar |---->
 	<div class="settings_bar">
 		<div class="wrapper">
@@ -107,9 +25,9 @@ function clearSearchResult(){
 
 		?><li style="border-left:none;padding: 0 4px;"><div id="search_top">
 		<div><form action="<?php echo $pageURL;?>/search" method="post" name="search_box_form" id="search_box_form" >
-		<input name="search" id="search" type="text" class="search_bg acInput"  tabindex="1" placeholder="  search" class="textbox"  autocomplete="off">
+		<input name="search_text" id="search_text" type="text" class="search_bg"  tabindex="1" placeholder="  search" class="textbox"  autocomplete="off">
 		<input name="bt_search" type="button" class="bt_search" id="bt_search"  >
-		
+
 		<div class="bt_advSearch" id="bt_advSearch" > <a href="javascript:void(null);" >
 		<img src="/_images/images/adv_option.png" /></a> 
         <div id="popup_top" > 
