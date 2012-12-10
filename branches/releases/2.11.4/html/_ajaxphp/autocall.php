@@ -1,7 +1,5 @@
 <?php 
-
-//var_dump($_REQUEST);
-
+ $results = array();
 $SOLR_URL_STRING = "http://ec2-75-101-162-191.compute-1.amazonaws.com:8080/solr/lighthouse_active/select?q=";
 $url = $SOLR_URL_STRING.urlencode($_REQUEST[q]).'&featureClass=P&style=full&maxRows=10&name_startsWith='.$_REQUEST[name_startsWith];
 
@@ -24,9 +22,25 @@ $url = $SOLR_URL_STRING.urlencode($_REQUEST[q]).'&featureClass=P&style=full&maxR
 			if(preg_match('/^(http)/',$url)) curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
 			$response = curl_exec($ch);
 			curl_close($ch);
-		  //  $xml = (array)simplexml_load_string($response);
-		//	print_r($xml);
 
-print $response;
+$results = new SimpleXMLElement($response);
+		  $results = (array)simplexml_load_string($response);
+			print "<pre>";
+			//var_dump($results['result']);
+		
+if(count($results) > 0){
+	foreach($results['result'] as $key => $val){
+		//$inf["ID"]."###".$inf["countryName"]."|";
+		
+		//print_r($val);
+		echo $val->arr->str[0]."###".$val->arr->str[0]."|";
+		
+	
+	}
+
+
+} 			
+
+
 ?>
 
