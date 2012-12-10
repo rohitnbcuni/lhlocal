@@ -1,7 +1,7 @@
 <?php 
  $results = array();
 $SOLR_URL_STRING = "http://ec2-75-101-162-191.compute-1.amazonaws.com:8080/solr/lighthouse_active/select?q=";
-$url = $SOLR_URL_STRING.urlencode($_REQUEST[q]).'&featureClass=P&style=full&maxRows=10&name_startsWith='.$_REQUEST[name_startsWith];
+$url = $SOLR_URL_STRING.urlencode($_REQUEST['letters']).'&featureClass=P&style=full&maxRows=10&name_startsWith='.$_REQUEST[name_startsWith];
 
 			$ch = curl_init();
 			$request='<request>'.$request.'</request>';
