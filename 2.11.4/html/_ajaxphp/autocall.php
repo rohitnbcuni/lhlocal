@@ -24,10 +24,7 @@ $url = $SOLR_URL_STRING.urlencode($_REQUEST['letters']).'&featureClass=P&style=f
 			curl_close($ch);
 
 $results = new SimpleXMLElement($response);
-		  $results = (array)simplexml_load_string($response);
-			print "<pre>";
-			//var_dump($results['result']);
-		
+			
 if(count($results) > 0){
 	foreach($results['result'] as $key => $val){
 		//$inf["ID"]."###".$inf["countryName"]."|";
