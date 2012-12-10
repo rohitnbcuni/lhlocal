@@ -28,6 +28,8 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 <!--[if IE]>
 <link rel="stylesheet" type="text/css" href="/_css/style_ie.css?<?PHP echo $randNum; ?>" />
 <![endif]-->
+<script type="text/javascript" src="/_js/autocomplete/ajax.js"></script>
+<script type="text/javascript" src="/_js/autocomplete/ajax-dynamic-list.js"></script>
 <script type="text/javascript" src="/_fckeditor/fckeditor.js"></script>
 <script src="/_js/jquery.pack.js" type="text/javascript"></script>
 <script src="/_js/lh_global.js" type="text/javascript"></script>
@@ -310,7 +312,7 @@ echo "<style>"
 }
 
 ?>
-	<script language="javascript">
+<script language="javascript">
 		var sBasePath = document.location.href;
 	</script>
 
