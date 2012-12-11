@@ -1,7 +1,8 @@
 <?php 
+include('../_inc/config.inc');
+include("sessionHandler.php");
 $results = array();
-$SOLR_URL_STRING = "http://ec2-75-101-162-191.compute-1.amazonaws.com:8080/solr/lighthouse_active/select?q=";
-$url = $SOLR_URL_STRING.urlencode($_REQUEST['letters']).'&featureClass=P&style=full&maxRows=100&name_startsWith='.$_REQUEST['letters'];
+$url = SOLR_URL_STRING.'(('.urlencode($_REQUEST['letters']).'))&featureClass=P&style=full&&start=0&rows=20&sort=docid%20desc&name_startsWith="'.urlencode($_REQUEST['letters']).'"';
 
 			$ch = curl_init();
 			$request='<request>'.$request.'</request>';
@@ -23,7 +24,8 @@ $url = $SOLR_URL_STRING.urlencode($_REQUEST['letters']).'&featureClass=P&style=f
 			$response = curl_exec($ch);
 			curl_close($ch);
 
-$results = new SimpleXMLElement($response);
+if($response!==''){
+$results = new SimpleXMLElement($response);}
 /*if(count($results) > 0){
 	foreach($results['result'] as $key => $val){
 		//$inf["ID"]."###".$inf["countryName"]."|";
@@ -55,10 +57,10 @@ if(count($results) > 0){
 						$desc[] =  $eVal->str[4];
 						$cat[] =  $eVal->str[5];
 						/* $comment[] =  (array) $comments ;*/
-						if( $eVal->str[5]=='quality'){
+					/*	if( $eVal->str[5]=='quality'){
 						$count_qa=$i++;}
 						else{$count_wo=$wo++; }
-
+						*/
 						}
 
 					}
@@ -69,9 +71,10 @@ if(count($results) > 0){
 
 	}
 }
-
+$pageURL = BASE_URL;
 for($i =0 ; $i<count($id); $i++){
-echo $id[$i][0]."###".ucfirst($title[$i][0])."|"; 
+if($cat[$i][0]=='quality'){$link = $pageURL.'/quality/index/edit/?defect_id=';}else{$link = $pageURL.'/workorders/index/edit/?wo_id='; }
+echo $id[$i][0]."###".'<a  href="'.$link.$id[$i][0].'">'.ucfirst($title[$i][0]).'<a/>'."|"; 
 // echo $title[$i][0];
 }
  			
