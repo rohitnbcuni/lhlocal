@@ -14,7 +14,7 @@
 					$string='%20AND%20categories:workorder';
 				}
 			//$url = SOLR_URL_STRING.urlencode($query).$string.'&start=0&rows=200000&sort=docid%20desc';
-			$url = SOLR_URL_STRING.'(('.urlencode($query).')'.$string.')&start=0&rows=2000&sort=docid%20desc';
+			$url = SOLR_URL_STRING.'(("'.urlencode($query).'")'.$string.')&start=0&rows=2000&sort=docid%20desc';
 			$ch = curl_init();
 			$request='<request>'.$request.'</request>';
 			curl_setopt($ch, CURLOPT_URL, $url);

@@ -131,6 +131,7 @@ Owner of DHTMLgoodies.com
 
 
 			div.innerHTML = items[items.length-1];
+			//div.innerHTML = ["<a target=_blank  href='http://"+window.location.host+"/workorders/index/edit/?wo_id="+items[0]+"'>"+items[items.length-1]+"</a>"];
 			div.id = items[0];
 			div.className='optionDiv';
 			div.onmouseover = function(){ ajax_options_rollOverActiveItem(this,false) }
