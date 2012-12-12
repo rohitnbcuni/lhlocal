@@ -236,18 +236,24 @@ Owner of DHTMLgoodies.com
 		if(ajax_list_cachedLists[paramToExternalFile][inputObj.value.toLowerCase()]){
 			ajax_option_list_buildList(inputObj.value,paramToExternalFile,currentListIndex);
 		}else{
+			if(trim(inputObj.value) != ''){
 			var tmpIndex=currentListIndex/1;
 			ajax_optionDiv.innerHTML = '';
 			var ajaxIndex = ajax_list_objects.length;
 			ajax_list_objects[ajaxIndex] = new sack();
-			var url = ajax_list_externalFile + '?' + paramToExternalFile + '=1&letters=' + inputObj.value.replace(" ","+");
+			var url = ajax_list_externalFile + '?' + paramToExternalFile + '=1&letters=' + inputObj.value;
 			ajax_list_objects[ajaxIndex].requestFile = url;	// Specifying which file to get
 			ajax_list_objects[ajaxIndex].onCompletion = function(){ ajax_option_list_showContent(ajaxIndex,inputObj,paramToExternalFile,tmpIndex); };	// Specify function that will be executed after file has been found
+			
 			ajax_list_objects[ajaxIndex].runAJAX();		// Execute AJAX function
 		}
-
+		}
 
 	}
+	
+	function trim(str) {
+        return str.replace(/^\s+|\s+$/g,"");
+		}
 
 	function ajax_option_keyNavigation(e)
 	{
