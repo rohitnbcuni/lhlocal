@@ -241,7 +241,14 @@ Owner of DHTMLgoodies.com
 			ajax_optionDiv.innerHTML = '';
 			var ajaxIndex = ajax_list_objects.length;
 			ajax_list_objects[ajaxIndex] = new sack();
-			var url = ajax_list_externalFile + '?' + paramToExternalFile + '=1&letters=' + inputObj.value;
+
+			var radios = document.getElementsByName('search_par[]');
+			for (var i = 0, length = radios.length; i < length; i++) {
+    			if (radios[i].checked) {
+        		var filters = radios[i].value;
+   			 }	
+			}
+			var url = ajax_list_externalFile + '?' + paramToExternalFile + '=1&letters=' + inputObj.value + '&filters=' + filters ;
 			ajax_list_objects[ajaxIndex].requestFile = url;	// Specifying which file to get
 			ajax_list_objects[ajaxIndex].onCompletion = function(){ ajax_option_list_showContent(ajaxIndex,inputObj,paramToExternalFile,tmpIndex); };	// Specify function that will be executed after file has been found
 			
