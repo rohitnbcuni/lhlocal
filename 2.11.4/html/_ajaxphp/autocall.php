@@ -2,8 +2,9 @@
 include('../_inc/config.inc');
 include("sessionHandler.php");
 $results = array();
-$search_string = urlencode(trim($_GET['letters']));
+$search_string = trim($_GET['letters']);
 if($search_string != ''){
+		$search_string = urlencode($search_string);
 		$url = SOLR_URL_STRING.'((title:'.$search_string.'*%20OR%20description:'.$search_string.'*%20OR%20id:'.$search_string.'*))&featureClass=P&style=full&&start=0&rows=10&sort=docid%20desc&name_startsWith="'.$search_string.'"';
 
 		$ch = curl_init();
@@ -25,9 +26,10 @@ if($search_string != ''){
 		if(preg_match('/^(http)/',$url)) curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
 		$response = curl_exec($ch);
 		curl_close($ch);
-
-		if($response!==''){
-		$results = new SimpleXMLElement($response);}
+			
+		if(ISSET($response) && strlen($response) > 10){
+			$results = new SimpleXMLElement($response);
+		}
 		/*if(count($results) > 0){
 			foreach($results['result'] as $key => $val){
 				//$inf["ID"]."###".$inf["countryName"]."|";
