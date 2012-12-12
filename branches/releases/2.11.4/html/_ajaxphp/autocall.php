@@ -2,7 +2,8 @@
 include('../_inc/config.inc');
 include("sessionHandler.php");
 $results = array();
-$url = SOLR_URL_STRING.'((title:'.urlencode($_REQUEST['letters']).'*%20OR%20description:'.urlencode($_REQUEST['letters']).'*%20OR%20id:'.urlencode($_REQUEST['letters']).'*))&featureClass=P&style=full&&start=0&rows=10&sort=docid%20desc&name_startsWith="'.urlencode($_REQUEST['letters']).'"';
+$search_string = urlencode(trim($_GET['letters']));
+$url = SOLR_URL_STRING.'((title:'.$search_string.'*%20OR%20description:'.$search_string.'*%20OR%20id:'.$search_string.'*))&featureClass=P&style=full&&start=0&rows=10&sort=docid%20desc&name_startsWith="'.$search_string.'"';
 
 			$ch = curl_init();
 			$request='<request>'.$request.'</request>';
