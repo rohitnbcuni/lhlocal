@@ -2,21 +2,22 @@
 include('../_inc/config.inc');
 include("sessionHandler.php");
 $results = array();
-$search_string = trim($_GET['letters']);
-if($search_string != ''){
-		$search_string = '"'.urlencode($search_string).'"';
+$search_str = trim($_GET['letters']);
+if($search_str != ''){
+		$search_string = '"'.urlencode($search_str).'"';
 		$search_par = trim($_GET['filters']);
 		if($search_par=='All'){
-				$string='';
-			}
-			elseif($search_par=='Defect'){
-					$string='%20AND%20categories:quality';
-				}
-			elseif($search_par=='WorkO'){
-					$string='%20AND%20categories:workorder';
-				}		
-
-		$url = SOLR_URL_STRING.'((title:'.$search_string.'%20OR%20description:'.$search_string.'%20OR%20docid:'.$search_string.')'.$string.')&featureClass=P&style=full&&start=0&rows=10&sort=docid%20desc&name_startsWith="'.$search_string.'"';
+			$string='';
+		}
+		elseif($search_par=='Defect'){
+			$string='%20AND%20categories:quality';
+		}
+		elseif($search_par=='WorkO'){
+			$string='%20AND%20categories:workorder';
+		}		
+		$int_id = (int) $search_str;
+		$doc_id = (!empty($int_id))?"docid:".$int_id:'';
+		$url = SOLR_URL_STRING.'((title:'.$search_string.'%20OR%20description:'.$search_string.'%20OR%20'.$doc_id.')'.$string.')&featureClass=P&style=full&&start=0&rows=10&sort=docid%20desc&name_startsWith="'.$search_string.'"';
 
 		$ch = curl_init();
 		$request='<request>'.$request.'</request>';
