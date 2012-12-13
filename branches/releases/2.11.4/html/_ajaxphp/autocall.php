@@ -2,7 +2,7 @@
 include('../_inc/config.inc');
 include("sessionHandler.php");
 $results = array();
-$search_str = trim(str_replace('"','""',$_GET['letters']));
+$search_str = trim(str_replace('"','\"',$_GET['letters']));
 if($search_str != ''){
 		$search_string = '"'.urlencode($search_str).'"';
 		$search_par = trim($_GET['filters']);
