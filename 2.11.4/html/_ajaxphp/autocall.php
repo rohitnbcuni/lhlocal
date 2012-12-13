@@ -16,8 +16,8 @@ if($search_str != ''){
 			$string='%20AND%20categories:workorder';
 		}		
 		$int_id = (int) $search_str;
-		$doc_id = (!empty($int_id))?"docid:".$int_id:'';
-		$url = SOLR_URL_STRING.'((title:'.$search_string.'%20OR%20description:'.$search_string.'%20OR%20'.$doc_id.')'.$string.')&featureClass=P&style=full&&start=0&rows=10&sort=docid%20desc&name_startsWith="'.$search_string.'"';
+		$doc_id = (!empty($int_id))?"%20OR%20docid:".$int_id:'';
+		$url = SOLR_URL_STRING.'((title:'.$search_string.'%20OR%20description:'.$search_string.$doc_id.')'.$string.')&featureClass=P&style=full&&start=0&rows=10&sort=docid%20desc&name_startsWith="'.$search_string.'"';
 
 		$ch = curl_init();
 		$request='<request>'.$request.'</request>';
