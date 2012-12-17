@@ -142,7 +142,7 @@ Owner of DHTMLgoodies.com
 		if(optionsAdded){
 			ajax_optionDiv.style.display='block';
 			if(ajax_optionDiv_iframe)ajax_optionDiv_iframe.style.display='';
-			ajax_options_rollOverActiveItem(ajax_list_optionDivFirstItem,true);
+			//ajax_options_rollOverActiveItem(ajax_list_optionDivFirstItem,true);
 		}
 
 	}
@@ -286,7 +286,7 @@ Owner of DHTMLgoodies.com
 
 		if(e.keyCode==13 || e.keyCode==9){	// Enter key or tab key
 			if(ajax_list_activeItem && ajax_list_activeItem.className=='optionDivSelected')ajax_option_setValue(false,ajax_list_activeItem);
-			if(e.keyCode==13)return false; else return true;
+			//if(e.keyCode==13)return false; else return true;
 		}
 		if(e.keyCode==27){	// Escape key
 			ajax_options_hide();
