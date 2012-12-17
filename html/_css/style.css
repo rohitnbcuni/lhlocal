@@ -1678,3 +1678,35 @@ border-width:5px;}
 .ui-multiselect.ui-widget span{
 	background:none;
 	}
+	
+	
+/* Big box with list of options */
+	#ajax_listOfOptions{
+		position:absolute;	/* Never change this one */
+		#width:225px;	/* Width of box */
+		#height:500px;	/* Height of box */
+		overflow:auto;	/* Scrolling features */
+		border:1px solid #358FCE;	/* Dark green border */
+		background-color:#FFF;	/* White background color */
+		text-align:left;
+		font-size:0.9em;
+		z-index:100;
+	}
+	#ajax_listOfOptions div{	/* General rule for both .optionDiv and .optionDivSelected */
+		margin:2px;		
+		padding:2px;
+		cursor:pointer;
+		font-size:12px;
+	}
+	#ajax_listOfOptions .optionDiv{	/* Div for each item in list */
+		
+	}
+	#ajax_listOfOptions .optionDivSelected{ /* Selected item in the list */
+		background-color:#358FCE;
+		color:#FFF;
+	}
+	#ajax_listOfOptions_iframe{
+		background-color:#F00;
+		position:absolute;
+		z-index:5;
+	}	
