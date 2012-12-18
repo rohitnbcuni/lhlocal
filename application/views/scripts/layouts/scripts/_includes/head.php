@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<?PHP	$randNum = "201211300609"; ?>
+<?PHP	$randNum = "201212140609"; ?>
 <title><?echo DEV_TEAM_NAME?>: Lighthouse</title>
 	<link rel="stylesheet" href="/_css/style.css?<?PHP echo $randNum; ?>" type="text/css" />
 	<link rel="stylesheet" href="/_css/ui.datepicker.css" type="text/css" />
@@ -28,6 +28,8 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 <!--[if IE]>
 <link rel="stylesheet" type="text/css" href="/_css/style_ie.css?<?PHP echo $randNum; ?>" />
 <![endif]-->
+<script type="text/javascript" src="/_js/autocomplete/ajax.js"></script>
+<script type="text/javascript" src="/_js/autocomplete/ajax-dynamic-list.js"></script>
 <script type="text/javascript" src="/_fckeditor/fckeditor.js"></script>
 <script src="/_js/jquery.pack.js" type="text/javascript"></script>
 <script src="/_js/lh_global.js" type="text/javascript"></script>
@@ -310,7 +312,7 @@ echo "<style>"
 }
 
 ?>
-	<script language="javascript">
+<script language="javascript">
 		var sBasePath = document.location.href;
 	</script>
 
