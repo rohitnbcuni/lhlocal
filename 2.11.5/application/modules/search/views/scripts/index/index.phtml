@@ -1,4 +1,7 @@
 <?PHP
+session_start();
+$_SESSION['idess']='';
+$_SESSION['id_quality']='';
 	/*
 	Base Zend index file loaded for the index.php file
 	*/
@@ -111,85 +114,312 @@ if(count($xml) > 0){
 $pageURL = BASE_URL;
 $search_text= str_replace('"', "", $this->search_text);
 $search_text= str_replace("'", "",$search_text);
-?>
+
 <div class="title_med2 workorders_filter">
 	<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE="" />
 	<?php if($result_found!=0){ ?>
-		<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label" title="<?php echo $search_text;?>"><?php echo $result_found;?> Search results for "<?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?>"</label><?php } else{?>
-		<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label">No result found</label>
+		<label style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" title="<?php echo $search_text;?>"><?php echo $result_found;?> Search results for "<?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?>"</label><?php } else{?>
+		<label  style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" >No result found</label>
 	<?php }?>
 </div>
-<div id='search_wrapper' class='search_wrapper'>
-	<div id='search_results_wrapper' class='search_results_wrapper' style='margin-top:20px;'>
-	<?php if ($result_found > 0){?> <div class='search_results_nav'>
-		<ul>
-		<li  <?php if($this->search_par[0]!='All'){echo "style='background-color:#FFFFFF; color: #358FCE;;'";} else {echo "class='active'";} ?>><a href='#'  <?php if($this->search_par[0]!='All'){echo " onclick='return false;'";}else{ echo ' onclick="load_all_search();"';};?>>All</a></li>
-		<li  class='active_defect' <?php if($this->search_par[0]=='Defect'){echo "style='background-color:#848484; color: #FFFFFF;'";} ?>><a href='#'  <?php if($this->search_par[0]=='WorkO'){echo " onclick='return false;'";}else{ echo ' onclick="load_defect_search();"';}; if($this->search_par[0]=='Defect'){echo "style='color: #FFFFFF;'";} ?> >Defects (<?php echo $count_qa;?>)</a></li>
-		<li class="active_wo"  <?php if($this->search_par[0]=='WorkO'){echo "style='background-color:#848484;'";} ?>><a href='#'  <?php if($this->search_par[0]=='Defect'){echo " onclick='return false;'";}else{ echo ' onclick="load_workorder_search();"';}; if($this->search_par[0]=='WorkO'){echo "style='color: #FFFFFF;'";} ?>>Work Orders(<?php echo $count_wo;?>)</a></li>
-		</ul>
-	</div><!-- END search_results_nav -->
-	<div class='search_results_content'>
-		<div id="wrapper">
-			<div id="paging_container7">
-				<ul class="content">
-					<?php   
-					for($i =0 ; $i<count($id); $i++){ 
-					if($cat[$i][0]=='quality'){$link = $pageURL.'/quality/index/edit/?defect_id=';$text='DEFECTS';}else{$link = $pageURL.'/workorders/index/edit/?wo_id=';$text='WORKORDERS'; }?>
-					<li> 
-						<div class='search_result'>
-						<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank" title="<?php echo $title[$i][0];?>"><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr(Util::escapewordquotes($title[$i][0]),0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
-						<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><?php echo $link.$id[$i][0]; ?></a></span>
-						<p class='defect_desc'><?php echo  ucfirst(substr(Util::escapewordquotes($desc[$i][0]),0,300));if(strlen($desc[$i][0])>300){echo '...';}?></p>
-						</div> <!-- END search_result -->
-					</li>
-					<?php } ?>
+ <div class="search_wrapper_parent">
+    <div class="search_select_radio">
+      <ul>
+        <li>
+          <input name="Select Options" type="radio" class="radiobutton_wo" id="radio" value="radio" <?php if($_POST['search_par'][0]=='WorkO'){echo  'checked="checked"';} ?>/>
+          <label class="radiobutton_wo_text" >Work Orders (<?php echo $count_wo;?>) </label>
+        </li>
+        <li>
+          <input name="Select Options" type="radio" class="radiobutton_qa" id="radio2" value="radio" <?php if($_POST['search_par'][0]=='Defect'){echo  'checked="checked"';} ?> />
+          <label class="radiobutton_qa_text">Defects (<?php echo $count_qa;?>) </label>
+        </li>
+      </ul>
+    <!--  <a href="#" class="generate_report" onclick="return generateWOReport();">Generate Report</a>-->
+	  <button style="float:right; margin-top: 12px;margin-right: 28px;" onclick="return generateWOReport();"><span>Generate Report</span></button>
+    </div> <!-- END search_select_radio -->
+  </div> <!-- END search_wrapper_parent -->
+  
+  <!--==| START: Bucket |==-->
+		<?php 
+		if($_POST['search_par'][0]=='All' || $_POST['search_par'][0]=='WorkO'){
+	    	$cnt = 5;
+			if($_SESSION['login_status'] == "client") {
+				echo '<input type="hidden" name="client_login" id="client_login" value="client" />';
+			} else {
+				echo '<input type="hidden" name="client_login" id="client_login" value="employee" />';
+			}
+			$status_active = ($_REQUEST['status'] == '1') ? 'selected' : '';
+			$status_archive = ($_REQUEST['status'] == '0') ? 'selected' : '';
+			$status_draft = ($_REQUEST['status'] == '-1') ? 'selected' : '';
+			echo '<!--=========== START: COLUMNS ===========-->
+				<!--==| START: Bucket |==-->
+
+				<div class="title_med workorders_filter">
+					<label for="client_filter" id="client_filter_label">Client</label>
+					<select id="client_filter" onchange="changeCompany();">
+						<option value="-1">Show All</option>
+					'.WoDisplay::getCompanyHTML().'
+					</select>
+					<label for="project_filter" id="project_filter_label">Project</label>
+					<select id="project_filter" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'2\');">
+						<option value="-1">Show All</option>
+					</select>
+					<label for="status_filter" id="status_filter_label">Status</label>
+					<select id="status_filter" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\');">
+						<option value="-1">Show All</option>
+						'.WoDisplay::getAllStatusOptionHTML().'
+						<option value="over_due">Over Due</option>
+						<option value="99">Open</option>
+					</select>
+					<label for="assigned_filter" id="assigned_filter_label">Assigned To</label>
+					<select id="assigned_filter" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'2\');">
+						<option value="-1">Show All</option>
+					</select>
+
+					<label for="project_status_filter" id="project_status_filter_label">Type</label>
+					<select id="project_status_filter" onchange="getWO_On_Status();">
+						<option value="1" '.$status_active.'>Active</option>
+						<option value="0" '.$status_archive.'>Archived</option>
+						<option value="-1" '.$status_draft.'>Draft</option>
+					</select>
+				</div>';
+				$wo_data_cookie = isset($_COOKIE["lighthouse_wo_data"])? $_COOKIE["lighthouse_wo_data"] : "";
+				$req_Type_Arr = Array();
+				$req_Type_Arr['Outage'] = ' selected="selected"';
+				$req_Type_Arr['Problem'] = ' selected="selected"';
+				$req_Type_Arr['Request'] = ' selected="selected"';
+
+				if(!empty($wo_data_cookie))
+				{
+
+					$wo_data_cookie_all = explode("~", @$wo_data_cookie);
+					$requestTypeFilter = $wo_data_cookie_all[4];
+					if(!empty($requestTypeFilter))
+					{
+						$req_Type_Arr = Array();
+						$requestTypeFilter_all = explode(",", @$requestTypeFilter);
+						for($u = 0; $u < sizeof($requestTypeFilter_all); $u++) {
+							if(!empty($requestTypeFilter_all[$u]))
+							{
+								$req_Type_Arr[$requestTypeFilter_all[$u]] = ' selected="selected"';
+							}
+						}
+					}
+				}
+				$end_date_default = date("m/d/Y");// current date;
+				$start_date_add_one_month = strtotime(date("m/d/Y", strtotime($end_date_default)) . "-1 month");
+				$start_date_default = date("m/d/Y", $start_date_add_one_month);
+        echo '
+				<INPUT TYPE="hidden" ID="start_date_hidden" VALUE="'.$start_date_default.'" />
+				<INPUT TYPE="hidden" ID="end_date_hidden" VALUE="'.$end_date_default.'" />
+				<INPUT TYPE="hidden" ID="search_hidden" VALUE="" />';
+
+				echo '<div class="title_med2 workorders_filter">
+				<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE"" />
+					<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label">Request Type</label>
+					<select id="control_7" name="control_7[]" multiple="multiple" size="5">
+						<option value=""></option>
+						<option value="Outage" '.$req_Type_Arr['Outage'].'>Outage</option>
+						<option value="Problem" '.$req_Type_Arr['Problem'].'>Problem</option>
+						<option value="Request" '.$req_Type_Arr['Request'].'>Request</option>
+				</select>';
+
+				echo '<div class="title_med workorders_filter" style="position: inherit;align:center;">
+				   <label style="padding-left:15px;" for="requestedby_filter" id="requestedby_filter_label">Request By</label>
+					<select id="requestedby_filter" style="width: 140px;" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'2\');">
+						<option value="-1">Show All</option>
+					</select>
+					 </div>
+		
+        </div>
+				<!--==| END: Bucket |==-->
+				
+				<!--==| START: Sorting |==-->
+				<ul class="project_filters workorders_sort">
+					<li class="id"><a href="#" class="down" id="idsort" onClick="sortWorkorders(\'id\'); return false;">id</a></li>
+					<li class="title"><a href="#" class="down" id="titlesort" onClick="sortWorkorders(\'title\'); return false;">title</a></li>
+					<li class="req_type"><a id="req_typesort" href="#" onClick="sortWorkorders(\'req_type\'); return false;">Request Type</a></li>
+			
+
+                                        <li class="status"><a id="statussort" href="#" onClick="sortWorkorders(\'status\'); return false;">status</a></li>
+					<li class="requested"><a id="requested_bysort" href="#" onClick="sortWorkorders(\'requested_by\'); return false;">requested by</a></li>
+					<li class="assigned"><a id="assigned_tosort" href="#" onClick="sortWorkorders(\'assigned_to\'); return false;">assigned to</a></li>
+					<li class="opendate"><a id="open_datesort" href="#" onClick="sortWorkorders(\'open_date\'); return false;">open date</a></li>
+					<li class="due_date"><a id="due_datesort" href="#" onClick="sortWorkorders(\'due_date\'); return false;">due date</a></li>
+					<li class="lastcommentby"><a id="lastcommentbysort" href="#" onClick="sortWorkorders(\'lastcommentby\'); return false;">last commented by</a></li>
+					<li class="commentdate"><a id="commentdatesort" href="#" onClick="sortWorkorders(\'commentdate\'); return false;">commented date</a></li>
 				</ul>
-			 <?php
-				$count_sum=$count_qa + $count_wo;	
-				 if($count_sum > 10 ){ ?>	
-			<div class="page_navigation"></div><?php } ?>	
-			</div>				
-			<div class="search_results_content_defect" style="display:none">
-				<div id="paging_container71">
-					<ul class="content">
-						<?php
 
+				<!--==| END: Sorting |==-->
 
-						for($i =0 ; $i<count($id); $i++){
-							if($cat[$i][0]=='quality'){
-							$link = $pageURL.'/quality/index/edit/?defect_id=';$text='DEFECTS';?>
-							<li> <div class='search_result'>
-							<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"  title="<?php echo $title[$i][0];?>"><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr(Util::escapewordquotes($title[$i][0]),0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
-							<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><?php echo $link.$id[$i][0]; ?></a></span>
-							<p class='defect_desc'><?php echo  ucfirst(substr(Util::escapewordquotes($desc[$i][0]),0,300));if(strlen($desc[$i][0])>300){echo '...';}?></p>
-							</div> <!-- END search_result --></li>
-							<?php } 
-						}?>
-					</ul>
-				 <?php if($count_qa>10){ ?>
-				<div class="page_navigation"></div><?php } ?>
+				<!--==| START: Work Orders |==-->';
+				$inStyle = '';
+				$ua = $_SERVER['HTTP_USER_AGENT'];
+				$checker = array(
+				  'iphone'=>preg_match('/iPhone|iPod|iPad/', $ua),
+				  'blackberry'=>preg_match('/BlackBerry/', $ua),
+				  'android'=>preg_match('/Android/', $ua),
+				);
+			
+				if ($checker['iphone'] || $checker['blackberry'] || $android['android']){
+				//	  $inlineStyle = "style='height:auto;overflow:hidden'";
+				 $inlineStyle = "style='background:none repeat scroll 0 0 #C9C9C9;clear:both;height:auto;overflow:hidden;padding: 0 3px 3px;position: relative;'";
+		
+						
+				}
+				echo '<input type="hidden" name="active_wo" id="active_wo" value="" />
+				<div id="wo_containter" class="workorders_container" '.$inlineStyle.'>';
+					
+					echo '<!-- Company Break -->
+				</div>
+				<!--==| END: Work Orders |==-->';
+	
+		for($i =0 ; $i<count($id); $i++){
+		//if($cat[$i][0]=='workorder'){
+		if($i<count($id)-1){
+		$idess.= $id[$i][0].',';
+		}else{
+		$idess.= $id[$i][0];
+		}}
+		
+		$_SESSION['idess'] = $idess;
+		}elseif($_POST['search_par'][0]=='Defect'){
+			if($_SESSION['login_status'] == "client") {
+				echo '<input type="hidden" name="client_login" id="client_login" value="client" />';
+			} else {
+				echo '<input type="hidden" name="client_login" id="client_login" value="employee" />';
+			}
+			echo '<!--=========== START: COLUMNS ===========-->
+		
+
+				<!--==| START: Bucket |==-->
+
+				<div class="title_med workorders_filter">
+					<label for="client_filter" id="client_filter_label">Client</label>
+					<select id="client_filter" style="width:115px" onchange="changeCompany();">
+						<option value="-1">Show All</option>
+					'.QaDisplay::getCompanyHTML().'
+					</select>
+					<label for="project_filter" id="project_filter_label">Project</label>
+					<select id="project_filter" >
+						<option value="-1">Show All</option>
+					</select>
+
+					<label for="status_filter" id="status_filter_label">Status</label>
+					<select id="status_filter" >
+						<option value="-1">Show All</option>
+						<option value="99">Not Closed</option>
+						'.QaDisplay::getAllStatusOptionHTML().'
+					</select>
+					<label for="project_severity_filter" id="project_status_filter_label">Severity</label>
+					<select id="severity_filter" > 
+						<option value="-1">Show All</option>
+						'.QaDisplay::getcustomDropDown("QA_SEVERITY").'
+					</select>
+					<label for="assigned_filter" id="assigned_filter_label">Assigned To</label>
+					<select id="assigned_filter"  style="width:100px;">
+						<option value="-1">Show All</option>
+					</select>
+					
+					<a href="javascript:void(null);" onclick="qulaityFilterJson();"><img src="../_images/quality_refresh.png" alt="refresh" title="refresh" style="vertical-align:middle;margin-top:9px;" /></a>
+
+				</div>
+
+				<!--==| END: Bucket |==-->
+				
+				<!--==| START: Sorting |==-->
+				<ul class="project_filters quality_sort" id="quality_sort" style="padding-left:8px; width:952px;">
+					<li class="id"><a href="#" class="down" id="idsort" onClick="sortQuality(\'id\'); return false;">Defect ID</a></li>
+					<li class="title"><a href="#" id="titlesort" onClick="sortQuality(\'title\'); return false;">title</a></li>
+					<li class="severity"><a id="severitysort" href="#" onClick="sortQuality(\'severity\'); return false;">severity</a></li>
+					<li class="status"><a id="statussort" href="#" onClick="sortQuality(\'status\'); return false;">status</a></li>
+					<li class="category"><a id="categorysort" href="#" onClick="sortQuality(\'category\'); return false;">category</a></li>
+					<li class="version"><a id="versionsort" href="#" onClick="sortQuality(\'version\'); return false;">version</a></li>
+					<li class="opendate"><a id="open_datesort" href="#" onClick="sortQuality(\'open_date\'); return false;">open date</a></li>
+					<li class="assigned"><a id="assigned_tosort" href="#" onClick="sortQuality(\'assigned_to\'); return false;">assigned to</a></li>
+					<li class="detected_by"><a id="detected_bysort" href="#" onClick="sortQuality(\'detected_by\'); return false;">detected by</a></li>
+					<li class="last_action"><a id="last_actionsort" href="#" onClick="sortQuality(\'last_action\'); return false;">Last Action</a></li>
+				</ul>
+
+				<!--==| END: Sorting |==-->
+
+				<!--==| START: Work Orders |==-->
+				<input type="hidden" name="active_wo" id="active_wo" value="" />
+				<div id="wo_containter" class="workorders_container">';
+					
+					echo '<!-- Company Break -->
+				</div>
+				<!--==| END: Work Orders |==-->
+			<!--=========== END: COLUMNS ===========-->
+			<div class="message_archive">
+				<p>
+					You are about to archive this work order. <br /> you want to continue?
+				</p>
+				<input type="hidden" name="archive_project_confirm" id="archive_project_confirm" value="" />
+				
+				<div style="clear: both;"></div>
+				
+				<div class="duplicate_buttons">
+					<button onClick="archiveWo(document.getElementById(\'active_wo\').value); return false;"><span>Yes</span></button> 
+					<button class="cancel" onClick="$(\'.message_archive\').css({display:\'none\'}); return false;"><span>No</span></button>
+					<div style="clear: both;"></div>
 				</div>
 			</div>
-			<div class="search_results_content_wo" style="display:none" >
-				<div id="paging_container72">
-					<ul class="content">
-					<?php
-					for($i =0 ; $i<count($id); $i++){
-						if($cat[$i][0]=='workorder'){$link = $pageURL.'/workorders/index/edit/?wo_id=';$text='WORKORDERS'; ?>
-						<li> <div class='search_result'>
-						<h2><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank" title="<?php echo $title[$i][0];?>" ><span class='search_txt'  style="color: #358FCE;"><?php echo ucfirst(substr(Util::escapewordquotes($title[$i][0]),0,70));if(strlen($title[$i][0])>70){echo '...';}?></a></span></h2>
-						<span class='defect_url'><span class='defect_txt'><?php echo $text; ?></span><a href='<?php echo $link.$id[$i][0]; ?>' target="_blank"><?php echo $link.$id[$i][0]; ?></a></span>
-						<p class='defect_desc'><?php echo  ucfirst(substr(Util::escapewordquotes($desc[$i][0]),0,300));if(strlen($desc[$i][0])>300){echo '...';}?></p>
-						</div> <!-- END search_result --></li>
-						<?php }
-					} ?>
-					</ul> 
-					 <?php if($count_wo>10){ ?>
-					<div class="page_navigation"></div><?php } ?>
-				</div>
+
+
+			<div style="display: none;" id="wo_dimmer_ajax" class="wo_save_box">
+				<img alt="ajax-loader" src="/_images/ajax-loader.gif"/>
 			</div>
 
-		</div>
-	</div><!-- END search_results_content -->
-	<?php } ?>
-	</div> <!-- END search_results_wrapper -->
+			<div class="message_archive_select_check">
+				<p>
+					You need to select the work order to Archive/un-archive. <br />
+				</p>
+				<input type="hidden" name="archive_project_confirm" id="archive_project_confirm" value="" />
+				
+				<div style="clear: both;"></div>
+				
+				<div class="duplicate_buttons">
+					<button class="cancel" onClick="$(\'.message_archive_select_check\').css({display:\'none\'}); return false;"><span>Cancel</span></button>
+					<div style="clear: both;"></div>
+				</div>
+			</div>		
+
+			<div class="message_unarchive">
+				<p>
+					You are about to un-archive this work order. <br /> you want to continue?
+				</p>
+				<input type="hidden" name="unarchive_project_confirm" id="unarchive_project_confirm" value="" />
+				
+				<div style="clear: both;"></div>
+				
+				<div class="duplicate_buttons">
+					<button onClick="unarchiveWo(document.getElementById(\'active_wo\').value); return false;"><span>Yes</span></button> 
+					<button class="cancel" onClick="$(\'.message_unarchive\').css({display:\'none\'}); return false;"><span>No</span></button>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+			<div style="display: none;" id="wo_dimmer_ajax" class="wo_save_box">
+				<img alt="ajax-loader" src="/_images/ajax-loader.gif"/>
+			</div>';
+	} 
+		
+		else{
+		print "<br/><br/><strong>Please try the following</strong><br/><br/>";
+		
+		print "* Check your Spelling<br/>";
+		print "* Try more general words<br/>";
+		print "* Try using scronyms or using different words<br/>";
+		print "* Try using fewer words your search me too specific<br/>";
+		}
+		for($i =0 ; $i<count($id); $i++){
+		//if($cat[$i][0]=='quality'){
+		if($i<count($id)-1){
+		$id_quality.= $id[$i][0].',';
+		}else{
+		$id_quality.= $id[$i][0];
+		}}//}		
+		$_SESSION['id_quality'] = $id_quality;
+
+
+?>
