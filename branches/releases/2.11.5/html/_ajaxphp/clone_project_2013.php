@@ -9,7 +9,7 @@
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, 'lhdev_live2' , DB_PORT);	
 	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	//global $mysql;
-	$project_all = "SELECT * FROM `projects` WHERE `archived` = '0' AND `active` = '1' AND `deleted` = '0' AND year='2012' AND company IN ('2','4','5','64','261','271')";
+	$project_all = "SELECT * FROM `projects` WHERE   YEAR = '2012'";
 	$project_list = $mysql->query($project_all) or die($mysql->error);
 	
 	$current_year = '2013';//'2010';//date("Y");
