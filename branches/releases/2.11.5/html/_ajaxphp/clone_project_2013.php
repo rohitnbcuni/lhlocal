@@ -146,16 +146,16 @@
 					
 			
 			//End qa_project_version
-			$qa_project_version = "UPDATE `qa_project_version` SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' AND `active` = '1' AND `deleted` = '0'";
+			$qa_project_version = "UPDATE `qa_project_version` SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' ";
 			$mysql->query($qa_project_version) or writeLog($mysql,$qa_project_version);
 			//End qa_project_version
 			//End qa_project_iteration
-			$qa_project_iteration = "UPDATE `qa_project_iteration` SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' AND `active` = '1' AND `deleted` = '0'";
-			$mysql->query($qa_project_version) or writeLog($mysql,$qa_project_iteration);
+			$qa_project_iteration = "UPDATE `qa_project_iteration` SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' ";
+			$mysql->query($qa_project_iteration) or writeLog($mysql,$qa_project_iteration);
 			//End qa_project_iteration
 			//End qa_project_product
-			$qa_project_product = "UPDATE `qa_project_product` SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' AND `active` = '1' AND `deleted` = '0'";
-			$mysql->query($qa_project_version) or writeLog($mysql,$qa_project_product);
+			$qa_project_product = "UPDATE `qa_project_product` SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' ";
+			$mysql->query($qa_project_product) or writeLog($mysql,$qa_project_product);
 			//End qa_project_product
 			
 			$resource_blocks = "UPDATE `resource_blocks` SET `projectid`='".$newProjectID."' WHERE `projectid` = '".$clone_project_id."' AND YEAR(`datestamp`) =  '$current_year'";
