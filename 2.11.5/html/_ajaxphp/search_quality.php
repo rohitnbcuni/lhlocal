@@ -155,7 +155,7 @@ if($project_result->num_rows > 0) {
     $postingList[$i]['client'] = $project_row['company'];
     $postingList[$i]['quality'] = Array();
 
-    $select_project_workorders = "SELECT * FROM `qa_defects` WHERE `project_id`='" .$project_row['id'] ."' ".$archive_sql." AND `id` IN (".$_SESSION['id_quality'].")  ORDER BY `title` ";
+   echo $select_project_workorders = "SELECT * FROM `qa_defects` WHERE `project_id`='" .$project_row['id'] ."' AND `id` IN (".$_SESSION['id_quality'].")  ORDER BY `title` ";
 
     $project_workorders_result = $mysql->sqlordie($select_project_workorders);
 
