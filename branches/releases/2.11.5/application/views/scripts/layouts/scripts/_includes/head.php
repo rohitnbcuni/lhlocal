@@ -279,11 +279,9 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 			   echo "\t<script src=\"/_js/jqueryMultiSelect.js\" type=\"text/javascript\"></script>\n"
 						."\t<script src=\"/_js/jquery-ui-1.8.19.custom.min.js\" type=\"text/javascript\"></script>"
 						. "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
-				if($_POST['search_par'][0]=='WorkO'){
-				echo "<script src=\"/_js/search_filter.js\"></script>";} 
+				echo "<script src=\"/_js/search_filter.js\"></script>"; 
 			    echo "<link rel=\"stylesheet\" href=\"/_css/search_style.css?". $randNum. "\" type=\"text/css\" />";
-				if($_POST['search_par'][0]=='Defect'){
-				echo "<script src=\"/_js/search_quality_filter.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";}
+				echo "<script src=\"/_js/search_quality_filter.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
 			break;
 			}
 		}
