@@ -26,7 +26,11 @@ if(array_key_exists("report", $_GET)){
 $archive_sql = " AND b.`archived`='0' and b.`active`='1'";
 $project_archive = " AND b.`archived`='0'";
 $pjt_sql = " JOIN `projects` a ON a.`id`=b.`project_id`";
-if('1' == $_GET['status']){         // for active workorders
+if('2' == $_GET['status']){ //All wo
+	$archive_sql = "";
+	$project_archive = "";
+	
+}else if('1' == $_GET['status']){         // for active workorders
 	$archive_sql = " AND b.`archived`='0' and b.`active`='1'";
 	$project_archive = " AND b.`archived`='0'";
 }else if('0' == $_GET['status']){   // for archieved workorders
