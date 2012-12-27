@@ -93,7 +93,7 @@ $search_text= str_replace("'", "",$search_text);
 </div>
  <div class="search_wrapper_parent">
     <div class="search_select_radio">
-      <ul>
+     <?php if($result_found!=0){ ?> <ul>
         <li>
           <input name="Select Options" type="radio" class="radiobutton_wo" id="radio" value="radio" <?php if($_POST['search_par'][0]=='WorkO' || $_POST['search_par'][0]=='All'){print  'checked="checked"'.'onclick="load_wo_search();"';}else{print  'disabled="disabled"';} ?>/>
           <label class="radiobutton_wo_text" >Work Orders (<?php echo $count_wo;?>) </label>
@@ -107,9 +107,10 @@ $search_text= str_replace("'", "",$search_text);
 	  <button style="float:right; margin-top: 12px;margin-right: 28px;" id="WO_report" class="WO_report" onclick="return generateWOReport();"><span>Generate Report</span></button>
 	  <button style="float:right; margin-top: 12px;margin-right: 28px;display:none;" id="QA_report" class="QA_report" onclick="return generateQAReport();"><span>Generate Report</span></button>
 	   <?php } else {?><button style="float:right; margin-top: 12px;margin-right: 28px;" id="QA_report" class="QA_report" onclick="return generateQAReport();"><span>Generate Report</span></button><?php } ?>
-    </div> <!-- END search_select_radio -->
+    <?php } ?></div> <!-- END search_select_radio -->
   </div> <!-- END search_wrapper_parent -->
-  <div id="wo_container" class="wo_container" <?php if($_POST['search_par'][0]=='Defect'){print 'style="display:none;"';}?>>
+<?php if($result_found!=0){ ?> 
+ <div id="wo_container" class="wo_container" <?php if($_POST['search_par'][0]=='Defect'){print 'style="display:none;"';}?>>
   <!--==| START: Bucket |==-->
 		<?php 
 		$cnt = 5;
@@ -317,16 +318,15 @@ $search_text= str_replace("'", "",$search_text);
 			</div>
 
 			';
-	/*} 
+	} 
 		
 		else{
-		print "<br/><br/><strong>Please try the following</strong><br/><br/>";
+		print "<br/><br/><div style='font-size: 14px; color: #000000;margin-left: 15px;font-family: Verdana;'><strong>Please try the following</strong></div><br/><br/><div style='font-size: 13px; color: #000000;margin-left: 20px;font-family: Verdana;'>";
 		
 		print "* Check your Spelling<br/>";
 		print "* Try more general words<br/>";
 		print "* Try using scronyms or using different words<br/>";
-		print "* Try using fewer words your search me too specific<br/>";
-		}*/
+		print "* Try using fewer words your search me too specific</div>";}
 	
 
 ?>
