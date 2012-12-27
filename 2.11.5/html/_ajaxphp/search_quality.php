@@ -78,7 +78,7 @@ if(array_key_exists("report", $_GET)){
 
 
 $project_query = "SELECT DISTINCT a.`id`, a.`project_name`, a.`project_code`, a.`company` FROM `projects` a, `qa_defects` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND a.qa_permission ='1' AND c.`user_id`='" .$_SESSION['user_id'] ."'  ".$CLIENT_SQL." AND b.`id` IN (".$_SESSION['id_quality'].")  ORDER BY a.`company`, a.`project_name` ASC";
-//echo "qry".$project_query;
+//echo "qry".$project_query.'<br>';
 $project_result = $mysql->sqlordie($project_query);
 $project_result->num_rows;
 $i=0;
@@ -124,7 +124,7 @@ if($project_result->num_rows > 0) {
 			}else
 			{
 				 $qa_last_audit_array[$qa_last_action_row['defect_id']] = "Updated : ".timeElapse($qa_last_action_row['log_date'])." ago";
-			}		
+			}
 		}
 	}
 
@@ -146,7 +146,7 @@ if($project_result->num_rows > 0) {
   }
 
   while($project_row = $project_result->fetch_assoc()) {
-    	
+
     $postingList[$i] = Array();
     $postingList[$i]['project_name'] = $project_row['project_name'];
     $postingList[$i]['project_code'] = $project_row['project_code'];
@@ -154,16 +154,16 @@ if($project_result->num_rows > 0) {
     $postingList[$i]['company_name'] = $companyListArr[$project_row['company']];
     $postingList[$i]['client'] = $project_row['company'];
     $postingList[$i]['quality'] = Array();
-    
+
     $select_project_workorders = "SELECT * FROM `qa_defects` WHERE `project_id`='" .$project_row['id'] ."' ".$archive_sql." AND ".$WHERE_SQL." ORDER BY `title` ";
 
     $project_workorders_result = $mysql->sqlordie($select_project_workorders);
-    	
+
     if($project_workorders_result->num_rows > 0) {
       while($quality = $project_workorders_result->fetch_assoc()) {
 
 
-		  
+
          if(!array_key_exists($quality['version'], $qa_project_version)){
 	          $select_qa_version = "SELECT * FROM `qa_project_version` WHERE `id`= ? ";
 			  $version_result = $mysql->sqlprepare($select_qa_version,array($quality['version']));
@@ -176,7 +176,7 @@ if($project_result->num_rows > 0) {
         }
 			  if(!empty($version_row['version_name']))
 			  {
-			  
+
 		          $qa_project_version[$quality['version_break']] = htmlentities(substr($version_row['version_name'], 0, 10).$elipsee,ENT_QUOTES,'UTF-8');
 				  $qa_project_version[$quality['version']] = $version_row['version_name'];
 			  }
@@ -186,7 +186,7 @@ if($project_result->num_rows > 0) {
 	          $select_qa_version = "SELECT * FROM `qa_project_iteration` WHERE `id`= ? ";
 			  $version_result = $mysql->sqlprepare($select_qa_version,array($quality['iteration']));
 			  $version_row = $version_result->fetch_assoc();
-			  
+
 			  $userName = '';
 			  if(!empty($version_row['iteration_name']))
 			  {
@@ -241,16 +241,16 @@ if($project_result->num_rows > 0) {
         $overdue_flag = '0';
         $date_offset = array("0" => "4", "1" => "4", "2" => "4", "3" => "6", "4" => "6", "5" => "6", "6" => "5");
         $current_timestamp = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
-		// New-1, In Progress-2, Fixed - 3 , Rejected - 4,  Reopened - 5, Need More Info - 6 ,  Hold - 7 , Closed - 8, Feedback Provided - 10        	
+		// New-1, In Progress-2, Fixed - 3 , Rejected - 4,  Reopened - 5, Need More Info - 6 ,  Hold - 7 , Closed - 8, Feedback Provided - 10
         if($quality['status'] == 1 || $quality['status'] == 5 ) {
           $dlClass = 'new';
         } else if($quality['status'] == 3 || $quality['status'] == 8) {
 			  $dlClass = 'complete';
-        } else if($quality['status'] == 4) { 
+        } else if($quality['status'] == 4) {
 			 $dlClass = 'alert';
              //$overdue_flag = '1';
         }
-		else if($quality['status'] == 7) { 
+		else if($quality['status'] == 7) {
 			 $dlClass = 'onhold';
         }
 		else
@@ -260,7 +260,7 @@ if($project_result->num_rows > 0) {
 		$requested_by=$wo_user_list[$quality['requested_by']];
         $detectedby = $wo_user_list[$quality['detected_by']];
         $assigned = $wo_user_list[$quality['assigned_to']];
-        	
+
         if(strlen($quality['title']) > 40) {
           $elipse = "...";
         } else {
@@ -330,15 +330,15 @@ if($project_result->num_rows > 0) {
 		  $select_qa_browser = "SELECT * FROM `lnk_custom_fields_value` WHERE `field_id`= ? ";
           $assigned_result = $mysql->sqlprepare($select_qa_browser,array($quality['browser']));
           $assigned_row_qa_browser = $assigned_result->fetch_assoc();
-          
+
           $select_qa_os = "SELECT * FROM `lnk_custom_fields_value` WHERE `field_id`= ? ";
           $assigned_result_os = $mysql->sqlprepare($select_qa_os,array($quality['os']));
           $assigned_row_qa_os = $assigned_result_os->fetch_assoc();
-          
+
            $select_qa_origin = "SELECT * FROM `lnk_custom_fields_value` WHERE `field_id`= ? ";
           $assigned_result_origin = $mysql->sqlprepare($select_qa_origin,array($quality['origin']));
           $assigned_row_qa_origin = $assigned_result_origin->fetch_assoc();
-		 
+
       array_push($postingList[$i]['quality'],Array('id' => $quality['id'], 'title' => htmlentities(substr($quality['title'], 0, 37).$elipse,ENT_QUOTES,'UTF-8'), 'full_title' => htmlentities($quality['title'],ENT_QUOTES,'UTF-8'), 'status' => $wo_status_array[$quality['status']],'severity' => $custom_feild_arr['QA_SEVERITY'][$quality['severity']],'severity_id' => $quality['severity'],'category' => $custom_feild_arr['QA_CATEGORY'][$quality['category']],'version' => $qa_project_version[$quality['version']],'version_break' => $qa_project_version[$quality['version_break']], 'detected_by' => $detectedby, 'assigned_to' => $assigned,'assigned_to_id' => $quality['assigned_to'],'creation_date' => $quality['creation_date'] ,'open_date' => format_date($quality['creation_date']), 'assigned_date' => format_date($quality['assigned_date']), 'completed' => format_date($quality['completed_date']),'launch_date' => format_date($quality['launch_date']), 'class' => $dlClass, 'overdue_flag' => $overdue_flag,'wo_last_comment'=>nl2br(htmlentities($wo_last_comment,ENT_QUOTES,'UTF-8')),'wo_last_comment_user_id'=>$wo_last_comment_user_id,'wo_last_comment_user'=>$wo_last_comment_user ,'last_log_date'=>$log_date_val,'wo_last_comment_date'=>format_date($wo_last_comment_date),'qa_last_action'=>$qa_last_action ,'qa_requested_by'=>$requested_by, 'example_url'=>$quality['example_url'], 'body'=>preg_replace("/\s+/",' ',preg_replace("/[\r\n]+/", "\n",$quality['body'])),'active'=>$active,'deleted'=>$deleted,'archived'=>$archived,'closed_date'=> $closed_date,'browser'=>$assigned_row_qa_browser['field_name'],'os'=>$assigned_row_qa_os['field_name'],'origin'=>$assigned_row_qa_origin['field_name'],'iteration' =>$qa_project_iteration[$quality['iteration']],'product' =>$qa_project_product[$quality['product']] ));
       }
     }
@@ -367,7 +367,7 @@ function timeElapse($log_date)
 		$lapseTxt = "";
 		if($min>='60')
 		{
-			$hrs = $min/60;			
+			$hrs = $min/60;
 		}
 
 		if($hrs>='24')
@@ -384,7 +384,7 @@ function timeElapse($log_date)
 if(isset($from_action) && $from_action){
   //		return $postingList;
 }else if($type == 'excel'){
-   
+
   $header = "Id\t Project\t Company\t Title\t  Category\t Example Url\t Description\t Status\t Severity\t Version\t Browser\t OS\t Origin\t Iteration\t Product\t  Requested By\t Detected By\t Assigned To\t Open Date\t Assigned Date\t Completed Date\t Closed Date\t Last Action\t Active\t Deleted\t Archived\n";
   $excel_body = '';
 
@@ -400,7 +400,7 @@ if(isset($from_action) && $from_action){
     //if(($clientId < 0 || $clientId == $project['client']) && ($projectId < 0 || $projectId == $project['project_id'])){
       foreach($project['quality'] as $wo){
         // if(($statusId < 0 || ($statusId == 99 && $wo['status'] != 'Closed') || $statusId == $wo['status']) && ($assignedTo < 0 || $assignedTo == $wo['assigned_to_id']) && ($rp_severity_filter < 0 || $rp_severity_filter == $wo['severity'])){
-		
+
          $excel_body .=  $wo['id'] . "\t " .
           $project['project_code'] . " : " . $project['project_name'] . "\t " .
           $project['company_name'] . "\t " .
@@ -438,7 +438,7 @@ if(isset($from_action) && $from_action){
 	header("Content-Type: application/force-download");
 	header("Content-Type: application/octet-stream");
 	header("Content-Type: application/download");
-	header("Content-Disposition: attachment;filename=qa_report.xls"); 
+	header("Content-Disposition: attachment;filename=qa_report.xls");
 	header("Content-Transfer-Encoding: binary ");
 	echo $header;
 	echo $excel_body;
@@ -451,7 +451,7 @@ if(isset($from_action) && $from_action){
   $isXmlHttpRequest = (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) ?
   (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') ? true : false: false;
   ($isXmlHttpRequest) ? header('Content-type: application/json') : header('Content-type: text/plain');
-  	
+
   echo $jsonSettings;
 }
 
@@ -462,7 +462,7 @@ function getQualityStatus($name,$mysql){
   	if($status_result->num_rows > 0){
     	$status_row = $status_result->fetch_assoc();
       	return $status_row['id'];
-    
+
   }
 }
 ?>
