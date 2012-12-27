@@ -88,11 +88,16 @@ if(count($xml) > 0){
 						$cat[] =  $eVal->str[5];
 						/* $comment[] =  (array) $comments ;*/
 						if( $eVal->str[5]=='quality'){
-						$count_qa=$i++;}
-						else{$count_wo=$wo++; }
-
+						$count_qa=$i++;
+						if($count_qa==1){
+						$id_quality.=$eVal->long[0];
+						}else{$id_quality.=','.$eVal->long[0];}
 						}
-
+						else{$count_wo=$wo++;
+						if($count_wo==1){
+						$idess.=$eVal->long[0];
+						}else{$idess.=','.$eVal->long[0];}}
+						}
 					}
 				}
 
@@ -101,6 +106,9 @@ if(count($xml) > 0){
 
 	}
 }
+$_SESSION['idess'] = $idess;
+$_SESSION['id_quality'] = $id_quality;
+
 
 $pageURL = BASE_URL;
 $search_text= str_replace('"', "", $this->search_text);
@@ -268,15 +276,7 @@ $search_text= str_replace("'", "",$search_text);
 			</div>
 				<!--==| END: Work Orders |==--></div>';
 	
-		for($i =0 ; $i<count($id); $i++){
-		//if($cat[$i][0]=='workorder'){
-		if($i<count($id)-1){
-		$idess.= $id[$i][0].',';
-		}else{
-		$idess.= $id[$i][0];
-		}}
 		
-		$_SESSION['idess'] = $idess;
 		
 			?><div id="qa_container" class="qa_container" <?php if($_POST['search_par'][0]=='WorkO' || $_POST['search_par'][0]=='All' ){print 'style="display:none;"';}?>><!--=========== START: COLUMNS ===========-->
 		
@@ -355,14 +355,6 @@ $search_text= str_replace("'", "",$search_text);
 		print "* Try using scronyms or using different words<br/>";
 		print "* Try using fewer words your search me too specific<br/>";
 		}*/
-		for($i =0 ; $i<count($id); $i++){
-		//if($cat[$i][0]=='quality'){
-		if($i<count($id)-1){
-		$id_quality.= $id[$i][0].',';
-		}else{
-		$id_quality.= $id[$i][0];
-		}}//}		
-		$_SESSION['id_quality'] = $id_quality;
-
+	
 
 ?>
