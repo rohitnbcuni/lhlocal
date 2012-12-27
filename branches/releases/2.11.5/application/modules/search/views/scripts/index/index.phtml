@@ -18,46 +18,16 @@ margin-right:-3px;}
 <![endif]-->
 
 <script type="text/javascript">
-function load_all_search(){
-$('#paging_container7').css({display:'block'});
-$('.search_results_content_defect').css({display:'none'});
-$('.search_results_content_wo').css({display:'none'});
-$("li.active_defect").css("background-color","#FFFFFF");
-$("li.active_wo").css("background-color","#FFFFFF");
-$("li.active").css("background-color","#848484");
-$("li.active_defect a").css("color","#358FCE");
-$("li.active a").css("color","#FFFFFF");
-$("li.active_wo a").css("color","#358FCE");
-}
-function load_defect_search(){
-$('#paging_container7').css({display:'none'});
-$('.search_results_content_defect').css({display:'block'});
-$('.search_results_content_wo').css({display:'none'});
-$("li.active_defect").css("background-color","#848484");
-$("li.active_wo").css("background-color","#FFFFFF");
-$("li.active").css("background-color","#FFFFFF");
-$("li.active_defect a").css("color","#FFFFFF");
-$("li.active a").css("color","#358FCE");
-$("li.active_wo a").css("color","#358FCE");
-}
-function load_workorder_search(){
-$('#paging_container7').css({display:'none'});
-$('.search_results_content_defect').css({display:'none'});
-$('.search_results_content_wo').css({display:'block'});
-$("li.active_defect").css("background-color","#FFFFFF");
-$("li.active_wo").css("background-color","#848484");
-$("li.active").css("background-color","#FFFFFF");
-$("li.active_wo a").css("color","#FFFFFF");
-$("li.active_defect a").css("color","#358FCE");
-$("li.active a").css("color","#358FCE");
-
-}
 function load_defect_search(){
 $('#wo_container').css({display:'none'});
+$('#WO_report').css({display:'none'});
+$('#QA_report').css({display:'block'});
 $('#qa_container').css({display:'block'});
 }
 function load_wo_search(){
 $('#wo_container').css({display:'block'});
+$('#WO_report').css({display:'block'});
+$('#QA_report').css({display:'none'});
 $('#qa_container').css({display:'none'});
 }
 </script>
@@ -118,12 +88,12 @@ $search_text= str_replace("'", "",$search_text);
 	<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE="" />
 	<?php if($result_found!=0){ ?>
 		<label style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" title="<?php echo $search_text;?>"><?php echo $result_found;?> Search results for "<?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?>"</label><?php } else{?>
-		<label  style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" >No result found</label>
+		<label  style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" >No result for <?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?> </label>
 	<?php }?>
 </div>
  <div class="search_wrapper_parent">
     <div class="search_select_radio">
-      <?php if($result_found!=0){ ?> <ul>
+      <ul>
         <li>
           <input name="Select Options" type="radio" class="radiobutton_wo" id="radio" value="radio" <?php if($_POST['search_par'][0]=='WorkO' || $_POST['search_par'][0]=='All'){print  'checked="checked"'.'onclick="load_wo_search();"';}else{print  'disabled="disabled"';} ?>/>
           <label class="radiobutton_wo_text" >Work Orders (<?php echo $count_wo;?>) </label>
@@ -133,12 +103,13 @@ $search_text= str_replace("'", "",$search_text);
           <label class="radiobutton_qa_text">Defects (<?php echo $count_qa;?>) </label>
         </li>
       </ul>
-    <!--  <a href="#" class="generate_report" onclick="return generateWOReport();">Generate Report</a>-->
-	  <button style="float:right; margin-top: 12px;margin-right: 28px;" onclick="return generateWOReport();"><span>Generate Report</span></button>
- <?php } ?>   </div> <!-- END search_select_radio -->
+    <?php if($_POST['search_par'][0]=='WorkO' || $_POST['search_par'][0]=='All'){?>
+	  <button style="float:right; margin-top: 12px;margin-right: 28px;" id="WO_report" class="WO_report" onclick="return generateWOReport();"><span>Generate Report</span></button>
+	  <button style="float:right; margin-top: 12px;margin-right: 28px;display:none;" id="QA_report" class="QA_report" onclick="return generateQAReport();"><span>Generate Report</span></button>
+	   <?php } else {?><button style="float:right; margin-top: 12px;margin-right: 28px;" id="QA_report" class="QA_report" onclick="return generateQAReport();"><span>Generate Report</span></button><?php } ?>
+    </div> <!-- END search_select_radio -->
   </div> <!-- END search_wrapper_parent -->
-   <?php if($result_found!=0){ ?>
-	<div id="wo_container" class="wo_container" <?php if($_POST['search_par'][0]=='Defect'){print 'style="display:none;"';}?>>
+  <div id="wo_container" class="wo_container" <?php if($_POST['search_par'][0]=='Defect'){print 'style="display:none;"';}?>>
   <!--==| START: Bucket |==-->
 		<?php 
 		$cnt = 5;
@@ -346,16 +317,16 @@ $search_text= str_replace("'", "",$search_text);
 			</div>
 
 			';
-	} 
+	/*} 
 		
 		else{
-		print "<br/><br/><div style='font-size: 14px; color: #000000;margin-left: 15px;font-family: Verdana;'><strong>Please try the following</strong></div><br/><br/><div style='font-size: 13px; color: #000000;margin-left: 20px;font-family: Verdana;'>";
+		print "<br/><br/><strong>Please try the following</strong><br/><br/>";
 		
 		print "* Check your Spelling<br/>";
 		print "* Try more general words<br/>";
 		print "* Try using scronyms or using different words<br/>";
-		print "* Try using fewer words your search me too specific</div>";
-		}
+		print "* Try using fewer words your search me too specific<br/>";
+		}*/
 	
 
 ?>
