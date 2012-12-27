@@ -77,7 +77,7 @@ if(array_key_exists("report", $_GET)){
 }
 
 
-$project_query = "SELECT DISTINCT a.`id`, a.`project_name`, a.`project_code`, a.`company` FROM `projects` a, `qa_defects` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND a.qa_permission ='1' AND c.`user_id`='" .$_SESSION['user_id'] ."'  ".$CLIENT_SQL." AND b.`id` IN (".$_SESSION['id_quality'].")  ORDER BY a.`company`, a.`project_name` ASC";
+$project_query = "SELECT DISTINCT a.`id`, a.`project_name`, a.`project_code`, a.`company` FROM `projects` a, `qa_defects` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND a.qa_permission ='1' AND c.`user_id`='" .$_SESSION['user_id'] ."'  ".$CLIENT_SQL." ORDER BY a.`company`, a.`project_name` ASC";
 //echo "qry".$project_query.'<br>';
 $project_result = $mysql->sqlordie($project_query);
 $project_result->num_rows;
@@ -155,7 +155,7 @@ if($project_result->num_rows > 0) {
     $postingList[$i]['client'] = $project_row['company'];
     $postingList[$i]['quality'] = Array();
 
-    $select_project_workorders = "SELECT * FROM `qa_defects` WHERE `project_id`='" .$project_row['id'] ."' ".$archive_sql." AND ".$WHERE_SQL." ORDER BY `title` ";
+    $select_project_workorders = "SELECT * FROM `qa_defects` WHERE `project_id`='" .$project_row['id'] ."' ".$archive_sql." AND ".$WHERE_SQL."  AND `id` IN (".$_SESSION['id_quality'].")  ORDER BY `title` ";
 
     $project_workorders_result = $mysql->sqlordie($select_project_workorders);
 
