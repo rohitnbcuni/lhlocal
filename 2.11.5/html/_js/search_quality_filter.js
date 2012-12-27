@@ -847,7 +847,7 @@ function sortById(a, b) {
 	return ((x < y) ? -1 : ((x > y) ? 1 : 0));
 }
 
-function generateWOReport(){
+function generateQAReport(){
 	var typeFilter = '1';
 	var rp_client_filter =  $("#client_filter").val();
 	var rp_project_filter =  $("#qa_project_filter").val();
