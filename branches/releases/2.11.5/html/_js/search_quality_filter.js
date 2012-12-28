@@ -470,8 +470,9 @@ function displayquality() {
 				{ showcounter = counter+' / '+qualityList[i]['quality'].length; }	
 				//--------------------------------------
 				//html_top += '<div class="title_small"><h6>' + qualityList[i]['project_code'] + ' - ' + qualityList[i]['project_name'] + ' :<b> Total - </b><a href="javascript:void(0);" class="qastatslink"onclick="showStats('+proj_id+');"><b>'+counter+'/'+qualityList[i]['quality'].length+'</b> </a></h6></div>';
-				 html_top += '<div class="title_small"><h6>' + qualityList[i]['project_code'] + ' - ' + qualityList[i]['project_name'] + ' :<b> Total - </b><a href="javascript:void(0);" class="qastatslink"onclick="showStats('+proj_id+');"><b>'+ showcounter +'</b> </a></h6></div>';
-				
+				if(showcounter!=0){
+				html_top += '<div class="title_small"><h6>' + qualityList[i]['project_code'] + ' - ' + qualityList[i]['project_name'] + ' :<b> Total - </b><a href="javascript:void(0);" class="qastatslink"onclick="showStats('+proj_id+');"><b>'+ showcounter +'</b> </a></h6></div>';
+				}
 				html_top += '<div class="quality_rows">';
 				for (var e = 0; e < qualityList[i]['quality'].length; e++) {
 
@@ -581,7 +582,7 @@ function displayquality() {
 						html_body += '<div style="clear: both;"></div>';
 						html_body += '</div></div>';
 				
-				if(html_body != ''){
+				if(html_body!= ''){
 					if(qualityList[i]['client'] != lastComp) {
 						html_company_top = '<div class="title_small"><h5>' + qualityList[i]['company_name'] + '</h5></div>';
 					}else{
