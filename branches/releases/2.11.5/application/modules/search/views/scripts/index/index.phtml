@@ -140,7 +140,7 @@ $search_text= str_replace("'", "",$search_text);
 					</select>
 					<label for="status_filter" id="status_filter_label">Status</label>
 					<select id="status_filter" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\');">
-						<option value="-1">Show All</option>
+						<option value="-1" >Show All</option>
 						'.WoDisplay::getAllStatusOptionHTML().'
 						<option value="over_due">Over Due</option>
 						<option value="99">Open</option>
@@ -151,8 +151,8 @@ $search_text= str_replace("'", "",$search_text);
 					</select>
 
 					<label for="project_status_filter" id="project_status_filter_label">Type</label>
-					<select id="project_status_filter" onchange="getWO_On_Status();">
-					<option value="2" '.$status_active.'>All</option>
+					<select id="project_status_filter" onchange="getWO_On_Status();"  style="width: 80px;">
+					<option value="2" '.$status_active.'>Show All</option>
 						<option value="1" '.$status_active.'>Active</option>
 						<option value="0" '.$status_archive.'>Archived</option>
 						<option value="-1" '.$status_draft.'>Draft</option>
