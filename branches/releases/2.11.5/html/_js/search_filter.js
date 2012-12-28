@@ -102,7 +102,7 @@ $(document).ready(function() {
   }
 	jQuery.getJSON('/_ajaxphp/search.php?status='+status, function(json) {
 		workorderList = json;
-		cookie_date = getCookie("lighthouse_wo_data");
+		cookie_date = '';//getCookie("lighthouse_wo_data");
 		$("#wo_containter .title_small").css({display:"none"});
 		$("#wo_containter .workorders_rows").css({display:"none"});
 //		sortWorkorders("title");
