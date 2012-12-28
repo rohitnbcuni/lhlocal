@@ -78,7 +78,10 @@ if(count($xml) > 0){
 }
 $_SESSION['idess'] = $idess;
 $_SESSION['id_quality'] = $id_quality;
-
+if(strpos($_SERVER['HTTP_REFERER'],'quality')){
+unset($_POST['search_par'][0]);
+$_POST['search_par'][0]='Defect';
+}
 
 $pageURL = BASE_URL;
 $search_text= str_replace('"', "", $this->search_text);
@@ -110,7 +113,7 @@ $search_text= str_replace("'", "",$search_text);
     <?php } ?></div> <!-- END search_select_radio -->
   </div> <!-- END search_wrapper_parent -->
 <?php if($result_found!=0){ ?> 
- <div id="wo_container" class="wo_container" <?php if($_POST['search_par'][0]=='Defect'){print 'style="display:none;"';}?>>
+ <div id="wo_container" class="wo_container" <?php if($_POST['search_par'][0]=='Defect' || strpos($_SERVER['HTTP_REFERER'],'quality')){print 'style="display:none;"';}?>>
   <!--==| START: Bucket |==-->
 		<?php 
 		$cnt = 5;
