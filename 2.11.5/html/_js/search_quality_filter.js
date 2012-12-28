@@ -584,8 +584,9 @@ function displayquality() {
 				
 				if(html_body!= ''){
 					if(qualityList[i]['client'] != lastComp) {
+					if(showcounter!=0){
 						html_company_top = '<div class="title_small"><h5>' + qualityList[i]['company_name'] + '</h5></div>';
-					}else{
+					}}else{
 						html_company_top = '';
 					}
 					html += html_company_top + html_top + html_body + html_bottom;
