@@ -218,6 +218,7 @@
 			}
 			insertWorkorderAudit($mysql,$getdefectID, '1', $_SESSION['user_id'],$user,$woStatus);
 		}else if($wo_row['assigned_to'] != $wo_old_row['assigned_to']){
+			// When the WO is assinged to a new person
 					$description=($wo_row['body']);
 					$desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES,'UTF-8'));
 					$link = "<a href='".BASE_URL ."/quality/index/edit/?defect_id=" .$getdefectID."'>".$getdefectID."</a>";
@@ -244,13 +245,14 @@
 		else if($wo_row['status'] != $wo_old_row['status'])
 		{
 			//if($woStatus=='3' || $woStatus=='4' || $woStatus=='5' || $woStatus=='6' || $woStatus=='10'){
-		// When the WO is assinged to a new person
+			//echo $woStatus; 
+			
 			$description=($wo_row['body']);
 			$desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES,'UTF-8'));
 			$sendList = array_unique($users_email);
 			$sendList = array_keys($sendList);
 			$msg = '';
-			$woStatus = $wo_row['status'];
+			//$woStatus = $wo_row['status'];
 			foreach($sendList as $user){
 
 				$select_email_addr = "SELECT `email` FROM `users` WHERE `id`= ? LIMIT 1";
