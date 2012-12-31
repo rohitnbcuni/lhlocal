@@ -218,6 +218,8 @@
 			}
 			insertWorkorderAudit($mysql,$getdefectID, '1', $_SESSION['user_id'],$user,$woStatus);
 		}else if($wo_row['assigned_to'] != $wo_old_row['assigned_to']){
+					$description=($wo_row['body']);
+					$desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES,'UTF-8'));
 					$link = "<a href='".BASE_URL ."/quality/index/edit/?defect_id=" .$getdefectID."'>".$getdefectID."</a>";
 					$select_email_addr = "SELECT `email` FROM `users` WHERE `id`= ? LIMIT 1";
 					$email_addr_res = $mysql->sqlprepare($select_email_addr,array($wo_row['assigned_to']));
@@ -231,6 +233,7 @@
 					$msg.= "<b>Summary: </b>" .htmlentities($wo_row['title'],ENT_NOQUOTES,'UTF-8') ."<br>";
 					$msg.= "<b>Description: </b>" .$desc_string ."<br>";
 					$msg.= $file_list."<br>";
+					
 
 					if(!empty($to)){  
 						sendEmail($to, $subject, $msg, $headers);
