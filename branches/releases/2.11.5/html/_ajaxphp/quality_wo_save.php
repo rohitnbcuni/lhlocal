@@ -167,7 +167,7 @@
 		$wo_status_row = $wo_status_res->fetch_assoc();
 
 		$subject = "Defect ".$getdefectID.": ".$wo_status_row['name']." - ".$wo_row['title'];
-		$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1";
+		$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 
 
 		$file_list = "";
@@ -250,6 +250,7 @@
 			$sendList = array_unique($users_email);
 			$sendList = array_keys($sendList);
 			$msg = '';
+			$woStatus = $wo_row['status'];
 			foreach($sendList as $user){
 
 				$select_email_addr = "SELECT `email` FROM `users` WHERE `id`= ? LIMIT 1";
