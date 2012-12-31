@@ -102,7 +102,7 @@ $search_text= str_replace("'", "",$search_text);
           <label class="radiobutton_wo_text" >Work Orders (<?php echo $count_wo;?>) </label>
         </li>
         <li>
-          <input name="Select Options" type="radio" class="radiobutton_qa" id="radio2" value="radio" <?php if($_POST['search_par'][0]=='All'){print 'onclick="load_defect_search();"';}else if($_POST['search_par'][0]=='Defect' || $count_qa!=0) {print  'checked="checked"';} else{print 'disabled="disabled"';} ?> />
+          <input name="Select Options" type="radio" class="radiobutton_qa" id="radio2" value="radio" <?php if($_POST['search_par'][0]=='All' && $count_qa!=0){print 'onclick="load_defect_search();"';}else if($_POST['search_par'][0]=='Defect' || $count_qa!=0) {print  'checked="checked"';} else{print 'disabled="disabled"';} ?> />
           <label class="radiobutton_qa_text">Defects (<?php echo $count_qa;?>) </label>
         </li>
       </ul>
