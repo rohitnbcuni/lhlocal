@@ -218,6 +218,7 @@
 			}
 			insertWorkorderAudit($mysql,$getdefectID, '1', $_SESSION['user_id'],$user,$woStatus);
 		}else if($wo_row['assigned_to'] != $wo_old_row['assigned_to']){
+					$link = "<a href='".BASE_URL ."/quality/index/edit/?defect_id=" .$getdefectID."'>".$getdefectID."</a>";
 					$select_email_addr = "SELECT `email` FROM `users` WHERE `id`= ? LIMIT 1";
 					$email_addr_res = $mysql->sqlprepare($select_email_addr,array($wo_row['assigned_to']));
 					$email_addr_row = $email_addr_res->fetch_assoc();
