@@ -110,7 +110,21 @@ $search_text= str_replace("'", "",$search_text);
 	  <button style="float:right; margin-top: 12px;margin-right: 28px;" id="WO_report" class="WO_report" onclick="return generateWOReport();"><span>Generate Report</span></button>
 	  <button style="float:right; margin-top: 12px;margin-right: 28px;display:none;" id="QA_report" class="QA_report" onclick="return generateQAReport();"><span>Generate Report</span></button>
 	   <?php } else {?><button style="float:right; margin-top: 12px;margin-right: 28px;" id="QA_report" class="QA_report" onclick="return generateQAReport();"><span>Generate Report</span></button><?php } ?>
-    <?php } ?></div> <!-- END search_select_radio -->
+    <?php } ?>
+	
+	<?php if($result_found == 0){ ?> <ul>
+        <li>
+          <input name="Select Options" type="radio" class="radiobutton_wo" id="radio" value="radio" disabled="disabled" checked="checked"/>
+          <label class="radiobutton_wo_text" >Work Orders (0) </label>
+        </li>
+        <li>
+          <input name="Select Options" type="radio" class="radiobutton_qa" id="radio2" value="radio" disabled="disabled" checked="checked" />
+          <label class="radiobutton_qa_text">Defects (0) </label>
+        </li>
+      </ul>
+    
+    <?php } ?>
+	</div> <!-- END search_select_radio -->
   </div> <!-- END search_wrapper_parent -->
 <?php if($result_found!=0){ ?> 
  <div id="wo_container" class="wo_container" <?php if($_POST['search_par'][0]=='Defect' || strpos($_SERVER['HTTP_REFERER'],'quality')){print 'style="display:none;"';}?>>
@@ -326,10 +340,10 @@ $search_text= str_replace("'", "",$search_text);
 		else{
 		print "<br/><br/><div style='font-size: 14px; color: #000000;margin-left: 15px;font-family: Verdana;'><strong>Please try the following</strong></div><br/><br/><div style='font-size: 13px; color: #000000;margin-left: 20px;font-family: Verdana;'>";
 		
-		print "* Check your Spelling<br/>";
-		print "* Try more general words<br/>";
-		print "* Try using scronyms or using different words<br/>";
-		print "* Try using fewer words your search might be too specific</div>";}
+		print "<ul><li> Check your Spelling</li>";
+		print "<li>Try more general words</li>";
+		print "<li>Try using scronyms or using different words</li>";
+		print "<li>Try using fewer words your search might be too specific</li></ul></div>";}
 	
 
 ?>
