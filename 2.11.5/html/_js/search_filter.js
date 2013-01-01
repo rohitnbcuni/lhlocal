@@ -913,7 +913,7 @@ function buildWorkordersHTML() {
 	
 						if(workorderList[i]['workorders'][e]['wo_last_comment_date']!='N/A' || workorderList[i]['workorders'][e]['wo_last_comment_user'] != 'N/A')
 						{					
-							html_body += '<dd class="lastcommentby" onmouseover="showComment('+wo_id  +',1);" onmouseout="hideComment('+wo_id  +');">';
+							html_body += '<dd class="lastcommentby" onmouseover="showComment_wo('+wo_id  +',1);" onmouseout="hideComment_wo('+wo_id  +');">';
 							html_body += workorderList[i]['workorders'][e]['wo_last_comment_user'];
 							html_body += '</dd>';			
 							html_body += '<dd class="commentdate" >';
@@ -935,7 +935,7 @@ function buildWorkordersHTML() {
 						 */
 						//var replacedText = ( unescape(workorderList[i]['workorders'][e]['wo_last_comment']).replace(/\+/g, " ")).replace(exp,"<a href='$1' target='_blank'>$1</a>");
                         //End Ticket
-                        html_body += '<dd id ="wo_comment_'+wo_id+'" class="wo_comment" style="display:none;"  onmouseover="showComment('+wo_id  +',3);" onmouseout="hideComment('+wo_id +');"><div class="wo_comment_header"></div><div class="wo_comment_content"><p class="risk_desc">';
+                        html_body += '<dd id ="wo_comment_'+wo_id+'" class="wo_comment" style="display:none;"  onmouseover="showComment_wo('+wo_id  +',3);" onmouseout="hideComment_wo('+wo_id +');"><div class="wo_comment_header"></div><div class="wo_comment_content"><p class="risk_desc">';
 						html_body += replacedText;
 						html_body += '</p></div><div class="wo_comment_footer"></div></dd>';
 						/*if(document.getElementById('client_login').value != "client" && document.getElementById('project_status_filter').value == "1") {
@@ -1026,7 +1026,7 @@ function unarchiveWO_CheckList(){
 	}
 }
 
-function showComment(wo_id,flag){
+function showComment_wo(wo_id,flag){
 	var topVar = ($('#wo_comment_'+wo_id).offset().top + 58);	
 	if(flag==1)
 	{
@@ -1035,7 +1035,7 @@ function showComment(wo_id,flag){
 	}
 	else if (flag==2)
 	{
-		var leftVar = 630;	
+		var leftVar = 720;	
 		$('#wo_comment_'+wo_id).css({display:'block',left: leftVar + 'px'});
 	}
     else
@@ -1044,7 +1044,7 @@ function showComment(wo_id,flag){
 	}
 }
 
-function hideComment(wo_id){
+function hideComment_wo(wo_id){
 	$('#wo_comment_'+wo_id).css({display:'none'});
 }
 
