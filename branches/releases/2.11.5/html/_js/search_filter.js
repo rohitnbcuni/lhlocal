@@ -71,8 +71,9 @@ $(document).ready(function() {
 			}
 	   });	 
 	  $("#requestTypeFilter").val(requestTypeFilter);
-  
-  var status = document.getElementById("project_status_filter").value; 
+  if(document.getElementById("project_status_filter")){
+	var status = document.getElementById("project_status_filter").value; 
+  }
 
   if(status == 1)
 	{	
