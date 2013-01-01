@@ -1035,7 +1035,7 @@ function showComment(wo_id,flag){
 	}
 	else if (flag==2)
 	{
-		var leftVar = 720;	
+		var leftVar = 630;	
 		$('#wo_comment_'+wo_id).css({display:'block',left: leftVar + 'px'});
 	}
     else
