@@ -28,9 +28,9 @@
 		<input name="search_text" id="search_text" type="text" class="search_bg"  tabindex="1" placeholder="  search" class="textbox"  autocomplete="off" onkeyup="ajax_showOptions(this,'q',event)">
 		<input name="bt_search" type="button" class="bt_search" id="bt_search"  >
 
-		<div class="bt_advSearch" id="bt_advSearch" > <a href="javascript:void(null);" >
+		<div class="bt_advSearch" id="bt_advSearch" style="display:none;" > <a href="javascript:void(null);" >
 		<img src="/_images/images/adv_option.png" /></a> 
-        <div id="popup_top" > 
+        <div id="popup_top"  > 
           <div class="search_popupTop"> <a class="bt_close"  href="javascript:hide_searchpopup();"><img src="/_images/images/bt_close.png" /></a> 
            <input  type="radio" name="search_par[]" id="search_par" value="All"  checked="checked"/>
             All<br />
