@@ -91,7 +91,7 @@ $search_text= str_replace("'", "",$search_text);
 	<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE="" />
 	<?php if($result_found!=0){ ?>
 		<label style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" title="<?php echo $search_text;?>"><?php echo $result_found;?> Search results for "<?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?>"</label><?php } else{?>
-		<label  style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" >No result for <?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?> </label>
+		<label  style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" >No result for "<?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?>" </label>
 	<?php }?>
 </div>
  <div class="search_wrapper_parent">
