@@ -308,8 +308,8 @@ function changeAssigned(selectVal, theId) {
 			var oldHTML = $('assigned_a_'+theId).html();
 			//$('#assigned_a_'+theId).html(outPart[0]+" "+outPart[1]);
 			
-			if(out.length > 22){
-				var shortText = jQuery.trim(out).substring(0, 22).split(" ").slice(0, 4).join(" ") + "...";
+			if(out.length > 20){
+				var shortText = jQuery.trim(out).substring(0, 20).split(" ").slice(0, 4).join(" ") + "...";
 			}else{
 				shortText = out;
 			}
@@ -851,14 +851,13 @@ function buildWorkordersHTML() {
 	}else{
 		statusActiveArray[statusId] = statusId;
 	}
-
 	var lastComp;
 	for (var i = 0; i < workorderList.length; i++) {
 			html_top = '';
 			html_body = '';
 			html_bottom = '';
 			if ((clientId < 0 || clientId == workorderList[i]['client']) && (projectId < 0 || projectId == workorderList[i]['project_id'])){
-				if((i-1 >= 0 && workorderList[i-1]['project_code'] != workorderList[i]['project_code']) || i == 0){
+				if((i-1 >= 0 && workorderList[i-1]['project_name']!= workorderList[i]['project_name']) || i == 0){
 					html_top += '<div class="title_small"><h6>' + workorderList[i]['project_code'] + ' - ' + workorderList[i]['project_name'] + '</h6></div>';
 			}
 				html_top += '<div class="workorders_rows">';
@@ -897,8 +896,8 @@ function buildWorkordersHTML() {
 						html_body += '<dd style="height: 27px;" class="assigned" id="assigned_' + workorderList[i]['workorders'][e]['id'] + '">';
 						if(workorderList[i]['workorders'][e]['assigned_to'] != null){
 							html_body += '<span title="'+workorderList[i]['workorders'][e]['assigned_to']+'" id="assigned_a_' + workorderList[i]['workorders'][e]['id'] + '" onClick="woShowAssigned(' + workorderList[i]['workorders'][e]['id'] + ');">';
-							if(workorderList[i]['workorders'][e]['assigned_to'].length > 22){
-								var shortText = jQuery.trim(workorderList[i]['workorders'][e]['assigned_to']).substring(0, 22).split(" ").slice(0, 4).join(" ") + "...";
+							if(workorderList[i]['workorders'][e]['assigned_to'].length > 20){
+								var shortText = jQuery.trim(workorderList[i]['workorders'][e]['assigned_to']).substring(0, 20).split(" ").slice(0, 4).join(" ") + "...";
 							}else{
 								shortText = workorderList[i]['workorders'][e]['assigned_to'];
 							}
@@ -961,7 +960,7 @@ function buildWorkordersHTML() {
 				html += '<input type=hidden id="active_wo" value=5>'; 
 			}
 	}
-	Set_Cookie( "lighthouse_wo_data", clientId + '~' + projectId + '~' + statusId + '~' + assignedTo + '~' + requestTypeFilter + '~' + requestedby , "7", "/", "", "");
+	//Set_Cookie( "lighthouse_wo_data", clientId + '~' + projectId + '~' + statusId + '~' + assignedTo + '~' + requestTypeFilter + '~' + requestedby , "7", "/", "", "");
 
 	$("#wo_containter").html(html);
 	loadAssignedList(assignedTo);

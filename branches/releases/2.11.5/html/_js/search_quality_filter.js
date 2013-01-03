@@ -697,13 +697,13 @@ function sortQuality(sortType){
       }
     }
   	if(sortDir == 0){
-  	 Set_Cookie("selectedSortOption",sortType+":0","","/");
-  	 Set_Cookie("selectedSortOption",sortType+":0","","/quality");
-  	 Set_Cookie("selectedSortOption",sortType+":0","","/quality/");
+  	// Set_Cookie("selectedSortOption",sortType+":0","","/");
+  	// Set_Cookie("selectedSortOption",sortType+":0","","/quality");
+  	// Set_Cookie("selectedSortOption",sortType+":0","","/quality/");
       }else{
-  	 Set_Cookie("selectedSortOption",sortType+":1","","/");
-  	 Set_Cookie("selectedSortOption",sortType+":1","","/quality");	
-  	 Set_Cookie("selectedSortOption",sortType+":1","","/quality/");
+  	 //Set_Cookie("selectedSortOption",sortType+":1","","/");
+  	// Set_Cookie("selectedSortOption",sortType+":1","","/quality");	
+  	// Set_Cookie("selectedSortOption",sortType+":1","","/quality/");
   	}
  //     isOnPageload = false;
   	for (var i = 0; i < qualityList.length; i++) {
@@ -882,7 +882,7 @@ function gotoWorkorder(){
 function CreateDefect()
 {
 	projectId = document.getElementById("qa_project_filter").value;
-	Set_Cookie( "lh_qa_project_cookie", projectId , "7", "/", "", "");
+	//Set_Cookie( "lh_qa_project_cookie", projectId , "7", "/", "", "");
 	window.location = '/quality/index/create/';
 }
 
@@ -925,8 +925,8 @@ function qulaityFilterJson(){
 	//alert("projectId"+projectId);
 	displayquality();
 	severity_value = $('#severity_filter').val();
-	Set_Cookie( "lighthouse_qa_data", clientId + '~' + projectId + '~' + statusId + '~' + assignedTo + '~' + severity_value, "7", "/", "", "");
-	Set_Cookie( "lh_qa_project_cookie", "", "7", "/", "", "");
+	//Set_Cookie( "lighthouse_qa_data", clientId + '~' + projectId + '~' + statusId + '~' + assignedTo + '~' + severity_value, "7", "/", "", "");
+	//Set_Cookie( "lh_qa_project_cookie", "", "7", "/", "", "");
 	if(clientId == '-1'){
 		QA_loadAllProjectList();
 		QA_loadAllAssignedList();
