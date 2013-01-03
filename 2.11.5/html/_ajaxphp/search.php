@@ -179,7 +179,7 @@ if('0' == $_GET['status']){
   $workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM  `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql .$req_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql . $requestedby_filter_sql .$search_filter_sql." AND b.`id` IN (".$query_string_search.") ORDER BY a.`company`, a.`project_name`" . $column_filter_sql . $page_number_filter_sql;
 } else {
    //$workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM `projects` a, `workorders` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND c.`user_id`='" .$_SESSION['user_id'] ."'  " . $archive_sql . " ORDER BY a.`company`, a.`project_name`, b.`title` ASC";
-	$workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM `projects` a, `workorders` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND c.`user_id`='" .$_SESSION['user_id'] ."'  AND b.`id` IN (".$query_string_search.") ORDER BY a.`company`, a.`project_name`, b.`title` ASC";
+	$workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM `projects` a, `workorders` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND c.`user_id`='" .$_SESSION['user_id'] ."'  AND b.`id` IN (".$query_string_search.") ORDER BY a.`company`, a.`project_name`, b.`id` DESC";
    }	
 //echo "qry".$workorder_list_query;
 $workorder_result = $mysql->sqlordie($workorder_list_query);
@@ -240,7 +240,8 @@ if($workorder_result->num_rows > 0) {
 			$postingList[$i] = Array();
 		}
 		$postingList[$i]['project_name'] = $workorder_row['project_name'];
-		$postingList[$i]['project_code'] = $workorder_row['project_code'];
+		$replace_the_year=array('_2011','_2012');
+		$postingList[$i]['project_code'] = str_replace($replace_the_year,' ',$workorder_row['project_code']);
 		$postingList[$i]['project_id'] = $workorder_row['project_id'];
 		$postingList[$i]['company_name'] = $companyListArr[$workorder_row['project_company']];
 		$postingList[$i]['client'] = $workorder_row['project_company'];
