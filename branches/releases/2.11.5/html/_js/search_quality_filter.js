@@ -28,9 +28,11 @@ $(document).ready(function() {
 	var assignedTo = '-1';
 	var severityID = '-1';
 	var projectId = '-1';
-	var cookie_date = getCookie("lighthouse_qa_data");
+	//var cookie_date = getCookie("lighthouse_qa_data");
+	var cookie_date = '';
 	$('#wo_dimmer_ajax').css({display:'block'});
-	var lh_qa_project_cookie = getCookie("lh_qa_project_cookie");
+	//var lh_qa_project_cookie = getCookie("lh_qa_project_cookie");
+	var lh_qa_project_cookie = '';
 	$("#quality_containter .title_small").css({display:"block"});
 	$("#quality_containter .quality_rows").css({display:"block"});
 	
@@ -114,7 +116,8 @@ $(document).ready(function() {
 					sortDir = 1;
 					sortQuality("id");
 					}else{
-					previousSortSelection = getCookie("selectedSortOption");
+					//previousSortSelection = getCookie("selectedSortOption");
+					previousSortSelection = '';
 					previousSortSelection = previousSortSelection.split(":");
 					sortDir = previousSortSelection[1];
 					sortQuality(previousSortSelection[0]);
@@ -936,7 +939,8 @@ function qulaityFilterJson(){
 		QA_loadAssignedList();
 
 	}
-	cookie_date = getCookie("lighthouse_qa_data");
+	//cookie_date = getCookie("lighthouse_qa_data");
+	cookie_date ='';
 	if(cookie_date != '-1'){
 		data = cookie_date.split('~');
 
