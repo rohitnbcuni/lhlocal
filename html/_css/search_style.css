@@ -10,6 +10,68 @@ a:hover { text-decoration: none; }
 /*******************
  * SEARCH HEADER
  * ********************/
+ 
+ 
+ 
+/*******************
+SEARCH HEADER
+********************/
+	.search_wrapper_parent h1{
+		font-weight: normal;
+		background: #004a8b; /* Old browsers */
+		padding: 6px 10px 6px 16px;
+		color: #FFFFFF;	
+		font-size: 18px;
+		margin: 0px;
+		}
+		.search_wrapper_parent h1 span.search_key{
+			font-weight: bold;
+			font-size: 20px;
+			}
+/************************
+SEARCH SELECT OPTIONS
+*************************/
+    .search_wrapper_parent .search_select_radio {
+		border-left: 1px solid #cecece;
+		border-right: 1px solid #cecece;
+		border-bottom: 1px solid #cecece;
+		background: #ffffff; /* Old browsers */
+		background: -moz-linear-gradient(top,  #ffffff 0%, #dfdfdf 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#dfdfdf)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top,  #ffffff 0%,#dfdfdf 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top,  #ffffff 0%,#dfdfdf 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top,  #ffffff 0%,#dfdfdf 100%); /* IE10+ */
+		background: linear-gradient(to bottom,  #ffffff 0%,#dfdfdf 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dfdfdf',GradientType=0 ); /* IE6-9 */
+		height: 47px;
+		position: relative;
+	    }
+		.search_wrapper_parent .search_select_radio ul {
+			padding-left: 0px;
+			float: left;
+			margin: 0px;
+			}
+		.search_wrapper_parent .search_select_radio ul li{
+		    list-style: none outside none;
+			float: left;
+			padding: 13px 0 0 10px;
+			}
+		.search_wrapper_parent .search_select_radio ul li label{
+		    color: #4A4A4A;
+		    font-size: 12px;
+		    font-weight: bold;
+		    }
+		   .search_wrapper_parent .search_select_radio a.generate_report {
+			    background: url("../_images/btn_generate_report.png") no-repeat scroll right top transparent;
+			    display: block;
+			    height: 25px;
+			    left: 810px;
+			    position: absolute;
+			    text-indent: -9999px;
+			    top: 12px;
+			    width: 132px;
+				}
+
 	.search_wrapper .search_header .search_header_content h1{
 		font-weight: normal;
 		border: 1px solid #999999;

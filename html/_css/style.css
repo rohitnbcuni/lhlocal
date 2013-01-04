@@ -1120,7 +1120,7 @@ a:hover { text-decoration: underline; }
 		.workorders_filters { border-bottom: none; }
 
 			.workorders_filter select { margin-right: 50px; }
-			#client_filter, #project_filter, #status_filter, #assigned_filter, #project_status_filter, #severity_filter { margin-right: 10px;}
+			#client_filter,#qa_project_filter, #project_filter, #status_filter, #qa_assigned_filter, #assigned_filter, #project_status_filter, #severity_filter { margin-right: 10px;}
 			#status_filter { width: 95px; }
 			#assigned_filter { width: 125px; }
 			#severity_filter { width: 95px; }
@@ -1184,7 +1184,6 @@ a:hover { text-decoration: underline; }
 					.quality_sort .lastcommentby a.down, .quality_sort .lastcommentby a.up, { padding: 0px 10px 0px 0px;}
 					.quality_sort .req_type a.down, .quality_sort .req_type a.up, { padding: 0px 10px 0px 0px;}
 					.quality_sort .commentdate a.down, .quality_sort .commentdate a.up { padding: 0px 10px 0px 0px;}
-
 		/*-----------old height 405px-----------*/
 		.workorders_container { position: relative; height:755px; overflow: auto; padding: 0 3px 3px 3px; background: #c9c9c9; clear:both;}
 
@@ -1228,8 +1227,10 @@ a:hover { text-decoration: underline; }
 					.workorders_rows select { width: 95px; }
 					.workorders_rows .status select { width: 75px; }
 
+					.quality_container { position: relative; height:755px; overflow: auto; padding: 0 3px 3px 3px; background: #c9c9c9; clear:both;}
+					.quality_container .title_small { border: 1px solid #dfdede; margin-top: -1px; }
 
-				.quality_rows { padding: 0 1px 1px; background: #fff; }
+					.quality_rows { padding: 0 1px 1px; background: #fff; }
 
 					.quality_rows dl { border-top: 1px solid #fff; border-bottom: 1px solid #dfdede; min-height: 39px; width: auto; background: url(../_images/bg_workorders_rows.gif) repeat-x; list-style-type: none; color: #666; }
 						.quality_rows dl.alert { background-position: 0 -195px; }
