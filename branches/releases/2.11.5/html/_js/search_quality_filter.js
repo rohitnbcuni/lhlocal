@@ -20,7 +20,7 @@ $(document).ready(function() {
 	privacyLookup[1] = "Medium";
 	privacyLookup[2] = "High";
 	
-	statusLookup[0] = "Open";
+	statusLookup[0] = "Show All";
 	statusLookup[1] = "Assigned";
 	statusLookup[2] = "Closed";
 	var clientId = '-1';
@@ -64,7 +64,7 @@ $(document).ready(function() {
 	}else{
 		projectId = '-1';
 		clientId = '-1';
-		statusId = '99';
+		statusId = '-1';
 		assignedTo = '-1';
 		severityID = '-1';
 	}
@@ -125,7 +125,7 @@ $(document).ready(function() {
 
 			}else{
 			
-				$("#status_filter").val(99);
+				$("#status_filter").val(-1);
 			}
 			$('#wo_dimmer_ajax').css({display:'none'});
 	});
