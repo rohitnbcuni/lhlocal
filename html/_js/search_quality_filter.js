@@ -24,7 +24,7 @@ $(document).ready(function() {
 	statusLookup[1] = "Assigned";
 	statusLookup[2] = "Closed";
 	var clientId = '-1';
-	var statusId = '-1';
+	var statusId = '99';
 	var assignedTo = '-1';
 	var severityID = '-1';
 	var projectId = '-1';
@@ -125,7 +125,7 @@ $(document).ready(function() {
 
 			}else{
 			
-				$("#status_filter").val(-1);
+				//$("#status_filter").val(-1);
 			}
 			$('#wo_dimmer_ajax').css({display:'none'});
 	});
@@ -432,7 +432,7 @@ function displayquality() {
 	clientId = document.getElementById("client_filter").value;
 	projectId = document.getElementById("qa_project_filter").value;
 	
-	statusId = document.getElementById("status_filter").value;
+	statusId = document.getElementById("qa_status_filter").value;
 	assignedTo = document.getElementById("qa_assigned_filter").value;
 	severityID = document.getElementById("severity_filter").value;
 	var statusActiveArray = [];
@@ -473,7 +473,7 @@ function displayquality() {
 				{ showcounter = counter+' / '+qualityList[i]['quality'].length; }	
 				//--------------------------------------
 				//html_top += '<div class="title_small"><h6>' + qualityList[i]['project_code'] + ' - ' + qualityList[i]['project_name'] + ' :<b> Total - </b><a href="javascript:void(0);" class="qastatslink"onclick="showStats('+proj_id+');"><b>'+counter+'/'+qualityList[i]['quality'].length+'</b> </a></h6></div>';
-				if(showcounter!=0){
+				if(counter!=0){
 				html_top += '<div class="title_small"><h6>' + qualityList[i]['project_code'] + ' - ' + qualityList[i]['project_name'] + ' :<b> Total - </b><a href="javascript:void(0);" class="qastatslink"onclick="showStats('+proj_id+');"><b>'+ showcounter +'</b> </a></h6></div>';
 				
 				html_top += '<div class="quality_rows">';
@@ -855,7 +855,7 @@ function generateQAReport(){
 	var typeFilter = '1';
 	var rp_client_filter =  $("#client_filter").val();
 	var rp_project_filter =  $("#qa_project_filter").val();
-	var rp_status_filter =  $("#status_filter").val();
+	var rp_status_filter =  $("#qa_status_filter").val();
 	var rp_severity_filter =  $("#severity_filter :selected").text();
 	var rp_assigned_filter =  $("#qa_assigned_filter").val();
 	window.open("/_ajaxphp/search_quality.php?report=excel&severityID="+severityID+"&statusId="+statusId+"&projectId="+projectId+"&aclientId="+clientId+"&assignedTo="+assignedTo);
@@ -896,7 +896,7 @@ function qulaityFilterJson(){
 	clientId = $("#client_filter").val();
 	projectId = $("#qa_project_filter").val();
 	
-	statusId = $("#status_filter").val();
+	statusId = $("#qa_status_filter").val();
 	assignedTo = $("#qa_assigned_filter").val();
 	severityID = $("#severity_filter").val();
 	//$("#wo_containter .title_small").css({display:"block"});

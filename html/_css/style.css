@@ -1120,8 +1120,9 @@ a:hover { text-decoration: underline; }
 		.workorders_filters { border-bottom: none; }
 
 			.workorders_filter select { margin-right: 50px; }
-			#client_filter,#qa_project_filter, #project_filter, #status_filter, #qa_assigned_filter, #assigned_filter, #project_status_filter, #severity_filter { margin-right: 10px;}
+			#client_filter,#qa_project_filter, #project_filter, #qa_status_filter, #status_filter, #qa_assigned_filter, #assigned_filter, #project_status_filter, #severity_filter { margin-right: 10px;}
 			#status_filter { width: 95px; }
+			#qa_status_filter { width: 95px; }
 			#assigned_filter { width: 125px; }
 			#severity_filter { width: 95px; }
 
