@@ -920,7 +920,7 @@ function qulaityFilterJson(){
 	privacyLookup[0] = "Low";
 	privacyLookup[1] = "Medium";
 	privacyLookup[2] = "High";
-	statusLookup[0] = "Open";
+	statusLookup[0] = "Show All";
 	statusLookup[1] = "Assigned";
 	statusLookup[2] = "Closed";
 	jQuery.getJSON('/_ajaxphp/search_quality.php',{severityID:severityID,statusId:statusId,projectId:projectId,clientId:clientId,assignedTo:assignedTo}, function(json) {
