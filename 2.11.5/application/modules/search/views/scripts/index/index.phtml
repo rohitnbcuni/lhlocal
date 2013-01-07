@@ -154,7 +154,7 @@ $search_text= str_replace("'", "",$search_text);
 					</select>
 					<label for="status_filter" id="status_filter_label">Status</label>
 					<select id="status_filter" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\');">
-						<option value="-1" >Show All</option>
+						<option value="-1" selected>Show All</option>
 						'.WoDisplay::getAllStatusOptionHTML().'
 						<option value="over_due">Over Due</option>
 						<option value="99">Open</option>
@@ -177,24 +177,6 @@ $search_text= str_replace("'", "",$search_text);
 				$req_Type_Arr['Outage'] = ' selected="selected"';
 				$req_Type_Arr['Problem'] = ' selected="selected"';
 				$req_Type_Arr['Request'] = ' selected="selected"';
-
-				if(!empty($wo_data_cookie))
-				{
-
-					$wo_data_cookie_all = explode("~", @$wo_data_cookie);
-					$requestTypeFilter = $wo_data_cookie_all[4];
-					if(!empty($requestTypeFilter))
-					{
-						$req_Type_Arr = Array();
-						$requestTypeFilter_all = explode(",", @$requestTypeFilter);
-						for($u = 0; $u < sizeof($requestTypeFilter_all); $u++) {
-							if(!empty($requestTypeFilter_all[$u]))
-							{
-								$req_Type_Arr[$requestTypeFilter_all[$u]] = ' selected="selected"';
-							}
-						}
-					}
-				}
 				$end_date_default = date("m/d/Y");// current date;
 				$start_date_add_one_month = strtotime(date("m/d/Y", strtotime($end_date_default)) . "-1 month");
 				$start_date_default = date("m/d/Y", $start_date_add_one_month);
