@@ -1,7 +1,8 @@
 <?PHP
-
 	include('Search.inc');
+	include('WorkOrders.inc');
 	include("_ajaxphp/util.php");
+	include('Quality.inc');
 	class Search_IndexController extends LighthouseController { 
 		public function indexAction() {
 			$searchResult = array();
