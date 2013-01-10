@@ -241,7 +241,8 @@ if($workorder_result->num_rows > 0) {
 		}
 		$postingList[$i]['project_name'] = $workorder_row['project_name'];
 		$replace_the_year=array('_2011','_2012');
-		$postingList[$i]['project_code'] = str_replace($replace_the_year,' ',$workorder_row['project_code']);
+		//$postingList[$i]['project_code'] = str_replace($replace_the_year,' ',$workorder_row['project_code']);
+		$postingList[$i]['project_code'] = $workorder_row['project_code'];
 		$postingList[$i]['project_id'] = $workorder_row['project_id'];
 		$postingList[$i]['company_name'] = $companyListArr[$workorder_row['project_company']];
 		$postingList[$i]['client'] = $workorder_row['project_company'];
