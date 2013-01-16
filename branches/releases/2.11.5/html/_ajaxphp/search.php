@@ -1,9 +1,14 @@
 <?php
 session_start();
+
 if(!(isset($from_action) && $from_action))
 include('../_inc/config.inc');
+
+if(!ISSET($_SESSION['user_id'])){
+	die("<b>You are not allowed to access these files</b>");
+}
 global $mysql;
-$query_string_search = $_SESSION['idess'];	
+$query_string_search = $_POST['idess'];	
 $postingList = Array();
 // filters from frontend for archieve workorders
 $client_sql = "";
@@ -20,20 +25,20 @@ $page_number_filter_sql = "";
 $column_filter_sql = "";   // for sorting based on assigned_to or requested by 
                                                       // query for filters start
 $type = '';
-if(array_key_exists("report", $_GET)){
-	$type = $_GET['report'];
+if(array_key_exists("report", $_POST)){
+	$type = $_POST['report'];
 }
 $archive_sql = " AND b.`archived`='0' and b.`active`='1'";
 $project_archive = " AND b.`archived`='0'";
 $pjt_sql = " JOIN `projects` a ON a.`id`=b.`project_id`";
-if('2' == $_GET['status']){ //All wo
+if('2' == $_POST['status']){ //All wo
 	$archive_sql = "";
 	$project_archive = "";
 	
-}else if('1' == $_GET['status']){         // for active workorders
+}else if('1' == $_POST['status']){         // for active workorders
 	$archive_sql = " AND b.`archived`='0' and b.`active`='1'";
 	$project_archive = " AND b.`archived`='0'";
-}else if('0' == $_GET['status']){   // for archieved workorders
+}else if('0' == $_POST['status']){   // for archieved workorders
 	$archive_sql = " AND b.`archived`='1' and b.`active`='1'";
 	$project_archive = " AND b.`archived`='1'";
 	  if(isset($_REQUEST['client']) && $_REQUEST['client'] != '-1'){
@@ -134,7 +139,7 @@ $date_range_filter_sql = " AND b.`closed_date` >= '".date('Y-m-d',strtotime($_RE
      $count_row = $count_result->fetch_assoc();
   }
   $count = $count_row['cnt']; 
-}else if('-1' == $_GET['status']){    // for draft workorders
+}else if('-1' == $_POST['status']){    // for draft workorders
 	$archive_sql = " AND b.`active`='0' AND b.`requested_by`='".$_SESSION['user_id']."'";
 }
 
@@ -174,12 +179,12 @@ $distinct_requested_by_sql_result = $mysql->sqlordie($distinct_requested_by_sql)
 		$wo_distinct_values_requested_by = array($requested_by_user_id_array,$requested_by_user_name_array);
 	}	
 
-if('0' == $_GET['status']){ 
+if('0' == $_POST['status']){ 
  //$workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM  `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql .$req_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql . $requestedby_filter_sql .$date_range_filter_sql .$search_filter_sql." ORDER BY a.`company`, a.`project_name`" . $column_filter_sql . $page_number_filter_sql;
-  $workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM  `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql .$req_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql . $requestedby_filter_sql .$search_filter_sql." AND b.`id` IN (".$query_string_search.") ORDER BY a.`company`, a.`project_name`" . $column_filter_sql . $page_number_filter_sql;
+  $workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date`,b.active,b.archived FROM  `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql .$req_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql . $requestedby_filter_sql .$search_filter_sql." AND b.`id` IN (".$query_string_search.") ORDER BY a.`company`, a.`project_name`" . $column_filter_sql . $page_number_filter_sql;
 } else {
    //$workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM `projects` a, `workorders` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND c.`user_id`='" .$_SESSION['user_id'] ."'  " . $archive_sql . " ORDER BY a.`company`, a.`project_name`, b.`title` ASC";
-	$workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM `projects` a, `workorders` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND c.`user_id`='" .$_SESSION['user_id'] ."'  AND b.`id` IN (".$query_string_search.") ORDER BY a.`company`, a.`project_name`, b.`id` DESC";
+	$workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date`,b.active,b.archived FROM `projects` a, `workorders` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND c.`user_id`='" .$_SESSION['user_id'] ."'  AND b.`id` IN (".$query_string_search.") ORDER BY a.`company`, a.`project_name`, b.`id` DESC";
    }	
 //echo "qry".$workorder_list_query;
 $workorder_result = $mysql->sqlordie($workorder_list_query);
@@ -372,16 +377,12 @@ if($workorder_result->num_rows > 0) {
 		 * Special Character display 
 		 * @var test Comment type
 		 */
-		array_push($postingList[$i]['workorders'],Array('id' => $workorder_row['id'], 'title' => htmlentities(substr($workorder_row['title'], 0, 37).$elipse,ENT_NOQUOTES,'UTF-8'), 'full_title' => htmlentities($workorder_row['title'],ENT_QUOTES,'UTF-8'), 'status' => $wo_status_array[$workorder_row['status']],'status_id' => $workorder_row['status'], 'req_type' => $REQ_TYPE,'severity'=>$WO_SEVERITY, 'requested_by' => $requested, 'requested_by_id' => $workorder_row['requested_by'], 'assigned_to' => $assigned,'assigned_to_id' => $workorder_row['assigned_to'],'open_date' => format_date($workorder_row['creation_date']), 'assigned_date' => format_date($workorder_row['assigned_date']), 'completed' => format_date($woCompletedDate),'launch_date' => format_date($workorder_row['launch_date']), 'estimated_date' => format_date($woEastimateDate), 'class' => $dlClass, 'overdue_flag' => $overdue_flag,'wo_last_comment'=> nl2br((htmlentities($wo_last_comment,ENT_NOQUOTES,'UTF-8'))),'wo_last_comment_user_id'=>$wo_last_comment_user_id,'wo_last_comment_user'=>$wo_last_comment_user ,'wo_last_comment_date'=>format_date($wo_last_comment_date)));
+		array_push($postingList[$i]['workorders'],Array('id' => $workorder_row['id'], 'title' => htmlentities(substr($workorder_row['title'], 0, 37).$elipse,ENT_NOQUOTES,'UTF-8'), 'full_title' => htmlentities($workorder_row['title'],ENT_QUOTES,'UTF-8'), 'status' => $wo_status_array[$workorder_row['status']],'status_id' => $workorder_row['status'], 'req_type' => $REQ_TYPE,'severity'=>$WO_SEVERITY, 'requested_by' => $requested, 'requested_by_id' => $workorder_row['requested_by'], 'assigned_to' => $assigned,'assigned_to_id' => $workorder_row['assigned_to'],'open_date' => format_date($workorder_row['creation_date']), 'assigned_date' => format_date($workorder_row['assigned_date']), 'completed' => format_date($woCompletedDate),'launch_date' => format_date($workorder_row['launch_date']), 'estimated_date' => format_date($woEastimateDate), 'class' => $dlClass, 'overdue_flag' => $overdue_flag,'wo_last_comment'=> nl2br((htmlentities($wo_last_comment,ENT_NOQUOTES,'UTF-8'))),'wo_last_comment_user_id'=>$wo_last_comment_user_id,'wo_last_comment_user'=>$wo_last_comment_user ,'wo_last_comment_date'=>format_date($wo_last_comment_date),'archived' =>$workorder_row['archived'],'active'=> $workorder_row['active']));
 
   }
 }
-if('0' == $_GET['status']){
-//	print("<pre>");
-//	var_dump($wo_distinct_values);
-//	echo "qry1".$distinct_project_list_sql."<br>";
-//	echo "qry2".$distinct_assigned_to_sql."<br>";
-//	print("</pre>");die();
+if('0' == $_POST['status']){
+
   $postingList = array($postingList,$count,$wo_distinct_values_projects,$wo_distinct_values_assigned_to,$wo_distinct_values_requested_by);
 }  
 
@@ -434,7 +435,7 @@ if(isset($from_action) && $from_action){
 	}else{
 		$statusActiveArray[$statusId] = $statusId;
 	}
-	if('0' == $_GET['status']){
+	if('0' == $_POST['status']){
 		$projectList = $postingList[0];
 	} else {
 		$projectList = $postingList;
@@ -476,7 +477,7 @@ if(isset($from_action) && $from_action){
     header("Expires: 0");
     header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
     header("Content-Type: application/force-download");
-   header("Content-Type: application/octet-stream");
+    header("Content-Type: application/octet-stream");
     header("Content-Type: application/download");
     header("Content-Disposition: attachment;filename=wo_report.xls"); 
     header("Content-Transfer-Encoding: binary ");

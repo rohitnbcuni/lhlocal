@@ -2,7 +2,9 @@
 session_start();
 if(!(isset($from_action) && $from_action))
 include('../_inc/config.inc');
-include("sessionHandler.php");
+if(!ISSET($_SESSION['user_id'])){
+	die("<b>You are not allowed to access these files</b>");
+}
 $postingList = Array();
 //$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 //Defining Global mysql connection values
@@ -24,46 +26,48 @@ if($_SESSION['login_status'] == "client") {
   }
 }
 
+$id_quality = $_POST['id_quality'];
+
 $archive_sql = " AND `archived`='0'";
 $project_archive = " AND b.`archived`='0'";
-if('1' == $_GET['status']){
+if('1' == $_POST['status']){
   $archive_sql = " AND `archived`='0'";
   $project_archive = " AND b.`archived`='0'";
-}else if('0' == $_GET['status']){
+}else if('0' == $_POST['status']){
   $archive_sql = " AND `archived`='1'";
   $project_archive = " AND b.`archived`='1'";
 }
 
-if(ISSET($_GET['clientId']) && $_GET['clientId'] != '-1'){
-	$CLIENT_SQL = " AND a.company = '".$_GET['clientId']."'";
+if(ISSET($_POST['clientId']) && $_POST['clientId'] != '-1'){
+	$CLIENT_SQL = " AND a.company = '".$_POST['clientId']."'";
 }
 
 
 $WHERE = array();
 $WHERE_SQL = '';
-if(ISSET($_GET['assignedTo']) && $_GET['assignedTo'] != '-1'){
-	$WHERE[] = " assigned_to = ".$_GET['assignedTo'];
+if(ISSET($_POST['assignedTo']) && $_POST['assignedTo'] != '-1'){
+	$WHERE[] = " assigned_to = ".$_POST['assignedTo'];
 }
-if(ISSET($_GET['statusId']) && $_GET['statusId'] != '-1' && $_GET['statusId'] != '99' ){
-	$status = getQualityStatus($_GET['statusId'],$mysql);
+if(ISSET($_POST['statusId']) && $_POST['statusId'] != '-1' && $_POST['statusId'] != '99' ){
+	$status = getQualityStatus($_POST['statusId'],$mysql);
 	$WHERE[] = " status = ".$status;
 }
-if($_GET['statusId'] == '99'){
+if($_POST['statusId'] == '99'){
 	//closed and Hold
 	$WHERE[] = "  status NOT IN ('7','8')";
 }
-if($_GET['statusId'] == '-1'){
+if($_POST['statusId'] == '-1'){
 	//closed and Hold
 	$WHERE[] = "  status IN ('1','2','3','4','5','6','7','8','10')";
 }
-if(ISSET($_GET['projectId']) && $_GET['projectId'] != '-1'){
-	$WHERE[] = " project_id = ".$_GET['projectId'];
+if(ISSET($_POST['projectId']) && $_POST['projectId'] != '-1'){
+	$WHERE[] = " project_id = ".$_POST['projectId'];
 }
-if(ISSET($_GET['severityID']) && $_GET['severityID'] != '-1'){
-	$WHERE[] = " severity = ".$_GET['severityID'];
+if(ISSET($_POST['severityID']) && $_POST['severityID'] != '-1'){
+	$WHERE[] = " severity = ".$_POST['severityID'];
 }
-/*if($_GET['assignedTo'] != '-1'){
-	$WHERE[] = " assigned_to = ".$_GET['assignedTo'];
+/*if($_POST['assignedTo'] != '-1'){
+	$WHERE[] = " assigned_to = ".$_POST['assignedTo'];
 }*/
 
 if(count($WHERE) > 0){
@@ -72,8 +76,8 @@ if(count($WHERE) > 0){
 	$WHERE_SQL = "  status NOT IN ('7','8')";
 }
 $type = '';
-if(array_key_exists("report", $_GET)){
-  $type = $_GET['report'];
+if(array_key_exists("report", $_POST)){
+  $type = $_POST['report'];
 }
 
 
@@ -155,7 +159,7 @@ if($project_result->num_rows > 0) {
     $postingList[$i]['client'] = $project_row['company'];
     $postingList[$i]['quality'] = Array();
 
-   $select_project_workorders = "SELECT * FROM `qa_defects` WHERE `project_id`='" .$project_row['id'] ."' AND `id` IN (".$_SESSION['id_quality'].")  ORDER BY `title` ";
+   $select_project_workorders = "SELECT * FROM `qa_defects` WHERE `project_id`='" .$project_row['id'] ."' AND `id` IN (".$id_quality.")  ORDER BY `title` ";
 
     $project_workorders_result = $mysql->sqlordie($select_project_workorders);
 
@@ -388,11 +392,11 @@ if(isset($from_action) && $from_action){
   $header = "Id\t Project\t Company\t Title\t  Category\t Example Url\t Description\t Status\t Severity\t Version\t Browser\t OS\t Origin\t Iteration\t Product\t  Requested By\t Detected By\t Assigned To\t Open Date\t Assigned Date\t Completed Date\t Closed Date\t Last Action\t Active\t Deleted\t Archived\n";
   $excel_body = '';
 
-  $clientId = $_GET['rp_client_filter'];
-  $projectId = $_GET['rp_project_filter'];
-  $statusId = $_GET['rp_status_filter'];
-  $assignedTo = $_GET['rp_assigned_filter'];
-  $rp_severity_filter = $_GET['rp_severity_filter'];
+  $clientId = $_POST['rp_client_filter'];
+  $projectId = $_POST['rp_project_filter'];
+  $statusId = $_POST['rp_status_filter'];
+  $assignedTo = $_POST['rp_assigned_filter'];
+  $rp_severity_filter = $_POST['rp_severity_filter'];
   if($rp_severity_filter == 'Show All'){
     $rp_severity_filter = -1;
   }
