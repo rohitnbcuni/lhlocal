@@ -408,7 +408,9 @@ function QA_loadProjectList() {
 
 // To Load the project list dynamically with all the project for the first time
 function QA_loadAllProjectList() {
-	clientId = document.getElementById("qa_client_filter").value;
+	if(document.getElementById("qa_client_filter")){
+		clientId = document.getElementById("qa_client_filter").value;
+	}
 	var allProject = new Array();
 	var sortedList = new Array();
 	html = '<option value="-1">Show All</option>';
@@ -497,13 +499,22 @@ function QA_loadAssignedList(assignedToId) {
 
 function displayquality() {
 	html = "";
+	var statusId = '';
+	var clientId = '';
+	var projectId = '';
+	var assignedTo = '';
+	var severityID = '';
+	
 	var exp = /((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	if(document.getElementById("qa_client_filter")){
 	clientId = document.getElementById("qa_client_filter").value;
+	
 	projectId = document.getElementById("qa_project_filter").value;
 
 	statusId = document.getElementById("qa_status_filter").value;
 	assignedTo = document.getElementById("qa_assigned_filter").value;
 	severityID = document.getElementById("qa_severity_filter").value;
+	}
 	var statusActiveArrayQA = [];
 	var qaStatusStatusQA = [];
 	// alert(statusId);
@@ -915,9 +926,9 @@ function sortQuality(sortType) {
 	$(".quality_sort li a").removeClass("up").removeClass("down");
 
 	if (sortDir == 1) {
-		$("#" + sortType + "sort").addClass("down").removeClass("up");
+		$("#" + sortType + "sort_qa").addClass("down").removeClass("up");
 	} else {
-		$("#" + sortType + "sort").removeClass("down").addClass("up");
+		$("#" + sortType + "sort_qa").removeClass("down").addClass("up");
 	}
 
 	/*
