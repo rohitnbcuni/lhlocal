@@ -392,11 +392,11 @@ if(isset($from_action) && $from_action){
   $header = "Id\t Project\t Company\t Title\t  Category\t Example Url\t Description\t Status\t Severity\t Version\t Browser\t OS\t Origin\t Iteration\t Product\t  Requested By\t Detected By\t Assigned To\t Open Date\t Assigned Date\t Completed Date\t Closed Date\t Last Action\t Active\t Deleted\t Archived\n";
   $excel_body = '';
 
-  $clientId = $_POST['rp_client_filter'];
-  $projectId = $_POST['rp_project_filter'];
-  $statusId = $_POST['rp_status_filter'];
-  $assignedTo = $_POST['rp_assigned_filter'];
-  $rp_severity_filter = $_POST['rp_severity_filter'];
+  $clientId = $_POST['qa_client_filter'];
+  $projectId = $_POST['qa_project_filter'];
+  $statusId = $_POST['qa_status_filter'];
+  $assignedTo = $_POST['qa_assigned_filter'];
+  $rp_severity_filter = $_POST['qa_severity_filter'];
   if($rp_severity_filter == 'Show All'){
     $rp_severity_filter = -1;
   }
