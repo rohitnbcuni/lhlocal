@@ -321,7 +321,10 @@ function wo_changeCompany(){
 
 // To Load the project list dynamically with the projects of the selected company
 function wo_loadProjectList() {
+	var clientId = '';
+	if(document.getElementById("client_filter")){
 	clientId = document.getElementById("client_filter").value;
+	}
 	html = '<option value="-1">Show All</option>';
   if($('#project_status_filter').val() == '0') {
     if(projectList != null){
@@ -349,8 +352,12 @@ function wo_loadProjectList() {
 
 // To Load the project list dynamically with all the project for the first time
 function wo_loadAllProjectList() {
-	previouslySelectedProject=document.getElementById("project_filter").value;
-	clientId = document.getElementById("client_filter").value;
+	if(document.getElementById("project_filter")){
+		previouslySelectedProject=document.getElementById("project_filter").value;
+	}
+	if(document.getElementById("client_filter")){
+		clientId = document.getElementById("client_filter").value;
+	}
 	html = '<option value="-1">Show All</option>';
   var allProject = new Array();
 	var sortedList = new Array();
@@ -368,8 +375,13 @@ function wo_loadAllProjectList() {
   	for (var i = 0; i < workorderList.length; i++) {
   		allProject[i] = workorderList[i]['project_code']+'~~'+workorderList[i]['project_name']+'~~'+workorderList[i]['project_id'];
   	}
-  	allProject2 = DistinctArray(allProject, true);
-	allProject = allProject2;
+  	var allProject2 = [];
+  	if(allProject.length > 0){
+  		allProject2 = DistinctArray(allProject, true);
+	  	if(allProject2.length > 0){
+	  		allProject = allProject2;
+	  	}
+  	}
   	var sortedList = allProject.sort();
   	for (var i = 0; i < sortedList.length; i++) {
   		project = sortedList[i].split('~~');
@@ -382,6 +394,7 @@ function wo_loadAllProjectList() {
   	allProjectList = html;
 	}
 	$("#project_filter").html(html);
+  
 }
 
 // To load the Assigned to list dynamically with all the assigned user list
@@ -422,9 +435,14 @@ function wo_loadAllAssignedList() {
 
 // To load the Assigned to list dynamically with the assigned user list based on the selected company and project
 function wo_loadAssignedList(assignedToId) {
-
+	var clientId = '';
+	var projectId = '';
+	if(document.getElementById("client_filter")){
 	clientId = document.getElementById("client_filter").value;
+	}
+	if(document.getElementById("project_filter")){
 	projectId = document.getElementById("project_filter").value;
+	}
 
   html = '<option value="-1">Show All</option>';
 	if(clientId == '-1' && projectId == '-1'){
@@ -588,15 +606,20 @@ function DistinctArray(array,ignorecase) {
 function buildWorkordersHTML() {
 	html = "";
     var exp = /((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-
-
-
+    var clientId = '';
+    var projectId ='';
+    var statusId = '';
+    var assignedTo = '';
+    var requestedby ='';
+    var project_status_filter = '';
+    if(document.getElementById("client_filter")){
 	clientId = document.getElementById("client_filter").value;
 	projectId = document.getElementById("project_filter").value;
 	statusId = document.getElementById("status_filter").value;
 	assignedTo = document.getElementById("assigned_filter").value;
 	requestedby = document.getElementById("requestedby_filter").value;
 	project_status_filter = document.getElementById("project_status_filter").value;
+    }
 //alert(requestedby);
 	// Added this fix for finding previously selected project exists -Chandra
 	var isProjectSelectedPresent = 0;
