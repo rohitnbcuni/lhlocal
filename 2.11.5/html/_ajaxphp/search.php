@@ -1,9 +1,7 @@
 <?php
 session_start();
-
 if(!(isset($from_action) && $from_action))
 include('../_inc/config.inc');
-
 if(!ISSET($_SESSION['user_id'])){
 	die("<b>You are not allowed to access these files</b>");
 }
