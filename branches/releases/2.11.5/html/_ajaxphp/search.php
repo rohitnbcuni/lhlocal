@@ -399,13 +399,13 @@ if(isset($from_action) && $from_action){
    
   $header = "Id\t Title\t Project\t Company\t Request Type\t Severity\t Status\t Requested By\t Assigned To\t Open Date\t Assigned Date\t Completed Date\t Due Date\t Estimate Date\t Last Commented By\t Last Commented Date\n";
   $excel_body = '';
-  $lhwoValue = $_COOKIE['lighthouse_wo_data'];
-  $lhwoArray = explode('~',$lhwoValue);
-  $clientId = $lhwoArray[0];
-  $projectId = $lhwoArray[1];
-  $statusId = $lhwoArray[2];
-  $assignedTo = $lhwoArray[3];
-  $request_type = $lhwoArray[4];
+  //$lhwoValue = $_COOKIE['lighthouse_wo_data'];
+ // $lhwoArray = explode('~',$lhwoValue);
+  $clientId = $_POST['client'];
+  $projectId = $_POST['proj_id'];
+  $statusId = $_POST['status_filter'];
+  $assignedTo = $_POST['assigned_to'];
+  $request_type = $_POST['req_type'];
 
   $req_Type_Arr = Array();
   $statusActiveArray = Array();
