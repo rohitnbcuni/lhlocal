@@ -1039,7 +1039,7 @@ function generateQAReport() {
 			+ "&aclientId=" + clientId + "&assignedTo=" + assignedTo+"&id_quality="+defectLists);*/
 	$.download('/_ajaxphp/search_quality.php',"report=excel&severityID="
 			+ rp_severity_filter + "&statusId=" + rp_status_filter + "&projectId=" + rp_project_filter
-			+ "&aclientId=" + rp_client_filter + "&assignedTo=" + rp_assigned_filter+"&id_quality="+defectLists );
+			+ "&clientId=" + rp_client_filter + "&assignedTo=" + rp_assigned_filter+"&id_quality="+defectLists );
 	// window.open('/_ajaxphp/qualityfilter_json.php?report=excel&rp_client_filter='+rp_client_filter+'&rp_project_filter='+rp_project_filter+'&rp_status_filter='+rp_status_filter+'&rp_severity_filter='+rp_severity_filter+'&rp_assigned_filter='+rp_assigned_filter);
 }
 
