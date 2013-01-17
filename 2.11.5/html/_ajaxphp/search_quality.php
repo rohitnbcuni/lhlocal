@@ -392,18 +392,20 @@ if(isset($from_action) && $from_action){
   $header = "Id\t Project\t Company\t Title\t  Category\t Example Url\t Description\t Status\t Severity\t Version\t Browser\t OS\t Origin\t Iteration\t Product\t  Requested By\t Detected By\t Assigned To\t Open Date\t Assigned Date\t Completed Date\t Closed Date\t Last Action\t Active\t Deleted\t Archived\n";
   $excel_body = '';
 
-  $clientId = $_POST['qa_client_filter'];
-  $projectId = $_POST['qa_project_filter'];
-  $statusId = $_POST['qa_status_filter'];
-  $assignedTo = $_POST['qa_assigned_filter'];
-  $rp_severity_filter = $_POST['qa_severity_filter'];
+  $clientId = $_POST['clientId'];
+  $projectId = $_POST['projectId'];
+  $statusId = $_POST['statusId'];
+  $assignedTo = $_POST['assignedTo'];
+  $rp_severity_filter = $_POST['severityID'];
+  
+  
   if($rp_severity_filter == 'Show All'){
     $rp_severity_filter = -1;
   }
   foreach($postingList as $project){
-    //if(($clientId < 0 || $clientId == $project['client']) && ($projectId < 0 || $projectId == $project['project_id'])){
+    if(($clientId < 0 || $clientId == $project['client']) && ($projectId < 0 || $projectId == $project['project_id'])){
       foreach($project['quality'] as $wo){
-        // if(($statusId < 0 || ($statusId == 99 && $wo['status'] != 'Closed') || $statusId == $wo['status']) && ($assignedTo < 0 || $assignedTo == $wo['assigned_to_id']) && ($rp_severity_filter < 0 || $rp_severity_filter == $wo['severity'])){
+         if(($statusId < 0 || ($statusId == 99 && $wo['status'] != 'Closed') || $statusId == $wo['status']) && ($assignedTo < 0 || $assignedTo == $wo['assigned_to_id']) && ($rp_severity_filter < 0 || $rp_severity_filter == $wo['severity'])){
 
          $excel_body .=  $wo['id'] . "\t " .
           $project['project_code'] . " : " . $project['project_name'] . "\t " .
@@ -431,8 +433,8 @@ if(isset($from_action) && $from_action){
           $wo['active'] . "\t" .
           $wo['deleted'] . "\t" .
           $wo['archived'] . "\n";
-        //}
-      //}
+        }
+      }
     }
   }
 
