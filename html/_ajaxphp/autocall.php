@@ -2,7 +2,8 @@
 include('../_inc/config.inc');
 include("sessionHandler.php");
 $results = array();
-$search_str = trim(str_replace('"','&quot;',$_GET['letters']));
+//$search_str = trim(str_replace('"','&quot;',$_GET['letters']));
+$search_str = htmlspecialchars($_GET['letters']);
 if($search_str != ''){
 		$search_string = '"'.urlencode($search_str).'"';
 		$search_par = trim($_GET['filters']);
@@ -17,7 +18,7 @@ if($search_str != ''){
 		}		
 		$int_id = (int) $search_str;
 		$doc_id = (!empty($int_id))?"%20OR%20docid:".$int_id:'';
-		echo $url = SOLR_URL_STRING.'((title:'.$search_string.'%20OR%20description:'.$search_string.$doc_id.')'.$string.')&featureClass=P&style=full&start=0&rows=10&sort=docid%20desc&name_startsWith='.$search_string;
+		$url = SOLR_URL_STRING.'((title:'.$search_string.'%20OR%20description:'.$search_string.$doc_id.')'.$string.')&featureClass=P&style=full&start=0&rows=10&sort=docid%20desc&name_startsWith='.$search_string;
 
 		$ch = curl_init();
 		$request='<request>'.$request.'</request>';
@@ -28,6 +29,7 @@ if($search_str != ''){
 				curl_setopt($ch,CURLOPT_HTTPPROXYTUNNEL,true);
 				curl_setopt($ch,CURLOPT_PROXYTYPE,CURLPROXY_HTTP);
 		}
+		
 		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 		curl_setopt ($ch, CURLOPT_POST, 1);
 		curl_setopt ($ch, CURLOPT_POSTFIELDS, $request);
