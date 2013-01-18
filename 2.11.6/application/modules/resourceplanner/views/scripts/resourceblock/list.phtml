@@ -1,0 +1,90 @@
+<ul id="WeekRow">
+	<li class="PreviousWeek"><a href="javascript:void(0);" onclick="app.previousWeek('<?=$this->items["previous_week"]?>');"><span>previous week</span></a></li>
+<?php foreach ($this->items["weekdays"] as $day){ ?>
+	<li><?= strftime("%A<br />%m/%d/%y", strtotime($day)) ?></li>
+<?php } ?>
+	<li class="NextWeek"><a href="javascript:void(0);" onclick="app.nextWeek('<?=$this->items["next_week"]?>');"><span>next week</span></a></li>
+</ul>
+
+<ul id="ResourceGrid">
+
+<?php
+ 
+	$counter = 1;
+	$char_at=' ';
+	$rt='phone-number-fax';
+	$encountered_letters=array();
+	$type='';
+	if(array_key_exists('type',$_REQUEST))
+	{
+		$type=$_REQUEST['type'];
+	}
+	$encountered_projects=array();
+?>
+
+<?php foreach ($this->items["users"] as $user){ ?>
+<?php
+	$user_id = $user["id"];
+	
+	$utype=$this->items['bc']->get_person_extra($user_id,'type');
+	if(!$utype && $type!='Uncategorized') continue;
+	if($type!='')
+	{
+		if($type=='Uncategorized' && $utype!='')
+		{
+			continue;
+		}
+		elseif($type!='Uncategorized' && ($type!=$utype))
+		{
+			continue;
+		}
+	}
+	$first_name = "first-name";
+	$last_name = "last-name";
+	$active_user = !empty($this->items["resourceblocks"][$user_id]) ? $this->items["resourceblocks"][$user_id] : "";
+	$char_at=strtolower($user[$first_name][0]);
+	$id='';
+	if($char_at!=end($encountered_letters))
+	{
+		$id="anchor_$char_at";
+		$encountered_letters[]=$char_at;
+	}
+
+?>
+	<li class="<?php if ($counter++ % 2 == 0){print "Even";}else{print "Odd";}?>"> 
+	<div class="UserName" id="<?=$id?>"><?=$user[$first_name]?> <?=$user[$last_name]?></div>
+		<ul class="UserWeek uid<?=$user_id?>">
+		<?php foreach ($this->items["weekdays"] as $day){ ?>
+		<li>
+			<ul class="UserDay d<?=$day?>">
+			<?php foreach ($this->items["dayparts"] as $daypart){ ?>
+				<?php
+					$active_user_daypart = !empty($active_user[$day][$daypart]) ? $active_user[$day][$daypart] : "";
+					$dpStatus = $active_user_daypart ? $active_user_daypart["Status"] : "";
+					$project_id = $active_user_daypart ? $active_user[$day][$daypart]["ProjectID"] : "";
+					$project = !empty($this->items["projects"][$project_id]) ? $this->items["projects"][$project_id] : "";
+					$project_name= '';
+					if($project && array_key_exists('name',$project)) $project_name=$project['name'];
+				?>
+				<li onClick="app.clk(this);"
+					class="<?php if ($dpStatus)print "Status$dpStatus";?> dp<?=$daypart?>">
+					<span><?php echo $project_name?><?php if ($project_id) print " BC id: $project_id";?></span></li>
+					<?php
+					$p=preg_replace('/(^[A-Z]+).*$/','$1',$project_name);
+					if($p!='')
+					{
+						$p=preg_replace('/M|(?:PROD)$/','',$p);
+						array_key_exists($p,$encountered_projects)?$encountered_projects[$p]++:$encountered_projects[$p]=1;
+					}
+
+					?>
+			<?php } ?>
+			</ul>
+		</li>
+		<?php } ?>
+		</ul>
+	</li>
+<?php } ?>
+</ul>
+<div id="load_numbers"><?=json_encode($this->items['load']); ?></div>
+<div id="project_numbers"><?=json_encode($encountered_projects); ?></div>
