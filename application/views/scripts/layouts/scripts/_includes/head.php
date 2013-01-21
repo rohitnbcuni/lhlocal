@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<?PHP	$randNum = "201212140609"; ?>
+<?PHP	$randNum = "201301180609"; ?>
 <title><?echo DEV_TEAM_NAME?>: Lighthouse</title>
 	<link rel="stylesheet" href="/_css/style.css?<?PHP echo $randNum; ?>" type="text/css" />
 	<link rel="stylesheet" href="/_css/ui.datepicker.css" type="text/css" />
@@ -275,13 +275,13 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 			}
 
 			case "search": {
-			    echo "<script src=\"/_js/jquery.min.js\"></script>"; 
-			    echo "<script src=\"/_js/ui.core.js\" type=\"text/javascript\"></script>\n"
-					 ."\t<script src=\"/_js/ui.selectable.js\" type=\"text/javascript\"></script>\n"
-					 ."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
-		            echo "<script src=\"/_js/jquery.pajinate.js\"></script>";
-	
+			   echo	"<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n";
+			   echo "\t<script src=\"/_js/jqueryMultiSelect.js\" type=\"text/javascript\"></script>\n"
+						."\t<script src=\"/_js/jquery-ui-1.8.19.custom.min.js\" type=\"text/javascript\"></script>"
+						. "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
+				echo "<script src=\"/_js/search_filter.js\"></script>"; 
 			    echo "<link rel=\"stylesheet\" href=\"/_css/search_style.css?". $randNum. "\" type=\"text/css\" />";
+				echo "<script src=\"/_js/search_quality_filter.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
 			break;
 			}
 		}
