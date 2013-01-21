@@ -1,0 +1,222 @@
+<? // setup javascript to load in HTML head, including all required Dojo
+   // libraries: ?>
+<? $this->headScript()
+        ->setAllowArbitraryAttributes(true)
+        ->appendFile( '/js/jquery.js','text/javascript')
+        ->appendFile( '/js/jquery.jeditable.js','text/javascript')
+        ->appendFile( '/js/jquery.ui.js','text/javascript')
+        ->captureStart() ?>
+
+ $(document).ready(function() {
+
+	 $(".draggable").draggable({
+		helper: "clone"
+	 });
+
+	 $(".droppable").droppable({
+    accept: ".draggable",
+    tolerance: "pointer",
+    drop: function(ev, ui) {
+    	val = ui.draggable.attr("id");
+    	cclist = $("#cclist").val();
+    	cclist = cclist.replace(val,"");
+    	cclist = cclist.replace("||","|");
+    	cclist = cclist.replace(/^\|/,"");
+    	$("#cclist").val(cclist);
+        ui.draggable.clone().fadeOut("fast",
+        function() { $(ui.draggable).remove()});
+    }
+	});
+
+	people = <?php print Zend_Json::encode($this->people); ?>;
+
+
+
+   // add markup to container and apply click handlers to anchors
+   $("#post").click(function(e){
+     $.post("/workorders/index/comment", {bcid: $("#bcid").val(), new_comment: $("#new_comment").val()}, function(data) {
+     	 $("#posted").html('');
+     	 $("#new_comment").val('');
+    	 $.each(data, function(i) {
+       		$("#posted").append(
+				"<label>Posted On: </label>" + data[i].posted+ "<br>" +
+				"<label>Author: </label>" + data[i].name+ "<br>" +
+				"<label>Attachments: </label>" + data[i].attachments + "<br><br>" +
+				data[i].body + "<br>"
+			);
+       });
+     },"json");
+   });
+
+    $("#close").click(function(e){
+    	$.post("/workorders/index/close", {id: $("#id").val(), new_comment: $("#new_comment").val()}, function(data) {top.location = "/workorders/index/list"});
+	});
+
+
+$("#ccAdd").editable(function(value, settings) {
+	if($("#list").html() == "no recipients") { $("#list").empty() };
+	$("#list").append('<span title="drag to trash to remove" class="draggable prepend-1"> '+people[value]+'</span>');
+	val = $("#cclist").val();
+	delim = val == '' ? '' : '|';
+	$("#cclist").val(value+delim + val);
+	$(".draggable").draggable({ helper: "clone" });
+	return '<img src="/images/AddMailbox.gif">';
+ }, {
+
+ 		data		: '<?php print Zend_Json::encode($this->people); ?>',
+		type		: 'select',
+		submit		: 'OK',
+		tooltip     : 'Click to add recipients',
+		cssclass	: 'inherit'
+	});
+});
+
+
+
+<? $this->headScript()->captureEnd() ?>
+
+<? $this->headStyle()->captureStart() ?>
+
+ .editable {font-size: 9pt; height: 25px}
+ #trashxx {position: absolute; display: block; bottom: 0em; right : 1.5em;}
+ #list {background-color: lavander;}
+
+<? $this->headStyle()->captureEnd() ?>
+
+
+
+<form enctype="multipart/form-data" name="workorders" action="<?= $this->escape($this->form->getAction()) ?>" method="<?= $this->escape($this->form->getMethod()) ?>" >
+<div class = "span-12">
+<fieldset style="height: 475px">
+    <legend>New Work Order Information</legend>
+    <?= $this->form->id ?>
+    <?= $this->form->bcid ?>
+    <?= $this->form->category_id ?>
+    <?= $this->form->cclist ?>
+    <?= $this->form->requested_by ?>
+    <?= $this->form->project_id ?>
+    <?= $this->form->type ?>
+    <?= $this->form->priority ?>
+    <?= stripslashes($this->form->title) ?>
+    <?= stripslashes($this->form->body) ?>
+    <?= $this->form->file ?>
+</fieldset>
+</div>
+<div class = "span-12 last">
+	<fieldset style="height: 475px">
+	<legend>Comments</legend>
+
+		<?= $this->form->new_comment ?>
+		<dl>
+			<div class="span-5"><?= $this->form->post ?></div>
+			<div class="last"><?= $this->form->close ?></div>
+		</dl>
+		<dt><label for="posted">Posted Comments</label></dt>
+		<dd>
+			<div name="posted" id="posted" style="margin: .5em; background-color: snow; font-color: blue;   height: 200px; overflow: auto; padding: 5px; border: 1px solid #666;">
+				<?php
+					if(is_array($this->comments))
+					{
+					foreach($this->comments as $comment) {
+						$author = $this->bc->person($comment->{"author-id"});
+						$comment->{"name"} = sprintf("%s, %s", $author->{"first-name"}, $author->{"last-name"});
+				?>
+					<label>Posted On:</label> <?= $comment->{"posted-on"} ?><br>
+					<label>Author:</label> <?= $comment->{"name"} ?><br>
+					<label>Attachments:</label> <?= $comment->{"attachments-count"} ?><br>
+
+					<?= stripslashes($comment->{"body"}) ?><br><br>
+				<?php
+					}
+					}
+				?>
+			</div>
+		</dd>
+			<div class="span-2">
+					<label >CC&nbsp;List</label>
+			</div>
+			<div class="span-7 editable" name="ccAdd" id="ccAdd">
+				<img src="/images/AddMailbox.gif">
+			</div>
+			<div class="span-1 droppable last" name="trash" id="trash">
+					<img src="/images/TrashMailboxLarge.png">
+			</div>
+			<div class="span-9" name="list" id="list">
+<?php
+			$i = 0;
+			if($this->ccArray[0] != "") {
+			foreach($this->ccArray as $cc) {
+				if($i > 4 ) $i = 0;
+				$i++;
+				$last = $i == 4 ? 'last' : '';
+				$class = "prepend-1 draggable" ;
+			?>
+			<span title="drag to trash to remove" class="<?= $class ?>" id="<?= $cc ?>"><?= $this->people[$cc] ?></span>
+<?php
+			}
+			}
+?>
+		</div>
+	</fieldset>
+</div>
+<?php if(!$_SESSION['basecamp']['isClient'])
+	{
+?>
+<div class = "container">
+<div class="span-24">
+<fieldset>
+	<legend>Requester</legend>
+    <div class=" span-3"><dt><label>Name</label></dt><dd><?= $this->requester->{"name"} ?></dd></div>
+    <div class=" span-3"><dt><label>Username</label></dt><dd><?= isset($this->requester->{"user-name"}) ? $this->requester->{"user-name"} : ''  ?></dd></div>
+    <div class=" span-3"><dt><label>IM</label></dt><dd><?= $this->requester->{"im-handle"} ?></dd></div>
+    <div class=" span-8"><dt><label>Email</label></dt><dd><?= $this->requester->{"email-address"} ?></dd></div>
+    <div class=" span-3 last"><dt><label>BCID</label></dt><dd><?= $this->requester->{"id"} ?></dd></div>
+</fieldset>
+</div>
+</div>
+<div class = "container">
+<fieldset>
+    <legend>Project Management</legend>
+    <div class = "span-8"><?= $this->form->assigned_to ?></div>
+    <div class = "span-8"><?= $this->form->extra_resources ?></div>
+    <div class = "span-4 last"><?= $this->form->status ?></div>
+    <dl></dl>
+    <div class = "span-8"><?= $this->form->start_date ?></div>
+    <div class = "span-8"><?= $this->form->est_due_date ?></div>
+    <div class = "span-4 last"><?= $this->form->closed_date ?></div>
+</fieldset>
+</div>
+<div class = "container">
+<fieldset>
+	<div class = "span-4"><?= $this->form->submit ?></div>
+	<div class = "last"><?= $this->form->reset ?></div>
+</fieldset>
+</div>
+<?php
+	}else{
+?>
+ <fieldset style="Display:none">
+	<legend>Requester</legend>
+    <?= $this->form->requested_by ?>
+</fieldset>
+<br>
+<fieldset style="Display:none">
+    <legend>Project Management</legend>
+    <?= $this->form->assigned_to ?>
+    <?= $this->form->extra_resources ?>
+    <?= $this->form->status ?>
+    <?= $this->form->start_date ?>
+    <?= $this->form->est_due_date ?>
+    <?= $this->form->closed_date ?>
+</fieldset>
+<div class="container">
+<fieldset>
+	<div class = "span-4"><?= $this->form->submit ?></div>
+	<div class = "span-4 last"><?= $this->form->reset ?></div>
+</fieldset>
+</div>
+
+<?php
+	}
+?>
+</form>
