@@ -383,14 +383,14 @@
 							echo '</li>
 							<li>
 								<label for="wo_desc" id="wo_desc_label"><img style="float:left;margin-left:40px;margin-top:-4px;" src="/_images/tool-tip-lighthouse-v2.png" onmouseout="hideTooltip();" onmouseover="showTooltip();" >Description:</label><div style="display: none;" class="wo_comment" id="qa_tooltip"><div class="wo_comment_header"></div><div class="wo_comment_content"><p class="risk_desc">
-Description should include the following:
+<b>Description should include the following:</b>
 <br><br>
-- Further detailed explanation of the summary already provided<br>
-- Steps to Recreate:  Explain each step correctly in sequence and clearly<br>
-- Expected Result:  Illustrate the expected behavior of the application<br>
-- Actual Result:  Document what actually happened in the application<br>
-- Reproducible - Is the issue reproducible - Yes or No?<br>
-- Environment - (Prod, Stage, QA, Dev)<br>
+<b>-</b> Further detailed explanation of the summary already provided<br>
+<b>-</b> Steps to Recreate:  Explain each step correctly in sequence and clearly<br>
+<b>-</b> Expected Result:  Illustrate the expected behavior of the application<br>
+<b>-</b> Actual Result:  Document what actually happened in the application<br>
+<b>-</b> Reproducible - Is the issue reproducible - Yes or No?<br>
+<b>-</b> Environment - (Prod, Stage, QA, Dev)<br>
 
 </p></div><div class="wo_comment_footer"></div></div>
 								<textarea name="wo_desc" id="wo_desc" class="field_large">' .htmlentities(@$wo_data[0]['body'],ENT_NOQUOTES,'UTF-8') .'</textarea>
