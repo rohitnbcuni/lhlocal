@@ -890,7 +890,7 @@ function qualityeditsearch(){
 }
 function showTooltip(){
 	var topVar = ($('#qa_tooltip').offset().top + 58); 
-	var leftVar = 710; 
+	var leftVar = -120; 
 	$('#qa_tooltip').css({display:'block', left: leftVar + 'px'});
 	}
 
