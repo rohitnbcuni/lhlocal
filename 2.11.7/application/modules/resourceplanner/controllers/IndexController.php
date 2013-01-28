@@ -452,6 +452,18 @@
 				</div>';
 			}
 		}
+		
+		
+		public function hoursAction(){
+			if(ISSET($_SESSION['user_id'])){
+				$userId = $_SESSION['user_id'];
+				$this->_redirect("resourceplanner/?userid=".$userId);
+				$this->_helper->layout->disableLayout();
+			}	
+			
+		
+		
+		}
 	}
 
 ?>
