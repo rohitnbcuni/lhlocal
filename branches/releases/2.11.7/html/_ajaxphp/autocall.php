@@ -9,7 +9,7 @@ if($search_str != ''){
 	//echo getAdavanceSearch($search_str);
 	$output = getGroupBySearch($search_str);
 	if(trim($output) == ''){
-		//$output = getAdavanceSearch($search_str);
+		$output = getAdavanceSearch($search_str);
 
 	}
 	echo $output;
