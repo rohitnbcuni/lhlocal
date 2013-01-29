@@ -9,7 +9,7 @@ if($search_str != ''){
 	//echo getAdavanceSearch($search_str);
 	$output = getGroupBySearch($search_str);
 	if(trim($output) == ''){
-		$output = getAdavanceSearch($search_str);
+		//$output = getAdavanceSearch($search_str);
 
 	}
 	echo $output;
@@ -43,7 +43,7 @@ function getGroupBySearch($search_str){
 			if(count($jsonOutput) > 0){
 				foreach($jsonOutput as $key => $val){
 					if($key%2 == 0){
-						$result_str .= $key."###<a  href='javascript:void(0);'>".ucfirst($val)."|"; 
+						$result_str .= ($key+1)."###<a  href='javascript:void(0);'>".ucfirst($val)."|"; 
 					}
 				}
 			
@@ -123,7 +123,7 @@ function getAdavanceSearch($search_str){
 				}
 			}
 			$pageURL = BASE_URL;
-			for($i =0 ; $i<count($id); $i++){
+			for($i =1 ; $i<count($id); $i++){
 				if($cat[$i][0]=='quality'){
 					$link = $pageURL.'/quality/index/edit/?defect_id=';
 				}else{
@@ -156,7 +156,7 @@ function getAdavanceSearch($search_str){
 			
 				$response = curl_exec($ch);
 				if($response == false){
-					throw new Exception('Bad Request');
+					//throw new Exception('Bad Request');
 				
 				}
 				curl_close($ch);
