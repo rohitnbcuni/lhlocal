@@ -142,6 +142,7 @@ function getAdavanceSearch($search_str){
 				$ch = curl_init();
 				$request='<request>'.$request.'</request>';
 				curl_setopt($ch, CURLOPT_URL, $url);
+				//Uncomment if you want to run on Local system
 				//curl_setopt($ch, CURLOPT_PROXY, "http://64.210.197.20:80");
 				//curl_setopt($ch, CURLOPT_PROXYPORT, 80);
 				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
