@@ -143,8 +143,8 @@ function getAdavanceSearch($search_str){
 				$request='<request>'.$request.'</request>';
 				curl_setopt($ch, CURLOPT_URL, $url);
 				//Uncomment if you want to run on Local system
-				//curl_setopt($ch, CURLOPT_PROXY, "http://64.210.197.20:80");
-				//curl_setopt($ch, CURLOPT_PROXYPORT, 80);
+				curl_setopt($ch, CURLOPT_PROXY, "http://64.210.197.20:80");
+				curl_setopt($ch, CURLOPT_PROXYPORT, 80);
 				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 				curl_setopt ($ch, CURLOPT_POST, 1);
 				curl_setopt ($ch, CURLOPT_POSTFIELDS, $request);
@@ -167,8 +167,7 @@ function getAdavanceSearch($search_str){
 				$strResponse = "";
 				$strErrorCode = $e->getCode();
 				$strErrorMessage = $e->getMessage();
-				print_r($arrCurlInfo, $strErrorCode, $strErrorMessage);
-				die;
+				
 			} 
 		}
  			
