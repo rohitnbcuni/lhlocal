@@ -119,7 +119,7 @@
 						<!--==| END: Bucket |==-->
 						</div>
 					<!--=========== COLUMN BREAK ===========-->
-					<div class="column_right_resource">
+					<div class="column_right_resource" style="margin-top:-979px;margin-left:652px;">
 
 						<!--==| START: Bucket |==-->
 						<div class="title_med allocation_expanded"><h4>Allocation Type</h4></div>
