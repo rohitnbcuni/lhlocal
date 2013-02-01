@@ -39,7 +39,7 @@ class createSolrXml{
 	public function workorders($path){
 		
 			$mysql = self::singleton();
-			$workorders = "SELECT id,project_id,title,example_url,body,requested_by,creation_date FROM workorders where id!='28317' ORDER BY id DESC";  
+			$workorders = "SELECT id,project_id,title,example_url,body,requested_by,creation_date FROM workorders where id!='28317'  ORDER BY id DESC limit 0, 1000";  
 			$workorders_res = $mysql->query($workorders);
 							
 			$doc = new DOMDocument("1.0");
@@ -133,7 +133,7 @@ class createSolrXml{
 	
 	public function quality($path){
 			$mysql = self::singleton();
-			$quality = "SELECT id,project_id,title,example_url,body,requested_by,creation_date FROM qa_defects ORDER BY id DESC";  
+			$quality = "SELECT id,project_id,title,example_url,body,requested_by,creation_date FROM qa_defects ORDER BY id DESC limit 0,1000";  
 			$quality_res = $mysql->query($quality);
 			$doc = new DOMDocument("1.0");
 			$doc->formatOutput = true; 
