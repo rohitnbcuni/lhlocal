@@ -130,6 +130,7 @@
 				}else{
 					$avatar_img = '/_images/empty_mugshot.gif';
 				}
+				$avatar_img = str_replace("http:", "https:", $avatar_img);
 				$update_user_query = "UPDATE `users` SET "
 							."`user_name`='" .$uData['user_name'] ."', "
 							."`email`='" .$uData['email'] ."', "

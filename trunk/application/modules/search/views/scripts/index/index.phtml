@@ -1,6 +1,5 @@
 <?PHP
-session_start();
-	/*
+/*
 	Base Zend index file loaded for the index.php file
 	*/
 
@@ -93,8 +92,23 @@ $search_text= str_replace("'", "",$search_text);
 	<?php if($result_found!=0){ ?>
 		<label style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" title="<?php echo $search_text;?>"><?php echo $result_found;?> Search results for "<?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?>"</label><?php } else{?>
 		<label  style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" >No result for "<?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?>" </label>
+			
 	<?php }?>
-</div>
+	<div onmouseout="hideComment_wo(23);" onmouseover="showComment_wo(23);" style="float:right;margin:7px 31px 0 10px;">
+	<img src="/_images/tool-tip-lighthouse-v2.png" >
+		<div id='wo_comment_23' class='wo_comment' style="display:none;">
+			<div class="wo_comment_header"></div>
+			<div class="wo_comment_content">
+				<p class="risk_desc">Actual result may be different from total result due to following reasons.<br>
+				- You don't have access to view some workorders.<br/>
+				- Project might be deleted from basecamp or Lighthouse backend.
+				<br>
+				</p>
+			</div>
+			<div class="wo_comment_footer"></div>
+		</div>
+	</div>
+</div>	
  <div class="search_wrapper_parent">
     <div class="search_select_radio">
      <?php if($result_found!=0){ ?> <ul>

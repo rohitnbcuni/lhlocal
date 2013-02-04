@@ -888,4 +888,16 @@ function qualityeditsearch(){
 	}
 	return false;
 }
+function showTooltip(){
+	var topVar = ($('#qa_tooltip').offset().top + 58); 
+	var leftVar = -120; 
+	$('#qa_tooltip').css({display:'block', left: leftVar + 'px'});
+	}
+
+	function hideTooltip(){
+	$('#qa_tooltip').css({display:'none'});
+	}
+
+
+
 
