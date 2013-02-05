@@ -45,7 +45,7 @@ a:hover { text-decoration: underline; }
 
 	.settings_logo { }
 
-	h2 { width: 300px; position: absolute; left: 0; background: url(../_images/OandTS-logo.png) no-repeat;margin-top: -3px;height: 100px; text-indent: -9999px; }
+	h2 { width: 300px; position: absolute;background: url(../_images/OandTS-logo.png)scroll 60px 0 transparent no-repeat;margin-top: -3px;height: 100px;font-size: 9px;color: #FFFFFF;padding: 14px 0 0;margin-left: 3px;  }
 
 	.risk_settings { list-style-type: none; position: absolute; right: 230px; top: 1px;}
 
