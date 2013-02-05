@@ -11,7 +11,7 @@
 	<!----| START: Setting Bar |---->
 	<div class="settings_bar">
 		<div class="wrapper">
-			<h2><?=DEV_TEAM_NAME?>: Experience User Design</h2>
+			<h2>Powered By</h2>
 			<ul class="settings">
 			<?PHP
 				//@$menu_array[5]['url']
