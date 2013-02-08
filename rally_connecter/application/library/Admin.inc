@@ -713,9 +713,15 @@
 
 		
 		public  static function maapingLhRallyProject($mappedData) {
+		
 			$db = Zend_Registry::get('db');
-			$db->insert("rally_lh_project_mapping", $mappedData);
-			return $db->lastInsertId();
+			//check if LH or RALLY project not exist in Mapped table
+			$result = $db->query("SELECT id FROM rally_lh_project_mapping WHERE (lh_project_id = ".$mappedData['lh_project_id']." OR rally_project_id = ".$mappedData['rally_project_id'].") LIMIT 1");
+			$affectedLHRows = $result->rowCount();
+			if($affectedLHRows == 0){
+				$db->insert("rally_lh_project_mapping", $mappedData);
+				return $db->lastInsertId();
+			}
 		}
 		
 		public  static function getLHRallyProjects($id =0) {
