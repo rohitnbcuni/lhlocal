@@ -421,7 +421,7 @@
 			
 			return '<input type="hidden" name="cclist" id="cclist" value="' .$cclist[0]['cclist'] .'" />';
 		}
-public function getQCProjectCCList($project_id) {
+		public function getQCProjectCCList($project_id) {
        		$cclist = self::getQuery("SELECT `qccclist` FROM `projects` WHERE `id`='$project_id'");
 			
 			return '<input type="hidden" name="qccclist" id="qccclist" value="' .$cclist[0]['qccclist'] .'" />';
@@ -556,7 +556,7 @@ public function getQCProjectCCList($project_id) {
 		}
 
 /* //////////////////////////////////////////////////////////////changes///////////////////////////////////////////////////////////*/		
-               public function getYears($yearSelected) {
+        public function getYears($yearSelected) {
 		//	$startDate = strtotime(date('d/m/2010'));
 		//	$nextYear = $startDate;
 			for($i=2010;$i<=$yearSelected;$i++)
@@ -685,7 +685,7 @@ public function getQCProjectCCList($project_id) {
 			return $html;
 		}
 		
-		function userProjectArray($userId, $userType,$userStatus){
+		function userProjectArray($userId, $userType='',$userStatus=''){
 			$db = Zend_Registry::get('db');
 			//$db = Zend_Registry::get('db');
 			if($userStatus == "client") {
@@ -696,6 +696,62 @@ public function getQCProjectCCList($project_id) {
 			//$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com  ON (a.`company`=com.`id`) WHERE  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1'  $comp_query ORDER BY com.`name`, a.`project_code` ASC");
 
 			return $userProjectListArray =  $db->fetchCol("SELECT distinct UP.project_id FROM `user_project_permissions` UP INNER JOIN `projects` a  ON (a.`id`=UP.`project_id`) WHERE UP.`user_id`='" .$userId."' AND  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1'  ORDER BY a.`project_code` ASC ");
+		
+		}
+		
+		
+		public  static function getRallyProjectOptionEditHTML() {
+			$db = Zend_Registry::get('db');
+			$projects = ("SELECT  rs.`project_name` AS workspace_name, r.`project_name` AS project_name, rs.project_id AS workspace_id, r.project_id AS project_id
+				FROM  `rally_projects` r LEFT JOIN  `rally_projects` AS rs ON ( r.`workspace_id` = rs.`project_id` ) WHERE rs.`project_name` IS NOT NULL 
+				ORDER BY rs.`project_name` ") ;
+			$rs = $db->fetchAll($projects);
+					
+			return $rs;
+		}
+		
+
+		
+		public  static function maapingLhRallyProject($mappedData) {
+			$db = Zend_Registry::get('db');
+			$db->insert("rally_lh_project_mapping", $mappedData);
+			return $db->lastInsertId();
+		}
+		
+		public  static function getLHRallyProjects($id =0) {
+			
+			$db = Zend_Registry::get('db');
+			if($id > 0){
+			
+				$mappedData = "SELECT lh.project_name AS lh_project, rp.project_name AS ra_project, rl.id
+							FROM rally_lh_project_mapping rl INNER JOIN projects lh ON ( lh.id = rl.lh_project_id ) 
+							INNER JOIN rally_projects rp ON ( rp.project_id = rl.rally_project_id ) 
+							WHERE rl.deleted =  '0' AND rl.active =  '1' AND rl.id = ".$id;
+							
+			}else{
+				$mappedData = "SELECT lh.project_name AS lh_project, rp.project_name AS ra_project, rl.id, rl.lh_project_id,rl.rally_project_id
+							FROM rally_lh_project_mapping rl INNER JOIN projects lh ON ( lh.id = rl.lh_project_id ) 
+							INNER JOIN rally_projects rp ON ( rp.project_id = rl.rally_project_id ) 
+							WHERE rl.deleted =  '0'
+							AND rl.active =  '1'";
+						}
+			//echo $mappedData;
+			$result = $db->fetchAll($mappedData);
+			return $result;
+		}
+		
+		public function getLHProjectOption() {
+			$db = Zend_Registry::get('db');
+			$projectsSql = $db->fetchAll("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com  ON (a.`company`=com.`id`) WHERE  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`qa_permission` = '1'  ORDER BY com.`name`, a.`project_code` ASC");
+			return $projectsSql;
+		}
+		
+		public static function deleteMaapingLhRallyProject($id){
+			$db = Zend_Registry::get('db');
+			
+			$result = $db->query("DELETE FROM rally_lh_project_mapping WHERE id = ".$id." LIMIT 1");
+			return $affectedRows = $result->rowCount();
+			//return $db->lastInsertId();
 		
 		}
 	}
