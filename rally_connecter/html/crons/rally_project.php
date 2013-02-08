@@ -9,8 +9,8 @@
 try {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_PROXY, "http://64.210.197.20:80");
-	curl_setopt($ch, CURLOPT_PROXYPORT, 80);
+	//curl_setopt($ch, CURLOPT_PROXY, "http://64.210.197.20:80");
+	//curl_setopt($ch, CURLOPT_PROXYPORT, 80);
 	curl_setopt($ch, CURLOPT_URL, RALLY_PROJECT_URL);    // get the url contents
 	
 	curl_setopt($ch, CURLOPT_HEADER, false);
