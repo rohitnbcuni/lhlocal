@@ -75,8 +75,8 @@ if(count($rally_workspaces) >0){
 
 }
 
-print "<pre>";
-print_r($xml);
+//print "<pre>";
+//print_r($xml);
 
 
 
