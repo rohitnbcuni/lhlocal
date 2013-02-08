@@ -1140,6 +1140,66 @@
 			$this->_helper->layout->disableLayout();
 			echo $result;
 		}
+		
+		public function rallyprojectmapAction(){
+			$rallyArray = array();
+			//All rally project
+			$rallyProject = AdminDisplay::getRallyProjectOptionEditHTML();
+			foreach($rallyProject as $r_key => $r_val){
+				//if($r_val['workspace_id'] == ''){
+					
+					$rallyArray[$r_val['workspace_name']][] = array('name'=>$r_val['project_name'],'id'=>$r_val['project_id']);
+					
+					//}
+			}
+			$this->view->assign('rallyArray',$rallyArray);
+			
+			$proj_id=0;
+			//All LH project
+			$this->view->assign('LHProjectHtml',AdminDisplay::getLHProjectOption()); 
+			//All Mapped projects
+			$this->view->assign('LhRallyProjects',AdminDisplay::getLHRallyProjects($proj_id));
+			
+		}
+		
+		function maprojectlistingAction(){
+			$lastInsertId = 0;
+			$lh_project = $this->_request->getParam('lh');
+			$rally_project = $this->_request->getParam('rally');
+			if(!empty($lh_project) && (!empty($rally_project))){
+				$mappedArray = array();
+				$mappedArray = array(
+					"lh_project_id" => $lh_project,
+					"rally_project_id" => $rally_project,
+					"active" => "1",
+					"deleted" =>"0",
+				);
+				$lastInsertId = AdminDisplay::maapingLhRallyProject($mappedArray);
+				$lastInsertId = trim($lastInsertId);
+				$lastInsertRow = AdminDisplay::getLHRallyProjects($lastInsertId);
+				$this->view->assign('LhRallyProjects',$lastInsertRow);
+			}
+			
+			$this->_helper->layout->disableLayout();
+			//echo $result;
+		
+		}
+		
+		function deletemaprojectlistingAction(){
+			$affectedId = 0;
+			$id = $this->_request->getParam('id');
+			
+			if(!empty($id)){
+				$affectedId = AdminDisplay::deleteMaapingLhRallyProject($id);
+			}
+			if(count($affectedId) > 0){
+				echo $affectedId;
+			}
+			$this->_helper->layout->disableLayout();
+			
+		
+		}
+		
 	}
 	
 ?>
