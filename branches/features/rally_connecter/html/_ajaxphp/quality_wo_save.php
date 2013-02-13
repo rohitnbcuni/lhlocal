@@ -417,8 +417,8 @@
 		curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,0);
 		curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_PROXY, "http://64.210.197.20:80");
-		curl_setopt($ch, CURLOPT_PROXYPORT, 80);
+		//curl_setopt($ch, CURLOPT_PROXY, "http://64.210.197.20:80");
+		//curl_setopt($ch, CURLOPT_PROXYPORT, 80);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 4);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $prepare_defect_xml);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
