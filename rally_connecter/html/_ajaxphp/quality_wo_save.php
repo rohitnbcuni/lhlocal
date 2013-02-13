@@ -466,7 +466,7 @@
 					$arr = $returnXML->Object->attributes();
 					
 					if(ISSET($arr['ref'])){
-						echo $rally_new_defect_id = str_replace(RALLY_WEB_SERVICE_URL,"",$arr['ref']); 	
+						echo $rally_new_defect_id = str_replace(RALLY_WEB_SERVICE_URL."/defect/","",$arr['ref']); 	
 						
 						$sql = "INSERT INTO qa_rally_defects SET defect_id = '".$lh_defect_id."', rally_id = '".$rally_new_defect_id."' , created = '".date("Y-m-d h:i:s")."'";
 						$result2 = $mysql->sqlordie($sql);
