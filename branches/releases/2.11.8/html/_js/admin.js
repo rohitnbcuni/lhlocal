@@ -845,6 +845,9 @@ function setQadataGrid(){
 
 
 function mappLHRalyProjectes(){
+
+	
+	
 	var lh_project = $('#lh_project').val();
 	var rally_project = $('#rally_project').val();
 	if(lh_project == ''){
@@ -853,13 +856,14 @@ function mappLHRalyProjectes(){
 		return false;
 	
 	
-	}else if(rally_project == ''){
+	}if(rally_project == ''){
 		$('.message_required p').html('Please select Rally Project .');
 		$('.message_required').css({display:'block'});
 		return false;
 	}
 	
 	if(lh_project != '' && lh_project != ''){
+		$('#rallyReportbtn').attr("onclick","");
 		$.post("/admin/index/maprojectlisting",{lh:lh_project,rally:rally_project},
 				function(data){
 						
@@ -871,6 +875,7 @@ function mappLHRalyProjectes(){
 							}else{
 								$('.adminTr').before(data);
 							}
+							$('#rallyReportbtn').attr("onclick","return mappLHRalyProjectes();");
 							$('#lh_project :selected').remove();
 							$('#rally_project :selected').remove();
 							$('.message_required p').html('The information has been updated successfully.');
