@@ -20,6 +20,7 @@
 	$rally_array['status'] = 8;
 	$rally_array['severity'] = $row['severity'];
 	$rally_array['project_id'] = $row['project_id'];
+	$rally_array['detected_by'] = $row['detected_by'];
 	
 	insertWorkorderAudit($mysql,$defectId, '3', $_SESSION['user_id'],$row['assigned_to'],'8');
 	setNewRallyDefect($row['project_id'], $defectId,$rally_array );
