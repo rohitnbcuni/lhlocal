@@ -53,7 +53,7 @@
 		$rally_array['status'] = $woStatus;
 		$rally_array['severity'] =$qaSEVERITY;
 		$rally_array['project_id'] = $projectId;
-		$rally_array['detected_by'] = $qaDETECTED_BY;
+		$rally_array['detected_by'] = $requestedId;
 		
 		$getdefectID = '';
 		

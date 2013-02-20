@@ -35,6 +35,7 @@
 		$rally_array['status'] = $qa_row['status'];
 		$rally_array['severity'] = $feildID;
 		$rally_array['project_id'] = $qa_row['project_id'];
+		$rally_array['detected_by'] = $qa_row['detected_by'];
 		
 		setNewRallyDefect($qa_row['project_id'], $defect_id,$rally_array );
 	}
