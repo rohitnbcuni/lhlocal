@@ -53,6 +53,7 @@
 		$rally_array['status'] = $woStatus;
 		$rally_array['severity'] =$qaSEVERITY;
 		$rally_array['project_id'] = $projectId;
+		$rally_array['detected_by'] = $qaDETECTED_BY;
 		
 		$getdefectID = '';
 		
@@ -304,7 +305,7 @@
 					$msg.= $file_list."<br>";
 
 					if(!empty($to)){
-						echo $to." ".$subject." ".$msg;
+						//echo $to." ".$subject." ".$msg;
 						sendEmail($to, $subject, $msg, $headers);
 					}
 				}

@@ -36,6 +36,8 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 			$sql = "SELECT * FROM qa_rally_defects WHERE defect_id = '".$defect_id."' LIMIT 1";
 			$result2 = $mysql->sqlordie($sql);
 			if($result2->num_rows == 0){
+				
+				$full_name = $data['detected_by'];
 				$type = 'create';
 				$XML_POST_URL = RALLY_WEB_SERVICE_URL.'/defect/create';
 				$prepare_defect_xml = '<Defect>
@@ -46,10 +48,10 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 									<Severity>'.$severity_value.'</Severity> 
 									<State>'.$status_value.'</State>
 									<Owner ref="'.RALLY_WEB_SERVICE_URL.'/user/'.RALLY_LH_USER_ID.'"/>
+									<DetectedBy>'.$full_name.'</DetectedBy>
 									<Project ref="'.RALLY_WEB_SERVICE_URL.'/project/10151940218" />
 									<SubmittedBy ref="'.RALLY_WEB_SERVICE_URL.'/user/'.RALLY_LH_USER_ID.'"/>
-									<LighthouseID>'.$defect_id.'</LighthouseID>
-									<LighthouseIDWebLink><LinkID>'.$defect_id.'</LinkID><DisplayString/></LighthouseIDWebLink>
+									<LighthouseDefectID><LinkID>'.$defect_id.'</LinkID><DisplayString/></LighthouseDefectID>
 									</Defect>';	
 				
 			
@@ -96,7 +98,7 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); 
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml;charset=utf-8'));
 		$rally_xml = curl_exec($ch);
-		//print_r($prepare_defect_xml);
+		//print_r($rally_xml);
 
 		/**
 		 * Check for errors
