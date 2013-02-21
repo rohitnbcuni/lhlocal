@@ -99,10 +99,11 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		//curl_setopt($ch, CURLOPT_PROXY, "http://64.210.197.20:80");
 		//curl_setopt($ch, CURLOPT_PROXYPORT, 80);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+		
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $prepare_defect_xml);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 1000);		
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/html;charset=utf-8'));
 		$rally_xml = curl_exec($ch);
 		//print_r($rally_xml);
@@ -111,7 +112,7 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 		 */
 		if ( curl_errno($ch) ) {
 			$result = 'cURL ERROR -> ' . curl_errno($ch) . ': ' . curl_error($ch);
-			//echo "ERROR! " . $result;
+			echo "ERROR! " . $result;
 		} else {
 			$returnCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			switch($returnCode){
