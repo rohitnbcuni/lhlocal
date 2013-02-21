@@ -5,7 +5,7 @@
 	include('../_ajaxphp/util.php');
 	include('../_ajaxphp/rally_function.php');
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
-	
+	$result_defect_array = array();
 	if(isset($_SESSION['user_id'])) {
 		$user = $_SESSION['lh_username'];
 	    $password = $_SESSION['lh_password'];
@@ -48,8 +48,8 @@
 		$wo_old_row = $wo_old_res->fetch_assoc();		
 
 		$rally_array = array();
-		$rally_array['title'] = $woTitle;
-		$rally_array['desc'] = $woDesc;
+		$rally_array['title'] = isset($_POST['woTitle'])?htmlentities($_POST['woTitle']):'';
+		$rally_array['desc'] = isset($_POST['woDesc'])?htmlentities($_POST['woDesc']):'';
 		$rally_array['status'] = $woStatus;
 		$rally_array['severity'] =$qaSEVERITY;
 		$rally_array['project_id'] = $projectId;
@@ -313,8 +313,16 @@
 			insertWorkorderAudit($mysql,$getdefectID, '3', $_SESSION['user_id'],$wo_row['assigned_to'],$woStatus);
 		}
 		}
+		$result_defect_array['defect'] = $getdefectID;
+		$jsonSettings = json_encode($result_defect_array);
+
+	  // output correct header
+	  $isXmlHttpRequest = (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) ?
+	  (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') ? true : false: false;
+	  ($isXmlHttpRequest) ? header('Content-type: application/json') : header('Content-type: text/plain');
 		
-		echo $getdefectID;
+	  echo $jsonSettings;
+		
 	}
 
 	function sendEmail($to, $subject, $msg, $headers){
