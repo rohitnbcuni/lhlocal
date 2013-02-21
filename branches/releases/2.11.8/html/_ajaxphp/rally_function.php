@@ -70,12 +70,10 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 				$prepare_defect_xml = '<Defect>
 										<Description> '.$data['desc'].'</Description> 
 										<Name>'.$data['title'].' </Name> 
-										<Priority>None</Priority>
-										<ReleaseNote>false</ReleaseNote> 
 										<Severity>'.$severity_value.'</Severity> 
 										<State>'.$status_value.'</State>
 										<DetectedBy>'.$full_name.'</DetectedBy>
-										
+										<LighthouseDefectID><LinkID>'.$defect_id.'</LinkID><DisplayString/></LighthouseDefectID>
 										</Defect>';	
 									
 			}
@@ -90,7 +88,7 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 	
 	
 	function sendRallyCurl($XML_POST_URL,$prepare_defect_xml,$lh_defect_id,$type){
-		global $mysql;
+		global $mysql,$result_defect_array;
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $XML_POST_URL);
 		curl_setopt($ch, CURLOPT_USERPWD, RALLY_DEFECT_USERNAME.':'.RALLY_DEFECT_PASSWORD);
@@ -105,14 +103,13 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); 
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml;charset=utf-8'));
 		$rally_xml = curl_exec($ch);
-		//print_r($prepare_defect_xml);
-
+		//print_r($rally_xml);
 		/**
 		 * Check for errors
 		 */
 		if ( curl_errno($ch) ) {
 			$result = 'cURL ERROR -> ' . curl_errno($ch) . ': ' . curl_error($ch);
-			echo "ERROR! " . $result;
+			//echo "ERROR! " . $result;
 		} else {
 			$returnCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			switch($returnCode){
@@ -129,11 +126,13 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 			$xml_parser = xml_parser_create();
 			xml_parse($xml_parser, $rally_xml);
 			$returnXML = new SimpleXMLElement($rally_xml);
-			if(count($returnXML->Errors) == 0){
 			
-			
-			}
 			//print_r($returnXML);
+			if(ISSET($returnXML->Errors->OperationResultError)){
+				//echo $returnXML->Errors->OperationResultError;
+				$result_defect_array['rally_msg'] = (string) "Error : ". $returnXML->Errors->OperationResultError;
+			}
+			
 			if(ISSET($returnXML->Object)){
 				/*
 				 [rallyAPIMajor] => 1
@@ -142,18 +141,31 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 				[refObjectName] => project details numbers
 				[type] => Defect
 				*/
+				$arr = $returnXML->Object->attributes();
+
 				if($type == 'create'){
-					$arr = $returnXML->Object->attributes();
+					
 					
 					if(ISSET($arr['ref'])){
 						$rally_new_defect_id = str_replace(RALLY_WEB_SERVICE_URL."/defect/","",$arr['ref']); 	
-						
+						$result_defect_array['rally_msg'] = "The new defect has been created on Rally: ".$rally_new_defect_id;
 						$sql = "INSERT INTO qa_rally_defects SET defect_id = '".$lh_defect_id."', rally_id = '".$rally_new_defect_id."' , created = '".date("Y-m-d h:i:s")."'";
 						$result2 = $mysql->sqlordie($sql);
 					}
 				
 				}
-			}
+			}else if ($type == 'update'){
+				
+					//$arr = $returnXML->Object->attributes();
+					//$rally_new_defect_id = str_replace(RALLY_WEB_SERVICE_URL."/defect/","",$arr['ref']); 	
+					if(count($result_defect_array['rally_msg']) == 0){
+						$result_defect_array['rally_msg'] = "The defect has been updated on Rally";
+						}
+				}
+		}else{
+			
+				$result_defect_array['rally_msg'] =  "Error: Rally connection failed .Please update Defect after some time.";
+			
 		}
 		
 	
