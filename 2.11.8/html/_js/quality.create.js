@@ -122,7 +122,8 @@ function dateExists(date, month, year){
 }
 
 function saveWorkOrder(savebtn) {
-	
+
+	//alert("dddd");	
 	var qString = "";
 	var valid = true;
 	
@@ -285,9 +286,10 @@ function saveWorkOrder(savebtn) {
 		$.ajax({
 			type: "POST",
 			url: "/_ajaxphp/quality_wo_save.php",
-			data: JSON,
+			data: data,
+			dataType: "json",
 			success: function(defect_msg) {
-				
+				//alert("ttt2"+defect_msg.defect);	
 				var msg = defect_msg.defect;
 				if(defect_msg.rally_msg){
 					//alert(defect_msg.rally_msg);
