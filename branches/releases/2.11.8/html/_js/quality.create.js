@@ -123,7 +123,7 @@ function dateExists(date, month, year){
 
 function saveWorkOrder(savebtn) {
 
-	//alert("dddd");	
+	//alert("dddd"+savebtn);	
 	var qString = "";
 	var valid = true;
 	
@@ -294,7 +294,7 @@ function saveWorkOrder(savebtn) {
 				if(defect_msg.rally_msg){
 					//alert(defect_msg.rally_msg);
 					$container = $("#new_comment_notification").notify();
-					create("sticky", { title:'Rally Notification', text:defect_msg.rally_msg},{ expires:false });
+					create("sticky", { title:'Rally Notification', text:defect_msg.rally_msg});
 				
 				}
 					
