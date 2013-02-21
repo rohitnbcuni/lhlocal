@@ -285,7 +285,7 @@ function saveWorkOrder(savebtn) {
 		$.ajax({
 			type: "POST",
 			url: "/_ajaxphp/quality_wo_save.php",
-			data: data,
+			data: JSON,
 			success: function(defect_msg) {
 				
 				var msg = defect_msg.defect;
