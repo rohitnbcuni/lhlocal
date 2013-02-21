@@ -55,7 +55,6 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 									<DetectedBy>'.$full_name.'</DetectedBy>
 									<Project ref="'.RALLY_WEB_SERVICE_URL.'/project/10151940218" />
 									<SubmittedBy ref="'.RALLY_WEB_SERVICE_URL.'/user/'.RALLY_LH_USER_ID.'"/>
-									<LighthouseID>'.$defect_id.'</LighthouseID>
 									<LighthouseDefectID><LinkID>'.$defect_id.'</LinkID><DisplayString/></LighthouseDefectID>
 									</Defect>';	
 				
@@ -72,7 +71,9 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 										<Name>'.$data['title'].' </Name> 
 										<Severity>'.$severity_value.'</Severity> 
 										<State>'.$status_value.'</State>
+										<Owner ref="'.RALLY_WEB_SERVICE_URL.'/user/'.RALLY_LH_USER_ID.'"/>
 										<DetectedBy>'.$full_name.'</DetectedBy>
+										<SubmittedBy ref="'.RALLY_WEB_SERVICE_URL.'/user/'.RALLY_LH_USER_ID.'"/>
 										<LighthouseDefectID><LinkID>'.$defect_id.'</LinkID><DisplayString/></LighthouseDefectID>
 										</Defect>';	
 									
@@ -130,7 +131,7 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 			//print_r($returnXML);
 			if(ISSET($returnXML->Errors->OperationResultError)){
 				//echo $returnXML->Errors->OperationResultError;
-				$result_defect_array['rally_msg'] = (string) "Error : ". $returnXML->Errors->OperationResultError;
+				$result_defect_array['rally_msg'] = (string) "Rally Error : ". $returnXML->Errors->OperationResultError;
 			}
 			
 			if(ISSET($returnXML->Object)){
