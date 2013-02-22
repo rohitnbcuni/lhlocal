@@ -152,7 +152,7 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 					
 					if(ISSET($arr['ref'])){
 						$rally_new_defect_id = str_replace(RALLY_WEB_SERVICE_URL."/defect/","",$arr['ref']); 	
-						$result_defect_array['rally_msg'] = "The new defect has been created on Rally: ".$rally_new_defect_id;
+						$result_defect_array['rally_msg'] = "The new defect has been created on Rally.";
 						$sql = "INSERT INTO qa_rally_defects SET defect_id = '".$lh_defect_id."', rally_id = '".$rally_new_defect_id."' , created = '".date("Y-m-d h:i:s")."'";
 						$result2 = $mysql->sqlordie($sql);
 					}
