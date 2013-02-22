@@ -1,0 +1,59 @@
+@charset "utf-8";
+/* CSS Document */
+
+	.events_filter #month_filter{ width: 65px; }
+	
+	.events_filter #status_filter{ width: 140px; }
+	
+	.events_link { position: relative; margin: 24px 20px 14px 10px; list-style-type: none; font-weight: bold; }
+		.events_link a { font-size: 12px; color: #358fce; text-decoration:none; }
+	
+	.result_label { margin: 0px 20px 24px 10px; font-size: 18px; color: #6f6f6f; font-weight:normal; }
+	.result_label_anual { margin: 24px 20px 24px 10px; font-size: 18px; color: #6f6f6f; font-weight:normal; }
+
+	.events_list_container { position: relative; width: 922px; margin: 0 auto; padding: 0px; background: #ffffff; clear:both; }
+	
+	.event_specifics ul { list-style-type:none; }
+	
+	.gray_bg { background-color:#EDEFF0; }
+	
+	.event_specifics .event_list #first_item { margin-top:0px; background-color:#FFFFFF; }
+	.event_specifics .event_list #item { margin:5px 0px; background-color:#FFFFFF; }
+	.event_specifics .event_list #last_item { margin-top:0px; background-color:#FFFFFF; }
+	
+	.event_specifics .event_list #first_item_blue { margin-top:0px; background: url(../_images/event_section_blue_bg.gif) repeat-x left top #FFFFFF; }
+	.event_specifics .event_list #item_blue { margin:5px 0px; background: url(../_images/event_section_blue_bg.gif) repeat-x left top #FFFFFF; }
+	.event_specifics .event_list #last_item_blue { margin-top:0px; background: url(../_images/event_section_blue_bg.gif) repeat-x left top #FFFFFF; }
+	
+	.event_specifics .event_list li {
+		background: url("../_images/event_section_bg.gif") repeat-x scroll left top transparent;
+		padding: 10px 5px;
+	}
+	
+	.event_specifics .past_event {
+		font-size: 17px;
+		font-style: italic;
+		padding-top: 3px;
+	}
+	.event_company_affected ul {
+		width:220px;
+		float:left;
+	}
+	
+	.event_company_affected #aff_companies li {
+		list-style-type:disc;
+		list-style-position: inside;
+		width:110px;
+		float:left;
+		padding:0px;
+	}
+
+	.shadow {
+		-moz-box-shadow: 3px 3px 4px #000;
+		-webkit-box-shadow: 3px 3px 4px #000;
+		box-shadow: 3px 3px 4px #000;
+		/* For IE 8 */
+		-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#000000')";
+		/* For IE 5.5 - 7 */
+		filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#000000');
+	}
