@@ -122,6 +122,8 @@ function dateExists(date, month, year){
 }
 
 function saveWorkOrder(savebtn) {
+
+	//alert("dddd"+savebtn);	
 	var qString = "";
 	var valid = true;
 	
@@ -285,10 +287,21 @@ function saveWorkOrder(savebtn) {
 			type: "POST",
 			url: "/_ajaxphp/quality_wo_save.php",
 			data: data,
-			success: function(msg) {
-
+			dataType: "json",
+			success: function(defect_msg) {
+				//alert("ttt2"+defect_msg.defect);	
+				var msg = defect_msg.defect;
+				if(defect_msg.rally_msg){
+					//alert(defect_msg.rally_msg);
+					$container = $("#new_comment_notification").notify();
+					create("sticky", { title:'Rally Notification', text:defect_msg.rally_msg});
+				
+				}
+					
+				
 				$('#wo_dimmer').css({display:'none'});
 				$('#wo_dimmer_ajax').css({display:'none'});
+				
 
 				if(parseInt(msg)) {
 					$('#defect_id').val(msg);
@@ -435,8 +448,7 @@ function saveWorkOrder(savebtn) {
 							window.location = '/quality/';
 						});
 					}
-
-
+					
 
 
 
@@ -445,7 +457,7 @@ function saveWorkOrder(savebtn) {
 				}
 			},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
-						alert("Error:" + textStatus + msg2 );
+						alert("Error:" + textStatus );
 				}		
 		});
 				
@@ -899,5 +911,7 @@ function showTooltip(){
 	}
 
 
-
+function create( template, vars, opts ){
+	return $container.notify("create", template, vars, opts);
+}
 

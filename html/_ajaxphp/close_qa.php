@@ -2,18 +2,28 @@
 	session_start();
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
+	include('../_ajaxphp/rally_function.php');
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
 	$defectId = @$_GET['defectId'];
-
+	
 	$update_wo = "UPDATE `qa_defects` SET `closed_date`=NOW(), `completed_date`=NOW(), `status`='8' WHERE `id`='$defectId'";
 	@$mysql->sqlordie($update_wo);
 
-	$select_wo = "SELECT `closed_date`, `assigned_to`, `detected_by`, `cclist`, `project_id`, `body`, `title` FROM `qa_defects` WHERE `id`='$defectId' LIMIT 1";
+	$select_wo = "SELECT `closed_date`, `assigned_to`, `detected_by`, `cclist`, `project_id`, `body`, `title`,`severity`  FROM `qa_defects` WHERE `id`='$defectId' LIMIT 1";
 	$result = @$mysql->sqlordie($select_wo);
 	$row = @$result->fetch_assoc();
 	
+	$rally_array = array();
+	$rally_array['title'] = $row['title'];
+	$rally_array['desc'] = $row['body'];
+	$rally_array['status'] = 8;
+	$rally_array['severity'] = $row['severity'];
+	$rally_array['project_id'] = $row['project_id'];
+	$rally_array['detected_by'] = $row['detected_by'];
+	
 	insertWorkorderAudit($mysql,$defectId, '3', $_SESSION['user_id'],$row['assigned_to'],'8');
+	setNewRallyDefect($row['project_id'], $defectId,$rally_array );
 
 	$date_time_part = explode(" ", $row['closed_date']);
 	$date_part = explode("-", $date_time_part[0]);
