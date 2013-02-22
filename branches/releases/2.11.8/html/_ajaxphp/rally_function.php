@@ -73,7 +73,6 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 										<State>'.$status_value.'</State>
 										<Owner ref="'.RALLY_WEB_SERVICE_URL.'/user/'.RALLY_LH_USER_ID.'"/>
 										<DetectedBy>'.$full_name.'</DetectedBy>
-										<Project ref="'.RALLY_WEB_SERVICE_URL.'/project/'.$rally_project_id.'" />
 										<SubmittedBy ref="'.RALLY_WEB_SERVICE_URL.'/user/'.RALLY_LH_USER_ID.'"/>
 										<LighthouseID><LinkID>'.$defect_id.'</LinkID><DisplayString/></LighthouseID>
 										</Defect>';	
