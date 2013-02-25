@@ -36,7 +36,10 @@
 							</li>
 							<li class="alt" id="QualityGridDisplay" onClick="qaGrid();">
 								<img src="/_images/yellow_status.gif">Quality Grid Display
-							</li>								
+							</li>
+							<li class="alt" id="rallyLHProjects" onClick="rallyProjects();">
+								<img src="/_images/yellow_status.gif">Rally/LH Project Mapping
+							</li>		
 						</ul>
 					</div>
 			<? echo $this->layout()->content; ?>

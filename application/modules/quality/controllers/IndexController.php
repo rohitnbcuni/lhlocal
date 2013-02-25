@@ -818,7 +818,13 @@
 
 					<!--=========== COLUMN BREAK ===========-->
 				</div>
-
+				<div id="new_comment_notification" style="display:none;">
+					<div id="sticky">
+						<a class="ui-notify-close ui-notify-cross" href="#">x</a>
+						<h1>#{title}</h1>
+						<p>#{text}</p>
+					</div>
+				</div>
 				<div class="clearer"></div>
 				<script>
 					$(function() {
@@ -948,6 +954,7 @@
 					<div style="clear: both;"></div>
 				</div>
 			</div>
+			
 
 			<div class="message_reopen">
 				<p>
