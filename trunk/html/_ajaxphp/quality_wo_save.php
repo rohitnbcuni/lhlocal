@@ -3,8 +3,9 @@
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
 	include('../_ajaxphp/util.php');
+	include('../_ajaxphp/rally_function.php');
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
-	
+	$result_defect_array = array();
 	if(isset($_SESSION['user_id'])) {
 		$user = $_SESSION['lh_username'];
 	    $password = $_SESSION['lh_password'];
@@ -46,8 +47,14 @@
 		$wo_old_res = $mysql->sqlprepare($select_wo_old,array($defectID));
 		$wo_old_row = $wo_old_res->fetch_assoc();		
 
+		$rally_array = array();
+		$rally_array['title'] = isset($_POST['woTitle'])?htmlentities($_POST['woTitle']):'';
+		$rally_array['desc'] = isset($_POST['woDesc'])?htmlentities($_POST['woDesc']):'';
+		$rally_array['status'] = $woStatus;
+		$rally_array['severity'] =$qaSEVERITY;
+		$rally_array['project_id'] = $projectId;
+		$rally_array['detected_by'] = $requestedId;
 		
-
 		$getdefectID = '';
 		
 		if(!empty($woAssignedTo)) {
@@ -80,7 +87,7 @@
 				@$mysql->sqlordie($insert_qa);
 				$getdefectID = $mysql->insert_id;			
 				$update_wo = "UPDATE `projects` SET `qa_permission`='1' WHERE `id`='$projectId'";
-			        @$mysql->sqlordie($update_wo);	
+			    @$mysql->sqlordie($update_wo);	
 		} else {			
 			$qaDETECTED_BY = $wo_old_row['detected_by'];
 			$requestedId = $wo_old_row['requested_by'] ;
@@ -125,11 +132,16 @@
 
 		}
 		
+		
+		
 		if(!empty($getdefectID) && $getdefectID > 0) {
 			@rename($_SERVER['DOCUMENT_ROOT']."/qafiles/" .$dirName,  $_SERVER['DOCUMENT_ROOT']."/qafiles/" .$getdefectID);
 			
 			$update_files = "UPDATE `qa_files` SET `defect_id`='$getdefectID', `directory`='$getdefectID' WHERE `directory`='" .str_replace("/", "", $dirName) ."'";
 			@$mysql->sqlordie($update_files);
+			
+			///CALL RALLY Connector////////
+			setNewRallyDefect($projectId, $getdefectID,$rally_array );
 		}
 		
 		$select_wo = "SELECT * FROM `qa_defects` WHERE `id`= ? ";
@@ -293,7 +305,7 @@
 					$msg.= $file_list."<br>";
 
 					if(!empty($to)){
-						echo $to." ".$subject." ".$msg;
+						//echo $to." ".$subject." ".$msg;
 						sendEmail($to, $subject, $msg, $headers);
 					}
 				}
@@ -301,8 +313,16 @@
 			insertWorkorderAudit($mysql,$getdefectID, '3', $_SESSION['user_id'],$wo_row['assigned_to'],$woStatus);
 		}
 		}
+		$result_defect_array['defect'] = $getdefectID;
+		$jsonSettings = json_encode($result_defect_array);
+
+	  // output correct header
+	  $isXmlHttpRequest = (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) ?
+	  (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') ? true : false: false;
+	  ($isXmlHttpRequest) ? header('Content-type: application/json') : header('Content-type: text/plain');
 		
-		echo $getdefectID;
+	  echo $jsonSettings;
+		
 	}
 
 	function sendEmail($to, $subject, $msg, $headers){
@@ -316,5 +336,10 @@
 		$insert_custom_feild = "INSERT INTO  `quality_audit` (`defect_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$defect_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
 		@$mysql->sqlordie($insert_custom_feild);
 	}
+	
+	
+	
+	
+	
 	
 ?>

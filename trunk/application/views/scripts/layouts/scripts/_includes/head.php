@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<?PHP	$randNum = "201301180609"; ?>
+<?PHP	$randNum = "201301180601"; ?>
 <title><?echo DEV_TEAM_NAME?>: Lighthouse</title>
 	<link rel="stylesheet" href="/_css/style.css?<?PHP echo $randNum; ?>" type="text/css" />
 	<link rel="stylesheet" href="/_css/ui.datepicker.css" type="text/css" />
@@ -187,10 +187,20 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 					case 'edit': {}
 					case 'create': {
 
-						echo "<script src=\"/_js/ui/jquery.ui.all.js\" type=\"text/javascript\"></script>\n"
+						/*echo "<script src=\"/_js/ui/jquery.ui.all.js\" type=\"text/javascript\"></script>\n"
 							."\t<script src=\"/_js/quality.create.js?" . $randNum . "\" type=\"text/javascript\"></script>\n"
 							."\t<script src=\"/_js/ajaxfileupload.js\" type=\"text/javascript\"></script>\n"
-							."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";
+							."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n";*/
+							
+							echo	"<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n"
+							."\t<script src=\"/_js/ui/jquery.ui.all.js\" type=\"text/javascript\"></script>\n"
+							."\t<script src=\"/_js/quality.create.js?" . $randNum . "\" type=\"text/javascript\"></script>\n"
+							."\t<script src=\"/_js/ajaxfileupload.js\" type=\"text/javascript\"></script>\n"
+							."\t<script src=\"/_js/jquery-ui-1.8.19.custom.min.js\" type=\"text/javascript\"></script>"
+							."\t<script src=\"/_js/jquery.ui.widget.js\" type=\"text/javascript\"></script>\n"
+							."\t<script src=\"/_js/jquery.notify.js\" type=\"text/javascript\"></script>\n"
+							. "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
+						echo  "<link href=\"/_css/ui.notify.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";	
 						break;
 					}
 					default: {

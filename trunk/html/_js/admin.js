@@ -2,6 +2,7 @@
 $(document).ready(function(){
 	
 	var adminTitlemsg = $('#adminTitlemsg').val();
+	
 	if(adminTitlemsg=='' || adminTitlemsg=='User Info')
 	{
 		adminTitlemsg = 'User Info';
@@ -50,6 +51,10 @@ $(document).ready(function(){
 	{
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #fetchProjIteration').addClass('active');
+	}else if(adminTitlemsg == 'Rally Lighthouse Mapping')
+	{
+		$('#create_sections li').removeClass('active');
+		$('#create_sections #rallyLHProjects').addClass('active');
 	}
 	$('.title_lrg h4').html(adminTitlemsg);
 	
@@ -809,6 +814,16 @@ function qaGrid(field_id)
 	form.submit();
 }
 
+function rallyProjects(field_id)
+{
+
+	var form = document.createElement("form");
+	form.setAttribute("method", 'post');
+	form.setAttribute("action", '/admin/index/rallyprojectmap/');	
+	document.body.appendChild(form);   
+	form.submit();
+}
+
 function setQadataGrid(){
 	var qaProjectValues = new Array();
 	$.each($("input[name='qaGrid[]']:checked"), function() {
@@ -826,4 +841,65 @@ function setQadataGrid(){
 		$('.message_required p').html('Please select at least one Project.');
 		$('.message_required').css({display:'block'});
 	}
+}
+
+
+function mappLHRalyProjectes(){
+
+	
+	
+	var lh_project = $('#lh_project').val();
+	var rally_project = $('#rally_project').val();
+	if(lh_project == ''){
+		$('.message_required p').html('Please select LH Project .');
+		$('.message_required').css({display:'block'});
+		return false;
+	
+	
+	}if(rally_project == ''){
+		$('.message_required p').html('Please select Rally Project .');
+		$('.message_required').css({display:'block'});
+		return false;
+	}
+	
+	if(lh_project != '' && lh_project != ''){
+		$('#rallyReportbtn').attr("onclick","");
+		$.post("/admin/index/maprojectlisting",{lh:lh_project,rally:rally_project},
+				function(data){
+						
+						if($.trim(data) != ''){
+							var mappCounter =$('#mappCounter').val();
+							if(mappCounter != '' || mappCounter == 0){
+								$('.adminTh').after(data);
+								$('#mappCounter').val($('#mappCounter').val()+1);
+							}else{
+								$('.adminTr').before(data);
+							}
+							$('#rallyReportbtn').attr("onclick","return mappLHRalyProjectes();");
+							$('#lh_project :selected').remove();
+							$('#rally_project :selected').remove();
+							$('.message_required p').html('The information has been updated successfully.');
+							$('.message_required').css({display:'block'});
+						}
+				});
+	
+	}
+
+
+}
+
+
+function deleteRallyProject(id){
+	$.post("/admin/index/deletemaprojectlisting",{id:id},
+				function(data){
+						if(data != ''){
+							$('#tr_'+id).css('display','none');
+							$('.message_required p').html('The information has been delete successfully.');
+							$('.message_required').css({display:'block'});
+						}
+						
+				});
+
+
+
 }
