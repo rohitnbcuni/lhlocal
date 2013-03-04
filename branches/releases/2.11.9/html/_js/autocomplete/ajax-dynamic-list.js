@@ -72,7 +72,8 @@ Owner of DHTMLgoodies.com
 		var tmpValue = inputObj.innerHTML;
 		if(ajax_list_MSIE)tmpValue = inputObj.innerText;else tmpValue = inputObj.textContent;
 		if(!tmpValue)tmpValue = inputObj.innerHTML;
-		ajax_list_activeInput.value = tmpValue;
+		ajax_list_activeInput.value = tmpValue.replace("Did you mean:",'');
+		//alert(tmpValue);
 		if(document.getElementById(ajax_list_activeInput.name + '_hidden'))document.getElementById(ajax_list_activeInput.name + '_hidden').value = inputObj.id;
 
   		//var f1=setTimeout('ajax_list_activeInput.focus()',1);
@@ -92,7 +93,7 @@ Owner of DHTMLgoodies.com
 		if(ajax_list_activeItem)ajax_list_activeItem.className='optionDiv';
 		item.className='optionDivSelected';
 		ajax_list_activeItem = item;
-
+		
 		if(fromKeyBoard){
 			if(ajax_list_activeItem.offsetTop>ajax_optionDiv.offsetHeight){
 				ajax_optionDiv.scrollTop = ajax_list_activeItem.offsetTop - ajax_optionDiv.offsetHeight + ajax_list_activeItem.offsetHeight + 2 ;
@@ -123,7 +124,7 @@ Owner of DHTMLgoodies.com
 			optionsAdded = true;
 			var div = document.createElement('DIV');
 			var items = ajax_list_cachedLists[paramToExternalFile][letters.toLowerCase()][no].split(/###/gi);
-
+			//alert(items.toSource());
 			if(ajax_list_cachedLists[paramToExternalFile][letters.toLowerCase()].length==1 && ajax_list_activeInput.value == items[0]){
 				ajax_options_hide();
 				return;
