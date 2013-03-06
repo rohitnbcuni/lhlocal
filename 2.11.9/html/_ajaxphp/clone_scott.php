@@ -9,7 +9,7 @@
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, 'lhdev_live2' , DB_PORT);	
 	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	//global $mysql;
-	$project_all = "SELECT * FROM `projects` WHERE  id = '18259' ";
+	/*$project_all = "SELECT * FROM `projects` WHERE  id = '18259' ";
 	$project_list = $mysql->query($project_all) or writeLog($mysql,$project_all);
 	
 	$current_year = '2013';//'2010';//date("Y");
@@ -187,7 +187,7 @@
 					"\nMySQL error: " . $mysql->error . 
 					"\nQuery: " . $sql . "\n");
 		fclose($a);
-	}
+	}*/
 	$newProjectID = '18259';
 	$clone_project_id = '21071';
 
