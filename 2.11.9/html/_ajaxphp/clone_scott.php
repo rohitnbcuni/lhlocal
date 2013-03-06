@@ -7,7 +7,7 @@
 	
 	//include("sessionHandler.php");
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, 'lhdev_live2' , DB_PORT);	
-	/*$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	//global $mysql;
 	$project_all = "SELECT * FROM `projects` WHERE  id = '18259' ";
 	$project_list = $mysql->query($project_all) or writeLog($mysql,$project_all);
@@ -177,7 +177,7 @@
 		}
 
 	}
-}*/
+}
 	
 	function writeLog($mysql, $sql='', $rootPath=''){
 		$a = fopen("clone_20123.log", "a");
