@@ -7,7 +7,7 @@
 	
 	//include("sessionHandler.php");
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, 'lhdev_live2' , DB_PORT);	
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	/*$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	//global $mysql;
 	$project_all = "SELECT * FROM `projects` WHERE  id = '18259' ";
 	$project_list = $mysql->query($project_all) or writeLog($mysql,$project_all);
@@ -120,12 +120,7 @@
 			}
 			//End Project Roles
 			
-			//user_project_role
-				//$user_project_role = "INSERT INTO  `user_project_role` (`project_id`, `flag`, `phase_subphase_id`, `user_id`, `creation_date`, `assigned_date`, `active`, `deleted`) SELECT '".$newProjectID."' as `project_id`, `flag`, `phase_subphase_id`, `user_id`, `creation_date`, `assigned_date`, `active`, `deleted` from  `user_project_role` where project_id = '".$clone_project_id."'";
-				//echo $user_project_role;
-				//$mysql->query($user_project_role);
 			
-			//
 			//project_status
 			$project_status = "INSERT INTO  `project_status` (project_id ,status_id,created_date,created_user) SELECT '".$newProjectID."' as `project_id`, `status_id`,`created_date`,`created_user` from  `project_status` where project_id = '".$clone_project_id."'";
 			$mysql->query($project_status) or writeLog($mysql,$project_status);
@@ -158,29 +153,7 @@
 			$mysql->query($qa_project_product) or writeLog($mysql,$qa_project_product);
 			//End qa_project_product
 			
-			//$resource_blocks = "UPDATE `resource_blocks` SET `projectid`='".$newProjectID."' WHERE `projectid` = '".$clone_project_id."' AND YEAR(`datestamp`) =  '$current_year'";
-			//echo "<br/>";
-			//$mysql->query($resource_blocks) or writeLog($mysql,$resource_blocks);
 			
-			/*$project_resources_2012 = "SELECT userid FROM  `resource_blocks` WHERE  `projectid` ='$clone_project_id' AND YEAR(`datestamp`) <>  '$current_year' GROUP BY userid";
-			//echo "<br/>";
-			$resources = $mysql->query($project_resources_2012) or writeLog($mysql,$project_resources_2012);
-			if($resources->num_rows > 0){
-				while($rows = @$resources->fetch_assoc()) {
-					$userID = $rows['userid'];
-					$project_resources_2013 = $mysql->query("SELECT userid FROM  `resource_blocks` WHERE  `projectid` ='$clone_project_id' AND YEAR(`datestamp`) =  '$current_year' AND userid ='$userID'") ;
-					if($project_resources_2013->num_rows == 0){
-						$project_sub_phase_row_new = "INSERT INTO `resource_blocks` (`userid`, `projectid`, `daypart`, `status`,`datestamp`,`dateadded`, `active`, `deleted`) VALUES ('".$rows['userid']."', '".$newProjectID."', '0','0','0000-00-00 00:00:00','0000-00-00 00:00:00', '1','0')";
-						//echo "<br/>";
-						$mysql->query($project_sub_phase_row_new) or writeLog($mysql,$project_sub_phase_row_new);
-					}
-					
-				
-				}
-			}*/
-			
-			//End resource_blocks
-			//$user_proj_permission = "INSERT INTO  `user_project_permissions` (project_id ,user_id,active,deleted) SELECT '".$newProjectID."' AS `project_id` , upp.user_id, upp.active, upp.deleted FROM `user_project_permissions` upp, `projects` p WHERE p.id = '".$clone_project_id."'  AND upp.project_id = p.id AND upp.user_id NOT IN ( SELECT user_id FROM users WHERE company = p.company )";
 			$user_proj_permission_new = "SELECT  user_id,active,deleted FROM `user_project_permissions` WHERE project_id = '".$clone_project_id."'";
 			$permission=$mysql->query($user_proj_permission_new);
 			if($permission->num_rows > 0){
@@ -198,22 +171,13 @@
 				$mysql->query($user_project_role) or writeLog($mysql,$user_project_role);
 				}
 			}
-			//$archiveCloneProject = "UPDATE `projects` set `archived` = '1', project_code='".$mysql->real_escape_string($row['project_code']).'_2012'."' WHERE ID = '".$clone_project_id."'";
-			//$mysql->query($archiveCloneProject) or writeLog($mysql,$archiveCloneProject);
-		
-			/*$deleteoldProject = "update `projects` SET `deleted`='1' where `YEAR`='2009'";
-			$mysql->query($deleteoldProject);
-			$deleteoldProject2010 = "update `projects` SET `deleted`='1' where `YEAR`='2010'";
-			$mysql->query($deleteoldProject2010);*/
-	
-			//$mysql->query("UPDATE workorders SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' and status!='1'");
-			//$mysql->query("UPDATE workorders SET `archived`='1' WHERE `project_id` = '".$clone_project_id."' and status ='1'");
+			
 			$mysql->query("UPDATE qa_defects SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."'");
 			
 		}
 
 	}
-}
+}*/
 	
 	function writeLog($mysql, $sql='', $rootPath=''){
 		$a = fopen("clone_20123.log", "a");
@@ -224,7 +188,22 @@
 					"\nQuery: " . $sql . "\n");
 		fclose($a);
 	}
+	$newProjectID = '18259';
+	$clone_project_id = '21071';
+
 	//
-	//$mysql->query("update `projects` SET `deleted`='1' where `YEAR`='2011' AND `archived`='1'");
+	$mysql->query("update `qa_defects` SET `project_id` = '".$newProjectID."' where id = '".$clone_project_id."'");
+		
+	//End qa_project_version
+	$qa_project_version = "UPDATE `qa_project_version` SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' ";
+	$mysql->query($qa_project_version) or writeLog($mysql,$qa_project_version);
+	//End qa_project_version
+	//End qa_project_iteration
+	$qa_project_iteration = "UPDATE `qa_project_iteration` SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' ";
+	$mysql->query($qa_project_iteration) or writeLog($mysql,$qa_project_iteration);
+	//End qa_project_iteration
+	//End qa_project_product
+	$qa_project_product = "UPDATE `qa_project_product` SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' ";
+	$mysql->query($qa_project_product) or writeLog($mysql,$qa_project_product);
 ?>
 
