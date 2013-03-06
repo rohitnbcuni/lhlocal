@@ -191,9 +191,9 @@
 	$newProjectID = '18259';
 	$clone_project_id = '21071';
 
-	//
-	$mysql->query("update `qa_defects` SET `project_id` = '".$newProjectID."' where id = '".$clone_project_id."'");
-		
+	$sql =  "update `qa_defects` SET `project_id` = '".$newProjectID."' where project_id = '".$clone_project_id."'";
+	$p = $mysql->query($sql);
+	//echo $p->num_rows;	
 	//End qa_project_version
 	$qa_project_version = "UPDATE `qa_project_version` SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' ";
 	$mysql->query($qa_project_version) or writeLog($mysql,$qa_project_version);
