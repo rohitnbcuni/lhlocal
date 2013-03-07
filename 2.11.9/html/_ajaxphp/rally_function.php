@@ -45,8 +45,8 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 				$type = 'create';
 				$XML_POST_URL = RALLY_WEB_SERVICE_URL.'/defect/create';
 				$prepare_defect_xml = '<Defect>
-									<Description> '.html_convert_entities($data['desc']).'</Description> 
-									<Name>'.html_convert_entities($data['title']).' </Name> 
+									<Description><![CDATA[ '.nl2br(html_convert_entities($data['desc'])).']]></Description>
+									<Name><![CDATA['.html_convert_entities($data['title']).']]></Name> 
 									<Priority>None</Priority>
 									<ReleaseNote>false</ReleaseNote> 
 									<Severity>'.$severity_value.'</Severity> 
@@ -67,8 +67,8 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 				//This defect has already reported . Just need to Update
 				$XML_POST_URL = RALLY_WEB_SERVICE_URL.'/defect/'.$rally_defect_id;
 				$prepare_defect_xml = '<Defect>
-										<Description> '.html_convert_entities($data['desc']).'</Description> 
-										<Name>'.html_convert_entities($data['title']).' </Name> 
+										<Description><![CDATA['.nl2br(html_convert_entities($data['desc'])).']]></Description>
+										<Name><![CDATA['.html_convert_entities($data['title']).']]></Name> 
 										<Severity>'.$severity_value.'</Severity> 
 										<State>'.$status_value.'</State>
 										<Owner ref="'.RALLY_WEB_SERVICE_URL.'/user/'.RALLY_LH_USER_ID.'"/>
@@ -99,7 +99,7 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		//curl_setopt($ch, CURLOPT_PROXY, "http://64.210.197.20:80");
 		//curl_setopt($ch, CURLOPT_PROXYPORT, 80);
-		
+		curl_setopt($ch, CURLOPT_CRLF, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $prepare_defect_xml);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
