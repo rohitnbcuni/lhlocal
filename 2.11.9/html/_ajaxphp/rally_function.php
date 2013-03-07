@@ -112,7 +112,7 @@ function setNewRallyDefect($lhprojectId, $defect_id, $data){
 		 */
 		if ( curl_errno($ch) ) {
 			$result = 'cURL ERROR -> ' . curl_errno($ch) . ': ' . curl_error($ch);
-			echo "ERROR! " . $result;
+			//echo "ERROR! " . $result;
 		} else {
 			$returnCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			switch($returnCode){
