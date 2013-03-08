@@ -340,7 +340,10 @@ a:hover { text-decoration: underline; }
 		.message_clear_deliver,
 		.message_clear_metrics,
 		.message_risk_create,
-		.message_lock_confirm
+		.message_lock_confirm,
+		.project_history_note,
+		.timeline_history_note,
+		.budget_save
 		{ display: none; width: 300px; min-height: 110px; background: #ffffff; position: fixed; top: 50%; left: 50%; margin: -75px 0 0 -150px; border: 2px solid #6595c1; z-index:999;}
 		
 		.fck_editor_overlay { display:none; }
@@ -590,11 +593,12 @@ a:hover { text-decoration: underline; }
 		border-bottom: 2px solid #e6e6e6;
 	}
 	.control_tower_main .leftCol {
-		width: 205px;
-		float: left;
+		/*width: 205px;
+		float: left;*/
+		width: 968px;
 	}
 		.control_tower_main .leftCol ul { margin: 0; padding: 0; list-style: none; list-style-type: none; }
-			.control_tower_main .leftCol ul li { height: 18px; padding: 5px 0 0 5px; background: url(../_images/project_tabs.gif) repeat-x; cursor: pointer; }
+			.control_tower_main .leftCol ul li { height: 18px; padding: 5px 0 0 5px; background: url(../_images/project_tabs.gif) repeat-x; cursor: pointer; float: left;}
 			.control_tower_main .leftCol ul li.alt { background-position: bottom; }
 			.control_tower_main .leftCol ul li.active { background: #c9c9c9; cursor: default; font-weight: bold; color: #000; }
 			.control_tower_main .leftCol ul li:hover { background: #ddd; }
@@ -608,12 +612,13 @@ a:hover { text-decoration: underline; }
 	.control_tower_main .rightCol {
 		float: left;
 		background: #e6e6e6;
-		border: 2px solid #c9c9c9; width: 759px;
+		border: 2px solid #c9c9c9; 
+		width: 964px;
 		min-height: 350px;
 		padding-bottom: 3px;
 	}
 		.control_tower_main .rightCol .inside {
-			width: 753px;
+			width: 958px;
 			margin-top: 2px;
 			margin-left: 2px;
 			background: #ffffff;
@@ -636,7 +641,7 @@ a:hover { text-decoration: underline; }
 
 		.drafting_actions .left_actions { margin: 5px 0 0; }
 			
-		.drafting_actions .right_actions { margin: 3px 1px 0 0; }
+		.drafting_actions .right_actions { margin: 3px 1px 0 0; padding: 5px;}
 			.left_actions .project_status_container { float:left; }
 				.project_status_container label { float:left; font-weight:bold; margin:4px 1px 0px 5px;}
 				.project_status_container .project_status_block { float:left; height:25px; width:120px; }
@@ -658,13 +663,13 @@ a:hover { text-decoration: underline; }
 		button.status_complete span			{ background-position: left -147px; padding-left: 25px; }
 		button.status_internal span			{ background-position: left -189px; padding-left: 25px; }
 
-		.project_status_list { background:#F8F8F8; height:auto; left:305px; position:absolute; top:102px; width:113px; z-index:1;}
+		.project_status_list { /*background:#F8F8F8;*/ height:auto; left:119px; position:absolute; top:194px; width:89px; z-index:1;}
 		.project_status_list ul { padding: 1px 0px 0px;}
-		.project_status_list li { clear:both; float:right; list-style-type:none; padding:1px 0px; }
+		.project_status_list li { clear:both; float:right; list-style-type:none; /*padding:1px 0px;*/ padding-top: 0.2px; }
 		.project_status_list li span { text-align:left; width:50px;}
 		.project_status_list li.selected {  }
 
-		.project_nav_buttons { padding: 25px 0 0 28px; }
+		.project_nav_buttons { padding: 25px 0 0 28px; display: none; }
 		.project_nav_buttons button.secondary span { width: 113px; }
 		.project_nav_buttons button.status span { width: 115px; }
 		.project_nav_buttons button.status_complete { margin-bottom: 7px; }
@@ -674,7 +679,7 @@ a:hover { text-decoration: underline; }
 					.subphase_type span { margin-right: 30px; width: 325px; font-size: 13px; font-weight: bold; color: #011548; }
 
 			/*----- START: CT - Roles --------------------------------------------------------------*/
-			.resource_header { padding: 6px 0 0 8px; width: 743px; margin: 1px 1px 0 1px; background: #eff1f1; height: 19px; }
+			.resource_header { padding: 6px 0 0 8px; width: 948px; margin: 1px 1px 0 1px; background: #eff1f1; height: 19px; }
 				.resource_header h3 { font-size: 11px; font-weight: bold; color: #011548; margin: 0; padding: 0; }
 			.resource_row { height: 37px; width: 751px; margin: 1px 1px 0 1px; border-bottom: 1px solid #dfdede; }
 			.resource_row:hover { cursor: pointer; }
@@ -692,7 +697,7 @@ a:hover { text-decoration: underline; }
 			/*----- START: CT - Description --------------------------------------------------------------*/
 			.finance_budget_header { position: relative; padding: 6px 0 0 8px; width: 743px; margin: 1px 1px 0 1px; background: #eff1f1; height: 25px; border-bottom: 1px solid #dfdede; }
 				.finance_budget_header h3 { font-size: 11px; font-weight: bold; color: #011548; margin: 3px 0 0 0; padding: 0; }
-				.finance_budget_header .finance_budget_options { position: absolute; top: 0px; right: 0px; }
+				.finance_budget_header .finance_budget_options { position: absolute; top: 0px; /*right: 0px;*/left: 40px;top: 3px; }
 				.finance_budget_header .finance_budget_options select { margin-top: 5px; float: left; width: 160px; }
 				.finance_budget_header .finance_budget_options button { margin: 2px 5px 4px 10px; float: left; }
 
@@ -741,6 +746,10 @@ a:hover { text-decoration: underline; }
 			.finance_bar { position: absolute; bottom: 0px; left: 0px; width: 751px; height: 50px; background: #d3d3d3; }
 				.finance_bar div { color: #4e4e4e; font-size: 11px; font-weight; bold; position: absolute; top: 20px; right: 10px; }
 				.finance_bar div span { font-size: 14px; color: #000000; }
+
+			.finance_budget_options_added{margin-top: 20px;/* border: 1px solid gray; */}
+			.add_budget { display: block; width: 8px; height: 7px; background: url('../_images/plus_btn.gif'); }
+			.remove_budget { display: block; width: 8px; height: 7px; background: url('../_images/minus_btn.gif'); }
 
 			/*----- END: CT - Description --------------------------------------------------------------*/
 
@@ -925,7 +934,7 @@ a:hover { text-decoration: underline; }
 			/*----- END: CT - Approvals --------------------------------------------------------------*/
 
 			/*----- START: CT - Timeline --------------------------------------------------------------*/
-			.proles_header { position: relative; padding: 6px 0 0 8px; width: 743px; margin: 1px 1px 0 1px; background: #eff1f1; height: 30px; border-bottom: 1px solid #dfdede; }
+			.proles_header { position: relative; padding: 6px 0 0 8px; width: 948px; margin: 1px 1px 0 1px; background: #eff1f1; height: 30px; border-bottom: 1px solid #dfdede; }
 				.proles_header h3 { font-size: 11px; font-weight: bold; color: #011548; margin: 5px 0 0 0; padding: 0; }
 				.proles_header .proles_options {position: absolute; top: 0px; right: 0px; }
 				.proles_header .proles_options select { margin-top: 7px; float: left; width: 160px; }
@@ -933,14 +942,14 @@ a:hover { text-decoration: underline; }
 
 			.ptimeline { list-style-type: none; }
 
-			.ptimeline li { position: relative; clear: both; height: 40px; width: 751px; margin: 1px 1px 0 1px; border-bottom: 1px solid #dfdede; }
+			.ptimeline li { position: relative; clear: both; height: 40px; width: 700px; margin: 1px 1px 0 1px; border-bottom: 1px solid #dfdede; }
 				.ptimeline li .dim { position: absolute; top: -2px; left: -2px; height: 42px; width: 753px; margin: 1px 1px 0 1px; background: #ffffff; border-bottom: 1px solid #dfdede; display: none; }
 				.ptimeline li.dragged { height: 44px; background: url('../_images/draggin_row.png'); border-bottom: none; }
 				.ptimeline li.dragged1 { height: 41px; background: url('../_images/draggin_row.png'); border-bottom: none; }
 				.ptimeline .handle { display: inline }
 
 				.ptimeline_phase { font-size: 11px; font-weight: bold; color: #000000; margin-top: 0px; float: left; padding: 12px 0 0 15px; height: 28px; }
-					.ptimeline_phase label { display: block; float: left; width: 250px; font-size: 13px; font-weight: bold; color: #153e65; }
+					.ptimeline_phase label { display: block; float: left; width: 230px; font-size: 13px; font-weight: bold; color: #153e65; }
 
 				.ptimeline_startdate { position: relative; font-size: 11px; font-weight: bold; color: #011548; margin-top: 5px; float: left; padding: 5px 0 0 0px; height: 20px; }
 					.ptimeline_startdate label { margin-left: 15px; margin-right: 5px; font-size: 11px; font-weight: bold; color: #4e4e4e; }
@@ -1120,7 +1129,7 @@ a:hover { text-decoration: underline; }
 		.workorders_filters { border-bottom: none; }
 
 			.workorders_filter select { margin-right: 50px; }
-			#client_filter,#qa_project_filter, #project_filter, #status_filter, #qa_assigned_filter, #assigned_filter, #project_status_filter, #severity_filter { margin-right: 10px;}
+			#client_filter, #project_filter, #status_filter, #assigned_filter, #project_status_filter, #severity_filter { margin-right: 10px;}
 			#status_filter { width: 95px; }
 			#assigned_filter { width: 125px; }
 			#severity_filter { width: 95px; }
@@ -1184,6 +1193,7 @@ a:hover { text-decoration: underline; }
 					.quality_sort .lastcommentby a.down, .quality_sort .lastcommentby a.up, { padding: 0px 10px 0px 0px;}
 					.quality_sort .req_type a.down, .quality_sort .req_type a.up, { padding: 0px 10px 0px 0px;}
 					.quality_sort .commentdate a.down, .quality_sort .commentdate a.up { padding: 0px 10px 0px 0px;}
+
 		/*-----------old height 405px-----------*/
 		.workorders_container { position: relative; height:755px; overflow: auto; padding: 0 3px 3px 3px; background: #c9c9c9; clear:both;}
 
@@ -1227,10 +1237,8 @@ a:hover { text-decoration: underline; }
 					.workorders_rows select { width: 95px; }
 					.workorders_rows .status select { width: 75px; }
 
-					.quality_container { position: relative; height:755px; overflow: auto; padding: 0 3px 3px 3px; background: #c9c9c9; clear:both;}
-					.quality_container .title_small { border: 1px solid #dfdede; margin-top: -1px; }
 
-					.quality_rows { padding: 0 1px 1px; background: #fff; }
+				.quality_rows { padding: 0 1px 1px; background: #fff; }
 
 					.quality_rows dl { border-top: 1px solid #fff; border-bottom: 1px solid #dfdede; min-height: 39px; width: auto; background: url(../_images/bg_workorders_rows.gif) repeat-x; list-style-type: none; color: #666; }
 						.quality_rows dl.alert { background-position: 0 -195px; }
@@ -1577,7 +1585,7 @@ button.admincclist_remover span { background-position: left -84px; padding-left:
 
 .admindisplaySiteInfo button{ margin-left: 200px; }
 
-.ct_prj_internal_grp { float:left; margin:5px 0 0;}
+.ct_prj_internal_grp { /*float:left;*/ margin:5px 0 0;}
 .wo_month_controller_display{background:url(../_images/date_picker_trigger.gif) no-repeat right; height:25px ;cursor: pointer;}
 
 #customEditOrAdd { margin-left: 118px; }
@@ -1679,35 +1687,209 @@ border-width:5px;}
 .ui-multiselect.ui-widget span{
 	background:none;
 	}
-	
-	
-/* Big box with list of options */
-	#ajax_listOfOptions{
-		position:absolute;	/* Never change this one */
-		#width:225px;	/* Width of box */
-		#height:500px;	/* Height of box */
-		overflow:auto;	/* Scrolling features */
-		border:1px solid #358FCE;	/* Dark green border */
-		background-color:#FFF;	/* White background color */
-		text-align:left;
-		font-size:0.9em;
-		z-index:100;
+
+
+/* new changes for over view - vd 3.3 */
+
+.control_tower_main #form_sec_1 .error_desc {
+	border-color: red;
+}
+.control_tower_main #form_sec_1 .required_fields_error {
+  color: red;
+}
+.control_tower_main #form_sec_3 {
+  min-height: 580px !important;
+  }
+  .control_tower_main #form_sec_1, .control_tower_main #form_sec_3 {
+    background: none !important;
+    border: 2px solid #C9C9C9 !important;
+    float: left !important;
+    min-height: 540px;
+    padding-bottom: 3px !important;
+    width: 965px !important;
+  }
+  .control_tower_main #form_sec_3 .timeline_history {
+    max-height: 510px !important;
+  }
+  .control_tower_main #form_sec_1 .project_history, .control_tower_main #form_sec_3 .timeline_history {
+    background: none repeat scroll 0 0 #E6E6E6;
+    border: 2px solid #C9C9C9;
+    max-height: 467px;
+    margin-left: 15px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-left: 10px;
+    padding-right: 40px;
+    width: 165px;
+	float: left;
+	min-height: 50px;
+  }
+  .project_history_note, .timeline_history_note {
+    width: 260px;
+    }
+    .project_history_note .duplicate_buttons, .timeline_history_note .duplicate_buttons{
+      margin-right: 50px;
+    }
+    .project_history_note p, .timeline_history_note p {
+      font-size: 15px;
+	  padding-top: 10px;
+	  padding-left: 40px;
+	  padding-bottom: 5px;
+    }
+    .project_history_note .project_note_save textarea, .timeline_history_note div textarea {
+      font-size: 12px;
+	  resize: none;
+	  margin-left: 27px;
+    }
+  .control_tower_main #form_sec_1 .project_history ul li, .control_tower_main #form_sec_3 .timeline_history ul li {
+    padding: 3px;
+  }
+  .control_tower_main #form_sec_1 .project_history .project_history_status, .control_tower_main #form_sec_3 .timeline_history .projected_timeline {
+    font-size: 13px;
+  }
+  .control_tower_main #form_sec_1 .project_history .textarea_note textarea, .control_tower_main #form_sec_3 .timeline_history .note_timeline_textarea textarea {
+    font-size: 12px;
+	resize:none;
+	color: #777777;
+	width: 179px;
+	height: 45px;
+  }
+  .control_tower_main #form_sec_1 .project_history_title h3, .control_tower_main #form_sec_3 .timeline_history_title h3 {
+    padding: 5px;
+  }
+  .control_tower_main #form_sec_3 .timeline_history .original_dates, .control_tower_main #form_sec_3 .timeline_history .revised_dates{
+    width: 185px;
+  }
+  .control_tower_main #form_sec_1 .project_history ul,.control_tower_main #form_sec_12 .wrapper_sections ul {
+    list-style: none outside none;
+	/*height: 100px;*/
 	}
-	#ajax_listOfOptions div{	/* General rule for both .optionDiv and .optionDivSelected */
-		margin:2px;		
-		padding:2px;
-		cursor:pointer;
-		font-size:12px;
+.control_tower_main #form_sec_3 .resources {
+  top: 80px !important;
+}
+.control_tower_main #form_sec_1 .textEdit, .control_tower_main #form_sec_3 .resources {
+  position: absolute;
+  top: 230px;
+  background: none repeat scroll 0 0 #E6E6E6;
+  border: 1px solid #C9C9C9;
+  float: left; 
+  margin-left: 10px;
+  margin-top: 15px;
+  width: 700px
+  }
+  .control_tower_main #form_sec_3 .resources .proles_header {
+    width: 690px
+  }
+.control_tower_main #form_sec_12 {
+  padding-bottom: 20px;
+  padding-left: 20px;
+  width: 945px;
+}
+.control_tower_main #form_sec_12 .wrapper_sections {
+  border: 1px solid #C9C9C9;
+  clear: both;
+  }
+  .control_tower_main #form_sec_1 .project_history_title, .control_tower_main #form_sec_3 .timeline_history_title {
+    background: none repeat scroll 0 0 #E6E6E6;
+    border: 2px solid #C9C9C9;
+    margin-left: 15px;
+    margin-top: 15px;
+    padding-left: 10px;
+    padding-right: 40px;
+    width: 165px;
+	float: left;
+	text-align: center;
+	border-bottom: none;
+  }
+  .control_tower_main #form_sec_1 .project_history ul,.control_tower_main #form_sec_12 .wrapper_sections ul, .control_tower_main #form_sec_3 .timeline_history ul {
+    list-style: none outside none;
 	}
-	#ajax_listOfOptions .optionDiv{	/* Div for each item in list */
-		
-	}
-	#ajax_listOfOptions .optionDivSelected{ /* Selected item in the list */
-		background-color:#358FCE;
-		color:#FFF;
-	}
-	#ajax_listOfOptions_iframe{
-		background-color:#F00;
-		position:absolute;
-		z-index:5;
-	}	
+  .control_tower_main #form_sec_12 .wrapper_sections {
+    border: 1px solid #AAAAAA;
+    clear: both;
+    height: 75px;
+    margin-top: 25px;
+	margin-right: 15px;
+    padding: 15px;
+  }
+  .control_tower_main #form_sec_12 .wrapper_sections h3 {
+    /*padding: 10px;*/
+	float: left;
+	width: 200px;
+  }
+  .control_tower_main #form_sec_12 .wrapper_sections .sections_project_roles li.sections_project_roles_results_0, .control_tower_main #form_sec_12 .wrapper_sections .sections_project_roles li.sections_project_roles_results_1, .control_tower_main #form_sec_12 .wrapper_sections .sections_project_timeline_1, .control_tower_main #form_sec_12 .wrapper_sections .sections_project_timeline_2, .control_tower_main #form_sec_12 .wrapper_sections .sections_project_resources_0, .control_tower_main #form_sec_12 .wrapper_sections .sections_project_resources_1, .control_tower_main #form_sec_12 .wrapper_sections .sections_project_finance_0, .control_tower_main #form_sec_12 .wrapper_sections .sections_project_finance_1 {
+	float: left;
+	width: 225px;
+  }
+  .control_tower_main #form_sec_12 .wrapper_sections .sections_project_description .project_description_details_labels, .control_tower_main #form_sec_12 .wrapper_sections_11 .sections_project_permissions_labels {
+	float: left;
+  }
+  .control_tower_main #form_sec_12 .wrapper_sections_1 button, .control_tower_main #form_sec_12 .wrapper_sections_2 button, .control_tower_main #form_sec_12 .wrapper_sections_3 button, .control_tower_main #form_sec_12 .wrapper_sections_5 button, .control_tower_main #form_sec_12 .wrapper_sections_6 button, .control_tower_main #form_sec_12 .wrapper_sections_11 button {
+    left: 885px;
+    position: absolute;
+    top: 80px;
+  }
+   .control_tower_main #form_sec_12 .wrapper_sections_2 button {
+    top: 210px;
+   }
+  .control_tower_main #form_sec_12 .wrapper_sections_3 button {
+    top: 344px;
+  }
+  .control_tower_main #form_sec_12 .wrapper_sections_5 button {
+    top: 475px;
+  }
+  .control_tower_main #form_sec_12 .wrapper_sections_6 button {
+    top: 608px;
+  }
+  .control_tower_main #form_sec_12 .wrapper_sections_11 button {
+    top: 740px;
+  }
+
+  .control_tower_main .leftCol #create_sections #sec_2 {
+    width: 150px !important;
+  }
+  .control_tower_main .leftCol #create_sections li {
+    height: 18px;
+    width: 130px;
+  }
+  .control_tower_main #form_sec_12 .wrapper_sections .sections_project_description {
+    margin-left: 60px;
+  }
+  .control_tower_main #form_sec_12 .wrapper_sections ul li {
+	padding: 1px !important;
+  }
+  .control_tower_main #form_sec_1 .drafting_actions .left_actions_project_status{
+    border-top: 1px solid #444444;
+    margin-top: 40px;
+    padding: 10px;
+  }
+  .control_tower_main #form_sec_3 .drafting_actions {
+    height: 44px !important;
+  }
+  .control_tower_main #form_sec_1 .drafting_actions, .control_tower_main #form_sec_3 .drafting_actions {
+    background: url("../_images/subtitle_bg_med.gif") repeat-x scroll 0 0 transparent;
+    height: 170px;
+	border: 1px solid #C9C9C9;
+    float: left;
+    margin-left: 10px;
+    margin-top: 15px;
+    width: 700px;
+  }
+  .control_tower_main #form_sec_1 .drafting_actions .left_actions_project_status .project_charter {
+	padding-top: 10px;
+	padding-bottom: 10px;
+  }
+  .control_tower_main #form_sec_1 .drafting_actions .left_actions_project_status .project_charter label {
+    font-weight: bold;
+    padding-right: 15px;
+  }
+  .control_tower_main #form_sec_1 .drafting_actions .left_actions_project_status .project_charter input, .control_tower_main #form_sec_1 .drafting_actions .left_actions_project_status .project_description_scope input {
+    width: 302px;
+  }
+  .control_tower_main #form_sec_1 .drafting_actions .left_actions_project_status .project_description_scope label {
+    font-weight: bold;
+    padding-right: 65px;
+  }
+  .control_tower_main #form_sec_1 .left_actions_project_status .project_status_program .project_status_label {
+    padding-right: 10px;
+  }
