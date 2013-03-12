@@ -52,22 +52,22 @@ session_start();
 	if($quarterID>0){
 		$where_clause = "";
 		if($quarterID == 1){
-			 $where_clause = " where quarter1_budget <> 0 ";
+			 $where_clause = " where quarter1_budget <> 0 and delete_flag = 0";
 			 $rp_start_date = current_year.'-01-01';
 		 	 $rp_end_date = current_year.'-03-31';
 			 $rp_date ="	and rb.datestamp >= '".$rp_start_date."' and rb.datestamp <= '".$rp_end_date."'";
 		}else if($quarterID == 2){
-			$where_clause = " where quarter2_budget <> 0 ";
+			$where_clause = " where quarter2_budget <> 0 and delete_flag = 0";
 			$rp_start_date = current_year.'-04-01';
 			$rp_end_date = current_year.'-06-30';
  		    $rp_date ="	and rb.datestamp >= '".$rp_start_date."' and rb.datestamp <= '".$rp_end_date."'";
 		}else if($quarterID == 3){
-			$where_clause = " where quarter3_budget <> 0 ";
+			$where_clause = " where quarter3_budget <> 0 and delete_flag = 0";
 			$rp_start_date = current_year.'-07-01';
 			$rp_end_date = current_year.'-09-30';
   		    $rp_date ="	and rb.datestamp >= '".$rp_start_date."' and rb.datestamp <= '".$rp_end_date."'";
 		}else if($quarterID == 4){
-			$where_clause = " where quarter4_budget <> 0 ";
+			$where_clause = " where quarter4_budget <> 0 and delete_flag = 0";
 			$rp_start_date = current_year.'-10-01';
 			$rp_end_date = current_year.'-12-31';
      	    $rp_date ="	and rb.datestamp >= '".$rp_start_date."' and rb.datestamp <= '".$rp_end_date."'";
@@ -145,7 +145,7 @@ session_start();
 				$complete_result = $mysql->sqlordie($select_complete);
 				$complete_row = $complete_result->fetch_assoc();
 				
-				$select_budget = "select * from project_budget where project_id='" .$row['id'] ."'";
+				$select_budget = "select * from project_budget where project_id='" .$row['id'] ."' and delete_flag = 0";
 				$budget_result = $mysql->sqlordie($select_budget);
 				if($budget_result->num_rows == 1){
 					$result_set = $budget_result->fetch_assoc();
@@ -242,7 +242,7 @@ session_start();
 				
 				//To set permissions on the Control Tower 
 				//if(array_key_exists($row['id'], $perms)) {
-					array_push($postingList,Array('id' => $row['id'], 'code' => $row['project_code'],'name' => substr($project_name, 0, 50).$elipse, 'full_name' => $project_name, 'todate' => $todate, 'budget' => $finance_total, 'complete' => "$complete", 'company' => $row['company'], 'producer_userid' => $producer_userid, 'manager_userid' => $manager_userid, 'class' => $class, 'progress_class' => $progress_class, 'risk' => array("riskCount" => "0"), 'status' => $row['project_status'],'status_name' => $status_array[$row['project_status']], 'approved' => '0'));
+					array_push($postingList,Array('id' => $row['id'], 'code' => $row['project_code'],'name' => substr($project_name, 0, 50).$elipse, 'full_name' => $project_name, 'todate' => $todate, 'budget' => $finance_total, 'complete' => "$complete", 'company' => $row['company'], 'producer_userid' => $producer_userid, 'manager_userid' => $manager_userid, 'class' => $class, 'progress_class' => $progress_class, 'risk' => array("riskCount" => "0"),'budget_risk'=> array("budgetRiskCount"=> "-1"), 'status' => $row['project_status'],'status_name' => $status_array[$row['project_status']], 'approved' => '0'));
 				//}
 			}
 		}
@@ -271,7 +271,7 @@ session_start();
 				$complete_result = $mysql->sqlordie($select_complete);
 				$complete_row = $complete_result->fetch_assoc();
 				
-				$select_budget = "select * from project_budget where project_id='" .$row['id'] ."'";
+				$select_budget = "select * from project_budget where project_id='" .$row['id'] ."' and delete_flag = 0";
 				$budget_result = $mysql->sqlordie($select_budget);
 				if($budget_result->num_rows == 1){
 					$result_set = $budget_result->fetch_assoc();
@@ -326,6 +326,13 @@ session_start();
 				$risk_row = $risk_result->fetch_assoc();
 				$risk = array();
 				$risk['riskCount'] = @$risk_result->num_rows;
+				
+				$project_budget_risk = "SELECT * FROM project_budget WHERE budget_code IS NOT NULL AND project_id='" .$row['id'] ."'";
+				$project_budget_risk_result = $mysql->sqlordie($project_budget_risk);
+				$budget_risk_row = $project_budget_risk_result->fetch_assoc();
+				$budget_risk = array();
+				$budget_risk['budgetRiskCount'] = @$project_budget_risk_result->num_rows;
+
 				if($risk['riskCount'] > 0){
 					$usrSql = "SELECT * FROM users WHERE id='" . $risk_row['assigned_to_user_id'] . "' AND active='1' LIMIT 1";
 					$userResult = $mysql->sqlordie($usrSql);
@@ -399,7 +406,7 @@ session_start();
 				
 				//To set permissions on the Control Tower 
 				//if(array_key_exists($row['id'], $perms)) {
-					array_push($postingList,Array('id' => $row['id'], 'code' => $row['project_code'],'name' => substr($project_name, 0, 50).$elipse, 'full_name' => $project_name, 'todate' => "$todate", 'budget' => "$finance_total", 'complete' => "$complete", 'company' => $row['company'], 'producer_userid' => $producer_userid, 'manager_userid' => $manager_userid, 'class' => $class, 'progress_class' => $progress_class, 'risk' => $risk, 'status' => $row['project_status'],'status_name' => $status_array[$row['project_status']], 'approved' => $project_approved));
+					array_push($postingList,Array('id' => $row['id'], 'code' => $row['project_code'],'name' => substr($project_name, 0, 50).$elipse, 'full_name' => $project_name, 'todate' => "$todate", 'budget' => "$finance_total", 'complete' => "$complete", 'company' => $row['company'], 'producer_userid' => $producer_userid, 'manager_userid' => $manager_userid, 'class' => $class, 'progress_class' => $progress_class, 'risk' => $risk,'budget_risk'=>$budget_risk, 'status' => $row['project_status'],'status_name' => $status_array[$row['project_status']], 'approved' => $project_approved));
 				//}
 			}
 		}
@@ -616,7 +623,7 @@ session_start();
 		//echo "<br /><br />";
 		return number_format($todate, 2, '.', '');
 	}
-//	echo '<br> Result : <pre>';print_r($postingList);echo '</pre>';die();
+	//echo '<br> Result : <pre>';print_r($postingList);echo '</pre>';die();
 	$jsonSettings = json_encode($postingList);
 //	setcookie("lighthouse_ct_data", urlencode($companyID . '~' . $producerID . '~' . $quarterID), time()+220752000, '/controltower');
 	// output correct header
