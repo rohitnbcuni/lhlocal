@@ -249,7 +249,7 @@
 			while($rp_row = $rp_res->fetch_assoc()) {
 				$todate = 0;
 				
-				$select_user_project_phase = "SELECT ppf.rate rate, ppf.phase phase FROM project_phase_finance ppf, user_project_role upr WHERE ppf.project_id = upr.project_id AND ppf.phase = upr.phase_subphase_id AND upr.flag = 'phase' AND upr.user_id = '" .$rp_row['userid'] ."' AND ppf.project_id = '" .$projID ."' LIMIT 1";
+				$select_user_project_phase = "SELECT ppf.rate rate, ppf.phase phase FROM project_phase_finance ppf, user_project_role upr WHERE ppf.project_id = upr.project_id AND ppf.phase = upr.phase_subphase_id AND upr.flag = 'phase' AND upr.user_id = '" .$rp_row['userid'] ."' AND ppf.project_id = '" .$projID ."' order by id DESC LIMIT 1";
 				$result_user_project_phase = $mysql->sqlordie($select_user_project_phase);
 
 				if($result_user_project_phase->num_rows > 0){
