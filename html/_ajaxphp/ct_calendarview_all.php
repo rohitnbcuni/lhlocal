@@ -289,7 +289,7 @@
 			$producerSQL = " AND pjr.resource_type_id='" . $lead_split[0] . "' AND pjr.user_id='" . $producerID."'";
 		}
 		//echo $select_projects;
-		$project_list_query .= "SELECT P.id , P.project_code , P.project_name,  DATE_FORMAT(PP.start_date,'%Y-%m-%d') as launch_date , P.project_status   FROM projects P INNER JOIN project_phases PP ON (PP.project_id = P.id) $producerFROM WHERE P.archived  = '0' AND P.active = '1' AND P.deleted ='0' AND PP.phase_type = '7'";
+		$project_list_query .= "SELECT P.id , P.project_code , P.project_name,  DATE_FORMAT(PP.start_date,'%Y-%m-%d') as launch_date , P.project_status   FROM projects P INNER JOIN project_phases PP ON (PP.project_id = P.id) $producerFROM WHERE P.archived  = '0' AND P.active = '1' AND P.deleted ='0' AND PP.phase_type = '7' AND PP.active = '1'";
 		$project_list_query .= " AND EXTRACT(MONTH FROM PP.start_date) = '$data->month'   AND EXTRACT(YEAR FROM PP.start_date) = '$data->year'  $client_sql $project_status_sql $project_program_sql $producerSQL $projectTitleSql $rp_date";
 		//echo $project_list_query;
 		//echo $client_sql;
