@@ -37,10 +37,10 @@ bud.quarter1_budget AS 'Q1 Allocation',
 bud.quarter2_budget AS 'Q2 Allocation', 
 bud.quarter3_budget AS 'Q3 Allocation', 
 bud.quarter4_budget AS 'Q4 Allocation',
-IFNULL(pjt.budget_code, '') AS 'Charge Code'
+IFNULL(bud.budget_code, '') AS 'Charge Code'
 FROM projects pjt
 LEFT JOIN companies com ON pjt.company=com.id
-LEFT JOIN project_budget bud ON bud.project_id=pjt.id
+LEFT JOIN project_budget bud ON bud.project_id=pjt.id AND bud.delete_flag = 0
 LEFT JOIN (SELECT * from project_phase_approvals where non_phase='client') ppa ON ppa.project_id=pjt.id
 LEFT JOIN (SELECT * FROM project_roles where resource_type_id='3') dm ON dm.project_id=pjt.id
 LEFT JOIN (SELECT * FROM project_roles where resource_type_id='2') el ON el.project_id=pjt.id
