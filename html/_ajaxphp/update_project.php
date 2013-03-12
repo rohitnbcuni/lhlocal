@@ -30,11 +30,38 @@
 		case 'project_description': {
 			$id = $mysql->real_escape_string(@$_REQUEST['comp_id']);
 			$desc = $mysql->real_escape_string(@$_REQUEST['desc']);
+			$scope = $mysql->real_escape_string(@$_REQUEST['scope']);
+			$project_charter = $mysql->real_escape_string(@$_REQUEST['project_charter']);
+			$user_id = $mysql->real_escape_string(@$_REQUEST['user_id']);
+			$note = $mysql->real_escape_string(@$_REQUEST['note']);
+			$status_id = $mysql->real_escape_string(@$_REQUEST['status_id']);
 			$section = explode("_", $mysql->real_escape_string(@$_REQUEST['section']));
 			$bool = 0;			
 			$project_program = $mysql->real_escape_string(@$_REQUEST['project_program']);
-		    if($project_program != ''){
-				$update_allocation_type = "UPDATE `projects` SET `program` = '$project_program' WHERE `id`='" .$id ."'";
+			if($status_id != '' && $user_id != '' && $id != ''){
+					$project_sql = 'SELECT IFNULL(project_status, 0) AS status FROM projects WHERE id="' . $id . '"';
+					$projectResult = $mysql->sqlordie($project_sql);
+					$projectRow = $projectResult->fetch_assoc();
+					
+					$project_status_sql = 'SELECT * FROM lnk_project_status_types WHERE id="' . $status_id . '"';
+					$projectStatusResult = $mysql->sqlordie($project_status_sql);
+					$projectStatusRow = $projectStatusResult->fetch_assoc();
+
+					if($project_status_id != $projectRow['status']){
+						$permissionUpdate = "";
+						if($project_status_id == "6"){
+							$permissionUpdate = ",`rp_permission`='0',`wo_permission`='0'";
+						}
+						$updateSql = 'UPDATE `projects` SET `project_status`="' . $status_id . '" ' . $permissionUpdate . ' WHERE id="' . $id . '"';
+						$mysql->sqlordie($updateSql);
+						$insertSql = 'INSERT INTO `project_status` (`project_id`, `status_id`, `created_user`, `created_date`) VALUES ("' . $id . '", "' . $status_id . '", "' . $user_id . '", NOW())';
+						$mysql->sqlordie($insertSql);
+						$inserted = "SELECT id FROM `project_status` order by id DESC LIMIT 1";
+						$inserted_id = $mysql->sqlordie($inserted)->fetch_assoc();	
+					}
+			 }
+		    if($project_program != '' || $scope !='' || $project_charter != ''){
+				$update_allocation_type = "UPDATE `projects` SET `program` = '$project_program', `project_scope` = '$scope', `project_charter` = '$project_charter' WHERE `id`='" .$id ."'";
 				$mysql->sqlordie($update_allocation_type);
 			}
 			$query = "SELECT * FROM `project_brief_sections` WHERE `project_id`='" .$id ."' AND `section_type`='" .$section[1] ."'";
@@ -82,7 +109,7 @@
 				}
 			}
 			
-			echo $bool;
+			echo $inserted_id['id'];
 			break;
 		}
 		case 'project_bcase': {
@@ -299,6 +326,68 @@
 			}
 			
 			echo $bool;
+			break;
+		}
+		case 'project_history_note': {
+		  $id = $mysql->real_escape_string(@$_REQUEST['id']);
+		  $project_id = $mysql->real_escape_string(@$_REQUEST['project_id']);
+		  $user_id = $mysql->real_escape_string(@$_REQUEST['user_id']);
+		  $note = $mysql->real_escape_string(@$_REQUEST['note']);
+		  $status_id = $mysql->real_escape_string(@$_REQUEST['status_id']);
+		  
+		  $update_note = "UPDATE `project_status` SET `note` = '$note' WHERE `id`='" .$id ."'";
+		  $mysql->sqlordie($update_note);
+		  /*$project_sql = 'SELECT IFNULL(project_status, 0) AS status FROM projects WHERE id="' . $project_id . '"';
+		  $projectResult = $mysql->sqlordie($project_sql);
+		  $projectRow = $projectResult->fetch_assoc();
+		
+		  $project_status_sql = 'SELECT * FROM lnk_project_status_types WHERE id="' . $status_id . '"';
+		  $projectStatusResult = $mysql->sqlordie($project_status_sql);
+		  $projectStatusRow = $projectStatusResult->fetch_assoc();
+		  $project_status_history = 'SELECT created_date FROM project_status WHERE status_id="' . $status_id . '" AND project_id="' . $project_id . '"';
+		  $project_status_history_result = $mysql->sqlordie($project_status_history);
+		  $projectStatusHistoryRow = $project_status_history_result->fetch_assoc();
+	      $date = date("m/d/Y", strtotime($projectStatusHistoryRow['created_date']));
+
+		  $user = 'SELECT user_name FROM users WHERE id="' . $user_id.'"';
+		  $user_result = $mysql->sqlordie($user);
+		  $userRow = $user_result->fetch_assoc();
+		  $history = '<li><div>'.$projectStatusRow['name'].'</div><div><textarea readonly rows="2" cols="18">'.$note.'</textarea></div><div>Updated by '.$userRow['user_name'].' on '.$date.'</div></li>';
+		  echo $history;*/
+		  break;
+		}
+		case 'project_status': {
+		  $project_status_id = $mysql->real_escape_string(@$_REQUEST['project_status_id']);
+		  $project_id = $mysql->real_escape_string(@$_REQUEST['project_id']);
+		  $user_id = $mysql->real_escape_string(@$_REQUEST['user_id']);
+		  
+		  $project_status_sql = 'SELECT name FROM lnk_project_status_types WHERE id="' . $project_status_id . '"';
+		  $project_status = $mysql->sqlordie($project_status_sql);
+		  $projectStatusRow = $project_status->fetch_assoc();
+		  
+		  $project_sql = 'SELECT IFNULL(project_status, 0) AS status FROM projects WHERE id="' . $project_id . '"';
+		  $projectResult = $mysql->sqlordie($project_sql);
+		  $projectRow = $projectResult->fetch_assoc();
+		  
+		  $class_name = str_replace(" ", "", strtolower($projectStatusRow['name']));
+		  $attr = '';
+		  if( $project_status_id != $projectRow['status'])
+		     $attr = 'user_id="'.$user_id.'" status_id="'.$project_status_id.'"';
+		  $html = '<button class="status status_' . $class_name . '" onclick="return false;" '.$attr.'><span>' . $projectStatusRow['name'] . '</span></button>';
+		 
+		  echo $html;
+		  break;
+		}
+		case 'timeline_history_note': {
+			$note = $mysql->real_escape_string(@$_REQUEST['note']);
+			$ids = $mysql->real_escape_string(@$_REQUEST['ids']);
+			$individual_ids = explode(',',$ids);
+			foreach($individual_ids as $id) {
+				if(!empty($id)) {
+				  $update_note = "UPDATE `project_phases` SET `note` = '$note' WHERE `id`='" .$id ."'";
+				  $mysql->sqlordie($update_note);
+				}
+			}
 			break;
 		}
 		//case '': {
