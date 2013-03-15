@@ -238,7 +238,7 @@
 		
 		public function financeTotal() {
 
-			$total_budget =  self::getQuery("SELECT sum(total_budget) as total_budget FROM `project_budget` pb, projects p  where p.id=pb.project_id and p.archived = '0' and p.active = '1' and p.deleted = '0'");
+			$total_budget =  self::getQuery("SELECT sum(total_budget) as total_budget FROM `project_budget` pb, projects p  where p.id=pb.project_id and p.archived = '0' and p.active = '1' and p.deleted = '0' and pb.delete_flag=0");
 			$finance_total = 0;
 
 			if(sizeof($total_budget)>0)
@@ -375,6 +375,95 @@
 					$html .= "<li class=\"$class\" id=\"sec_" .$sec[$i]['id'] ."\" onClick=\"ctCreateSectionsSwitch('sec_" .$sec[$i]['id'] ."');\"><span style=\"float:left;\"><img src=\"$flag_img\">" .$sec[$i]['name'] . "</span><span class=\"risk_ps\"><img src=\"/_images/flag_icon_red.png\"></span></li>";
 				}else{
 					$html .= "<li class=\"$class\" id=\"sec_" .$sec[$i]['id'] ."\" onClick=\"ctCreateSectionsSwitch('sec_" .$sec[$i]['id'] ."');\"><img src=\"$flag_img\">" .$sec[$i]['name'] . "</li>";
+				}
+			}
+			$html .= "</ul>";
+			
+			return $html;
+		}
+		/*added new function to display the project section.
+		on click changed to page reload instead just ajax call*/
+		public function getSectionEditHTMLDisplay($project_id, $section) {
+			switch ($section)
+			{
+				case 'Description':{
+				 $sec_id = '1';
+				 break;
+				}
+				case 'Roles':{
+				  $sec_id = '2';
+				  break;
+				}
+				case 'Timeline': {
+				  $sec_id = '3';
+				  break;
+				}
+				case 'Resources': {
+				  $sec_id = '5';
+				  break;
+				}
+				case 'Finance': {
+				  $sec_id = '6';
+				  break;
+				}
+				case 'Permissions': {
+				  $sec_id = '11';
+				  break;
+				}
+				default:{
+				  $sec_id = '12';
+				  break;
+				}
+			}
+			$html = '';
+			//$sec = self::getSections();
+			if($_SESSION['login_status'] == "client"){
+				$sec = self::getQuery("SELECT * FROM `lnk_project_brief_section_types` where id not in ('5','11','4','7','8','9','10') ORDER BY `sort_order` ASC");
+			}else{
+				$sec = self::getQuery("SELECT * FROM `lnk_project_brief_section_types` where id not in ('4','7','8','9','10') ORDER BY `sort_order` ASC");
+			}
+			//$sec = self::getQuery(QRY_PROJECT_SECTIONS_ASC);
+			
+			$html = "<ul id=\"create_sections\">";
+			for($i = 0; $i < sizeof($sec); $i++) {
+				$sec_stat = self::getQuery("SELECT * FROM `project_brief_sections` WHERE `project_id`='$project_id' AND `section_type`='" .$sec[$i]['id'] ."' LIMIT 1");
+				$flag_img = "";
+				
+				if(($i%2) == 0) {
+					$class = "alt ";
+				} else {
+					$class = "";
+				}
+				
+				switch(@$sec_stat[0]['flag']) {
+					case '2': {
+						$flag_img = "/_images/yellow_status.gif";
+						break;
+					}
+					case '3': {
+						$flag_img = "/_images/green_status.gif";
+						break;
+					}
+					default: {
+						$flag_img = "/_images/red_status.gif";
+						break;
+					}
+				}
+
+				if ( $sec[$i]['id'] == '12') {
+				  $flag_img = "/_images/green_status.gif";
+				}
+				
+				if($i == 0) {
+					$class .= "";
+				}
+				if($sec[$i]['id'] == $sec_id) {
+				  $class .= "active";
+				  #change for reload at js function ctCreateDisplaySection
+				  $html .= "<li class=\"$class\" id=\"sec_" .$sec[$i]['id'] ."\"><img src=\"$flag_img\">" .$sec[$i]['name'] . "</li>";
+				}else{
+					#change for reload at js function ctCreateDisplaySection
+					$html .= "<li class=\"$class\" id=\"sec_" .$sec[$i]['id'] ."\" onClick=\"ctCreateDisplaySection('sec_" .$sec[$i]['id'] ."');\"><img src=\"$flag_img\">" .$sec[$i]['name'] . "</li>";
 				}
 			}
 			$html .= "</ul>";
@@ -755,6 +844,121 @@
 			
 			return $html;
 		}
+		#created new function for timeline to get the latest value from project_phases
+		public function getTimelineEditHTMLNEW($project_id) {
+			$html = '';
+			$phases = self::getQuery(QRY_TIMELINE_SO_ASC);
+			
+			$html .= '<ul class="ptimeline" id="project_timeline">'
+				.'<li style="display: none;">'
+					.'<form></form>'
+				.'</li>';
+				
+			for($i = 0; $i < sizeof($phases); $i++) {
+				$timeline_link = self::getQuery("SELECT * FROM `lnk_resource_stage` WHERE `phase_id`='" .$phases[$i]['id'] ."' LIMIT 1");
+				if(sizeof($timeline_link) == 1) {
+					$nameIt = ' id="timeline_' .$timeline_link[0]['resource_id'] .'"';
+				} else {
+					$nameIt = '';
+				}
+				
+				//get resource type link
+				//check if resource type id exists
+				if(is_array($timeline_link)) {
+					$is_role = self::getQuery("SELECT * FROM `project_roles` WHERE `resource_type_id`='" .@$timeline_link[0]['resource_id'] ."' AND `project_id`='$project_id'");
+				}
+				
+				if(sizeof($is_role) > 0) {
+					#get the latest value first
+					$get_timeline = self::getQuery("SELECT * FROM `project_phases` WHERE `phase_type`='" 
+					.$phases[$i]['id'] ."' AND `project_id`='$project_id' order by id DESC");
+					
+					if(sizeof($get_timeline) > 0) {
+						$start_part = explode(" ", $get_timeline[0]['start_date']);
+						$start_date = explode("-", $start_part[0]);
+						$end_part = explode(" ", $get_timeline[0]['projected_end_date']);
+						$end_date = explode("-", $end_part[0]);
+						
+						if($start_date[0] != '0000') {
+							$start = $start_date[1] ."/" .$start_date[2] ."/" .$start_date[0];
+						} else {
+							$start = "";
+						}
+						if($end_date[0] != '0000') {
+							$end = $end_date[1] ."/" .$end_date[2] ."/" .$end_date[0];
+						} else {
+							$end = "";
+						}
+					} else {
+						$start = "";
+						$end = "";
+					}
+					
+					$html .= '<li' .$nameIt .'>
+						<form action="" method="post">
+							<input type="hidden" name="phase" id="phase" value="' .$phases[$i]['id'] .'" />
+							<div class="ptimeline_phase"><label for="phase">' .$phases[$i]['name'] .'</label></div>
+							<div class="ptimeline_startdate"><label for="start_date">Start Date:</label><input type="text" name="start_date" id="start_date' . $i .'" class="date_picker readonly" onChange="checkDateRange(\'start_date' . $i .'\', \'projected_date' . $i .'\')" value="' .$start .'"></div>
+							<div class="ptimeline_enddate"><label for="projected_date">Projected End Date:</label><input type="text" name="projected_date" id="projected_date' . $i .'" class="date_picker readonly" value="' .$end .'" onChange="checkDateRange(\'start_date' . $i .'\', \'projected_date' . $i .'\')"></div>
+							<div class="dim"></div>
+							<div style="clear: both"></div>
+						</form>
+					</li>';
+				} else {
+					#get the latest value first
+					$get_timeline = self::getQuery("SELECT * FROM `project_phases` WHERE `phase_type`='" 
+					.$phases[$i]['id'] ."' AND `project_id`='$project_id' order by id DESC");
+					
+					if(sizeof($get_timeline) > 0) {
+						$start_part = explode(" ", $get_timeline[0]['start_date']);
+						$start_date = explode("-", $start_part[0]);
+						$end_part = explode(" ", $get_timeline[0]['projected_end_date']);
+						$end_date = explode("-", $end_part[0]);
+						
+						if($start_date[0] != '0000') {
+							$start = $start_date[1] ."/" .$start_date[2] ."/" .$start_date[0];
+						} else {
+							$start = "";
+						}
+						if($end_date[0] != '0000') {
+							$end = $end_date[1] ."/" .$end_date[2] ."/" .$end_date[0];
+						} else {
+							$end = "";
+						}
+					} else {
+						$start = "";
+						$end = "";
+					}
+					
+					if(sizeof($timeline_link) < 1) {
+						$html .= '<li' .$nameIt .'>
+							<form action="" method="post">
+								<input type="hidden" name="phase" id="phase" value="' .$phases[$i]['id'] .'" />
+								<div class="ptimeline_phase"><label for="phase">' .$phases[$i]['name'] .'</label></div>
+								<div class="ptimeline_startdate"><label for="start_date">Start Date:</label><input type="text" name="start_date" id="start_date' . $i .'" class="date_picker readonly" onChange="checkDateRange(\'start_date' . $i .'\', \'projected_date' . $i .'\')" value="' .$start .'"></div>
+								<div class="ptimeline_enddate"><label for="projected_date">Projected End Date:</label><input type="text" name="projected_date" id="projected_date' . $i .'" class="date_picker readonly" value="' .$end .'" onChange="checkDateRange(\'start_date' . $i .'\', \'projected_date' . $i .'\')"></div>
+								<div class="dim"></div>
+								<div style="clear: both"></div>
+							</form>
+						</li>';
+					} else {
+						$html .= '<li' .$nameIt .' style="display: none;">
+						<form action="" method="post">
+							<input type="hidden" name="phase" id="phase" value="' .$phases[$i]['id'] .'" />
+							<div class="ptimeline_phase"><label for="phase">' .$phases[$i]['name'] .'</label></div>
+							<div class="ptimeline_startdate"><label for="start_date">Start Date:</label><input type="text" name="start_date" id="start_date' . $i .'" class="date_picker readonly" onChange="checkDateRange(\'start_date' . $i .'\', \'projected_date' . $i .'\')"></div>
+							<div class="ptimeline_enddate"><label for="projected_date">Projected End Date:</label><input type="text" name="projected_date" id="projected_date' . $i .'" class="date_picker readonly" onChange="checkDateRange(\'start_date' . $i .'\', \'projected_date' . $i .'\')"></div>
+							<div class="dim"></div>
+							<div style="clear: both"></div>
+						</form>
+					</li>';
+					}
+				}
+			}
+			$html .= '</ul>';
+			
+			return $html;
+		}
 
 		public function getPhases($project_id){
 			
@@ -901,7 +1105,7 @@
 				}
 
 				$sub_phase_list .= $phase['sub_phase'] . '~';
-				$onChange = 'calcSubPhaseFinance(\'' . $fin['id'] . '\', \'' . $phase['sub_phase'] . '\', fin_' . $fin['id'] . ',budget)';
+				$onChange = 'calcSubPhaseFinance(\'' . $fin['id'] . '\', \'' . $phase['sub_phase'] . '\', fin_' . $fin['id'] . ')';
 				$sp_html .= '<dt id="sub_phase_' . $phase['sub_phase'] .'">
 						<div class="finance_budget_name" onmouseover="$(\'#sp_remove_' . $phase['sub_phase'] .'\').css({display:\'block\'});" onmouseout="$(\'#sp_remove_' . $phase['sub_phase'] .'\').css({display:\'none\'});">
 							<span> - ' . $sp_details[$phase['sub_phase']]['name'] .'</span>
@@ -915,8 +1119,8 @@
 					</dt>';
 			}
 			if('' == $sp_html){
-				$phaseHrChange = 'onChange="calcFinance(fin_' . $fin['id'] .',budget);"';
-				$phaseRateHTML = '<span>Rate:</span><input type="text" name="rate" id="rate" value="'.$phaseRate.'" onChange="calcFinance(fin_' . $fin['id'] .',budget);" />';
+				$phaseHrChange = 'onChange="calcFinance(fin_' . $fin['id'] .');"';
+				$phaseRateHTML = '<span>Rate:</span><input type="text" name="rate" id="rate" value="'.$phaseRate.'" onChange="calcFinance(fin_' . $fin['id'] .');" />';
 				$totalHours = $phaseHours;
 				$totalTotal = $phaseTotal;
 				$readonly = '';
@@ -977,8 +1181,8 @@
 				}else{
 					$html .= '<input type="hidden" name="phase" id="phase" value="' .$fin[$i]['id'] .'" />
 						<div class="finance_budget_name"><span>' .$fin[$i]['name'] .':</span></div>
-						<div class="finance_budget_hours"><span>Hours:</span><input type="text" name="hours" id="hours" onChange="calcFinance(fin_' .$fin[$i]['id'] .',budget)" /></div>
-						<div class="finance_budget_rate"><span>Rate:</span><input type="text" name="rate" id="rate" onChange="calcFinance(fin_' .$fin[$i]['id'] .',budget)" /></div>
+						<div class="finance_budget_hours"><span>Hours:</span><input type="text" name="hours" id="hours" onChange="calcFinance(fin_' .$fin[$i]['id'] .')" /></div>
+						<div class="finance_budget_rate"><span>Rate:</span><input type="text" name="rate" id="rate" onChange="calcFinance(fin_' .$fin[$i]['id'] .')" /></div>
 						<div class="finance_budget_total"><span>Total:</span><input type="text" name="total" id="total" class="readonly" readonly /></div>
 						<div class="dim" style="display: block"></div>
 						<div style="clear: both"></div>';
@@ -1041,8 +1245,8 @@
 					}else{
 						$html .= '	<input type="hidden" name="phase" id="phase" value="' .$fin[$i]['id'] .'" />
 							<div class="finance_budget_name"><span>' .$fin[$i]['name'] .':</span></div>
-							<div class="finance_budget_hours"><span>Hours:</span><input type="text" name="hours" id="hours" value="' .$hours .'" onChange="calcFinance(fin_' .$fin[$i]['id'] .',budget)" /></div>
-							<div class="finance_budget_rate"><span>Rate:</span><input type="text" name="rate" id="rate" value="' .$rate .'" onChange="calcFinance(fin_' .$fin[$i]['id'] .',budget)" /></div>
+							<div class="finance_budget_hours"><span>Hours:</span><input type="text" name="hours" id="hours" value="' .$hours .'" onChange="calcFinance(fin_' .$fin[$i]['id'] .')" /></div>
+							<div class="finance_budget_rate"><span>Rate:</span><input type="text" name="rate" id="rate" value="' .$rate .'" onChange="calcFinance(fin_' .$fin[$i]['id'] .')" /></div>
 							<div class="finance_budget_total"><span>Total:</span><input type="text" name="total" id="total" value="' .$total .'" class="readonly" readonly /></div>
 							<div class="dim" style="display: block"></div>
 							<div style="clear: both"></div>';
@@ -1070,8 +1274,8 @@
 					}else{
 						$html .= '	<input type="hidden" name="phase" id="phase" value="' .$fin[$i]['id'] .'" />
 							<div class="finance_budget_name"><span>' .$fin[$i]['name'] .':</span></div>
-							<div class="finance_budget_hours"><span>Hours:</span><input type="text" name="hours" id="hours" onChange="calcFinance(fin_' .$fin[$i]['id'] .',budget)" /></div>
-							<div class="finance_budget_rate"><span>Rate:</span><input type="text" name="rate" id="rate" onChange="calcFinance(fin_' .$fin[$i]['id'] .',budget)" /></div>
+							<div class="finance_budget_hours"><span>Hours:</span><input type="text" name="hours" id="hours" onChange="calcFinance(fin_' .$fin[$i]['id'] .')" /></div>
+							<div class="finance_budget_rate"><span>Rate:</span><input type="text" name="rate" id="rate" onChange="calcFinance(fin_' .$fin[$i]['id'] .')" /></div>
 							<div class="finance_budget_total"><span>Total:</span><input type="text" name="total" id="total" class="readonly" readonly /></div>
 							<div class="dim" style="display: block"></div>
 							<div style="clear: both"></div>';
@@ -1121,15 +1325,59 @@
 			$quarter2_budget = 0;
 			$quarter3_budget = 0;
 			$quarter4_budget = 0;
-			$budget_data = self::getQuery("SELECT * FROM project_budget WHERE project_id='$project_id' LIMIT 1");
-			if(sizeof($budget_data) == 1){
-				$total_budget = $budget_data[0]['total_budget'];
-				$quarter1_budget = $budget_data[0]['quarter1_budget'];
-				$quarter2_budget = $budget_data[0]['quarter2_budget'];
-				$quarter3_budget = $budget_data[0]['quarter3_budget'];
-				$quarter4_budget = $budget_data[0]['quarter4_budget'];
+			
+			$budget_ids = self::getQuery("SELECT max(`id`) AS `id` FROM `project_budget` where project_id='$project_id' AND budget_code != '' GROUP BY `budget_code`  ORDER BY `updated_on`");
+			
+			if(is_array($budget_ids) && count($budget_ids) > 0) {
+				$id = "";
+				foreach($budget_ids as $value) {
+					$id .= $value["id"].",";
+				}
 			}
+			$id = rtrim($id,",");
+
+			if($id != "")			
+			$budget_data_value = self::getQuery("SELECT * FROM project_budget WHERE `id` in (".$id.") ORDER BY FIELD(`id`,".$id.")");
+
+			if(is_array($budget_data_value) && count($budget_data_value) > 0) {
+			
+			foreach($budget_data_value as $key => $budget_data) {
+
+			/*if($budget_data['delete_flag'] == 1) {
+				continue;
+			}*/
+			
+			$html .= '<div class="finance_budget_header" style="width: 725px;margin-top: 20px;">';
+			
+			if($key == 0) {
+				$html .= '<div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;">Budget code is needed. Please fix highlighted field.</div><div class="add_budget" onclick="generateBudgetCode();return false;" style="float: left;padding: 5px;cursor: pointer;"></div><!--<h3>FINANCE &amp; BUDGET</h3>--><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="'.trim($budget_data['budget_code']).'" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value="';
+			}else {
+				$html .= '<div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;">Budget code is needed. Please fix highlighted field.</div><div class="remove_budget" id="hideBudgetCodeOriginal" style="float: left;padding: 5px;cursor: pointer;"></div><!--<h3>FINANCE &amp; BUDGET</h3>--><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="'.trim($budget_data['budget_code']).'" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value="';		
+			}
+
+
+			if(isset($_GET['project_id']))
+			{
+			$html .= $budget_data['budget_code'];	
+			}				
+			$html .= '" /></div></div>';
+
+			$html .= '<ul class="finance_complete_budget">
+				<li style="display: none;"><form></form></li>';
+
+			$total_budget = $budget_data['total_budget'];
+
+			if($total_budget == "" || $total_budget == 0 || $total_budget == "0") {
+				$total_budget = @CtDisplay::getFinanceTotalEdit($_GET['project_id']);
+			}
+
+			$quarter1_budget = $budget_data['quarter1_budget'];
+			$quarter2_budget = $budget_data['quarter2_budget'];
+			$quarter3_budget = $budget_data['quarter3_budget'];
+			$quarter4_budget = $budget_data['quarter4_budget'];
+
 			$unallocated_budget = $total_budget-($quarter1_budget+$quarter2_budget+$quarter3_budget+$quarter4_budget);
+
 			if($total_budget > 0) {
 				$quarter1_percentage = round((($quarter1_budget/$total_budget)*100)*10)/10;
 				$quarter2_percentage = round((($quarter2_budget/$total_budget)*100)*10)/10;
@@ -1141,18 +1389,15 @@
 				$quarter3_percentage = 0;
 				$quarter4_percentage = 0;
 			}
-			$html .= '<ul class="finance_complete_budget">
-				<li style="display: none;"><form></form></li>';
 
-			$html .= '<li>
-			<form action="" method="post" name="budget">
+			$html .= '<li><form action="" method="post" name="budget'.$key.'">
 				<div class="finance_budget"' .$nameIt .'>
 					<div class="finance_total_budget"><span>Total Budget</span></div>
 					<div class="finance_total_budget"><span>Unallocated Budget</span></div>
-					<div class="finance_quarter_budget" align="right"><span>Quarter 1</span></div>
-					<div class="finance_quarter_budget" align="right"><span>Quarter 2</span></div>
-					<div class="finance_quarter_budget" align="right"><span>Quarter 3</span></div>
-					<div class="finance_quarter_budget" align="right"><span>Quarter 4</span></div>
+					<div class="finance_quarter_budget" align=""><span>Quarter 1</span></div>
+					<div class="finance_quarter_budget" align=""><span>Quarter 2</span></div>
+					<div class="finance_quarter_budget" align=""><span>Quarter 3</span></div>
+					<div class="finance_quarter_budget" align=""><span>Quarter 4</span></div>
 					<div class="dim" style="display: block"></div>
 					<div style="clear: both"></div>
 					
@@ -1160,32 +1405,168 @@
 				<div class="finance_budget"' .$nameIt .'>
 					<div class="finance_quarter_budget"><span></span></div>
 					<div class="finance_quarter_budget"><span></span></div>
-					<div class="finance_quarter_budget" align="right"><span>%</span><input type="text" name="percentage1" id="percentage1" value="'.$quarter1_percentage.'" onChange="calcBudgetPercentage(budget)" '.$quarter1ReadOnly.'/></div>
-					<div class="finance_quarter_budget" align="right"><span>%</span><input type="text" name="percentage2" id="percentage2" value="'.$quarter2_percentage.'" onChange="calcBudgetPercentage(budget)" '.$quarter2ReadOnly.'/></div>
-					<div class="finance_quarter_budget" align="right"><span>%</span><input type="text" name="percentage3" id="percentage3" value="'.$quarter3_percentage.'" onChange="calcBudgetPercentage(budget)" '.$quarter3ReadOnly.'/></div>
-					<div class="finance_quarter_budget" align="right"><span>%</span><input type="text" name="percentage4" id="percentage4" value="'.$quarter4_percentage.'" onChange="calcBudgetPercentage(budget)" '.$quarter4ReadOnly.' /></div>
+					<div class="finance_quarter_budget" align=""><span>%</span><input type="text" name="percentage1" id="percentage1" value="'.$quarter1_percentage.'" onChange="calcBudgetPercentage(budget'.$key.')" '.$quarter1ReadOnly.'/></div>
+					<div class="finance_quarter_budget" align=""><span>%</span><input type="text" name="percentage2" id="percentage2" value="'.$quarter2_percentage.'" onChange="calcBudgetPercentage(budget'.$key.')" '.$quarter2ReadOnly.'/></div>
+					<div class="finance_quarter_budget" align=""><span>%</span><input type="text" name="percentage3" id="percentage3" value="'.$quarter3_percentage.'" onChange="calcBudgetPercentage(budget'.$key.')" '.$quarter3ReadOnly.'/></div>
+					<div class="finance_quarter_budget" align=""><span>%</span><input type="text" name="percentage4" id="percentage4" value="'.$quarter4_percentage.'" onChange="calcBudgetPercentage(budget'.$key.')" '.$quarter4ReadOnly.' /></div>
 					<div class="dim" style="display: block"></div>
 					<div style="clear: both"></div>
 					
 				</div>
 				<div class="finance_budget"' .$nameIt .'>
-					<div class="finance_quarter_budget"><span>$</span><input class="readonly" readonly type="text" name="totalBudget" id="totalBudget" value="' .$total_budget .'" onChange="calcBudget(budget)" /></div>
+					<div class="finance_quarter_budget"><span>$</span><input class="readonly" readonly type="text" name="totalBudget" id="totalBudget" value="' .$total_budget .'" onChange="calcBudget(budget'.$key.')" /></div>
 					<div class="finance_quarter_budget"><span>$</span><input type="text" name="unallocated" id="unallocated" value="' .$unallocated_budget .'" readonly="true" class="readonly" /></div>
-					<div class="finance_quarter_budget" align="right"><span>$</span><input type="text" name="quarter1" id="quarter1" value="'.$quarter1_budget.'" "'.$quarter1ReadOnly.'" onChange="calcBudget(budget)" /></div>
-					<div class="finance_quarter_budget" align="right"><span>$</span><input type="text" name="quarter2" id="quarter2" value="'.$quarter2_budget.'" "'.$quarter2ReadOnly.'" onChange="calcBudget(budget)"  /></div>
-					<div class="finance_quarter_budget" align="right"><span>$</span><input type="text" name="quarter3" id="quarter3" value="'.$quarter3_budget.'" "'.$quarter3ReadOnly.'" onChange="calcBudget(budget)" /></div>
-					<div class="finance_quarter_budget" align="right"><span>$</span><input type="text" name="quarter4" id="quarter4" value="'.$quarter4_budget.'" onChange="calcBudget(budget)" "'.$quarter4ReadOnly.'" /></div>
+					<div class="finance_quarter_budget" align=""><span>$</span><input type="text" name="quarter1" id="quarter1" value="'.$quarter1_budget.'" "'.$quarter1ReadOnly.'" onChange="calcBudget(budget'.$key.')" /></div>
+					<div class="finance_quarter_budget" align=""><span>$</span><input type="text" name="quarter2" id="quarter2" value="'.$quarter2_budget.'" "'.$quarter2ReadOnly.'" onChange="calcBudget(budget'.$key.')"  /></div>
+					<div class="finance_quarter_budget" align=""><span>$</span><input type="text" name="quarter3" id="quarter3" value="'.$quarter3_budget.'" "'.$quarter3ReadOnly.'" onChange="calcBudget(budget'.$key.')" /></div>
+					<div class="finance_quarter_budget" align=""><span>$</span><input type="text" name="quarter4" id="quarter4" value="'.$quarter4_budget.'" onChange="calcBudget(budget'.$key.')" "'.$quarter4ReadOnly.'" /></div>
 					<div class="dim" style="display: block"></div>
 					<div style="clear: both"></div>
 					
 				</div>
 			</form>
 			</li>';
+				$html .= '</ul>';
+				}
 
-			$html .= '</ul>';
+		}else {
+				$quarter1_percentage = 0;
+				$quarter2_percentage = 0;
+				$quarter3_percentage = 0;
+				$quarter4_percentage = 0;
+
+			$html .= '<div class="finance_budget_header" style="width: 725px;margin-top: 20px;">';
+			
+			$html .= '<div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;">Budget code is needed. Please fix highlighted field.</div><div class="add_budget"  onclick="generateBudgetCode();return false;" style="float: left;padding: 5px;cursor: pointer;"></div><!--<h3>FINANCE &amp; BUDGET</h3>--><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value="" /></div></div>';
+
+			$html .= '<ul class="finance_complete_budget"><li style="display: none;"><form></form></li>';
+
+			$html .= '<li><form action="" method="post" name="budget">
+				<div class="finance_budget"' .$nameIt .'>
+					<div class="finance_total_budget"><span>Total Budget</span></div>
+					<div class="finance_total_budget"><span>Unallocated Budget</span></div>
+					<div class="finance_quarter_budget" align=""><span>Quarter 1</span></div>
+					<div class="finance_quarter_budget" align=""><span>Quarter 2</span></div>
+					<div class="finance_quarter_budget" align=""><span>Quarter 3</span></div>
+					<div class="finance_quarter_budget" align=""><span>Quarter 4</span></div>
+					<div class="dim" style="display: block"></div>
+					<div style="clear: both"></div>
+					
+				</div>
+				<div class="finance_budget"' .$nameIt .'>
+					<div class="finance_quarter_budget"><span></span></div>
+					<div class="finance_quarter_budget"><span></span></div>
+					<div class="finance_quarter_budget" align=""><span>%</span><input type="text" name="percentage1" id="percentage1" value="'.$quarter1_percentage.'" onChange="calcBudgetPercentage(budget)" '.$quarter1ReadOnly.'/></div>
+					<div class="finance_quarter_budget" align=""><span>%</span><input type="text" name="percentage2" id="percentage2" value="'.$quarter2_percentage.'" onChange="calcBudgetPercentage(budget)" '.$quarter2ReadOnly.'/></div>
+					<div class="finance_quarter_budget" align=""><span>%</span><input type="text" name="percentage3" id="percentage3" value="'.$quarter3_percentage.'" onChange="calcBudgetPercentage(budget)" '.$quarter3ReadOnly.'/></div>
+					<div class="finance_quarter_budget" align=""><span>%</span><input type="text" name="percentage4" id="percentage4" value="'.$quarter4_percentage.'" onChange="calcBudgetPercentage(budget)" '.$quarter4ReadOnly.' /></div>
+					<div class="dim" style="display: block"></div>
+					<div style="clear: both"></div>					
+				</div>
+				<div class="finance_budget"' .$nameIt .'>
+					<div class="finance_quarter_budget"><span>$</span><input class="readonly" readonly type="text" name="totalBudget" id="totalBudget" value="' .$total_budget .'" onChange="calcBudget(budget)" /></div>
+					<div class="finance_quarter_budget"><span>$</span><input type="text" name="unallocated" id="unallocated" value="' .$unallocated_budget .'" readonly="true" class="readonly" /></div>
+					<div class="finance_quarter_budget" align=""><span>$</span><input type="text" name="quarter1" id="quarter1" value="'.$quarter1_budget.'" "'.$quarter1ReadOnly.'" onChange="calcBudget(budget)" /></div>
+					<div class="finance_quarter_budget" align=""><span>$</span><input type="text" name="quarter2" id="quarter2" value="'.$quarter2_budget.'" "'.$quarter2ReadOnly.'" onChange="calcBudget(budget)"  /></div>
+					<div class="finance_quarter_budget" align=""><span>$</span><input type="text" name="quarter3" id="quarter3" value="'.$quarter3_budget.'" "'.$quarter3ReadOnly.'" onChange="calcBudget(budget)" /></div>
+					<div class="finance_quarter_budget" align=""><span>$</span><input type="text" name="quarter4" id="quarter4" value="'.$quarter4_budget.'" onChange="calcBudget(budget)" "'.$quarter4ReadOnly.'" /></div>
+					<div class="dim" style="display: block"></div>
+					<div style="clear: both"></div>
+					
+				</div>
+			</form>
+			</li>';
+				$html .= '</ul>';
+
+		}
 			
 			return $html;
 		}
+
+
+		public function getBudgetHistory($project_id) {
+
+		if($project_id != "") {
+
+		$budget_array = "";
+		$select_budget = "select distinct(budget_code) from project_budget WHERE `budget_code` != '' AND `project_id`=".$project_id;
+
+		//echo $select_budget;
+		
+		$budget_result = self::getQuery($select_budget);
+		$budget_history = "";$html = "";
+
+		if(is_array($budget_result) && count($budget_result) > 0) {
+
+			$html .= '<div style="color: #00000;font-size: 11pt;text-align: center;border-bottom: 1px solid gray;padding: 10px;">Budget History</div>';
+			$loop = 0;
+
+			foreach($budget_result as $value) {				
+				
+				$select_budget = "SELECT `id`,`updated_by`,`updated_on`,`budget_code`,`note`,UNIX_TIMESTAMP(updated_on) as `time` FROM `project_budget` where `budget_code`= '".trim($value['budget_code'])."' AND `project_id`=".$project_id." ORDER BY `updated_on` ASC LIMIT 50 OFFSET 1";
+
+				//echo $select_budget;
+
+				$result = self::getQuery($select_budget);
+
+				if(is_array($result) && count($result) > 0) {
+					foreach($result as $selectedBudget) {
+						$budget_index = "";
+						$budget_index = $selectedBudget["time"] + ($loop++);
+						$budget_array[$budget_index] = $selectedBudget;
+					}
+				}
+
+			}
+
+			ksort($budget_array);
+			$budget_array = array_reverse($budget_array);
+
+			 if(is_array($budget_array) && count($budget_array) > 0) {	
+				
+				foreach($budget_array as $selectedBudget) {
+					
+					$user = "";$updatedon = "";
+					$user = CtDisplay::getUser($selectedBudget["updated_by"]);	
+					$history_updated_on = date("m/d/Y",strtotime($selectedBudget["updated_on"]));
+					
+
+					$html .= '	<div class="bc_holder" style="border-bottom: 1px solid gray;">
+									<div class="history_bc" style="padding: 5px;margin-left: 7px;">'.$selectedBudget["budget_code"].'</div>
+									<div class="history_bc" style="padding: 10px;text-align: center;">
+										<div id="history_bc_note" class="history_bc" style="background: none repeat scroll 0% 0% white; vertical-align: text-bottom; height: 80px;text-align: left;border: 1px solid lightgray;">'.$selectedBudget["note"].'</div>
+									</div>
+								<div style="padding: 10px">
+									<span>Updated By</span><span class="history_bc_updatedby" style="padding: 5px;">'.$user.'</span><span>on</span>
+									<span class="history_bc_updatedon" style="padding: 10px;">'.$history_updated_on.'</span>
+								</div></div>';	
+				}
+			} 
+			
+		}else{
+					$html .= '<div style="color: #00000;font-size: 11pt;text-align: center;border-bottom: 1px solid gray;padding: 10px;">Budget History</div>';
+					$html .= '<span style="text-align: center">No history available</span>';
+		}
+
+			return $html;
+		}
+
+
+
+		}
+
+
+		public function getUser($user_id) {
+			if($user_id != "") {
+				$select_user = "SELECT `first_name`,`last_name` FROM users where id= ".trim($user_id);
+				$result = self::getQuery($select_user);
+
+				if(is_array($result) && count($result) > 0) {
+					return $result[0]["first_name"]." ".$result[0]["last_name"];
+				}
+			}
+		}
+
 
 		public function getFinanceTotalEdit($project_id) {
 			$finance_data = self::getQuery("SELECT * FROM `project_phase_finance` WHERE `project_id`='$project_id'");
@@ -1660,6 +2041,17 @@
 			}
 			return $html;
 		}
+		#created function to get the project status list.
+		function getProjectStatusList($projectId){
+			$html = '';
+			$project_status_sql = 'SELECT * FROM `lnk_project_status_types` ORDER BY `sort_order`';
+			$projectStatusResult = self::getQuery($project_status_sql);
+			foreach($projectStatusResult as $status){
+				$class_name = str_replace(" ", "", strtolower($status['name']));
+				$html .= '<li><button class="status status_' . $class_name . '" onclick="getProjStatus(\'' . $status['id'] . '\', \'' . $projectId . '\', \'' . $_SESSION['user_id'] . '\'); return false;"><span>' . $status['name'] . '</span></button></li>';
+			}
+			return $html;
+		}
 		function getProjectStatusEditHtml(){
 			$html = '';
 			$project_status_sql = 'SELECT * FROM `lnk_project_status_types` ORDER BY `sort_order`';
@@ -1759,6 +2151,77 @@
 				}
 			}
 			return $html;
+		}
+		function calculateDate($projID){
+
+			$toDateArray = array();
+			$todate = 0;
+
+			$rp_data = "SELECT * FROM `resource_blocks` WHERE `projectid`='" .$projID ."' AND `status`='4'";
+			$rp_res = self::getQuery($rp_data);
+			if(count($rp_res)>0) {
+			foreach($rp_res as $rp_row) {
+				$todate = 0;
+				
+				$select_user_project_phase = "SELECT ppf.rate rate, ppf.phase phase FROM project_phase_finance ppf, user_project_role upr WHERE ppf.project_id = upr.project_id AND ppf.phase = upr.phase_subphase_id AND upr.flag = 'phase' AND upr.user_id = '" .$rp_row['userid'] ."' AND ppf.project_id = '" .$projID ."' LIMIT 1";
+				$result_user_project_phase = self::getQuery($select_user_project_phase);
+
+				if(count($result_user_project_phase)> 0){
+					$user_project_phase_row = $result_user_project_phase[0];
+					if($rp_row['daypart'] == 9) {
+						$todate += $rp_row['hours'] * $user_project_phase_row['rate'];
+					} else {
+						$todate += $user_project_phase_row['rate'];
+					}
+					if(array_key_exists($user_project_phase_row['phase'], $toDateArray)){
+						$toDateArray[$user_project_phase_row['phase']] += $todate;
+					}else{
+						$toDateArray[$user_project_phase_row['phase']] = $todate;
+					}
+				}else{
+					$select_project_sub_phases = "SELECT pspf.rate rate, pspf.phase phase FROM project_sub_phase_finance pspf, user_project_role upr WHERE pspf.project_id = upr.project_id AND pspf.sub_phase = upr.phase_subphase_id AND upr.flag = 'subphase' AND upr.user_id = '" .$rp_row['userid'] ."' AND pspf.project_id = '" .$projID ."' LIMIT 1";
+					$result_sub_phases = self::getQuery($select_project_sub_phases);
+
+					if(count($result_sub_phases) > 0){
+						$sub_phase_row = $result_sub_phases[0];
+						if($rp_row['daypart'] == 9) {
+							$todate = $rp_row['hours'] * $sub_phase_row['rate'];
+						} else {
+							$todate = $sub_phase_row['rate'];
+						}
+						if(array_key_exists($sub_phase_row['phase'], $toDateArray)){
+							$toDateArray[$sub_phase_row['phase']] += $todate;
+						}else{
+							$toDateArray[$sub_phase_row['phase']] = $todate;
+						}
+					}else{
+						$select_project_phase = "SELECT * FROM `project_phase_finance` WHERE `project_id` = '" . $projID . "' AND `phase`='".UNASSIGNED_PHASE."'";  
+						$result_phases = self::getQuery($select_project_phase);
+						if(count($result_phases) > 0){
+							$phase_row = $result_phases[0];
+							if($rp_row['daypart'] == 9) {
+								$todate = $rp_row['hours'] * $phase_row['rate'];
+							} else {
+								$todate = $phase_row['rate'];
+							}
+							if(array_key_exists($phase_row['phase'], $toDateArray)){
+								$toDateArray[$phase_row['phase']] += $todate;
+							}else{
+								$toDateArray[$phase_row['phase']] = $todate;
+							}
+						}
+					}
+				}
+			}
+			}
+			return $toDateArray;
+		}
+		function checkPhaseDate($phaseDate){
+			if(empty($phaseDate))
+			{
+				$phaseDate= '00';
+			}			
+			return $phaseDate;
 		}
 	}
 ?>
