@@ -13,6 +13,10 @@ var percentageOneinitial;
 var percentageTwoinitial;
 var percentageThreeinitial;
 var percentageFourinitial;
+var budgetformcode;
+var budget_error = 0;
+budgetformcode = 0;
+
 $(document).ready(function(){
 	$('.status_dropdown').click(function(){
 		if($(this).hasClass('up')){
@@ -23,6 +27,30 @@ $(document).ready(function(){
 			$(this).addClass('up');
 		}
 	});
+	
+	
+
+	$(".finance_budget_options_added").live({
+		mouseover: function(){
+			//$(this).find("#hideBudgetCode").css('display','block');			
+		},
+		mouseout: function(){
+			//$(this).find("#hideBudgetCode").css('display','none');
+		}		
+	})
+
+	$("#hideBudgetCode").live("click",function(){
+		budgetformcode = budgetformcode - 1;
+		$(this).closest(".finance_budget_options_added").remove();		
+	});
+
+	$("#hideBudgetCodeOriginal").live("click",function(){
+		removeBudgetCode($(this));
+	});
+
+
+	
+	
 /*	$('.project_status_list').mouseover(function () {
 		$('.project_status_list').css({display:'block'});
 	});
@@ -278,7 +306,6 @@ function ctCreateSectionsSwitch(secName) {
 
 	var lst = document.getElementById('create_sections');
 	var lstElements = lst.getElementsByTagName("li");
-	
 	//var nmPart = split('_', secName);
 	var nmPart = curSec.split('_');
 	var prevElement = "form_sec_" + nmPart[1];	
@@ -345,7 +372,7 @@ function ctCreateSectionsSwitch(secName) {
 			
 			break;
 		}
-		case 'sec_2': {			
+		case 'sec_2': {	
 			document.getElementById('ajax_loader').style.display = "block";
 			document.getElementById('ajax_loader').style.backgroundColor = "#FFFFFF";
 			document.getElementById('ajax_loader').style.opacity = '0.7';
@@ -1964,7 +1991,7 @@ function ctCreateSectionsSwitchNextApprovals() {
 	});
 }
 function ctCreateDisplaySection(secName) {	
-	var frmName = "form_"+secName;
+	/*var frmName = "form_"+secName;
 	var divs = document.getElementById('create_columns');
 	var divList = divs.getElementsByTagName("div");
 	
@@ -1978,7 +2005,41 @@ function ctCreateDisplaySection(secName) {
 				elem.style.display = "none";
 			}
 		}
-	}
+	}*/
+  redirect = '';
+  switch (secName)
+  {
+    case 'sec_1':{
+      redirect = '&section=Description';
+      break;
+    }
+    case 'sec_2':{
+      redirect = '&section=Roles';
+      break;
+    }
+    case 'sec_3': {
+      redirect = '&section=Timeline';
+      break;
+    }
+    case 'sec_5': {
+      redirect = '&section=Resources';
+      break;
+    }
+    case 'sec_6': {
+      redirect = '&section=Finance';
+      break;
+    }
+    case 'sec_11': {
+      redirect = '&section=Permissions';
+      break;
+    }
+    default:{
+      redirect = '';
+      break;
+    }
+  }
+  document.location.href = '/controltower/index/edit/?project_id='+$("#project_id").val()+redirect;
+
 }
 
 function clearFCK(instance) {
@@ -2519,17 +2580,25 @@ function saveTimeline() {
 	} else {
 		$.ajax({
 			type: "GET",
-			url: "/_ajaxphp/update_timeline.php"+query+complete_text+status,
+			url: "/_ajaxphp/update_timeline.php"+query+complete_text+status+'&get_ids=yes',
 			success: function(msg) {
+        if (msg != '') {
+          $('.timeline_history_note').attr("ids", msg);
+        }
 				$.ajax({
 					type: "GET",
 					url: "/_ajaxphp/update_timeline.php"+delquery+complete_text+status,
 					success: function(msg) {
-						document.getElementById('ajax_loader').style.display = "none";
 						changeSectionStatus();
+            //document.getElementById('ajax_loader').style.display = "none";
+            if( typeof  $('.timeline_history_note').attr("ids") != 'undefined') {
+              $('.timeline_history_note').css({display:'block'});
+              $('.project_history_note textarea').focus();
+              document.getElementById('ajax_loader').style.display = "none";
+            }
 					}
 				});
-				document.getElementById('ajax_loader').style.display = "none";
+				//document.getElementById('ajax_loader').style.display = "none";
 				changeSectionStatus();
 			}
 		});
@@ -2553,9 +2622,19 @@ function calcFinance(theForm,budgetForm) {
 			}
 		}
 	}
-	document.getElementById('totalBudget').value = overall_total;
-	document.getElementById('overall_finance_total').innerHTML = "Overall Total:: <span>$"+overall_total+"</span>"
-	calcBudget(budgetForm);
+	
+
+	$(".finance_complete_budget").each(function() {
+		$(this).find("#totalBudget").val(overall_total); 
+		$("#ct_overall_total").val(overall_total);
+		calcNewBudget($(this));
+		//calcBudget($(this).find("#totalBudget").closest("form").attr("name"));		
+	});	
+	
+  //document.getElementById('totalBudget').value = overall_total;
+	document.getElementById('overall_finance_total').innerHTML = "Overall Total:: <span>$"+overall_total+"</span>";
+	//calcBudget(budgetForm);
+
 }
 function roundNumber(num, dec) {
 	var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
@@ -2591,10 +2670,10 @@ function calcBudget(theForm) {
 	
 	if(unallocated<0){
 		alert("Allocated Budget should not exceed Total Budget");
-		theForm.quarter1.value = quarterOneinitial;
-		theForm.quarter2.value = quarterTwoinitial;
-		theForm.quarter3.value = quarterThreeinitial;
-		theForm.quarter4.value = quarterFourinitial;
+		//theForm.quarter1.value = quarterOneinitial;
+		//theForm.quarter2.value = quarterTwoinitial;
+		//theForm.quarter3.value = quarterThreeinitial;
+		//theForm.quarter4.value = quarterFourinitial;
 		return;
 	}
 	theForm.unallocated.value = roundNumber(totalBudget-(quarter1+quarter2+quarter3+quarter4), 2);
@@ -2615,6 +2694,106 @@ function calcBudget(theForm) {
 	quarterFourinitial = quarter4;
 
 }
+
+function calcNewBudget(theForm){
+
+	var totalBudget = parseInt(theForm.find("#totalBudget").val());
+	var quarter1 = 0;
+	var quarter2 = 0;
+	var quarter3 = 0;
+	var quarter4 = 0;
+	
+	//alert($.trim(theForm.find("#quarter1").val()));
+	
+	if($.trim(theForm.find("#quarter1").val()) != ""){
+		quarter1 = parseFloat(theForm.find("#quarter1").val());
+	}else{		
+		theForm.find("#quarter1").val(0);
+	}
+
+	if($.trim(theForm.find("#quarter2").val()) != ""){
+		quarter2 = parseFloat(theForm.find("#quarter2").val());
+	}else{		
+		theForm.find("#quarter2").val(0);
+	}
+
+	if($.trim(theForm.find("#quarter3").val()) != ""){
+		quarter3 = parseFloat(theForm.find("#quarter3").val());
+	}else{		
+		theForm.find("#quarter3").val(0);
+	}
+
+	if($.trim(theForm.find("#quarter4").val()) != ""){
+		quarter4 = parseFloat(theForm.find("#quarter4").val());
+	}else{		
+		theForm.find("#quarter4").val(0);
+	}
+	
+	var unallocated = parseFloat(totalBudget-(quarter1+quarter2+quarter3+quarter4));
+	
+    var bc = theForm.prev(".finance_budget_header").find("#fin_budget_code").val();
+
+	if(unallocated<0){
+		alert("Allocated Budget "+bc+" should not exceed Total Budget");
+		budget_error = 1;
+		//alert("Allocated Budget should not exceed Total Budget");
+		return;
+	}
+	
+	theForm.find("#unallocated").val(roundNumber(totalBudget-(quarter1+quarter2+quarter3+quarter4), 2));
+	
+	if(totalBudget > 0){
+		theForm.find("#percentage1").val(roundNumber((quarter1/totalBudget)*100,1));
+		theForm.find("#percentage2").val(roundNumber((quarter2/totalBudget)*100,1));
+		theForm.find("#percentage3").val(roundNumber((quarter3/totalBudget)*100,1));
+		theForm.find("#percentage4").val(roundNumber((quarter4/totalBudget)*100,1));
+	}else{
+		theForm.find("#percentage1").val(0);
+		theForm.find("#percentage2").val(0);
+		theForm.find("#percentage3").val(0);
+		theForm.find("#percentage4").val(0);
+	}
+}
+
+
+function removeBudgetCode(budgetObj){
+	
+	selectedBudgetCode = budgetObj.parent(".finance_budget_header").find("#fin_budget_code").val();
+	prj_id = $("#project_id").val();
+	
+	if(selectedBudgetCode != '') {
+		$.ajax({
+			type: "GET",
+			url: "/_ajaxphp/remove_budgetcode.php?budget_code="+selectedBudgetCode+"&project_id="+prj_id,
+			success: function(msg) {
+				if(msg == 'success'){
+					budgetObj.parent(".finance_budget_header").next(".finance_complete_budget").remove();		
+					budgetObj.closest(".finance_budget_header").remove();
+				}
+				//document.getElementById('ajax_loader').style.display = "none";
+			}
+		});
+	}
+}
+
+function generateBudgetCode(){
+	//alert(budgetformcode);
+	budgetformcode += 1;
+	//alert(budgetformcode);
+	var id = $(".finance_complete_budget").size();
+	var total = $("#ct_overall_total").val(); 
+	var tempid = '';
+	tempid = 'budget_code_'+budgetformcode;
+	html = '<div id="'+tempid+'" style="background: #B7D6EA;" class="finance_budget_options_added"><div class="finance_budget_header" style="width: 725px;"><div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;">Budget code is needed. Please fix highlighted field.</div><div class="remove_budget" id="hideBudgetCode" style="float: left;padding: 5px;cursor: pointer;"></div><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value=""/></div></div><ul class="finance_complete_budget"><li style="display: none;"><form></form></li><li><form action="" method="post" name="budget'+id+'">	<div style="padding-bottom: 15px" class="finance_budget"><div class="finance_total_budget"><span>Total Budget</span></div><div class="finance_total_budget"><span>Unallocated Budget</span></div><div class="finance_quarter_budget" align="right" style="width: 120px;"><span>Quarter 1</span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>Quarter 2</span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>Quarter 3</span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>Quarter 4</span></div><div class="dim" style="display: block"></div><div style="clear: both"></div></div><div class="finance_budget"><div class="finance_quarter_budget"><span></span></div><div class="finance_quarter_budget"><span></span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage1" id="percentage1" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage2" id="percentage2" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage3" id="percentage3" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage4" id="percentage4" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="dim" style="display: block"></div><div style="clear: both"></div></div><div class="finance_budget"><div class="finance_quarter_budget" style="width: 120px;"><span>$</span><input class="readonly" readonly type="text" name="totalBudget" id="totalBudget" dynamic="true" value="'+total+'" /></div><div class="finance_quarter_budget" style="width: 120px;"><span>$</span><input type="text" name="unallocated" id="unallocated" value="0" readonly="true" class="readonly" /></div><div class="finance_quarter_budget" style="width: 127px;" align="right"><span>$</span><input type="text" name="quarter1" id="quarter1" dynamic="true" value="0" onchange="calcBudget(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>$</span><input type="text" name="quarter2" id="quarter2" dynamic="true" value="0" onchange="calcBudget(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>$</span><input type="text" name="quarter3" id="quarter3" dynamic="true" value="0" onchange="calcBudget(budget'+id+')" /></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>$</span><input type="text" dynamic="true" name="quarter4" id="quarter4" value="0" onchange="calcBudget(budget'+id+')" /></div><div class="dim" style="display: block"></div><div style="clear: both"></div></div></form></li></ul>';
+	
+	if(budgetformcode == 1){	
+		$(".finance_complete_budget:last").after(html);
+	}else{
+		$(".finance_budget_options_added:last").after(html);
+	}
+}
+
+
 function calcBudgetPercentage(theForm) {
 	var totalBudget = parseInt(theForm.totalBudget.value);
 	var percentage1 = 0;
@@ -2646,10 +2825,10 @@ function calcBudgetPercentage(theForm) {
 	
 	if(unallocated<0){
 		alert("Allocated Budget should not exceed Total Budget");
-		theForm.percentage1.value = percentageOneinitial;
-		theForm.percentage2.value = percentageTwoinitial;
-		theForm.percentage3.value = percentageThreeinitial;
-		theForm.percentage4.value = percentageFourinitial;
+		//theForm.percentage1.value = percentageOneinitial;
+		//theForm.percentage2.value = percentageTwoinitial;
+		//theForm.percentage3.value = percentageThreeinitial;
+		//theForm.percentage4.value = percentageFourinitial;
 		return;
 	}
 	quarter1 = roundNumber((percentage1*totalBudget)/100, 2);
@@ -2750,6 +2929,54 @@ function clearFinance() {
 	document.getElementById('overall_finance_total').innerHTML = "Overall Total:: <span>$ 0</span>"
 }
 function saveFinance() {
+	
+		
+	$(".finance_complete_budget").each(function(){
+		budget_error = 0;
+		calcNewBudget($(this));
+	});
+
+	if(budget_error == 1){
+		return false;
+	}
+
+	if($("#ct_section").val() == "finance") {
+
+		var validation_error = 0;
+    var present = false;
+    var bg_code_array = new Array();
+    var count = 0;
+
+	$(".finance_budget_header #fin_budget_code").each(function(){			
+		if($.trim($(this).val()) == "") {
+			$(this).addClass("input_error");
+			$(this).closest(".finance_budget_header").find('.budget_empty_error').css('display','block');
+			validation_error = 1;
+			return false;
+		}else{
+			$(this).closest(".finance_budget_header").find('.budget_empty_error').css('display','none');
+			$(this).removeClass("input_error");
+		}
+		if (in_array($.trim($(this).val()), bg_code_array)) {
+			present = true;
+		}else {
+			bg_code_array[count++] = $.trim($(this).val());
+		}
+	});
+	
+	//alert("VE: "+validation_error);
+
+	if(validation_error == 1){	
+	  return false;
+	}
+
+    if(present){
+      alert("No two budget codes should be same");
+		  return false;
+		}
+	}
+
+
 	var comp_id = document.getElementById('project_id').value;
 	var budget_code = document.getElementById('fin_budget_code').value;
 	var query = "?action=save&project_id="+comp_id+"&budget_code="+budget_code+"&";
@@ -2762,6 +2989,10 @@ function saveFinance() {
 //		alert("Total Budget cannot be zero");
 //		return false;
 //	}
+
+	//alert("ajax screen shd come");
+
+
 	document.getElementById('ajax_loader').style.display = "block";
 	document.getElementById('ajax_loader').style.backgroundColor = "#FFFFFF";
 	document.getElementById('ajax_loader').style.opacity = '0.7';
@@ -2823,24 +3054,34 @@ function saveFinance() {
 						break;
 					}
 					case 'totalBudget': {
-						query += "totalBudget="+block_inputs[i].value+"&";
-						break;
+						if(!block_inputs[i].hasAttribute("dynamic")){
+							query += "budget["+x+"][totalBudget]="+block_inputs[i].value+"&";
+							break;
+						}
 					}
 					case 'quarter1': {
-						query += "quarter1="+block_inputs[i].value+"&";
-						break;
+						if(!block_inputs[i].hasAttribute("dynamic")){
+							query += "budget["+x+"][quarter1]="+block_inputs[i].value+"&";
+							break;
+						}
 					}
 					case 'quarter2': {
-						query += "quarter2="+block_inputs[i].value+"&";
-						break;
+						if(!block_inputs[i].hasAttribute("dynamic")){
+							query += "budget["+x+"][quarter2]="+block_inputs[i].value+"&";
+							break;
+						}
 					}
 					case 'quarter3': {
-						query += "quarter3="+block_inputs[i].value+"&";
-						break;
+						if(!block_inputs[i].hasAttribute("dynamic")){
+							query += "budget["+x+"][quarter3]="+block_inputs[i].value+"&";
+							break;
+					  }
 					}
 					case 'quarter4': {
-						query += "quarter4="+block_inputs[i].value+"&";
-						break;
+						if(!block_inputs[i].hasAttribute("dynamic")){
+							query += "budget["+x+"][quarter4]="+block_inputs[i].value+"&";
+							break;
+					  }
 					}
 					case 'total': {
 						if(parseInt(block_inputs[i].value)){
@@ -2876,6 +3117,52 @@ function saveFinance() {
 //		document.getElementById('ajax_loader').style.display = "none";
 //		return false;
 //	}
+
+
+	//budgetcode_count = 0;
+
+	$(".finance_budget_options_added").each(function(){
+		var query_params = "",total = "",per1 = "",per2 = "",per3 = "",per4 = "",budget_code = "",user_id = "";
+				
+		x += 1;		
+		fin_budget_code = $(this).find("#fin_budget_code").val();
+		total = $(this).find("#totalBudget").val();
+		q1 = $(this).find("#quarter1").val();
+		q2 = $(this).find("#quarter2").val();
+		q3 = $(this).find("#quarter3").val();
+		q4 = $(this).find("#quarter4").val();
+		user_id = $("#ct_user_id").attr('value');
+		//budgetcode_count += 1;
+		//query += 'budget_code_'+budgetcode_count+'='+fin_budget_code+','+total+','+q1+','+q2+','+q3+','+q4+','+'note,'+user_id+'&';
+		query += "budget["+x+"][totalBudget]="+total+"&";
+		query += "budget["+x+"][quarter1]="+q1+"&";
+		query += "budget["+x+"][quarter2]="+q2+"&";
+		query += "budget["+x+"][quarter3]="+q3+"&";
+		query += "budget["+x+"][quarter4]="+q4+"&";
+
+	});
+
+	/*if(budgetcode_count > 0){
+		query += 'budget_count='+budgetcode_count+'&';
+	}*/
+
+	budget_loop = 0;
+
+	$(".finance_budget_header").each(function(){
+		//alert($(this).find("#fin_budget_code").val());
+		query += "budgetcode["+budget_loop+"][budget_code] = "+$(this).find("#fin_budget_code").val()+"&";
+
+		if($.trim($(this).find("#hidden_bc").val()) != ""){
+			query += "budgetcode["+budget_loop+"][original_budget_code] = "+$(this).find("#hidden_bc").val()+"&";	
+		}else{
+			query += "budgetcode["+budget_loop+"][original_budget_code] = "+$(this).find("#fin_budget_code").val()+"&";		
+		}
+		
+		budget_loop++;
+	});
+
+
+
 	if(complete) {
 		var complete_text = "complete=1&section="+curSec;
 	} else {
@@ -2884,23 +3171,71 @@ function saveFinance() {
 	//alert(query+complete_text);
 	//alert(delquery+complete_text);
 	
+	//alert("going for ajax");
+	//alert(query);
+
+	if($("#ct_section").val() == "finance") {
+		query += "&requestFrom=budget&" 
+	}
+
 	$.ajax({
 		type: "GET",
 		url: "/_ajaxphp/update_finance.php"+query+complete_text+status,
 		success: function(msg) {
+
+			$(".finance_budget_header").each(function(){
+				$(this).find("#hidden_bc").val($(this).find("#fin_budget_code").val());
+			});
+
 			$.ajax({
 				type: "GET",
-				url: "/_ajaxphp/update_finance.php"+delquery+complete_text+status,
-				success: function(msg) {
-					document.getElementById('ajax_loader').style.display = "none";
-					changeSectionStatus();
-				}
+				url: "/_ajaxphp/update_finance.php"+"?action=setFlag&project_id="+$("#project_id").val(),
+				success: function(res) {}
 			});
-			document.getElementById('ajax_loader').style.display = "none";
-			changeSectionStatus();
+		
+			if(msg != ""){				
+				$('#ct_user_note_id').val(msg);
+				$('.budget_save').css("display", "block");
+
+				$.ajax({
+					type: "GET",
+					url: "/_ajaxphp/update_finance.php"+delquery+complete_text+status,
+					success: function(msg) {
+						document.getElementById('ajax_loader').style.display = "none";
+						changeSectionStatus();
+					}
+				});
+				//document.getElementById('ajax_loader').style.display = "none";
+				changeSectionStatus();
+			}else{
+				$.ajax({
+					type: "GET",
+					url: "/_ajaxphp/update_finance.php"+delquery+complete_text+status,
+					success: function(msg) {
+						document.getElementById('ajax_loader').style.display = "none";
+						changeSectionStatus();
+					}
+				});
+				//document.getElementById('ajax_loader').style.display = "none";
+				changeSectionStatus();
+				//document.location.href = '/controltower/index/edit/?project_id='+$("#project_id").val()+'&section=Finance';
+				//alert("in else");
+				//if($("#ct_section").val() == "finance") {
+					//document.location.href = '/controltower/index/edit/?project_id='+$("#project_id").val()+'&section=Finance';
+				//}
+
+			}			
 		}
 	});
 }
+
+function in_array(needle, haystack) {
+    for(var i in haystack) {
+        if(haystack[i] == needle) return true;
+    }
+    return false;
+}
+
 function clearApprovals() {
 	var list = document.getElementById('approvals');
 	var listItems = list.getElementsByTagName('li');
@@ -3113,7 +3448,7 @@ function fadeDimmer(obj) {
 		saveRoles();
 		saveTimeline();
 		saveFinance();
-		saveApprovals();
+		//saveApprovals();
 	} else {
 		$("#role" + obj + "_btn").addClass("prole_disable");
 		$("#role" + obj + "_btn").removeClass("prole_enable");
@@ -3130,7 +3465,7 @@ function fadeDimmer(obj) {
 		saveRoles();
 		saveTimeline();
 		saveFinance();
-		saveApprovals();
+		//saveApprovals();
 	}
 }
 function saveCreate() {
@@ -3597,9 +3932,17 @@ function calcSubPhaseFinance(phase, subPhase, formName,theForm) {
 			}
 		}
 	}
-	document.getElementById('totalBudget').value = overall_total;
+	
+		
+	$(".finance_complete_budget").each(function(){
+		$(this).find("#totalBudget").val(overall_total);
+		$("#ct_overall_total").val(overall_total);
+		calcNewBudget($(this));
+	});
+
+	//document.getElementById('totalBudget').value = overall_total;
 	document.getElementById('overall_finance_total').innerHTML = "Overall Total:: <span>$"+overall_total+"</span>"
-	calcBudget(theForm);
+	//calcBudget(theForm);
 }
 
 /*	Project Status */
@@ -3608,6 +3951,19 @@ function calcSubPhaseFinance(phase, subPhase, formName,theForm) {
 				type: "GET",
 				url: "/_ajaxphp/update_project_status.php",
 				data: "project_id="+projectId+"&project_status_id="+newStatus+"&user_id="+userid,
+				success: function(msg) {
+					$('.project_status_block span.project_status').html(msg);
+					$('.project_status_list').css({display:'none'});
+					$('.project_status_block .dropdown a').removeClass('up');
+				}
+			});
+	}
+
+	function getProjStatus(newStatus, projectID, userid){
+		$.ajax({
+				type: "POST",
+				url: "/_ajaxphp/update_project.php",
+				data: "data_set=project_status&project_status_id="+newStatus+'&project_id='+projectID+'&user_id='+userid,
 				success: function(msg) {
 					$('.project_status_block span.project_status').html(msg);
 					$('.project_status_list').css({display:'none'});
