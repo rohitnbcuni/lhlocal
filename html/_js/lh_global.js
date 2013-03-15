@@ -21,7 +21,7 @@ function ajaxFunction(qString,action){
 				url: "/_ajaxphp/update_project.php",
 				data:qString,
 				success: function(msg) {
-					alert(msg);
+					//alert(msg);
 				}
 			});
 			
@@ -73,10 +73,6 @@ function ajaxFunction(qString,action){
 			break;
 		}
 		case 'update_project_desc': {
-			document.getElementById('ajax_loader').style.display = "block";
-			document.getElementById('ajax_loader').style.backgroundColor = "#FFFFFF";
-			document.getElementById('ajax_loader').style.opacity = '0.7';
-			document.getElementById('ajax_loader').style.filter = 'alpha(opacity=70)';
 			
 			if(draft) {
 				var status = "&status=true;";
@@ -84,25 +80,64 @@ function ajaxFunction(qString,action){
 			} else {
 				var status = "";
 			}
-			
+			//var note = $('.project_history ul li:first-child div textarea').val();
+      
+      var status_id = $('.project_status_container .project_status button').attr('status_id');
+      var user_id = $('.project_status_container .project_status button').attr('user_id');
+      if(typeof status_id == "undefined") status_id = '';
+      if(typeof user_id == "undefined") user_id = '';
 			var comp_id = document.getElementById('project_id').value;
+      var scope = encodeURIComponent(document.getElementById('project_description_scope_text').value);
+      var project_charter = encodeURIComponent(document.getElementById('project_charter_text').value);
+      if (project_charter != '') {
+          $('#project_charter_text').removeClass('error_desc');
+      }
+      else {
+        $('#project_charter_text').addClass('error_desc');
+      }
+
+      if (scope != '') {
+          $('#project_description_scope_text').removeClass('error_desc');
+      }
+      else {
+        $('#project_description_scope_text').addClass('error_desc');
+      }
+      if ( $('#project_description_scope_text').hasClass('error_desc') ||  $('#project_charter_text').hasClass('error_desc'))
+      {
+        $('#form_sec_1 .required_fields_error').remove();
+        $('#form_sec_1 .project_status_program').before('<div class="required_fields_error">Please fix highlighted fields.</div>');
+        return false;
+      }
 			var project_program = $('#project_program').val();
 			var project_prog;
 			if(project_program != 0){
 				project_prog = '&project_program='+project_program;
 			}
-			qString = 'data_set=project_description&comp_id='+comp_id+'&desc='+escateQuates(FCKeditorAPI.GetInstance('descEditor').GetData())+'&section='+curSec+status+project_prog;
+
+      document.getElementById('ajax_loader').style.display = "block";
+			document.getElementById('ajax_loader').style.backgroundColor = "#FFFFFF";
+			document.getElementById('ajax_loader').style.opacity = '0.7';
+			document.getElementById('ajax_loader').style.filter = 'alpha(opacity=70)';
+
+			qString = 'data_set=project_description&comp_id='+comp_id+'&desc='+escateQuates(FCKeditorAPI.GetInstance('descEditor').GetData())+'&section='+curSec+status+project_prog+'&scope='+scope+'&project_charter='+project_charter+'&note='+note+'&status_id='+status_id+'&user_id='+user_id;
 				$.ajax({
 					type: "POST",
 					url: "/_ajaxphp/update_project.php",
 					data:qString,
 					success: function(msg) {
 						document.getElementById('ajax_loader').style.display = "none";
-						if(msg == '0') {
+						/*if(msg == '0') {
 							//alert('Changes have not been saved');
 						} else if(msg == '1') {
 							//alert('Changes have been saved');
-						}
+						}*/
+            if(typeof $('.project_status_container .project_status button').attr('status_id') != "undefined" && typeof $('.project_status_container .project_status button').attr('user_id') != "undefined") {
+              //$('.project_history_note').removeClass('project_history_note');
+              $('.project_history_note').css({display:'block'});
+              $('.project_history_note').attr('id', msg);
+              $('.project_history_note textarea').focus();
+            }
+            $('#form_sec_1 .required_fields_error').remove();
 						changeSectionStatus();
 					}
 				});
@@ -333,12 +368,74 @@ function ajaxFunction(qString,action){
 			
 			break;
 		}
+    case 'project_history_note_save': {
+      var status_id = $('.project_status_container .project_status button').attr('status_id');
+      var user_id = $('.project_status_container .project_status button').attr('user_id');
+			var project_id = document.getElementById('project_id').value;
+      var note = encodeURIComponent($('.project_history_note textarea').val());
+      var id = $('.project_history_note').attr('id');
+      qString = 'data_set=project_history_note&project_id='+project_id+'&note='+note+'&status_id='+status_id+'&user_id='+user_id+'&id='+id;
+				$.ajax({
+					type: "POST",
+					url: "/_ajaxphp/update_project.php",
+					data:qString,
+					success: function(msg) {
+	          //$('.project_history ul li:first-child').before(msg);
+            $('.project_status_container .project_status button').removeAttr('status_id');
+            $('.project_status_container .project_status button').removeAttr('user_id');
+            $('.project_history_note textarea').val('');
+            $('.project_history_note').removeAttr('id');
+            ctCreateDisplaySection('sec_1');
+					}
+				});
+      break;
+    }
+    case 'timeline_history_note_save': {
+      ids = $('.timeline_history_note').attr("ids");
+      var note = encodeURIComponent($('.timeline_history_note textarea').val());
+      qString = 'data_set=timeline_history_note&note='+note+'&ids='+ids;
+				$.ajax({
+					type: "POST",
+					url: "/_ajaxphp/update_project.php",
+					data:qString,
+					success: function(msg) {
+            $('.timeline_history_note').removeAttr('ids');
+            $('.timeline_history_note textarea').val('');
+            ctCreateDisplaySection('sec_3');
+					}
+				});
+      break;
+    }
+    	case 'budget_save': {
+			//alert("in budget save");
+			
+			var id= $('#ct_user_note_id').val();
+			var note = $('.budget_save').find("textarea").val(); 
+			query = "?action=savenote&budget_update_id="+id+"&note="+encodeURIComponent(note);
+			
+			//alert(query);
+
+			$.ajax({
+				type: "GET",
+				url: "/_ajaxphp/update_finance.php"+query,
+				success: function(msg) {
+
+					ctCreateDisplaySection('sec_6');
+					if(msg != ""){
+						//$("#budget_history").html(msg);
+					}
+				}
+			});
+			
+			break;
+		}
+    
 		default: {
 			$.ajax({
 				type: "GET",
 				url: "/_ajaxphp/test.php"+qString,
 				success: function(msg) {
-					alert(msg);
+					//alert(msg);
 				}
 			});
 			
