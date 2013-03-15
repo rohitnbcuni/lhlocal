@@ -673,12 +673,19 @@ function displayActiveList() {
 	var producerProjCount = 0;
 	var allBudjet = 0;
 	var allProjCount = 0;
+
 	//Add Updated ProjectList	
 	//projectList = updateProjectList(); 
 	tList = projectList;
 	for (var i=0;i<tList.length;i++) {
 		proj = tList[i];
 //		pName = proj["code"] + " - " + proj["name"];
+    pBudgetRisk = proj['budget_risk']['budgetRiskCount'];
+    budget_risk_li = '';
+    if (pBudgetRisk == '0')
+    {
+      budget_risk_li = '<li class="budget_risk">br</li>';
+    }
 		pName = proj["name"];
 		pFullName = proj["full_name"];
 		if (pFullName.toLowerCase().match(fText) != null) {
@@ -713,11 +720,11 @@ function displayActiveList() {
 					//alert("insdide producer if ");
 					if((proj[filter_role] == producerId)){
 						if (proj["id"] == selectedRow) {
-							plist = plist + "<dt onClick=\"selectRow('" + proj["id"] + "');\" id=\"row_" + proj["id"] + "\" class=\"active\"><ul><li class=\"project\" title='" + pFullName + "'>" + pName + "</li><li class=\"status\"><div class=\"" + project_status + "\" title=\""+proj["status_name"]+"\"/></li><li class=\"actual\">$" + addCommas(parseFloat(proj["todate"]).toFixed(0)) + "</li><li class=\"budget\"> $" + addCommas(parseFloat(proj["budget"]).toFixed(0)) + "</li><li class=\"completeness\"><div class=\"project_progress " + proj["progress_class"] + "\" style=\"width: " + pwidth + "px;\"></div><div class=\"percentage\">" + proj["complete"] + "%</div></li>" + pRisk + "</ul></dt>";
+							plist = plist + "<dt onClick=\"selectRow('" + proj["id"] + "');\" id=\"row_" + proj["id"] + "\" class=\"active\"><ul><li class=\"project\" title='" + pFullName + "'>" + pName + "</li><li class=\"status\"><div class=\"" + project_status + "\" title=\""+proj["status_name"]+"\"/></li><li class=\"actual\">$" + addCommas(parseFloat(proj["todate"]).toFixed(0)) + "</li><li class=\"budget\"> $" + addCommas(parseFloat(proj["budget"]).toFixed(0)) + "</li><li class=\"completeness\"><div class=\"project_progress " + proj["progress_class"] + "\" style=\"width: " + pwidth + "px;\"></div><div class=\"percentage\">" + proj["complete"] + "%</div></li>" +budget_risk_li+ pRisk + "</ul></dt>";
 							plist = plist + '		<dd id="row_' + proj["id"] +'_d" class=\"active\">';
 							plist = plist + projDetails;
 						} else {
-							plist = plist + "<dt onClick=\"selectRow('" + proj["id"] + "');\" id=\"row_" + proj["id"] + "\"><ul><li class=\"project\" title='" + pFullName + "'>" + pName + "</li><li class=\"status\"><div class=\"" + project_status + "\" title=\""+proj["status_name"]+"\"/></li><li class=\"actual\">$" + addCommas(parseFloat(proj["todate"]).toFixed(0)) + "</li><li class=\"budget\"> $" + addCommas(parseFloat(proj["budget"]).toFixed(0)) + "</li><li class=\"completeness\"><div class=\"project_progress " + proj["progress_class"] + "\" style=\"width: " + pwidth + "px;\"></div><div class=\"percentage\">" + proj["complete"] + "%</div></li>" + pRisk + "</ul></dt>";
+							plist = plist + "<dt onClick=\"selectRow('" + proj["id"] + "');\" id=\"row_" + proj["id"] + "\"><ul><li class=\"project\" title='" + pFullName + "'>" + pName + "</li><li class=\"status\"><div class=\"" + project_status + "\" title=\""+proj["status_name"]+"\"/></li><li class=\"actual\">$" + addCommas(parseFloat(proj["todate"]).toFixed(0)) + "</li><li class=\"budget\"> $" + addCommas(parseFloat(proj["budget"]).toFixed(0)) + "</li><li class=\"completeness\"><div class=\"project_progress " + proj["progress_class"] + "\" style=\"width: " + pwidth + "px;\"></div><div class=\"percentage\">" + proj["complete"] + "%</div></li>" +budget_risk_li+ pRisk + "</ul></dt>";
 							plist = plist + '		<dd id="row_' + proj["id"] +'_d">';
 						}
 						producerBudjet += parseInt(parseFloat(proj["budget"]));
@@ -725,11 +732,11 @@ function displayActiveList() {
 					}
 				}else{
 					if (proj["id"] == selectedRow) {
-						plist = plist + "<dt onClick=\"selectRow('" + proj["id"] + "');\" id=\"row_" + proj["id"] + "\" class=\"active\"><ul><li class=\"project\" title='" + pFullName + "'>" + pName + "</li><li class=\"status\"><div class=\"" + project_status + "\" title=\""+proj["status_name"]+"\"/></li><li class=\"actual\">$" + addCommas(parseFloat(proj["todate"]).toFixed(0)) + "</li><li class=\"budget\"> $" + addCommas(parseFloat(proj["budget"]).toFixed(0)) + "</li><li class=\"completeness\"><div class=\"project_progress " + proj["progress_class"] + "\" style=\"width: " + pwidth + "px;\"></div><div class=\"percentage\">" + proj["complete"] + "%</div></li>" + pRisk + "</ul></dt>";
+						plist = plist + "<dt onClick=\"selectRow('" + proj["id"] + "');\" id=\"row_" + proj["id"] + "\" class=\"active\"><ul><li class=\"project\" title='" + pFullName + "'>" + pName + "</li><li class=\"status\"><div class=\"" + project_status + "\" title=\""+proj["status_name"]+"\"/></li><li class=\"actual\">$" + addCommas(parseFloat(proj["todate"]).toFixed(0)) + "</li><li class=\"budget\"> $" + addCommas(parseFloat(proj["budget"]).toFixed(0)) + "</li><li class=\"completeness\"><div class=\"project_progress " + proj["progress_class"] + "\" style=\"width: " + pwidth + "px;\"></div><div class=\"percentage\">" + proj["complete"] + "%</div></li>" +budget_risk_li+ pRisk + "</ul></dt>";
 						plist = plist + '		<dd id="row_' + proj["id"] +'_d" class=\"active\">';
 						plist = plist + projDetails;
 					} else {
-						plist = plist + "<dt onClick=\"selectRow('" + proj["id"] + "');\" id=\"row_" + proj["id"] + "\"><ul><li class=\"project\" title='" + pFullName + "'>" + pName + "</li><li class=\"status\"><div class=\"" + project_status + "\" title=\""+proj["status_name"]+"\"/></li><li class=\"actual\">$" + addCommas(parseFloat(proj["todate"]).toFixed(0)) + "</li><li class=\"budget\"> $" + addCommas(parseFloat(proj["budget"]).toFixed(0)) + "</li><li class=\"completeness\"><div class=\"project_progress " + proj["progress_class"] + "\" style=\"width: " + pwidth + "px;\"></div><div class=\"percentage\">" + proj["complete"] + "%</div></li>" + pRisk + "</ul></dt>";
+						plist = plist + "<dt onClick=\"selectRow('" + proj["id"] + "');\" id=\"row_" + proj["id"] + "\"><ul><li class=\"project\" title='" + pFullName + "'>" + pName + "</li><li class=\"status\"><div class=\"" + project_status + "\" title=\""+proj["status_name"]+"\"/></li><li class=\"actual\">$" + addCommas(parseFloat(proj["todate"]).toFixed(0)) + "</li><li class=\"budget\"> $" + addCommas(parseFloat(proj["budget"]).toFixed(0)) + "</li><li class=\"completeness\"><div class=\"project_progress " + proj["progress_class"] + "\" style=\"width: " + pwidth + "px;\"></div><div class=\"percentage\">" + proj["complete"] + "%</div></li>" +budget_risk_li+ pRisk + "</ul></dt>";
 						plist = plist + '		<dd id="row_' + proj["id"] +'_d">';
 					}
 					allBudjet += parseInt(parseFloat(proj["budget"]));
