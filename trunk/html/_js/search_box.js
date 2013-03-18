@@ -45,3 +45,16 @@ $(document).ready(function(){
 	});
 });	
 
+
+function didyoumean(){
+
+	var dym = $('#dym').val();
+	
+	$('#search_text').val(dym);
+	$('#search_par').val('All');
+	$('#search_box_form').submit();
+
+}
+
+
+

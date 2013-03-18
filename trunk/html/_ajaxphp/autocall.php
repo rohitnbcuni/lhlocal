@@ -9,11 +9,42 @@ if($search_str != ''){
 	//echo getAdavanceSearch($search_str);
 	$output = getGroupBySearch($search_str);
 	if(trim($output) == ''){
+		
 		$output = getAdavanceSearch($search_str);
 
 	}
+	if(trim($output) == ''){
+		
+		$output = getSpellChecker($search_str);
+	
+	}
 	echo $output;
 		
+	}
+	
+	function getSpellChecker($search_url){
+		$result_str = '';
+		$search_string = urlencode($search_url);
+		define("SOLR_URL_SPELLCHECKER_STRING",str_replace("select?q=","spellIndex?wt=json&spellcheck=true&spellcheck.q=",SOLR_URL_STRING));
+		$url = SOLR_URL_SPELLCHECKER_STRING.$search_string;
+		$response = json_decode(createCurlReuest($url),true);
+		if(ISSET($response['spellcheck']['suggestions'])){
+			$spellCheck = $response['spellcheck']['suggestions'];
+			foreach($spellCheck as $spellCheck_key => $spellCheck_value){
+				if(is_array($spellCheck_value)){
+					if(ISSET($spellCheck_value[0])){
+						if($spellCheck_value[0] == 'collationQuery'){
+							if(ISSET($spellCheck_value[1])){
+								$result_str .= "1###<b><i>Did you mean: </i></b><a  href='javascript:void(0);'>".$spellCheck_value[1]."|";
+							}
+						
+						}
+					}
+				}			
+			}
+		}
+		return $result_str;
+	
 	}
 	
 function getGroupBySearch($search_str){
@@ -77,15 +108,7 @@ function getAdavanceSearch($search_str){
 			if(ISSET($response) && strlen($response) > 10){
 				$results = new SimpleXMLElement($response);
 			}
-			/*if(count($results) > 0){
-				foreach($results['result'] as $key => $val){
-					//$inf["ID"]."###".$inf["countryName"]."|";
-					
-					print_r($val);
-					echo $val->arr->str[0]."###".$val->arr->str[0]."|";
-					
-				
-				}*/
+		
 
 			if(count($results) > 0){
 				foreach($results as $key =>$val){
@@ -96,22 +119,14 @@ function getAdavanceSearch($search_str){
 						foreach($searchResult as $k => $v){
 								if(count($searchResult) > 0){
 									foreach($searchResult as $sKey => $eVal){
-									/* $comments='';
-									for($i=0;$i<count($eVal->arr[1]->str);$i++)
-									{$no = $i+1;
-									$comments .= $no.'.'. $eVal->arr[1]->str[$i].'</br>';
-									}*/
+		
 									$id[] =   $eVal->long[0];
 									$project_id[] =  $eVal->str[1];
 									$title[] = $eVal->str[2];
 									$urllink[] =  $eVal->arr->str[1];
 									$desc[] =  $eVal->str[4];
 									$cat[] =  $eVal->str[5];
-									/* $comment[] =  (array) $comments ;*/
-								/*	if( $eVal->str[5]=='quality'){
-									$count_qa=$i++;}
-									else{$count_wo=$wo++; }
-									*/
+		
 									}
 
 								}

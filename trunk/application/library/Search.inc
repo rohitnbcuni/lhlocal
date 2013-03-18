@@ -3,7 +3,7 @@
 		Search classes parent and child
 	*/
 	class SearchDisplay {
-		public function Searchresult($query,$search_par) {
+		public function Searchresult($query,$search_par, $type='') {
 			if($search_par[0]=='All'){
 				$string='';
 			}
@@ -15,7 +15,14 @@
 				}
 			$query = htmlspecialchars($query);
 			//$url = SOLR_URL_STRING.urlencode($query).$string.'&start=0&rows=200000&sort=docid%20desc';
-			$url = SOLR_URL_STRING.'(("'.urlencode($query).'")'.$string.')&start=0&rows=2000&sort=docid%20desc';
+			if($type == ''){
+				$url = SOLR_URL_STRING.'(("'.urlencode($query).'")'.$string.')&start=0&rows=2000&sort=docid%20desc';
+			}else if($type == 'dym'){
+				$search_string = urlencode($query);
+				define("SOLR_URL_SPELLCHECKER_STRING",str_replace("select?q=","spellIndex?wt=json&spellcheck=true&spellcheck.q=",SOLR_URL_STRING));
+				$url = SOLR_URL_SPELLCHECKER_STRING.$search_string;
+				
+			}
 			$ch = curl_init();
 			$request='<request>'.$request.'</request>';
 			curl_setopt($ch, CURLOPT_URL, $url);
@@ -38,7 +45,27 @@
 			if(preg_match('/^(http)/',$url)) curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
 			$response = curl_exec($ch);
 			curl_close($ch);
-			$xml = (array)simplexml_load_string($response);
+			if($type == ''){
+				$xml = (array)simplexml_load_string($response);
+			}else if($type == 'dym'){
+				$response = json_decode($response,true);
+				if(ISSET($response['spellcheck']['suggestions'])){
+				$spellCheck = $response['spellcheck']['suggestions'];
+				foreach($spellCheck as $spellCheck_key => $spellCheck_value){
+					if(is_array($spellCheck_value)){
+						if(ISSET($spellCheck_value[0])){
+							if($spellCheck_value[0] == 'collationQuery'){
+								if(ISSET($spellCheck_value[1])){
+									$xml = $spellCheck_value[1];
+								}
+							
+							}
+						}
+					}			
+				}
+				}
+			
+			}
 			
 			return $xml;
 		}

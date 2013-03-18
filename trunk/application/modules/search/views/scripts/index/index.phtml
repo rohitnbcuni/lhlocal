@@ -91,9 +91,13 @@ $search_text= str_replace("'", "",$search_text);
 	<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE="" />
 	<?php if($result_found!=0){ ?>
 		<label style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" title="<?php echo $search_text;?>"><?php echo $result_found;?> Search results for "<?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?>"</label><?php } else{?>
-		<label  style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" >No result for "<?php echo ucfirst(substr(Util::escapewordquotes($search_text),0,70));if(strlen($search_text)>70){echo '...';} ?>" </label>
-			
-	<?php }?>
+		<label  style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" >
+		<?php if(!empty($this->didyoumean)): ?>
+				Did you mean: "<a href="javascript:didyoumean();" style="color:#fff;font-style:italic;"><?php echo ucfirst(substr(Util::escapewordquotes(trim($this->didyoumean)),0,70));if(strlen($this->didyoumean)>70){echo '...';} ?>"</a> ? </label>
+				<input type="hidden" name="dym" id="dym" value="<?php echo $this->didyoumean ?>">
+		<?php else: ?>
+				No result for "<?php echo ucfirst(substr(Util::escapewordquotes(trim($search_text)),0,70));if(strlen($search_text)>70){echo '...';} ?>" </label>
+	<?php endif; }?>
 	<div onmouseout="hideComment_wo(23);" onmouseover="showComment_wo(23);" style="float:right;margin:7px 31px 0 10px;">
 	<img src="/_images/tool-tip-lighthouse-v2.png" >
 		<div id='wo_comment_23' class='wo_comment' style="display:none;">

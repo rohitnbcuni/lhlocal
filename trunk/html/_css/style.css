@@ -1700,6 +1700,7 @@ border-width:5px;}
 		font-size:12px;
 	}
 	#ajax_listOfOptions .optionDiv{	/* Div for each item in list */
+	text-decoration:none;
 		
 	}
 	#ajax_listOfOptions .optionDivSelected{ /* Selected item in the list */
@@ -1741,3 +1742,7 @@ border-width:5px;}
 	.adminTable .dropProject{
 	cursor:pointer;
 	}
+.optionDivSelected{
+text-decoration:none;
+
+}
