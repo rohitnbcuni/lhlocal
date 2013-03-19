@@ -47,9 +47,9 @@
 					$projectStatusResult = $mysql->sqlordie($project_status_sql);
 					$projectStatusRow = $projectStatusResult->fetch_assoc();
 
-					if($project_status_id != $projectRow['status']){
+					if($status_id != $projectRow['status']){
 						$permissionUpdate = "";
-						if($project_status_id == "6"){
+						if($status_id == "6"){
 							$permissionUpdate = ",`rp_permission`='0',`wo_permission`='0'";
 						}
 						$updateSql = 'UPDATE `projects` SET `project_status`="' . $status_id . '" ' . $permissionUpdate . ' WHERE id="' . $id . '"';
