@@ -511,7 +511,7 @@ session_start();
 			$phase_data_res = @$mysql->sqlordie($select_phase_data);
 			$phase_data_row = @$phase_data_res->fetch_assoc();
 			
-			$timeline_query = "SELECT * FROM `project_phases` WHERE `project_id`='" .$projID."' AND `phase_type`='" .$row_phases['phase'] ."' LIMIT 1";
+			$timeline_query = "SELECT * FROM `project_phases` WHERE `project_id`='" .$projID."' AND `phase_type`='" .$row_phases['phase'] ."' order by id DESC LIMIT 1";
 			$timeline_res = @$mysql->sqlordie($timeline_query);
 			$timeline_row = @$timeline_res->fetch_assoc();
 			
