@@ -20,6 +20,15 @@
 	$i=0;
 	while($row = $project_list->fetch_assoc()) {
 		
+		/**
+		# Remove `budget_code` from the query, as it is moved to `project_budget` table
+		# Two columns are added, `project_scope`,`project_charter` to `projects` table to store project scope and project charter
+		# Below will be the query change
+
+		$newProject = "INSERT INTO `projects` (`bc_id`,`project_code`,`bc_category_id`,`project_name`,`company`,`desc`, `business_case`,`scope`,`deliverables`,`owner_approval`,`company_approval`,`metrics_tracking`,`archived`,`active`,`deleted`, `rp_permission`,`project_status`,`wo_permission`,`internal_groups`,`YEAR`,`clone_project_id`,`cclist`,`qccclist`,`program`, `qa_permission`,`project_scope`,`project_charter`) VALUES ('".$row['bc_id']."','".$mysql->real_escape_string($row['project_code'])."','".$row['bc_category_id']."','".$mysql->real_escape_string($row['project_name'])."','".$mysql->real_escape_string($row['company'])."','".$mysql->real_escape_string($row['desc'])."','".$mysql->real_escape_string($row['business_case'])."','".$mysql->real_escape_string($row['scope'])."','".$mysql->real_escape_string($row['deliverables'])."','".$mysql->real_escape_string($row['owner_approval'])."','".$mysql->real_escape_string($row['company_approval'])."','".$mysql->real_escape_string($row['metrics_tracking'])."','".$row['archived']."','".$row['active']."','".$row['deleted']."','".$row['rp_permission']."','".$row['project_status']."','".$row['wo_permission']."','".$row['internal_groups']."','".$current_year."','".$clone_project_id."','".$row['cclist']."','".$row['qccclist']."','".$row['program']."','".$row['qa_permission']."','".$row['project_scope']."','".$row['project_charter']."')";
+
+		**/
+
 		$clone_project_id = $row['id'];
 		$newProject = "INSERT INTO `projects` (`bc_id`,`project_code`,`bc_category_id`,`budget_code`,`project_name`,`company`,`desc`, `business_case`,`scope`,`deliverables`,`owner_approval`,`company_approval`,`metrics_tracking`,`archived`,`active`,`deleted`, `rp_permission`,`project_status`,`wo_permission`,`internal_groups`,`YEAR`,`clone_project_id`,`cclist`,`qccclist`,`program`, `qa_permission`) VALUES ('".$row['bc_id']."','".$mysql->real_escape_string($row['project_code'])."','".$row['bc_category_id']."','".$mysql->real_escape_string($row['budget_code'])."','".$mysql->real_escape_string($row['project_name'])."','".$mysql->real_escape_string($row['company'])."','".$mysql->real_escape_string($row['desc'])."','".$mysql->real_escape_string($row['business_case'])."','".$mysql->real_escape_string($row['scope'])."','".$mysql->real_escape_string($row['deliverables'])."','".$mysql->real_escape_string($row['owner_approval'])."','".$mysql->real_escape_string($row['company_approval'])."','".$mysql->real_escape_string($row['metrics_tracking'])."','".$row['archived']."','".$row['active']."','".$row['deleted']."','".$row['rp_permission']."','".$row['project_status']."','".$row['wo_permission']."','".$row['internal_groups']."','".$current_year."','".$clone_project_id."','".$row['cclist']."','".$row['qccclist']."','".$row['program']."','".$row['qa_permission']."')";
 
@@ -52,6 +61,19 @@
 			}
 			//end project_brief_sections
 			
+			/**
+			
+			# `budget_code` is moved from `projects` table into `project_budget` table
+			# Also 5 new columns are added to `project_budget` table, `updated_by`,`updated_on`,`budget_code`,`note`,`delete_flag`
+			# to track budget history
+			# Below are the query changes:
+			
+			$insert_budget="SELECT '".$newProjectID."' as `project_id`,`budget_code`, total_budget  , quarter1_budget, quarter2_budget, quarter3_budget, quarter4_budget,updated_by,updated_on,budget_code,note,delete_flag from project_budget where project_id = '".$clone_project_id."'";
+
+			$project_budget = "INSERT INTO project_budget  (project_id  , budget_code, total_budget, quarter1_budget, quarter2_budget, quarter3_budget, quarter4_budget,updated_by,updated_on,budget_code,note,delete_flag) VALUES ('".$rows1['project_id']."','".$rows1['total_budget']."','".$rows1['quarter1_budget']."','".$rows1['quarter2_budget']."','".$rows1['quarter3_budget']."','".$rows1['quarter4_budget']."',".$rows1['updated_by'].",".$rows1['updated_on'].",'".$rows1['budget_code']."','".$rows1['note']."',".$rows1['delete_flag'].")";
+			
+			**/
+
 			//project budget
 			$insert_budget="SELECT '".$newProjectID."' as `project_id`, total_budget  , quarter1_budget, quarter2_budget, quarter3_budget, quarter4_budget from project_budget where project_id = '".$clone_project_id."'";
 			$insert_budget_sql = $mysql->query($insert_budget) or writeLog($mysql,$insert_budget);
@@ -63,6 +85,16 @@
 			}
 			//end project budget
 			
+			/**
+			
+			# In `project_phases` table, 3 more columns `updated_by`,`updated_on` & `note` are added 
+			# These fields are added to track the timeline history			
+			# The insert query should be modified as below:		
+			
+			$project_new_phase = "INSERT INTO project_phases (`project_id`, `phase_type`, `name`, `desc`, finance_flag , approval_flag, start_date, projected_end_date, active, deleted,updated_by,updated_on,note) VALUES ('".$newProjectID."', '".$rows['phase_type']."', '".$mysql->real_escape_string($rows['name'])."', '".$mysql->real_escape_string($rows['desc'])."', '".$rows['finance_flag']."' , '".$rows['approval_flag']."', '".$rows['start_date']."', '".$rows['projected_end_date']."', '".$rows['active']."', '".$rows['deleted']."',".$rows['updated_by'].",".$rows['updated_on'].",'".$rows['note']."')";
+
+			**/
+
 			//project_phase
 			$project_phase = "SELECT * FROM project_phases WHERE project_id = '".$clone_project_id."'";
 			$project_phase_sql = $mysql->query($project_phase) or writeLog($mysql,$project_phase); 
@@ -126,6 +158,18 @@
 				//$mysql->query($user_project_role);
 			
 			//
+
+
+			/**
+			
+			# In `project_status` table, `note` column is added to track the note along with status changes history
+			# Below is the query change
+			
+			$project_status = "INSERT INTO  `project_status` (project_id ,status_id,created_date,created_user,note) SELECT '".$newProjectID."' as `project_id`, `status_id`,`created_date`,`created_user`,`note` from  `project_status` where project_id = '".$clone_project_id."'";
+
+			**/
+
+
 			//project_status
 			$project_status = "INSERT INTO  `project_status` (project_id ,status_id,created_date,created_user) SELECT '".$newProjectID."' as `project_id`, `status_id`,`created_date`,`created_user` from  `project_status` where project_id = '".$clone_project_id."'";
 			$mysql->query($project_status) or writeLog($mysql,$project_status);
