@@ -2760,15 +2760,20 @@ function removeBudgetCode(budgetObj){
 	
 	selectedBudgetCode = budgetObj.parent(".finance_budget_header").find("#fin_budget_code").val();
 	prj_id = $("#project_id").val();
-	
+
 	if(selectedBudgetCode != '') {
 		$.ajax({
 			type: "GET",
 			url: "/_ajaxphp/remove_budgetcode.php?budget_code="+selectedBudgetCode+"&project_id="+prj_id,
 			success: function(msg) {
 				if(msg == 'success'){
-					budgetObj.parent(".finance_budget_header").next(".finance_complete_budget").remove();		
-					budgetObj.closest(".finance_budget_header").remove();
+					if(budgetObj.parent(".finance_budget_header").parent().hasClass("finance_budget_options_added")) {
+						budgetObj.closest(".finance_budget_options_added").remove();	
+					}else {
+						budgetObj.closest(".finance_budget_header").next(".finance_complete_budget").remove();		
+						budgetObj.closest(".finance_budget_header").remove();						
+					}
+					
 				}
 				//document.getElementById('ajax_loader').style.display = "none";
 			}
@@ -2780,11 +2785,13 @@ function generateBudgetCode(){
 	//alert(budgetformcode);
 	budgetformcode += 1;
 	//alert(budgetformcode);
-	var id = $(".finance_complete_budget").size();
+	//var id = $(".finance_complete_budget").size();
+
+	var id = Math.floor(new Date().getTime() / 1000) + (Math.floor(Math.random() * 1000) + 1);
 	var total = $("#ct_overall_total").val(); 
 	var tempid = '';
 	tempid = 'budget_code_'+budgetformcode;
-	html = '<div id="'+tempid+'" style="background: #B7D6EA;" class="finance_budget_options_added"><div class="finance_budget_header" style="width: 725px;"><div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;">Budget code is needed. Please fix highlighted field.</div><div class="remove_budget" id="hideBudgetCode" style="float: left;padding: 5px;cursor: pointer;"></div><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value=""/></div></div><ul class="finance_complete_budget"><li style="display: none;"><form></form></li><li><form action="" method="post" name="budget'+id+'">	<div style="padding-bottom: 15px" class="finance_budget"><div class="finance_total_budget"><span>Total Budget</span></div><div class="finance_total_budget"><span>Unallocated Budget</span></div><div class="finance_quarter_budget" align="right" style="width: 120px;"><span>Quarter 1</span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>Quarter 2</span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>Quarter 3</span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>Quarter 4</span></div><div class="dim" style="display: block"></div><div style="clear: both"></div></div><div class="finance_budget"><div class="finance_quarter_budget"><span></span></div><div class="finance_quarter_budget"><span></span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage1" id="percentage1" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage2" id="percentage2" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage3" id="percentage3" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage4" id="percentage4" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="dim" style="display: block"></div><div style="clear: both"></div></div><div class="finance_budget"><div class="finance_quarter_budget" style="width: 120px;"><span>$</span><input class="readonly" readonly type="text" name="totalBudget" id="totalBudget" dynamic="true" value="'+total+'" /></div><div class="finance_quarter_budget" style="width: 120px;"><span>$</span><input type="text" name="unallocated" id="unallocated" value="0" readonly="true" class="readonly" /></div><div class="finance_quarter_budget" style="width: 127px;" align="right"><span>$</span><input type="text" name="quarter1" id="quarter1" dynamic="true" value="0" onchange="calcBudget(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>$</span><input type="text" name="quarter2" id="quarter2" dynamic="true" value="0" onchange="calcBudget(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>$</span><input type="text" name="quarter3" id="quarter3" dynamic="true" value="0" onchange="calcBudget(budget'+id+')" /></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>$</span><input type="text" dynamic="true" name="quarter4" id="quarter4" value="0" onchange="calcBudget(budget'+id+')" /></div><div class="dim" style="display: block"></div><div style="clear: both"></div></div></form></li></ul>';
+	html = '<div id="'+id+'" style="background: #B7D6EA;" class="finance_budget_options_added"><div class="finance_budget_header" style="width: 725px;"><div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;top: -23px;left: 32px;">Budget code is needed. Please fix highlighted field.</div><div class="remove_budget" id="hideBudgetCode" style="float: left;padding: 5px;cursor: pointer;"></div><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value=""/></div></div><ul class="finance_complete_budget"><li style="display: none;"><form></form></li><li><form action="" method="post" name="budget'+id+'">	<div style="padding-bottom: 15px" class="finance_budget"><div class="finance_total_budget"><span>Total Budget</span></div><div class="finance_total_budget"><span>Unallocated Budget</span></div><div class="finance_quarter_budget" align="right" style="width: 120px;"><span>Quarter 1</span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>Quarter 2</span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>Quarter 3</span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>Quarter 4</span></div><div class="dim" style="display: block"></div><div style="clear: both"></div></div><div class="finance_budget"><div class="finance_quarter_budget"><span></span></div><div class="finance_quarter_budget"><span></span></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage1" id="percentage1" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage2" id="percentage2" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage3" id="percentage3" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>%</span><input type="text" name="percentage4" id="percentage4" value="0" onchange="calcBudgetPercentage(budget'+id+')"/></div><div class="dim" style="display: block"></div><div style="clear: both"></div></div><div class="finance_budget"><div class="finance_quarter_budget" style="width: 120px;"><span>$</span><input class="readonly" readonly type="text" name="totalBudget" id="totalBudget" dynamic="true" value="'+total+'" /></div><div class="finance_quarter_budget" style="width: 120px;"><span>$</span><input type="text" name="unallocated" id="unallocated" value="0" readonly="true" class="readonly" /></div><div class="finance_quarter_budget" style="width: 127px;" align="right"><span>$</span><input type="text" name="quarter1" id="quarter1" dynamic="true" value="0" onchange="calcBudget(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>$</span><input type="text" name="quarter2" id="quarter2" dynamic="true" value="0" onchange="calcBudget(budget'+id+')"/></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>$</span><input type="text" name="quarter3" id="quarter3" dynamic="true" value="0" onchange="calcBudget(budget'+id+')" /></div><div class="finance_quarter_budget" style="width: 120px;" align="right"><span>$</span><input type="text" dynamic="true" name="quarter4" id="quarter4" value="0" onchange="calcBudget(budget'+id+')" /></div><div class="dim" style="display: block"></div><div style="clear: both"></div></div></form></li></ul>';
 	
 	if(budgetformcode == 1){	
 		$(".finance_complete_budget:last").after(html);
@@ -3185,6 +3192,7 @@ function saveFinance() {
 
 			$(".finance_budget_header").each(function(){
 				$(this).find("#hidden_bc").val($(this).find("#fin_budget_code").val());
+				$(this).find("#hideBudgetCode").attr("id","hideBudgetCodeOriginal");
 			});
 
 			$.ajax({
