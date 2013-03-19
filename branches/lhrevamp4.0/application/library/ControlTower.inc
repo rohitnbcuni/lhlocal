@@ -1350,9 +1350,9 @@
 			$html .= '<div class="finance_budget_header" style="width: 725px;margin-top: 20px;">';
 			
 			if($key == 0) {
-				$html .= '<div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;">Budget code is needed. Please fix highlighted field.</div><div class="add_budget" onclick="generateBudgetCode();return false;" style="float: left;padding: 5px;cursor: pointer;"></div><!--<h3>FINANCE &amp; BUDGET</h3>--><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="'.trim($budget_data['budget_code']).'" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value="';
+				$html .= '<div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;top: -23px;left: 32px;">Budget code is needed. Please fix highlighted field.</div><div class="add_budget" onclick="generateBudgetCode();return false;" style="float: left;padding: 5px;cursor: pointer;"></div><!--<h3>FINANCE &amp; BUDGET</h3>--><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="'.trim($budget_data['budget_code']).'" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value="';
 			}else {
-				$html .= '<div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;">Budget code is needed. Please fix highlighted field.</div><div class="remove_budget" id="hideBudgetCodeOriginal" style="float: left;padding: 5px;cursor: pointer;"></div><!--<h3>FINANCE &amp; BUDGET</h3>--><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="'.trim($budget_data['budget_code']).'" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value="';		
+				$html .= '<div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;top: -23px;left: 32px;">Budget code is needed. Please fix highlighted field.</div><div class="remove_budget" id="hideBudgetCodeOriginal" style="float: left;padding: 5px;cursor: pointer;"></div><!--<h3>FINANCE &amp; BUDGET</h3>--><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="'.trim($budget_data['budget_code']).'" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value="';		
 			}
 
 
@@ -1437,7 +1437,7 @@
 
 			$html .= '<div class="finance_budget_header" style="width: 725px;margin-top: 20px;">';
 			
-			$html .= '<div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;">Budget code is needed. Please fix highlighted field.</div><div class="add_budget"  onclick="generateBudgetCode();return false;" style="float: left;padding: 5px;cursor: pointer;"></div><!--<h3>FINANCE &amp; BUDGET</h3>--><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value="" /></div></div>';
+			$html .= '<div class="budget_empty_error" style="position: relative;color: red;height:50px;width:350px;display: none;top: -23px;left: 32px;">Budget code is needed. Please fix highlighted field.</div><div class="add_budget"  onclick="generateBudgetCode();return false;" style="float: left;padding: 5px;cursor: pointer;"></div><!--<h3>FINANCE &amp; BUDGET</h3>--><div class="finance_budget_options"><input type="hidden" id="hidden_bc" value="" /><label for="fin_budget_code">BUDGET CODE</label><input type="text" name="fin_budget_code" id="fin_budget_code" value="" /></div></div>';
 
 			$html .= '<ul class="finance_complete_budget"><li style="display: none;"><form></form></li>';
 
@@ -1489,6 +1489,7 @@
 		if($project_id != "") {
 
 		$budget_array = "";
+		$history = 0;
 		$select_budget = "select distinct(budget_code) from project_budget WHERE `budget_code` != '' AND `project_id`=".$project_id;
 
 		//echo $select_budget;
@@ -1510,6 +1511,8 @@
 				$result = self::getQuery($select_budget);
 
 				if(is_array($result) && count($result) > 0) {
+					$history = 1;
+
 					foreach($result as $selectedBudget) {
 						$budget_index = "";
 						$budget_index = $selectedBudget["time"] + ($loop++);
@@ -1543,9 +1546,11 @@
 				}
 			} 
 			
-		}else{
-					$html .= '<div style="color: #00000;font-size: 11pt;text-align: center;border-bottom: 1px solid gray;padding: 10px;">Budget History</div>';
-					$html .= '<span style="text-align: center">No history available</span>';
+		}
+
+		if($history == 0){
+					$html = '<div style="color: #00000;font-size: 11pt;text-align: center;border-bottom: 1px solid gray;padding: 10px;">Budget History</div>';
+					$html .= '<div style="text-align: center">No history available</div>';
 		}
 
 			return $html;
