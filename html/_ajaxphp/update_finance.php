@@ -6,7 +6,7 @@
 	$project = $mysql->real_escape_string(@$_GET['project_id']);
 	$budget_code = $mysql->real_escape_string(@$_GET['budget_code']);
 	
-	$insert_new_budget_code = "INSERT INTO `project_budget` (project_id,budget_code,total_budget,quarter1_budget,quarter2_budget,quarter3_budget,quarter4_budget,note,updated_by,updated_on) VALUES"; 
+	/*$insert_new_budget_code = "INSERT INTO `project_budget` (project_id,budget_code,total_budget,quarter1_budget,quarter2_budget,quarter3_budget,quarter4_budget,note,updated_by,updated_on) VALUES"; */
 	
 	$fin = @$_GET['finance'];
 	$fin_keys = array_keys($fin);
@@ -19,7 +19,7 @@
 	if(@$_GET['action'] == "savenote") {
 		$update_id = "";$note = "";
 		$update_id = @$_GET['budget_update_id'];
-		$note = @$_GET['note'];
+		$note = $mysql->real_escape_string(@$_GET['note']);
 
 		if($update_id != "" && trim($note) != "") {
 				$update_budget = "UPDATE `project_budget` SET `note` = '".$note."' WHERE `id` IN(".$update_id.")";
@@ -79,10 +79,16 @@
 								$new_budget_result = $mysql->sqlordie($check_new_budget);
 	
 								if($new_budget_result->num_rows > 0) {
+									$total = "";$q1 = "";$q2 = "";$q3 = "";$q4 = "";
+									$total = $mysql->real_escape_string(trim($budget['totalBudget']));
+									$q1 = $mysql->real_escape_string(trim($budget['quarter1']));
+									$q2 = $mysql->real_escape_string(trim($budget['quarter2']));
+									$q3 = $mysql->real_escape_string(trim($budget['quarter3']));
+									$q4 = $mysql->real_escape_string(trim($budget['quarter4']));
 								
 									$insert_project_budget = "INSERT INTO project_budget "	."(project_id,total_budget,quarter1_budget,quarter2_budget,quarter3_budget,quarter4_budget,updated_by,updated_on,budget_code,note)"
 												."VALUES "
-												."('$project','" .trim($budget['totalBudget'])."','" .trim($budget['quarter1'])."','" .trim($budget['quarter2'])."','" .trim($budget['quarter3'])."','" .trim($budget['quarter4'])."'," .trim($user_id).",NOW(),'".trim($budget_code[$key]["original_budget_code"])."','')";
+												."('$project','" .$total."','" .$q1."','" .$q2."','" .$q3."','" .$q4."'," .trim($user_id).",NOW(),'".trim($budget_code[$key]["original_budget_code"])."','')";
 									//echo $insert_project_budget;
 									@$mysql->sqlordie($insert_project_budget);
 
@@ -94,9 +100,16 @@
 									$recent_id = $obj->fetch_assoc();
 									$final_response .= $recent_id["id"].",";
 							}else {
+									$total = "";$q1 = "";$q2 = "";$q3 = "";$q4 = "";
+									$total = $mysql->real_escape_string(trim($budget['totalBudget']));
+									$q1 = $mysql->real_escape_string(trim($budget['quarter1']));
+									$q2 = $mysql->real_escape_string(trim($budget['quarter2']));
+									$q3 = $mysql->real_escape_string(trim($budget['quarter3']));
+									$q4 = $mysql->real_escape_string(trim($budget['quarter4']));
+
 									$insert_project_budget = "INSERT INTO project_budget "	."(project_id,total_budget,quarter1_budget,quarter2_budget,quarter3_budget,quarter4_budget,updated_by,updated_on,budget_code,note)"
 												."VALUES "
-												."('$project','" .trim($budget['totalBudget'])."','" .trim($budget['quarter1'])."','" .trim($budget['quarter2'])."','" .trim($budget['quarter3'])."','" .trim($budget['quarter4'])."'," .trim($user_id).",NOW(),'".trim($budget_code[$key]["original_budget_code"])."','')";
+												."('$project','" .$total."','" .$q1."','" .$q2."','" .$q3."','" .$q4."'," .trim($user_id).",NOW(),'".trim($budget_code[$key]["original_budget_code"])."','')";
 									//echo $insert_project_budget;
 									@$mysql->sqlordie($insert_project_budget);
 							}
@@ -124,11 +137,18 @@
 
 			if(is_array($budget_array) && count($budget_array) > 0)	
 			{
-				foreach($budget_array as $key => $budget) {	
+				foreach($budget_array as $key => $budget) {
+					
+				$total = "";$q1 = "";$q2 = "";$q3 = "";$q4 = "";
+				$total = $mysql->real_escape_string(trim($budget['totalBudget']));
+				$q1 = $mysql->real_escape_string(trim($budget['quarter1']));
+				$q2 = $mysql->real_escape_string(trim($budget['quarter2']));
+				$q3 = $mysql->real_escape_string(trim($budget['quarter3']));
+				$q4 = $mysql->real_escape_string(trim($budget['quarter4']));
 
 				$insert_project_budget = "INSERT INTO project_budget "	."(project_id,total_budget,quarter1_budget,quarter2_budget,quarter3_budget,quarter4_budget,updated_by,updated_on,budget_code,note)"
 							."VALUES "
-							."('$project','" .$budget['totalBudget'] ."','" .$budget['quarter1'] ."','" .$budget['quarter2'] ."','" .$budget['quarter3'] ."','" .$budget['quarter4'] ."'," .$user_id .",NOW(),'".trim($budget_code[$key]["budget_code"])."','')";
+							."('$project','" . $total ."','" . $q1 ."','" . $q2 ."','" . $q3 ."','" . $q4 ."'," .$user_id .",NOW(),'".trim($budget_code[$key]["budget_code"])."','')";
 							//echo $insert_project_budget;
 				@$mysql->sqlordie($insert_project_budget);
 				}
