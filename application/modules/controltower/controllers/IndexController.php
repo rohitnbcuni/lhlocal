@@ -214,7 +214,7 @@ echo '			<!--=========== START: COLUMNS ===========-->
 				<div style="display: none;" id="wo_dimmer_ajax" class="wo_save_box">
 				<img alt="ajax-loader" src="/_images/ajax-loader.gif"/>	
 				</div>			
-			';		
+			';
 		}	
 
 	public function createAction() 
@@ -360,17 +360,17 @@ else
 	echo ';">
 	<button id="createProject" class="active" onClick="project_mode(); return false;"><span>Create Project</span></button>
 	</div>		
-	<div class="project_complete" id="project_progress" style="display: ';	
+	<div style="display: none;" class="project_complete" id="project_progress" style="display: ';	
 if(isset($_GET['project_id'])) 
-{		
+{ 
 echo "block";
 } 
 else
-{	
+{ 
 echo "none";
-}	
-echo ';">	
-<label id="progress_percent_text" for="">PROJECT brief COMPLETENESS: ' .$proj_completeness .'%</label>	
+} 
+echo ';"> 
+<label id="progress_percent_text" for="">PROJECT brief COMPLETENESS: ' .$proj_completeness .'%</label>
 <div class="progressBar" id="progress_insider_bar">	
 <div class="insideBar" style="width: ' .$proj_completeness .'%;"></div>	
 </div>	
@@ -379,7 +379,7 @@ echo ';">
 </div>		
 <!--==| END: Bucket |==-->	
 <!--==| START: Bucket |==-->
-	<div  class="message_clear_desc message_clear_scope message_clear_deliver message_clear_metrics message_clear_bcase message_timeline_date message_clear_finance message_clear_roles message_clear_role message_clear_timeline message_clear_approvals message_risk_create " style="width:3000px;height:1024px;position:fixed;background-color:#fffff;margin-top:-500px;margin-left:-630px;opacity: 0.3;filter:alpha(opacity=30);zoom:1.0;z-index:1;"></div>
+	<div  class="message_clear_desc message_clear_scope message_clear_deliver message_clear_metrics message_clear_bcase message_timeline_date message_clear_finance message_clear_roles message_clear_role message_clear_timeline message_clear_approvals message_risk_create project_history_note timeline_history_note budget_save" style="width:3000px;height:1024px;position:fixed;background-color:#fffff;margin-top:-500px;margin-left:-630px;opacity: 0.3;filter:alpha(opacity=30);zoom:1.0;z-index:1;"></div>
 		
 	
 <div class="full_content_container_noscroll control_tower_main">	
@@ -427,7 +427,7 @@ if(isset($_GET['project_id']))
 		echo CtDisplay::getSectionEditHTMLNew($_GET['project_id'],1);
 		}
 		else{	
-		echo CtDisplay::getSectionEditHTML($_GET['project_id']);	
+		echo CtDisplay::getSectionEditHTMLDisplay($_GET['project_id'], $_GET['section']);	
 		}}
 		else
 			{
@@ -470,39 +470,81 @@ if(isset($_GET['project_id']))
 		</form>			
 			</div>';}
 		
-				if(isset($_GET['project_timeline'])){echo '<div class="rightCol" id="form_sec_1" style="display: none;">';	}
-				else {echo '<div class="rightCol" id="form_sec_1" style="display:block;">';}	
+				if(isset($_GET['section']) && $_GET['section'] == 'Description'){
+					echo '<div class="rightCol" id="form_sec_1" style="display:block;">';
 				echo '<form action="" method="post" name="form_sec_1" onSubmit="return false;">
-				<div class="inside drafting_actions">	
-				<div class="left_actions">
-				<div class="project_status_container">	
-				<label id="project_status_label" for="project_status">Project Status: </label>
-				<div class="project_status_block">
-				<span class="project_status">
-				' . CtDisplay::getProjectStatus($_GET['project_id'], '') . '</span>		
-				<span class="dropdown">		
-				<a class="status_dropdown">&nbsp;</a>
-				</span>	
-				</div>		
-				</div>		
-				</div>		
-				<div class="ct_prj_internal_grp">	
-				<div class="internal_grp_container">	
-				<!--<label id="project_status_label" for="project_status">Allocation Type: </label>	
-				<select name="allocationType" id="allocationType" class="medium">
-				' . CtDisplay::getAllocationType($_GET['project_id']) . '</select>-->
+				<div class="inside drafting_actions">
+					
+					<div class="right_actions">		
+						<button class="secondary" onClick="confirmEmptyDesc();"><span>clear</span></button>	
+						<button class="secondary" name="save" id="form_sec_1_save" onClick="ajaxFunction(\'\',\'update_project_desc\');return false;"><span>save</span></button>									<!--<button class="secondary" onClick="document.getElementById(\'form_sec_1_save\').click(); document.getElementById(\'form_sec_1_save\').click(); ctCreateSectionsSwitchNext();"><span>next</span></button>-->
+						<button class="secondary" onClick="nxtFalse(); ctCreateDisplaySection(\'sec_2\');">
+						<span>next</span></button>
+					</div>
+					<div class = "left_actions_project_status">
+						<div class="project_status_program">
+							<div class="left_actions">
+								<div class="project_status_container">	
+									<label id="project_status_label" for="project_status">Project Status: </label>
+									<div class="project_status_block">
+										<span class="project_status">
+										' . CtDisplay::getProjectStatus($_GET['project_id'], '') . '</span>		
+										<span class="dropdown">		
+											<a class="status_dropdown">&nbsp;</a>
+										</span>	
+									</div>		
+								</div>		
+							</div>	
+								
+							<div class="ct_prj_internal_grp">	
+								<div class="internal_grp_container">	
+									<!--<label id="project_status_label" for="project_status">Allocation Type: </label>	
+									<select name="allocationType" id="allocationType" class="medium">
+									' . CtDisplay::getAllocationType($_GET['project_id']) . '</select>-->
 
-				<label id="project_status_label" for="project_status">Program: </label>	
-				<select name="project_program" id="project_program" class="medium">
-				' . CtDisplay::getPrograms($_GET['project_id']) . '</select>
-				</div>				
-				</div>		
-				<div class="right_actions">		
-				<button class="secondary" onClick="confirmEmptyDesc();"><span>clear</span></button>	
-				<button class="secondary" name="save" id="form_sec_1_save" onClick="ajaxFunction(\'\',\'update_project_desc\'); changeSectionStatusMan(\'sec_1\'); setCompleteness();"><span>save</span></button>									<!--<button class="secondary" onClick="document.getElementById(\'form_sec_1_save\').click(); document.getElementById(\'form_sec_1_save\').click(); ctCreateSectionsSwitchNext();"><span>next</span></button>-->
-				<button class="secondary" onClick="nxtFalse(); ctCreateSectionsSwitchNextDesc();">
-				<span>next</span></button>
-				</div>' . $strAddFlag . '</div>	
+									<label id="project_status_label" for="project_status">Program: </label>	
+									<select name="project_program" id="project_program" class="medium">
+									' . CtDisplay::getPrograms($_GET['project_id']) . '</select>
+								</div>				
+							</div>
+						</div>';
+
+					if($_GET["project_id"] != "") {
+						$project_charter_scope = CtDisplay::getQuery('SELECT project_scope, project_charter FROM projects WHERE id='.$_GET["project_id"]);	
+					}
+						
+					echo '<div class = "project_charter" style="clear: both;"><label id="project_charter_label" for="project_charter">Project Charter: </label><input type="text" name="project_charter_text" id="project_charter_text" value = "'.$project_charter_scope[0]['project_charter'].'"/></div>';
+
+					echo '<div class = "project_description_scope"><label id="project_description_scope_label" for="project_description_scope">Scope: </label><input type="text" name="project_description_scope_text" id="project_description_scope_text" value = "'.$project_charter_scope[0]['project_scope'].'"/>
+					</div>' . $strAddFlag . '</div></div>
+
+				<div class = "project_history_title"><h3>Project History</h3></div>
+				<div class = "project_history"><ul>';
+				$project_history = CtDisplay::getQuery('SELECT * FROM project_status WHERE project_id='.$_GET["project_id"].' order by id DESC');
+				
+				if(count($project_history) == 1) {
+					echo "<div class = 'note_nohistorty'><label>No history available.</label></div>";
+				}
+
+				$history_flag = true;
+				$history_count = sizeof($project_history);
+
+				for ($i = 0; $i<$history_count; $i++) {
+				  $user = CtDisplay::getQuery('SELECT * FROM users WHERE id='.$project_history[$i]["created_user"]);
+				  $status = CtDisplay::getQuery('SELECT * FROM lnk_project_status_types WHERE id='.$project_history[$i]["status_id"]);
+				  $style = '';
+				  if(($history_count-1) == $i) {
+					$style = 'style=display:none;';
+					$history_flag = false;
+				  }
+				  $date = date("m/d/Y", strtotime($project_history[$i]['created_date']));
+				  echo '<li '.$style.'>';
+				  echo "<div class = 'project_history_status'>".$status[0]['name']."</div>";
+				   echo '<div class = "textarea_note"><textarea maxlength="100" readonly rows="2" cols="25" >'.$project_history[$i]['note'].'</textarea></div>';
+				    echo "<div class = 'note_updated_by'>Updated by ".$user[0]['first_name'].' '.$user[0]['last_name']." on ".$date."</div>";
+				  echo '</li>';
+				}
+				echo '</ul></div>	
 				<div class="inside textEdit">';
 			//javascript:submit(); 		
 			$descBasePath = $_SERVER['PHP_SELF'];
@@ -537,9 +579,11 @@ if(isset($_GET['project_id']))
 			</form>	
 			<div class="fck_editor_overlay">
 			</div>
-			</div>	
-			<div class="rightCol" id="form_sec_2" style="display: none; height: auto;">
-			<form action="" method="post" name="form_sec_2" onSubmit="return false;">		
+			</div>';
+				}
+			if (isset($_GET['section']) && $_GET['section'] == 'Roles') {
+				echo '<div class="rightCol" id="form_sec_2" style="display:block;">';
+			echo '<form action="" method="post" name="form_sec_2" onSubmit="return false;">		
 			<div class="inside drafting_actions">
 			<div class="left_actions">
 			<button class="status status_empty" onClick="confirmEmptyRoles();"><span>empty</span></button>	
@@ -549,7 +593,7 @@ if(isset($_GET['project_id']))
 			<div class="right_actions">	
 			<button class="secondary" onClick="confirmEmptyRoles();"><span>clear</span></button>	
 			<button class="secondary" name="save" id="form_sec_2_save" onClick="saveRoles(); changeSectionStatusMan(\'sec_2\'); setCompleteness();"><span>save</span></button>		
-			<button class="secondary" onClick="nxtFalse(); ctCreateSectionsSwitchNextRoles();"><span>next</span></button>
+			<button class="secondary" onClick="nxtFalse(); ctCreateDisplaySection(\'sec_3\');"><span>next</span></button>
 				</div>' . $strAddFlag . '</div>	
 		<!--<script>		
 				$(document).ready(function()
@@ -589,9 +633,14 @@ echo CtDisplay::getOwnerRolesNewHTML();
 echo '</ul>	
 </div>		
 </form>		
-</div>	
-<div class="rightCol" id="form_sec_3" style="display: none;">	
-<form action="" method="post" name="form_sec_3" onSubmit="return false;">
+</div>';
+			}
+	if (isset($_GET['section'])) {
+	if ($_GET['section'] == 'Timeline') 
+		echo '<div class="rightCol" id="form_sec_3" style="display:block;">';
+	else 
+		echo '<div class="rightCol" id="form_sec_3" style="display:none;">';
+echo '<form action="" method="post" name="form_sec_3" onSubmit="return false;">
 <div class="inside drafting_actions">	
 <div class="left_actions">
 <button class="status status_empty" onClick="confirmEmptyTimeline();"><span>empty</span></button>
@@ -600,8 +649,46 @@ echo '</ul>
 </div>		
 <div class="right_actions">	
 <button class="secondary" onClick="confirmEmptyTimeline();"><span>clear</span></button>		
-<button class="secondary" name="save" id="form_sec_3_save" onClick="saveTimeline(); changeSectionStatusMan(\'sec_3\'); setCompleteness();"><span>save</span></button>									<button class="secondary" onClick="nxtFalse(); ctCreateSectionsSwitchNextTimeline();"><span>next</span></button>	
-</div>	' . $strAddFlag . '	</div>		
+<button class="secondary" name="save" id="form_sec_3_save" onClick="saveTimeline(); changeSectionStatusMan(\'sec_3\'); setCompleteness();"><span>save</span></button>									<button class="secondary" onClick="nxtFalse(); ctCreateDisplaySection(\'sec_5\');"><span>next</span></button>	
+</div>	' . $strAddFlag . '	</div>
+<div class = "timeline_history_title"><h3>Timeline History</h3></div>
+<div class = "timeline_history">';
+     $project_id = $_GET['project_id'];
+	 $phase_array = array();
+	 echo "<ul>";
+     $phases = CtDisplay::getQuery("SELECT * FROM `project_phases` WHERE `project_id`='".$project_id ."' order by id DESC");
+	 $phasescount = CtDisplay::getQuery("SELECT * FROM `project_phases` WHERE `project_id`='".$project_id ."' group by phase_type having count(*) > 1");
+	 if(!count($phasescount)) {
+	   echo "<div class = 'timeline_note_nohistorty'><label>No history available.</label></div>";
+	 }
+	 foreach($phases as $phase) {
+	 $get_timeline = CtDisplay::getQuery("SELECT * FROM `project_phases` WHERE `phase_type`='".$phase['phase_type'] ."' AND `project_id`='$project_id' order by id DESC");//echo "<pre>";print_r($get_timeline);
+       if(sizeof($get_timeline) > 1) {
+          $phase_array[$phase['phase_type']] += 1;
+		  if (sizeof($get_timeline) != $phase_array[$phase['phase_type']]) {
+			  $start = date("m/d/Y",strtotime($get_timeline[$phase_array[$phase['phase_type']]]['start_date']));
+			  $end = date("m/d/Y",strtotime($get_timeline[$phase_array[$phase['phase_type']]]['projected_end_date']));
+			  $user = CtDisplay::getQuery("SELECT first_name,last_name FROM `users` WHERE `id`='".$get_timeline[$phase_array[$phase['phase_type']]-1]['updated_by'] ."'");
+			  $phase_name= CtDisplay::getQuery("SELECT name FROM `lnk_project_phase_types` WHERE `id`='".$phase['phase_type']."'");
+			  $timeline_start_date = date("m/d/Y", strtotime($get_timeline[$phase_array[$phase['phase_type']]-1]['start_date']));
+			  $timeline_end_date = date("m/d/Y", strtotime($get_timeline[$phase_array[$phase['phase_type']]-1]['projected_end_date']));
+			  if ($get_timeline[$phase_array[$phase['phase_type']]]['start_date'] == '0000-00-00 00:00:00') $start = '';
+			  if ($get_timeline[$phase_array[$phase['phase_type']]]['projected_end_date'] == '0000-00-00 00:00:00') $end = '';
+			  if ($get_timeline[$phase_array[$phase['phase_type']]-1]['start_date'] == '0000-00-00 00:00:00') $timeline_start_date = '';
+			  if ($get_timeline[$phase_array[$phase['phase_type']]-1]['projected_end_date'] == '0000-00-00 00:00:00') $timeline_end_date = '';
+			  echo "<li><div class = 'projected_timeline'><label>".$phase_name[0]['name']."</label></div>";
+			  echo "<div class = 'original_dates'>Original Dates:". $start."-".$end."</div>";
+			  echo "<div class = 'revised_dates'>Revised Dates:".$timeline_start_date."-".$timeline_end_date."</div>";
+			  echo "<div class = 'note_timeline_textarea'><textarea rows = '2' cols = '25' readonly>".$get_timeline[$phase_array[$phase['phase_type']]-1]['note']."</textarea></div>";
+			  echo "<div>Updated by ".$user[0]['first_name'].' '.$user[0]['last_name']." on ".date("m/d/Y", strtotime($get_timeline[$phase_array[$phase['phase_type']]-1]['updated_on']))."</div></li>";
+		  }
+       }
+
+
+
+	 }
+	 echo "</ul>";
+	echo '</div>
 <div class="inside resources">
 <div class="proles_header">
 <h3>PROJECTED TIMELINE FOR Project</h3>
@@ -609,7 +696,7 @@ echo '</ul>
 </div>';	
 if(isset($_GET['project_id']))
 	{			
-	echo CtDisplay::getTimelineEditHTML($_GET['project_id']);	
+	echo CtDisplay::getTimelineEditHTMLNEW($_GET['project_id']);	
 	}
 	else 
 		{	
@@ -617,8 +704,9 @@ if(isset($_GET['project_id']))
 		}			
 		echo '</div>	
 		</form>			
-			</div>		
-			<div class="rightCol" id="form_sec_4" style="display: none;">	
+			</div>';}
+	
+		/*	echo '<div class="rightCol" id="form_sec_4" style="display: none;">	
 			<form action="" method="post" name="form_sec_4" onSubmit="return false;">		
 			<div class="inside drafting_actions">		
 			<div class="left_actions">	
@@ -658,9 +746,11 @@ echo '</div>
 </form>
 <div class="fck_editor_overlay">	
 </div>		
-</div>	
-<div class="rightCol" id="form_sec_5" style="display: none;">	
-<form action="" method="post" name="form_sec_5" onSubmit="return false;">	
+</div>';*/
+if (isset($_GET['section']) && $_GET['section'] == 'Resources') {
+	echo '<div class="rightCol" id="form_sec_5" style="display: block;">';	
+
+echo '<form action="" method="post" name="form_sec_5" onSubmit="return false;">	
 <div class="inside drafting_actions">			
 <div class="left_actions">
 <button class="status status_empty"><span>empty</span></button>		
@@ -670,7 +760,7 @@ echo '</div>
 <div class="right_actions">		
 <!--<button class="secondary"><span>clear</span></button>-->	
 <button class="secondary" name="save" id="form_sec_5_save" onClick="saveUserRoles(); return false;"><span>save</span></button>	
-<button class="secondary" onClick="nxtFalse(); ctCreateSectionsSwitchNextDesc();"><span>next</span></button>
+<button class="secondary" onClick="nxtFalse(); ctCreateDisplaySection(\'sec_6\');"><span>next</span></button>
 </div>' . $strAddFlag . '</div>	
 <div class="inside textEdit">	
 <div class="inside resources">		
@@ -684,10 +774,14 @@ echo '</ul>
 </div>';
 echo '</div>
 </form>	
-</div>	
-<div class="rightCol" id="form_sec_6" style="display: none;">	
-<form action="" method="post" name="form_sec_6" onSubmit="return false;">
-<div class="inside drafting_actions">	
+</div>';
+}
+if (isset($_GET['section'])) {
+if ($_GET['section'] == 'Finance') 
+   echo '<div class="rightCol" id="form_sec_6" style="display:block;">';
+ else echo '<div class="rightCol" id="form_sec_6" style="display:none;">';
+echo '<form action="" method="post" name="form_sec_6" onSubmit="return false;" style="float: left;">
+<div class="inside drafting_actions" style="width: 734px;">	
 <div class="left_actions">		
 <button class="status status_empty" onClick="confirmEmptyFilnance();"><span>empty</span></button>
 <button class="status status_draft" onClick="draftStatus(); saveFinance(); return false; changeSectionStatusMan(\'sec_6\'); setCompleteness();"><span>draft</span></button>			
@@ -696,22 +790,10 @@ echo '</div>
 <div class="right_actions">		
 <button class="secondary" onClick="confirmEmptyFilnance(); return false;"><span>clear</span></button>
 <button class="secondary" name="save" id="form_sec_6_save" onClick="saveFinance(); return false; changeSectionStatusMan(\'sec_6\'); setCompleteness();"><span>save</span></button>	
-<button class="secondary" onClick="nxtFalse(); ctCreateSectionsSwitchNextFinance();"><span>next</span></button>	
+<button class="secondary" onClick="nxtFalse(); ctCreateDisplaySection(\'sec_11\');"><span>next</span></button>	
 </div>' . $strAddFlag . '</div>	
-<div class="inside textEdit" id="finance_calcs">	
-<div class="finance_budget_header">
-<h3>FINANCE &amp; BUDGET</h3>	
-<div class="finance_budget_options">	
-<label for="fin_budget_code">BUDGET CODE</label>
-<input type="text" name="fin_budget_code" id="fin_budget_code" value="';
-if(isset($_GET['project_id']))
-	{
-	echo $project_data[0]['budget_code'];	
-	}				
-	echo '" />	
-	<!--<button><span>ADD ITEM</span></button>-->	
-		</div>	
-		</div>';
+<div class="inside textEdit" id="finance_calcs" style="width: 736px;">';	
+
 	if(isset($_GET['project_id'])) 
 	{	
 	echo CtDisplay::getBudgetEditHTML($_GET['project_id']);	
@@ -725,13 +807,21 @@ if(isset($_GET['project_id']))
 			echo CtDisplay::getFinanceHTML();	
 			}
 		echo '<div class="finance_bar_spacer"></div>
-		<div class="finance_bar">	
+		<div class="finance_bar" style="width: 736px;">
+			<input type="hidden" id="ct_overall_total" value="'.@CtDisplay::getFinanceTotalEdit($_GET['project_id']).'"/>
 	 <div id="overall_finance_total">Overall Total: <span class="cur_for">$' .@CtDisplay::getFinanceTotalEdit($_GET['project_id']) .'</span></div>	
 		</div>';
-		echo '</div>	
-		</form>		
-	</div>	
-	<div class="rightCol" id="form_sec_7" style="display: none;">	
+		echo '</div>';
+		
+		echo '<div id="budget_history" style="border: 1px solid gray; left: 8px; top: 2px; width: 210px; position: relative;float: left;">';		
+		echo CtDisplay::getBudgetHistory($_GET['project_id']);
+		echo "</div>";
+
+		echo '</form>		
+	</div>';
+}
+
+	/*echo '<div class="rightCol" id="form_sec_7" style="display: none;">	
 	<form action="" method="post" name="form_sec_7" onSubmit="return false;">	
 	<div class="inside drafting_actions">
 	<div class="left_actions">		
@@ -1088,9 +1178,243 @@ for($u = 0; $u < sizeof($user_list); $u++) {
 				</form>	
 				<div class="fck_editor_overlay">
 			</div>		
-			</div>
-			<div class="rightCol" id="form_sec_11" style="display: none;">	
-			<form action="" method="post" name="form_sec_11" id="form_sec_11" onSubmit="return false;">	
+			</div>';*/
+			if (!isset($_GET['section'])) {
+				echo '<div class="rightCol" id="form_sec_12" style="display: block;">';
+			
+				echo '<div class = "wrapper_sections wrapper_sections_1">';
+				echo '
+					<h3>Project Description</h3><ul class = "sections_project_description">';
+					echo '<li class = "project_description_details_labels"><ul class = "project_description_details">';
+							echo '<li class = "project_status">Project Status: </li>';
+							echo '<li class = "project_program">Program:</li>';
+							echo '<li class = "project_charter">Project Charter: </li>';
+							echo '<li class = "project_scope">Scope: </li></ul></li>';
+							echo '<li class = "project_description_details_values"><ul class = "project_description_results">';
+								$project_status_sql = 'SELECT * FROM `lnk_project_status_types` where `id`=(select IFNULL(`project_status`, 0) from `projects` where id="' . $_GET['project_id'] . '")';
+								$projectStatusResult = CtDisplay::getQuery($project_status_sql);
+								foreach($projectStatusResult as $status){
+									$project_status = $status['name'];
+								}
+
+							echo '<li>'.$project_status.'</li>';	
+							if(!empty($_GET['project_id']))
+							{
+								$project_program_Result = CtDisplay::getQuery("SELECT * FROM `projects` where `id`='".$_GET['project_id']."'");
+								$program = $project_program_Result[0]['program'];
+							}
+
+							$project_program_sql = "SELECT * FROM `lnk_programs` where active='1' and deleted='0' and id='".$program."'";
+							$projectProgramResult = CtDisplay::getQuery($project_program_sql);
+							foreach($projectProgramResult as $prog){
+								$program = $prog['program'];
+							}
+							echo '<li>'.$program.'</li><li>'.$project_program_Result[0]["project_charter"].'</li>	
+								<li>'.$project_program_Result[0]["project_scope"].'</li></ul></li>	
+						</ul><button class="secondary" onclick=ctCreateDisplaySection("sec_1")><span>Edit</span></button>
+					
+				</div>
+
+				<div class = "wrapper_sections wrapper_sections_2">
+					<h3>Project Owner & Roles</h3><ul class = "sections_project_roles">';
+					$roles = CtDisplay::getQuery("SELECT *FROM `project_roles` where project_id='".$_GET['project_id']."'");
+					$role_count = 0;
+					foreach ($roles as $role) {
+					  if ($role['email'] != '') {
+						  echo '<li class="sections_project_roles_results_'.$role_count.'"><ul>';
+						  $res_type =  CtDisplay::getQuery("SELECT name FROM `resource_types` where id='".$role['resource_type_id']."'");
+						  $user =  CtDisplay::getQuery("SELECT first_name, last_name FROM `users` where id='".$role['user_id']."'");
+						  echo '<li>User:'.$user[0]['first_name'].' '.$user[0]['last_name'].'</li>';
+						  echo '<li>Resource Type:'.$res_type[0]['name'].'</li>';
+						  echo '<li>Email:'.$role['email'].'</li>';
+						  echo '<li>Phone:'.$role['phone'].'</li></ul></li>';
+						  $role_count++;
+					  }
+					  if ($role_count == 3) break;
+					}
+				echo '</ul><button class="secondary" onclick=ctCreateDisplaySection("sec_2")><span>Edit</span></button></div>
+					<div class = "wrapper_sections wrapper_sections_3">
+					<h3>Project Timeline</h3>';
+					$phases = CtDisplay::getQuery(QRY_TIMELINE_SO_ASC);
+					$project_id = $_GET['project_id'];
+					$proj_time_count = 0;
+					for($i = 0; $i < sizeof($phases); $i++) {
+						$timeline_link = CtDisplay::getQuery("SELECT * FROM `lnk_resource_stage` WHERE `phase_id`='" .$phases[$i]['id'] ."' LIMIT 1");
+						if(is_array($timeline_link)) {
+							$is_role = CtDisplay::getQuery("SELECT * FROM `project_roles` WHERE `resource_type_id`='" .@$timeline_link[0]['resource_id'] ."' AND `project_id`='$project_id'");
+						}
+						if(sizeof($is_role) > 0) {
+							$get_timeline = CtDisplay::getQuery("SELECT * FROM `project_phases` WHERE `phase_type`='".$phases[$i]['id'] ."' AND `project_id`='$project_id' order by ID DESC LIMIT 1");
+							if(sizeof($get_timeline) > 0) {
+								$start = date("m/d/Y", strtotime($get_timeline[0]['start_date']));
+								$end = date("m/d/Y", strtotime($get_timeline[0]['projected_end_date']));
+							
+								if ($start != '' && $get_timeline[0]['start_date'] != '0000-00-00 00:00:00') {
+									$proj_time_count++;
+									echo '<ul class = "sections_project_timeline_'.$proj_time_count.'">';
+									echo '<li>Phase:'.$phases[$i]['name'].'</li>';
+									echo '<li>Start Date:'.$start.'</li>';
+									echo '<li>Projected End Date:'.$end.'</li></ul>';
+								}
+							}
+						}
+						else {
+						  $get_timeline = CtDisplay::getQuery("SELECT * FROM `project_phases` WHERE `phase_type`='".$phases[$i]['id'] ."' AND `project_id`='$project_id' order by id DESC LIMIT 1");
+							if(sizeof($get_timeline) > 0) {
+								$start = date("m/d/Y", strtotime($get_timeline[0]['start_date']));
+								$end = date("m/d/Y", strtotime($get_timeline[0]['projected_end_date']));
+							
+								if(sizeof($timeline_link) < 1 && $start != '' && $get_timeline[0]['start_date'] != '0000-00-00 00:00:00') {
+									$proj_time_count++;
+									echo '<ul class = "sections_project_timeline_'.$proj_time_count.'">';
+									echo '<li>Phase:'.$phases[$i]['name'].'</li>';
+									echo '<li>Start Date:'.$start.'</li>';
+									echo '<li>Projected End Date:'.$end.'</li></ul>';
+								}
+							}
+						}
+						if ($proj_time_count == 3) break;
+					}
+				echo '<button class="secondary" onclick=ctCreateDisplaySection("sec_3")><span>Edit</span></button></div>
+				<div class = "wrapper_sections wrapper_sections_5">
+					<h3>Resources</h3>';
+					$project_id = $_GET['project_id'];
+					$users = CtDisplay::getQuery("SELECT DISTINCT a.`id`, a.* FROM `users` a, `resource_blocks` b WHERE a.`id` = b.`userid` AND b.`projectid`='" .$project_id ."'");
+					$phaseList = CtDisplay::getPhases($project_id);
+					$resource_count = 0;
+					for($i = 0; $i < sizeof($users); $i++) {
+						$total_actual = 0;
+						$total_booked = 0;
+						$resources = CtDisplay::getQuery("SELECT * FROM `resource_blocks` WHERE `projectid`='" .$project_id ."' AND `userid`='" .$users[$i]['id'] ."'");
+						for($r = 0; $r < sizeof($resources); $r++) {
+							if($resources[$r]['status'] == 4) {
+								if($resources[$r]['daypart'] == 9){
+									$total_actual += $resources[$r]['hours'];
+								}else{
+									$total_actual += 1;
+								}
+							}
+							if($resources[$r]['status'] == 3) {
+								$total_booked += 1;
+							}
+						}
+						$userRole = CtDisplay::getQuery("SELECT * FROM `user_project_role` WHERE `user_id`='" .$users[$i]['id'] ."' AND `project_id`='" .$project_id ."' LIMIT 1");
+						$phase_val = '';
+						foreach($phaseList as $phase => $phaseValue){
+							if($userRole[0]['flag'] == 'phase' && $userRole[0]['phase_subphase_id'] == $phase){
+								$phase_val = $phaseValue['name'];
+							}
+							if(array_key_exists('subphase', $phaseValue)){
+								foreach($phaseValue['subphase'] as $subphase => $spValue){
+									if($userRole[0]['flag'] == 'subphase' && $userRole[0]['phase_subphase_id'] == $subphase){
+										$phase_val = $spValue['name'];
+									}
+								}
+							}
+						}
+						echo '<ul class = "sections_project_resources_'.$resource_count.'">';
+						echo '<li>User:'.$users[$i]['first_name'].' '.$users[$i]['last_name'].'</li>';
+						echo '<li>Resource Type:'.$phase_val.'</li>';
+						echo '<li>Actual Hours:'.$total_actual.'</li>';
+						echo '<li>Scheduled Hours:'.$total_booked.'</li></ul>';
+						$resource_count++;
+						if ($resource_count == 3) break;
+					}
+				echo '<button class="secondary" onclick=ctCreateDisplaySection("sec_5")><span>Edit</span></button></div>
+				<div class = "wrapper_sections wrapper_sections_6">
+					<h3>Finance & Budget</h3>';
+				$phaseToDate = CtDisplay::calculateDate($_GET['project_id']);			
+	
+				$project_details_sql = "SELECT bc_id from `projects` WHERE id='" . $_GET['project_id'] . "'";
+				$project_details_result = CtDisplay::getQuery($project_details_sql);
+				$project_details_row = $project_details_result[0];
+
+
+				$select_project_phases = "SELECT ppf.phase phase, ppf.rate rate, ppf.hours hours FROM project_phase_finance ppf, lnk_project_phase_types lppt where ppf.phase = lppt.id and ppf.project_id = '" .$_GET['project_id'] ."' order by lppt.sort_order";
+
+				$result_phases = CtDisplay::getQuery($select_project_phases);
+				$row = 0;
+				$todate = 0;
+				foreach($result_phases as $row_phases) {
+					$total_finance = 0;
+					$select_phase_data = "SELECT * FROM `lnk_project_phase_types` WHERE `id`='" .$row_phases['phase'] ."' LIMIT 1";
+					$phase_data_res = CtDisplay::getQuery($select_phase_data);
+					$phase_data_row = $phase_data_res[0];
+					$timeline_query = "SELECT * FROM `project_phases` WHERE `project_id`='" .$_GET['project_id']."' AND `phase_type`='" .$row_phases['phase'] ."' order by id DESC LIMIT 1";
+					$timeline_res = CtDisplay::getQuery($timeline_query);
+					$timeline_row = $timeline_res[0];
+					if(array_key_exists($row_phases['phase'], $phaseToDate)){
+						$todate = $phaseToDate[$row_phases['phase']];
+					}else{
+						$todate = 0;
+					}
+
+					$sub_phase_select = "select * from project_sub_phase_finance where phase='" .$row_phases['phase'] ."' and project_id='" .$_GET['project_id'] ."' and active='1'";
+					$result_sub_phase_select = CtDisplay::getQuery($sub_phase_select);
+					if(count($result_sub_phase_select) > 0){
+						foreach($result_sub_phase_select as $project_subphase_row){
+							$total_finance += $project_subphase_row['hours'] * $project_subphase_row['rate'];
+						}
+					}else{
+						$total_finance += $row_phases['hours'] * $row_phases['rate'];
+					}
+
+
+					$start_date_time = explode(" ", $timeline_row['start_date']);
+					$start_date = explode("-", $start_date_time[0]);
+					$end_date_time = explode(" ", $timeline_row['projected_end_date']);
+					$end_date = explode("-", $end_date_time[0]);
+					$display = '1';
+					if($row_phases['phase'] == UNASSIGNED_PHASE)
+					{
+						if($todate!='0'){
+							$display = '1';
+						}
+						else
+						{
+							$display = '0';
+						}
+					}
+					if ($display == '1') {
+					  $projectDetail = '<!-- DATA -->
+							<ul class = "sections_project_finance_'.$row.'">
+								<li class="project_detail">' .$phase_data_row['name'] .'</li>
+								<li class="dates">Dates:' .CtDisplay::checkPhaseDate($start_date[1]) ."/" .CtDisplay::checkPhaseDate($start_date[2]) ."/".CtDisplay::checkPhaseDate($start_date[0]).' - ' .CtDisplay::checkPhaseDate($end_date[1]) ."/" .CtDisplay::checkPhaseDate($end_date[2]) ."/".CtDisplay::checkPhaseDate($end_date[0]).'</li>
+								<li class="actual">To Date:$' .number_format($todate, 0, '.', ',') .'</li>
+								<li class="budget">Budget:$' .number_format($total_finance, 0, '.', ',') .'</li>
+							</ul>';
+					}
+					echo  $projectDetail;
+					$row++;
+					if ($row == 3) break;
+				}
+				echo '<button class="secondary" onclick=ctCreateDisplaySection("sec_6")><span>Edit</span></button></div>
+				<div class = "wrapper_sections wrapper_sections_11">
+					<h3>Project Permissions</h3>';
+					$projectPermission = CtDisplay::getQuery("SELECT b.`rp_permission`,b.`wo_permission` FROM `projects` b WHERE b.`id`='$project_id' LIMIT 1");
+					echo "<ul><li class = 'sections_project_permissions_labels'><ul>";
+					if($projectPermission[0]['rp_permission'] == 1) echo "<li>Resource Planner:</li>";
+					if($projectPermission[0]['wo_permission'] == 1) echo "<li>Work Orders:</li>";echo '</ul></li><li><ul>';
+					if($projectPermission[0]['rp_permission'] == 1)
+						echo '<li>'.str_replace('http://', '', BASE_URL).'/resourceplanner</li>';
+					if($projectPermission[0]['wo_permission'] == 1)
+						echo '<li>'.str_replace('http://', '', BASE_URL).'/workorders</li>';
+					echo "</ul></li></ul>";
+				echo '<button class="secondary" onclick=ctCreateDisplaySection("sec_11")><span>Edit</span></button></div>
+			</div>';
+			}
+			$section_array = array("Description", "Roles", "Timeline", "Resources", "Finance", "Permissions");
+
+			if (isset($_GET['section'])) {
+			  if (!in_array(trim($_GET['section']), $section_array)) {
+			    header("Location: ".BASE_URL."/noaccess/index/error/");
+			  }
+			}
+
+			if (isset($_GET['section']) && $_GET['section'] == 'Permissions') {
+				echo '<div class="rightCol" id="form_sec_11" style="display:block;">';
+			
+			echo '<form action="" method="post" name="form_sec_11" id="form_sec_11" onSubmit="return false;">	
 			<div class="inside drafting_actions">	
 			<div class="left_actions">	
 			<!--<button class="status status_empty" onClick="confirmEmptyTimeline();"><span>empty</span></button>-->	
@@ -1124,8 +1448,10 @@ for($u = 0; $u < sizeof($user_list); $u++) {
 	}				
 	echo '</div>
 	</form>		
-	</div>		
-	<div style="clear: both;"></div>
+	</div>';
+			}
+			
+	echo '<div style="clear: both;"></div>
 	</div>		
 	</div>			
 	<form method="post" action="' .BASE_URL .'/pdfs/export_project.php" target="_blank" id="pdfform" name="pdfform">	</form>
@@ -1149,7 +1475,7 @@ for($u = 0; $u < sizeof($user_list); $u++) {
 		</form>		
 		<!--==| Project Status ==|-->
 		<div class="project_status_list" style="display:none;">		
-		<ul>' . CtDisplay::getProjectStatus($_GET['project_id'], 'all') . '	</ul>
+		<ul>' . CtDisplay::getProjectStatusList($_GET['project_id']) . '	</ul>
 		</div>		
 		<!--==| Section Clear Messages ==|-->	
 		<div class="message_clear_roles">	
@@ -1200,7 +1526,19 @@ for($u = 0; $u < sizeof($user_list); $u++) {
 		<button class="cancel" onClick="$(\'.message_clear_finance\').css({display:\'none\'}); return false;"><span>No</span></button>	
 		<div style="clear: both;"></div>	
 		</div>		
-		</div>		
+		</div>	
+			
+		<div class="budget_save" style="text-align: center; padding: 10px; width: 228px;">
+			<input type="hidden" id="ct_user_note_id" value="0"/>
+			<p style="font-size: 11pt">Leave a note (optional)</p>
+			<div class="project_note_save" style="text-align: left;padding-top: 5px"><textarea maxlength="100" rows="2" cols="25"></textarea></div>
+			<div style="clear: both;"></div>	
+			<div class="duplicate_buttons">			
+			<button onClick="ajaxFunction(\'\', \'budget_save\'); $(\'.budget_save\').css({display:\'none\'}); return false;"><span>Save</span></button>
+			<div style="clear: both;"></div>	
+			</div>		
+		</div>
+    	
 		<div class="message_clear_approvals">	
 		<p>					
 		You are about to clear this sections data.<br />Do you want to continue?
@@ -1225,7 +1563,25 @@ for($u = 0; $u < sizeof($user_list); $u++) {
 		<button class="cancel" onClick="$(\'.message_clear_desc\').css({display:\'none\'}); return false;"><span>No</span></button>			
 		<div style="clear: both;"></div>	
 		</div>		
-		</div>		
+		</div>
+		<div class="project_history_note">	
+			<p>Leave a note (optional)</p>
+			<div class="project_note_save"><textarea maxlength="100" rows="2" cols="25"></textarea></div>
+			<div style="clear: both;"></div>	
+			<div class="duplicate_buttons">			
+			<button onClick="ajaxFunction(\'\', \'project_history_note_save\'); $(\'.project_history_note\').css({display:\'none\'}); return false;"><span>Save</span></button> 			
+			<div style="clear: both;"></div>	
+			</div>		
+		</div>
+		<div class="timeline_history_note">	
+			<p>Leave a note (optional)</p>
+			<div><textarea maxlength="100" cols = "25" rows = "2"></textarea></div>
+			<div style="clear: both;"></div>	
+			<div class="duplicate_buttons">			
+			<button onClick="ajaxFunction(\'\', \'timeline_history_note_save\'); $(\'.timeline_history_note\').css({display:\'none\'}); return false;"><span>Save</span></button> 			
+			<div style="clear: both;"></div>	
+			</div>		
+		</div>
 		<div class="message_clear_scope">	
 		<p>				
 		You are about to clear this sections data.<br />Do you want to continue?	
