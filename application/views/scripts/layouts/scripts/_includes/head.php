@@ -92,6 +92,7 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						break;
 					}
 					case 'edit': {
+					  echo '<script src="/_js/jquery-1.7.2.min.js" type="text/javascript"></script>';
 						echo "\t<script src=\"/_js/controltower.create.js?" . $randNum . "\" type=\"text/javascript\"></script>\n"
 							."\t<script src=\"/_js/ui.datepicker.js\" type=\"text/javascript\"></script>\n"
 							//."\t<script src=\"/_js/jquery.dimensions.js\" type=\"text/javascript\"></script>\n"
