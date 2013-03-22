@@ -70,6 +70,22 @@
 			return $xml;
 		}
 		
+		
+		static public function insertSearchLog($data){
+			try{
+				$db = Zend_Registry::get('db');
+				$db->insert("search_log", $data);
+			}catch(Exception $e){
+				
+				//echo "update_event_audit".$e->getMessage();
+			}
+		
+		
+		}
+		
+		
+		
+		
 	}
 
 ?>
