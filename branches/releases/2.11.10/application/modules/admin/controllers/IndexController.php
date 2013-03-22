@@ -1200,6 +1200,16 @@
 		
 		}
 		
+		function solrsearchlogAction(){
+		
+			$searchData = AdminDisplay::getSearchLog();
+			$this->view->assign('searchData',$searchData);
+		
+		}
+		
+		
+		
+		
 	}
 	
 ?>
