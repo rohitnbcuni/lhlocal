@@ -760,5 +760,12 @@
 			//return $db->lastInsertId();
 		
 		}
+		
+		static public function getSearchLog(){
+			$db = Zend_Registry::get('db');
+			$data = $db->fetchAll("SELECT l.pattern, CONCAT_WS(' ', first_name,last_name) as user_name from search_log l INNER JOIN users u ON l.user_id = u.id");
+			return $data;
+		
+		}
 	}
 ?>
