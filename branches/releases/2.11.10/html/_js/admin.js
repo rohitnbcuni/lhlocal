@@ -56,9 +56,17 @@ $(document).ready(function(){
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #rallyLHProjects').addClass('active');
 	}
+	else if(adminTitlemsg == 'Solr Search Log')
+	{
+		$('#create_sections li').removeClass('active');
+		$('#create_sections #searchLHProjects').addClass('active');
+	}
 	$('.title_lrg h4').html(adminTitlemsg);
 	
+	
+	
 });
+
 
 $(document).ready(function(){
 	//$(".ui-multiselect").removeClass('button');
@@ -70,6 +78,12 @@ $(document).ready(function(){
 		
 	});
 
+//http://filamentgroup.com/lab/jquery_plugin_for_requesting_ajax_like_file_downloads/
+
+	
+function createSolrLog(){
+		window.open('/_ajaxphp/solr_search_log.php');
+	}
 function editUser() {
 	$(".adminCheckBox").removeAttr('disabled');
 	$('#admin_UserTitle_fade').css({display:'none'});
@@ -823,6 +837,15 @@ function rallyProjects(field_id)
 	document.body.appendChild(form);   
 	form.submit();
 }
+function solrSearchLog(field_id)
+{
+
+	var form = document.createElement("form");
+	form.setAttribute("method", 'post');
+	form.setAttribute("action", '/admin/index/solrsearchlog/');	
+	document.body.appendChild(form);   
+	form.submit();
+}
 
 function setQadataGrid(){
 	var qaProjectValues = new Array();
@@ -887,6 +910,7 @@ function mappLHRalyProjectes(){
 
 
 }
+
 
 
 function deleteRallyProject(id){
