@@ -1,0 +1,35 @@
+<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Solr Search Log">
+<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
+<div class="row2" style="float:right;margin-top:6px" >
+ <p>
+<button id="adminReportbtn" onclick="createSolrLog();"><span>Generate Report</span></button>
+</p>
+</div>				
+<input type="hidden" id="mappCounter" value="<?php echo count($this->searchData) ?>">
+<div class="mappProj" >	
+	<table name="mapProjectData" width="100%"  class="adminTable">
+		<tr class="adminTh">
+		<th>Sr.No</th>
+		<th>User Name</th>
+		<th>Search Strings</th>
+		</tr>
+		<?php
+			if(count($this->searchData) >0){
+			$i = 1;
+			 foreach($this->searchData as $key => $LH_val){  
+				//print_r($LH_val);
+			 ?>
+			<tr id="tr_<?php echo $i ?>" class="adminTr">
+			<td width="20%" ><?php echo $i; ?></td>
+			<td width="40%" ><?php echo $LH_val['user_name']; ?></td>
+			<td width="40%"  ><?php echo $LH_val['pattern']; ?></td>
+			
+			</tr>
+		
+		
+		<?php $i++; } ?>
+	<?php } ?>
+	</table>
+</div>
+
+
