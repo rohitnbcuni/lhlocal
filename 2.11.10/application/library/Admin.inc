@@ -767,5 +767,11 @@
 			return $data;
 		
 		}
+		static public function getUniqueUsers(){
+			$db = Zend_Registry::get('db');
+			$result = $db->query("SELECT distinct user_id  FROM search_log");
+			return $affectedRows = $result->rowCount();
+		
+		}
 	}
 ?>
