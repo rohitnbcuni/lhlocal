@@ -1204,6 +1204,8 @@
 		
 			$searchData = AdminDisplay::getSearchLog();
 			$this->view->assign('searchData',$searchData);
+			$uniqueUsers = AdminDisplay::getUniqueUsers();
+			$this->view->assign('uniqueUsers',$uniqueUsers);
 		
 		}
 		
