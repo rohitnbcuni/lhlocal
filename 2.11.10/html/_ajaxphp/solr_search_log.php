@@ -9,8 +9,8 @@ $result = $mysql->sqlordie("SELECT l.pattern, CONCAT_WS(' ', first_name,last_nam
 $OUTPUT .= "User Name, Search Strings\n";
 while($row = $result->fetch_assoc()){
 	$OUTPUT .= $row['user_name'].",";
-	$OUTPUT .= $row['pattern']."\n";
-	
+	$OUTPUT .= (strlen($row['pattern']) > 50)?substr($row['pattern'],0,50)."...":$row['pattern'];
+	$OUTPUT .= "\n";
 
 }
 
