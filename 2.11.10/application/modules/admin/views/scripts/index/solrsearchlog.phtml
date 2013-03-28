@@ -25,7 +25,7 @@
 			<tr id="tr_<?php echo $i ?>" class="adminTr">
 			<td width="20%" ><?php echo $i; ?></td>
 			<td width="40%" ><?php echo $LH_val['user_name']; ?></td>
-			<td width="40%"  ><?php echo $LH_val['pattern']; ?></td>
+			<td width="40%"  ><?php echo (strlen($LH_val['pattern']) > 50)?substr($LH_val['pattern'],0,50)."...":$LH_val['pattern'] ?></td>
 			
 			</tr>
 		
