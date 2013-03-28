@@ -22,4 +22,8 @@ if($create_new_res->num_rows > 0) {
 	//print_r($create_new_res->fetch_assoc());
 }
 
+$project_budget_code = 'ALTER TABLE `projects` DROP `budget_code`';
+$res = $mysql->sqlordie($project_budget_code);
+
+
 ?>
