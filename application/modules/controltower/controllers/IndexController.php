@@ -223,7 +223,11 @@ echo '			<!--=========== START: COLUMNS ===========-->
 		Zend_Session::regenerateId();		
 		$config = CtDisplay::getConfigValue();	
 		$project_data = "";		
-		$company_data = "";		
+		$company_data = "";
+		
+        echo '<input type="hidden" id="ct_user_id" value="'.$_SESSION['user_id'].'"></input>';
+		echo '<input type="hidden" id="ct_section" value="'.strtolower($_GET['section']).'"></input>';
+
         if(isset($_GET['project_id']))
 			{				
 		    $project_id = $_GET['project_id'];
