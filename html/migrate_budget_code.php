@@ -1,7 +1,7 @@
 <?php
 
 include("_inc/config.inc");
-include("_ajaxphp/sessionHandler.php");
+//include("_ajaxphp/sessionHandler.php");
  
 global $mysql;
 
