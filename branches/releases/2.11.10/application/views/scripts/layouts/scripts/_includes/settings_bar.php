@@ -101,6 +101,7 @@
 					<div class="keyword option">
 					<label for="without">Not</label>
 					<input id="without" class="keyword" name="without" type="input" maxlength="50">
+					           <input  type="hidden" name="search_par[]" id="search_par" value="All"  />
 					</div>
 					</div>
 					<div style="padding-left:50px;"><button onClick="advance_search(); return false;" ><span>SEARCH</span></button></div>
