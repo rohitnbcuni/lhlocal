@@ -1746,3 +1746,77 @@ border-width:5px;}
 text-decoration:none;
 
 }
+
+
+.advance_search_container {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 2px solid #003C7D;
+    display: none;
+    height: 180px;
+    margin: 0;
+    position: absolute;
+    right: 184px;
+    top: 30px;
+   
+    z-index: 1;
+}
+.advance_search_content {overflow:auto; }
+.close_advance_search { background: url(../_images/close_btn.gif) no-repeat; width: 18px; height: 17px; right: 0px; z-index:100; text-indent: -9999px; position:absolute; cursor:pointer;}
+
+
+.panel_search {
+		}
+.panel_search .content{
+overflow: hidden;
+zoom: 1;
+}
+.panel_search .content.search {
+}
+/*DCIPOLETTI:changed 11/21/12*/
+.panel_search form 
+{
+width:240px;
+margin: 0 0 0 35px;
+padding: 0 0;
+line-height: 15px;
+}
+.panel_search h4 
+{
+padding: 10px 0 0 7px;
+font-size: 12px;
+margin: 0 2px 5px;
+font-weight: bold;
+}
+.panel_search h4.keyword, 
+.panel_search h4.date 
+{
+color:#007cbc
+}
+
+.panel_search div.option.keyword label {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: url("../_images/keyword_label_bg.gif") repeat-x scroll left top transparent;
+    border-color: #BBBBBB -moz-use-text-color #BBBBBB #BBBBBB;
+    border-image: none;
+    border-style: solid none solid solid;
+    border-width: 1px medium 1px 1px;
+    clear: left;
+    color: #000000;
+    display: block;
+    float: left;
+    height: 20px;
+    padding: 3px 3px 0 0;
+    text-align: center;
+    width: 37px;
+}
+
+
+.keyword{
+display:inline-block;
+padding-bottom:4px;
+}
+
+#error_msg { float: left; font-size: 11px; width: 100%; font-weight: bold; color: #f00; text-align: center; }
