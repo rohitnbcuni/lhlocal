@@ -52,6 +52,15 @@
 				$search_text = $search_par_all.' OR '.$search_par_atleastone;
 			
 			}
+			if((!empty($search_par_all)) && (empty($search_par_atleastone)) && (empty($search_par_without))){
+				$search_text = $search_par_all;
+			
+			}
+			if((empty($search_par_all)) && (!empty($search_par_atleastone)) && (empty($search_par_without))){
+				$search_text = $search_par_atleastone;
+			
+			}
+			
 			//$search_text = $search_par_all.' OR '.$search_par_atleastone.' NOT '.$search_par_without;
 			$search_par = 'All';
 			$searchResult = SearchDisplay::advanceSearchresult($search_par_all,$search_par_atleastone,$search_par_without);
