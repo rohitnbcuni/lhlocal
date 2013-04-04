@@ -60,7 +60,7 @@
 				$search_text = $search_par_atleastone;
 			
 			}
-			
+			$search_text = htmlentities($search_text);
 			//$search_text = $search_par_all.' OR '.$search_par_atleastone.' NOT '.$search_par_without;
 			$search_par = 'All';
 			$searchResult = SearchDisplay::advanceSearchresult($search_par_all,$search_par_atleastone,$search_par_without);
