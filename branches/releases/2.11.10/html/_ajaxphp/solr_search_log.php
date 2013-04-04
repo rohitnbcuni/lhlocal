@@ -9,7 +9,7 @@ $result = $mysql->sqlordie("SELECT l.pattern, CONCAT_WS(' ', first_name,last_nam
 $OUTPUT .= "User Name, Search Strings, Searched On\n";
 while($row = $result->fetch_assoc()){
 	$OUTPUT .= $row['user_name'].",";
-	$OUTPUT .= $row['pattern'].",";
+	$OUTPUT .= str_replace(",", " ",$row['pattern']).",";
 	$OUTPUT .= $row['created'];
 	$OUTPUT .= "\n";
 
