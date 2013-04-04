@@ -10,7 +10,7 @@ $OUTPUT .= "User Name, Search Strings, Created\n";
 while($row = $result->fetch_assoc()){
 	$OUTPUT .= $row['user_name'].",";
 	$OUTPUT .= $row['pattern'].",";
-	$OUTPUT .= date("m/d/Y",strtotime($row['created']));
+	$OUTPUT .= $row['created'];
 	$OUTPUT .= "\n";
 
 }
