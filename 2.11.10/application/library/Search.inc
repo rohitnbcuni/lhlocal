@@ -74,7 +74,15 @@
 			$boolean_string = '';
 			//$search_par_all.','.$search_par_atleastone.','.$search_par_without;
 			if((!empty($search_par_all)) && (!empty($search_par_atleastone)) && (!empty($search_par_without))){
-				echo $boolean_string = '(("'.urlencode($search_par_all).'")%20OR%20("'.urlencode($search_par_atleastone).'")%20NOT%20("'.urlencode($search_par_without).'"))';
+				$boolean_string = '(("'.urlencode($search_par_all).'")%20OR%20("'.urlencode($search_par_atleastone).'")%20NOT%20("'.urlencode($search_par_without).'"))';
+			
+			}
+			if((!empty($search_par_all)) && (empty($search_par_atleastone)) && (empty($search_par_without))){
+				$boolean_string = '(("'.urlencode($search_par_all).'"))';
+			
+			}
+			if((empty($search_par_all)) && (!empty($search_par_atleastone)) && (empty($search_par_without))){
+				$boolean_string = '(("'.urlencode($search_par_atleastone).'"))';
 			
 			}
 			if((empty($search_par_all)) && (!empty($search_par_atleastone)) && (!empty($search_par_without))){
