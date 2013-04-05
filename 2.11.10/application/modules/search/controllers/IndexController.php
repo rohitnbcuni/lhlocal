@@ -20,7 +20,9 @@
 				}
 				$user_id = $_SESSION['user_id'];
 				$search_array = array( "user_id" => $user_id , "pattern" => $search_text);
-				SearchDisplay::insertSearchLog($search_array);
+				if(!empty($search_text)){
+					SearchDisplay::insertSearchLog($search_array);
+				}
 				@setcookie("search_text", $search_text, time()+3600);
 				@setcookie("search_par", $search_par, time()+3600);
 				$this->view->assign("searchResult",$searchResult);
@@ -60,14 +62,16 @@
 				$search_text = $search_par_atleastone;
 			
 			}
-			$search_text = htmlentities($search_text);
+			//$search_text = htmlentities($search_text);
 			//$search_text = $search_par_all.' OR '.$search_par_atleastone.' NOT '.$search_par_without;
 			$search_par = 'All';
 			$searchResult = SearchDisplay::advanceSearchresult($search_par_all,$search_par_atleastone,$search_par_without);
 		
 			$user_id = $_SESSION['user_id'];
 			$search_array = array( "user_id" => $user_id , "pattern" => $search_text);
-			SearchDisplay::insertSearchLog($search_array);
+			if(!empty($search_text)){
+				SearchDisplay::insertSearchLog($search_array);
+			}
 			@setcookie("search_text", $search_text, time()+3600);
 			@setcookie("search_par", $search_par, time()+3600);
 			$this->view->assign("searchResult",$searchResult);
