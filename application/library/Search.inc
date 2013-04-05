@@ -69,6 +69,78 @@
 			
 			return $xml;
 		}
+		public function advanceSearchresult($search_par_all,$search_par_atleastone,$search_par_without) {
+			$string = '';
+			$boolean_string = '';
+			//$search_par_all.','.$search_par_atleastone.','.$search_par_without;
+			if((!empty($search_par_all)) && (!empty($search_par_atleastone)) && (!empty($search_par_without))){
+				$boolean_string = '(("'.urlencode($search_par_all).'")%20OR%20("'.urlencode($search_par_atleastone).'")%20NOT%20("'.urlencode($search_par_without).'"))';
+			
+			}
+			if((!empty($search_par_all)) && (empty($search_par_atleastone)) && (empty($search_par_without))){
+				$boolean_string = '(("'.urlencode($search_par_all).'"))';
+			
+			}
+			if((empty($search_par_all)) && (!empty($search_par_atleastone)) && (empty($search_par_without))){
+				$boolean_string = '(("'.urlencode($search_par_atleastone).'"))';
+			
+			}
+			if((empty($search_par_all)) && (!empty($search_par_atleastone)) && (!empty($search_par_without))){
+				$boolean_string = '(("'.urlencode($search_par_atleastone).'")%20NOT%20("'.urlencode($search_par_without).'"))';
+			}
+			if((!empty($search_par_all)) && (empty($search_par_atleastone)) && (!empty($search_par_without))){
+				$boolean_string = '(("'.urlencode($search_par_all).'")%20NOT%20("'.urlencode($search_par_without).'"))';
+			
+			}
+			if((!empty($search_par_all)) && (!empty($search_par_atleastone)) && (empty($search_par_without))){
+				$boolean_string = '(("'.urlencode($search_par_all).'")%20OR%20("'.urlencode($search_par_atleastone).'"))';
+			
+			}
+				
+			$url = SOLR_URL_STRING.'('.$boolean_string.')&featureClass=P&style=full&start=0&rows=2000&sort=docid%20desc';
+			$ch = curl_init();
+			$request='<request>'.$request.'</request>';
+			curl_setopt($ch, CURLOPT_URL, $url);
+			if(defined('HTTP_PROXY') && HTTP_PROXY!='')
+			{
+					curl_setopt($ch,CURLOPT_PROXY,HTTP_PROXY);
+					curl_setopt($ch,CURLOPT_HTTPPROXYTUNNEL,true);
+					curl_setopt($ch,CURLOPT_PROXYTYPE,CURLPROXY_HTTP);
+			}
+			//Uncomment if you want to run on Local system
+			//curl_setopt($ch, CURLOPT_PROXY, "http://64.210.197.20:80");
+			//curl_setopt($ch, CURLOPT_PROXYPORT, 80);
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt ($ch, CURLOPT_POST, 1);
+			curl_setopt ($ch, CURLOPT_POSTFIELDS, $request);
+			curl_setopt($ch, CURLOPT_HEADER, false);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/xml', 'Content-Type: application/xml'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch,CURLOPT_USERPWD,BC_USER . ":" . BC_PASSWORD);
+			if(preg_match('/^(http)/',$url)) curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
+			$response = curl_exec($ch);
+			curl_close($ch);
+			
+				$xml = (array)simplexml_load_string($response);
+				
+						
+			return $xml;
+		}
+		
+		static public function insertSearchLog($data){
+			try{
+				$db = Zend_Registry::get('db');
+				$db->insert("search_log", $data);
+			}catch(Exception $e){
+				
+				//echo "update_event_audit".$e->getMessage();
+			}
+		
+		
+		}
+		
+		
+		
 		
 	}
 

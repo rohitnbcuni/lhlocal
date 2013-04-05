@@ -39,7 +39,10 @@
 							</li>
 							<li class="alt" id="rallyLHProjects" onClick="rallyProjects();">
 								<img src="/_images/yellow_status.gif">Rally/LH Project Mapping
-							</li>		
+							</li>
+							<li class="alt" id="searchLHProjects" onClick="solrSearchLog();">
+								<img src="/_images/yellow_status.gif">Solr Search Log
+							</li>	
 						</ul>
 					</div>
 			<? echo $this->layout()->content; ?>
