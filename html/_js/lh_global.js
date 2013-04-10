@@ -766,3 +766,29 @@ cbSplit._nativeSplit = String.prototype.split;
 String.prototype.search_split = function (separator, limit) {
     return cbSplit(this, separator, limit);
 };
+
+$(document).ready(function(){
+	$('#bt_advSearch').click(function(){
+		$('.advance_search_container').css("display","block");
+		
+	});
+});
+
+	$(document).ready(function(){
+		$('.close_advance_search').click(function(){
+			$('.advance_search_container').css({display:'none'});
+		});
+	});
+
+	
+function advance_search(){
+	if(($.trim($('#all').val()) == '') && ($.trim($('#atLeastOne').val()) == '') && ($.trim($('#without').val()) == '')){
+		$('#error_msg').html("At least one input box have some value");
+	}else if(($.trim($('#all').val()) == '') && ($.trim($('#atLeastOne').val()) == '') && ($.trim($('#without').val()) != '')){
+		$('#error_msg').html("Combination with NOT must have other operator(All/OR)");
+	}else{
+		$('#advance_search_form').submit();
+	}
+
+
+}

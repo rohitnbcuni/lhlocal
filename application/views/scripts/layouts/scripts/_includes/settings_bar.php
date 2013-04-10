@@ -25,11 +25,12 @@
 
 		?><li style="border-left:none;padding: 0 4px;"><div id="search_top">
 		<div><form action="<?php echo $pageURL;?>/search" method="post" name="search_box_form" id="search_box_form" >
-		<input name="search_text" id="search_text" type="text" class="search_bg"  tabindex="1" placeholder="  search" class="textbox"  autocomplete="off" onkeyup="ajax_showOptions(this,'q',event)">
+		<input name="search_text" id="search_text" type="text" class="search_bg"  tabindex="1" placeholder="  search" class="textbox"  autocomplete="off" onkeyup="ajax_showOptions(this,'q',event)" maxlength="100">
 		<input name="bt_search" type="button" class="bt_search" id="bt_search"  >
 
-		<div class="bt_advSearch" id="bt_advSearch" style="display:none;" > <a href="javascript:void(null);" >
-		<img src="/_images/images/adv_option.png" /></a> 
+		<div class="bt_advSearch" id="bt_advSearch"  > <a href="javascript:void(null);" >
+		<img src="/_images/images/adv_option.png" alt="Advance Search" title="Advance Search"/></a>
+		<div style="display:none;">
         <div id="popup_top"  > 
           <div class="search_popupTop"> <a class="bt_close"  href="javascript:hide_searchpopup();"><img src="/_images/images/bt_close.png" /></a> 
            <input  type="radio" name="search_par[]" id="search_par" value="All"  checked="checked"/>
@@ -40,6 +41,7 @@
             Work Orders</div>
           <div class="search_popupBottom"></div>
         </div>
+		</div>
       </div>
 		</form>
 		
@@ -79,3 +81,31 @@
 	</div>-->
 	<!----| END: Setting Bar |---->
 
+	<div class="advance_search_container">
+		<div class="close_advance_search" title="close">X</div>
+			<div class="advance_search_content panel_search">
+				
+				<form action="<?php echo $pageURL;?>/search/index/advancesearch" method="post" name="advance_search_form" id="advance_search_form" >
+					
+					<center><div style="margin-top:15px;" id="error_msg"></div></center>
+					<h4 id="searchbykeyword" class="keyword">Search By Keyword:</h4>
+					<div aria-labelledby="searchbykeyword" role="group">
+					<div class="keyword option">
+					<label for="all">All</label>
+					<input id="all" class="keyword" name="allOptions" type="input" maxlength="50">
+					</div>
+					<div class="keyword option">
+					<label for="atLeastOne">Or</label>
+					<input id="atLeastOne" class="keyword" name="atLeastOne" type="input" maxlength="50">
+					</div>
+					<div class="keyword option">
+					<label for="without">Not</label>
+					<input id="without" class="keyword" name="without" type="input" maxlength="50">
+					           <input  type="hidden" name="search_par[]" id="search_par" value="All"  />
+					</div>
+					</div>
+					<div style="padding-left:50px;"><button onClick="advance_search(); return false;" ><span>SEARCH</span></button></div>
+				</form>
+				
+			</div>
+	</div>

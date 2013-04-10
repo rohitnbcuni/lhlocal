@@ -96,7 +96,7 @@ $search_text= str_replace("'", "",$search_text);
 				Did you mean: "<a href="javascript:didyoumean();" style="color:#fff;font-style:italic;"><?php echo ucfirst(substr(Util::escapewordquotes(trim($this->didyoumean)),0,70));if(strlen($this->didyoumean)>70){echo '...';} ?>"</a> ? </label>
 				<input type="hidden" name="dym" id="dym" value="<?php echo $this->didyoumean ?>">
 		<?php else: ?>
-				No result for "<?php echo ucfirst(substr(Util::escapewordquotes(trim($search_text)),0,70));if(strlen($search_text)>70){echo '...';} ?>" </label>
+				No result for "<?php echo ucfirst(substr(Util::escapewordquotes(trim(htmlentities($search_text))),0,70));if(strlen($search_text)>70){echo '...';} ?>" </label>
 	<?php endif; }?>
 	<div onmouseout="hideComment_wo(23);" onmouseover="showComment_wo(23);" style="float:right;margin:7px 31px 0 10px;">
 	<img src="/_images/tool-tip-lighthouse-v2.png" >
@@ -302,7 +302,7 @@ $search_text= str_replace("'", "",$search_text);
 						<option value="-1">Show All</option>
 					</select>
 					
-					<a href="javascript:void(null);" onclick="qulaityFilterJson();"><img src="../_images/quality_refresh.png" alt="refresh" title="refresh" style="vertical-align:middle;margin-top:9px;" /></a>
+					<a href="javascript:void(null);" onclick="qulaityFilterJson();"><img src="/_images/quality_refresh.png" alt="refresh" title="refresh" style="vertical-align:middle;margin-top:9px;" /></a>
 
 				</div>
 
