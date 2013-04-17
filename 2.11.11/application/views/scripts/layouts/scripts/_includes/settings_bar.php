@@ -85,26 +85,57 @@
 		<div class="close_advance_search" title="close">X</div>
 			<div class="advance_search_content panel_search">
 				
-				<form action="<?php echo $pageURL;?>/search/index/advancesearch" method="post" name="advance_search_form" id="advance_search_form" >
+				<form action="<?php echo $pageURL;?>/search/index/advancesearch" method="post" name="advance_search_form" id="advance_search_form"  autocomplete="off">
 					
 					<center><div style="margin-top:15px;" id="error_msg"></div></center>
 					<h4 id="searchbykeyword" class="keyword">Search By Keyword:</h4>
-					<div aria-labelledby="searchbykeyword" role="group">
-					<div class="keyword option">
-					<label for="all">All</label>
-					<input id="all" class="keyword" name="allOptions" type="input" maxlength="50">
+					<div style="width:600px;">
+						<div  class="search-group" style="float:left;">
+							<div class="keyword option">
+							<label for="all">All</label>
+							<input id="all" class="keyword" name="allOptions" type="text" maxlength="50">
+							</div>
+							<div class="keyword option">
+							<label for="atLeastOne">Or</label>
+							<input id="atLeastOne" class="keyword" name="atLeastOne" type="text" maxlength="50">
+							</div>
+							<div class="keyword option">
+							<label for="without">Not</label>
+							<input id="without" class="keyword" name="without" type="text" maxlength="50">
+									   <input  type="hidden" name="search_par[]" id="search_par" value="All"  />
+							</div>
+							
+						</div>
+						<div  class="search-group " style="float:right;">
+							<div class="keyword option">
+								<label for="startdate">Start Date</label>
+								<input type="text" id="search_startdate" maxlength="50" name="search_startdate"  readonly="readonly" style="margin-left: -1px;" />
+							</div>
+							
+							<div class="keyword option">
+								<label for="enddate">End Date</label>
+								<input type="text" id="search_enddate" name="search_enddate" maxlength="50" readonly="readonly" style="margin-left: -1px;" />
+							</div>
+						
+	  
+							<div class="keyword option">
+							<fieldset id="search-fieldset">
+								<legend>Search By Fields:</legend>
+								Id:
+								<input type="checkbox" id="search_fields" name="search_fields[]"  value="docid" checked="checked" />
+								Title:
+								<input type="checkbox" id="search_fields" name="search_fields[]"  value="title" checked="checked" />
+								Description:
+								<input type="checkbox" id="search_fields" name="search_fields[]"  value="description" checked="checked" />
+								Comments:
+								<input type="checkbox" id="search_fields" name="search_fields[]"  value="commentTextList" checked="checked" />
+		
+							</fieldset>
+							</div>
+						</div>
 					</div>
-					<div class="keyword option">
-					<label for="atLeastOne">Or</label>
-					<input id="atLeastOne" class="keyword" name="atLeastOne" type="input" maxlength="50">
-					</div>
-					<div class="keyword option">
-					<label for="without">Not</label>
-					<input id="without" class="keyword" name="without" type="input" maxlength="50">
-					           <input  type="hidden" name="search_par[]" id="search_par" value="All"  />
-					</div>
-					</div>
-					<div style="padding-left:50px;"><button onClick="advance_search(); return false;" ><span>SEARCH</span></button></div>
+					<div style="hight:50px;"></div>
+					<div style="padding-left:235px;"><button onClick="return advance_search(); return false;" ><span>SEARCH</span></button></div>
 				</form>
 				
 			</div>
