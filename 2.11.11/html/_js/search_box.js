@@ -9,7 +9,8 @@ function hide_searchpopup(){
 
 	
 $(document).ready(function(){	
-	
+
+  
 	/*$('#search_par').change(function () {
    
     if($(this).attr("checked")) {
@@ -55,6 +56,68 @@ function didyoumean(){
 	$('#search_box_form').submit();
 
 }
+
+$(document).ready(function(){
+	$('#bt_advSearch').click(function(){
+		$('.advance_search_container').slideDown("show");
+		
+	});
+});
+
+	$(document).ready(function(){
+	 /* $("#search-startdate").datepicker({
+		numberOfMonths: 1,
+		onSelect: function(selected) {
+			$("#search-enddate").datepicker("option",{minDate}, selected)
+		}
+		});
+		$("#search-enddate").datepicker({numberOfMonths: 1,	onSelect: function(selected) {
+			$("#search-startdate").datepicker("option",{maxDate}, selected)
+			}
+		}); */
+		$('.close_advance_search').click(function(){
+			//$('.advance_search_container').css({display:'none'});
+			$('.advance_search_container').slideUp("show");
+		});
+		var checkInDate = $('#search_startdate');
+		var checkOutDate = $('#search_enddate');
+
+		checkInDate.datepicker({ onClose: clearEndDate });
+		checkOutDate.datepicker({ beforeShow: setMinDateForEndDate });
+
+		function setMinDateForEndDate() {
+			var d = checkInDate.datepicker('getDate');
+			if (d) return { minDate: d }
+		}
+		function clearEndDate(dateText, inst) {
+			checkOutDate.val('');
+		}
+		
+	});
+	 
+
+
+	
+function advance_search(){
+	if(($.trim($('#all').val()) == '') && ($.trim($('#atLeastOne').val()) == '') && ($.trim($('#without').val()) == '')){
+		$('#error_msg').html("At least one input box have some value");
+		return false;
+	}else if(($.trim($('#all').val()) == '') && ($.trim($('#atLeastOne').val()) == '') && ($.trim($('#without').val()) != '')){
+		$('#error_msg').html("Combination with NOT must have other operator(All/OR)");
+		return false;
+	}else if(($('#search_startdate').val() != '') && ($('#search_enddate').val() == '')){
+		
+		$('#error_msg').html("End Date must have some value");
+		return false;
+		
+		}else if(($('#search_startdate').val() == '') && ($('#search_enddate').val() != '')){
+		
+		$('#error_msg').html("Start Date must have some value");
+		return false;
+		
+		}
+		$('#advance_search_form').submit();
+	}
 
 
 
