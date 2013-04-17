@@ -34,11 +34,22 @@
 		public function advancesearchAction() {
 			
 			$searchResult = array();
+			$search_fields = array();
 			$cnt = 5;
 			$request = $this->getRequest();
 			$search_par_all = $request->getParam('allOptions');
 			$search_par_atleastone = $request->getParam('atLeastOne');
 			$search_par_without = $request->getParam('without');
+			$search_startdate = $request->getParam('search_startdate');
+			$search_enddate = $request->getParam('search_enddate');
+			$search_fields = $request->getParam('search_fields');	
+			$date_range = array();
+			if(!empty($search_startdate)){
+				$date_range['startDate'] = $search_startdate;
+			}
+			if(!empty($search_enddate)){
+				$date_range['endDate'] = $search_enddate;
+			}
 			if((!empty($search_par_all)) && (!empty($search_par_atleastone)) && (!empty($search_par_without))){
 				$search_text = $search_par_all.' OR '.$search_par_atleastone.' NOT '.$search_par_without;
 			
@@ -65,7 +76,8 @@
 			//$search_text = htmlentities($search_text);
 			//$search_text = $search_par_all.' OR '.$search_par_atleastone.' NOT '.$search_par_without;
 			$search_par = 'All';
-			$searchResult = SearchDisplay::advanceSearchresult($search_par_all,$search_par_atleastone,$search_par_without);
+			
+			$searchResult = SearchDisplay::advanceSearchresult($search_par_all,$search_par_atleastone,$search_par_without,$date_range,$search_fields);
 		
 			$user_id = $_SESSION['user_id'];
 			$search_array = array( "user_id" => $user_id , "pattern" => $search_text);
