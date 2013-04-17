@@ -1752,13 +1752,13 @@ text-decoration:none;
     background: none repeat scroll 0 0 #FFFFFF;
     border: 2px solid #003C7D;
     display: none;
-    height: 180px;
+    height: 266px;
     margin: 0;
     position: absolute;
     right: 184px;
     top: 30px;
-   
     z-index: 1;
+	width:640px;
 }
 .advance_search_content {overflow:auto; }
 .close_advance_search { background: url(../_images/close_btn.gif) no-repeat; width: 18px; height: 17px; right: 0px; z-index:100; text-indent: -9999px; position:absolute; cursor:pointer;}
@@ -1810,13 +1810,29 @@ color:#007cbc
     height: 20px;
     padding: 3px 3px 0 0;
     text-align: center;
-    width: 37px;
+    width: 54px;
 }
 
 
 .keyword{
 display:inline-block;
 padding-bottom:4px;
+margin:0px;
 }
 
 #error_msg { float: left; font-size: 11px; width: 100%; font-weight: bold; color: #f00; text-align: center; }
+
+
+.search-group{
+width:300px;
+height:133px;
+}
+
+
+#search-fieldset {
+background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid;
+     padding: 3px 6px 20px;
+    position: relative;
+    width: 96%;
+}
