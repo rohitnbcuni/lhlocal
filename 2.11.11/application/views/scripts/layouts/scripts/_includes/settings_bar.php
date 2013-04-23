@@ -121,15 +121,27 @@
 							<div class="keyword option">
 							<fieldset id="search-fieldset">
 								<legend>Search By Fields:</legend>
-								Id:
-								<input type="checkbox" id="search_fields" name="search_fields[]"  value="docid" checked="checked" />
-								Title:
-								<input type="checkbox" id="search_fields" name="search_fields[]"  value="title" checked="checked" />
-								Description:
-								<input type="checkbox" id="search_fields" name="search_fields[]"  value="description" checked="checked" />
-								Comments:
-								<input type="checkbox" id="search_fields" name="search_fields[]"  value="commentTextList" checked="checked" />
-		
+								<div style="width:203px;height:7px;">
+										<div style="float:left;">
+										<input type="checkbox" id="search_fields" name="search_fields[]"  value="docid" checked="checked" />:
+										Id
+										</div>
+										<div style="float:right;">
+										<input type="checkbox" id="search_fields" name="search_fields[]"  value="title" checked="checked" />:
+										Title
+										</div>
+								</div>
+								<br/>
+								<div style="width:234px;">
+										<div style="float:left;">
+											<input type="checkbox" id="search_fields" name="search_fields[]"  value="description" checked="checked" />:
+											Description
+										</div>
+										<div style="float:right;">
+											<input type="checkbox" id="search_fields" name="search_fields[]"  value="commentTextList" checked="checked" />:
+											Comments
+										</div>
+								</div>
 							</fieldset>
 							</div>
 						</div>
