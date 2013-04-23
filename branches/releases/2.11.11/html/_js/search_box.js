@@ -82,8 +82,8 @@ $(document).ready(function(){
 		var checkInDate = $('#search_startdate');
 		var checkOutDate = $('#search_enddate');
 
-		checkInDate.datepicker({ onClose: clearEndDate });
-		checkOutDate.datepicker({ beforeShow: setMinDateForEndDate });
+		checkInDate.datepicker({ onClose: clearEndDate ,maxDate: 0});
+		checkOutDate.datepicker({ beforeShow: setMinDateForEndDate,maxDate: 0 });
 
 		function setMinDateForEndDate() {
 			var d = checkInDate.datepicker('getDate');
@@ -100,7 +100,7 @@ $(document).ready(function(){
 	
 function advance_search(){
 	if(($.trim($('#all').val()) == '') && ($.trim($('#atLeastOne').val()) == '') && ($.trim($('#without').val()) == '')){
-		$('#error_msg').html("At least one input box have some value");
+		$('#error_msg').html("At least one input box should have some value");
 		return false;
 	}else if(($.trim($('#all').val()) == '') && ($.trim($('#atLeastOne').val()) == '') && ($.trim($('#without').val()) != '')){
 		$('#error_msg').html("Combination with NOT must have other operator(All/OR)");
@@ -110,12 +110,15 @@ function advance_search(){
 		$('#error_msg').html("End Date must have some value");
 		return false;
 		
-		}else if(($('#search_startdate').val() == '') && ($('#search_enddate').val() != '')){
+	}else if(($('#search_startdate').val() == '') && ($('#search_enddate').val() != '')){
 		
 		$('#error_msg').html("Start Date must have some value");
 		return false;
 		
-		}
+	}else if($('input[name="search_fields[]"]:checked').length == 0) {
+		   $('#error_msg').html('Please select at least one checkbox');
+		   return false;
+	}
 		$('#advance_search_form').submit();
 	}
 
