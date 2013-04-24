@@ -343,7 +343,10 @@ echo "<style>"
 <script language="javascript">
 		var sBasePath = document.location.href;
 	</script>
-
+<?php 
+	echo GOOGLE_ANALYTICAL_CODE;
+	echo "\n";
+?>
 </head>
 
 <body>
