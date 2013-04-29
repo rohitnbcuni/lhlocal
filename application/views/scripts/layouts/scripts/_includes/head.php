@@ -33,8 +33,13 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 <script type="text/javascript" src="/_fckeditor/fckeditor.js"></script>
 <script src="/_js/jquery.pack.js" type="text/javascript"></script>
 <script src="/_js/lh_global.js" type="text/javascript"></script>
+<script src="/_js/ui.datepicker.js" type="text/javascript"></script>
  <script src="/_js/s_code.js" type="text/javascript"></script>
-<script src="/_js/search_box.js" type="text/javascript"></script>
+ <?php
+ if($_controller != 'admin'){
+ ?>
+<script src="/_js/search_box.js?<?PHP echo $randNum; ?>" type="text/javascript"></script>
+<?php } ?>
  <script language="JavaScript" type="text/javascript"><!--
 
 	//s.pageName=document.title; 
@@ -201,10 +206,15 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 							."\t<script src=\"/_js/jquery.notify.js\" type=\"text/javascript\"></script>\n"
 							. "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
 						echo  "<link href=\"/_css/ui.notify.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";	
+						echo "<script src=\"/_js/search_box.js\" type=\"text/javascript\"></script>";
 						break;
 					}
 					default: {
+					echo	"<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n"
+							."\t<script src=\"/_js/ui/jquery.ui.all.js\" type=\"text/javascript\"></script>\n";
+		
 						echo "<script src=\"/_js/quality.filter.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
+					
 					}
 				}
 
@@ -223,6 +233,9 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						//."\t<script src=\"/_js/ui/jquery.multiselect.js\" type=\"text/javascript\"></script>\n"
 						."\t<script src=\"/_js/ui/jquery.multiselect.filter.js\" type=\"text/javascript\"></script>\n"
 						."\t<script src=\"/_js/admin.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
+						echo "\t<script src=\"/_js/search_box.js?" . $randNum . "\" type=\"text/javascript\"></script>";
+						echo "\t<link rel=\"stylesheet\" href=\"/_css/ui.datepicker.css\" type=\"text/css\" />";
+						echo "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
 						
 						break;
 						
@@ -233,12 +246,17 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						."\t<script src=\"/_js/admin.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
 						echo "<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n"
 						."\t<script src=\"/_js/ui/jquery-ui-1.8.13.custom.min.js\" type=\"text/javascript\"></script>\n";
+						
 						echo "<link href=\"/_css/jquery.multiselect_new.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
 						."\t<link href=\"/_css/jquery.multiselect.filter.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
 						."\t<link href=\"/_css/jquery.ui.multiselect.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
 						."\t<script src=\"/_js/ui/jquery.multiselect_new.js\" type=\"text/javascript\"></script>\n"
 						//."\t<script src=\"/_js/ui/jquery.multiselect.js\" type=\"text/javascript\"></script>\n"
 						."\t<script src=\"/_js/ui/jquery.multiselect.filter.js\" type=\"text/javascript\"></script>\n";
+						echo "<script src=\"/_js/search_box.js?" . $randNum . "\" type=\"text/javascript\"></script>";
+						echo "<link rel=\"stylesheet\" href=\"/_css/ui.datepicker.css\" type=\"text/css\" />";
+						echo "<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
+						
 					break;
 				}
 				break;
@@ -325,7 +343,10 @@ echo "<style>"
 <script language="javascript">
 		var sBasePath = document.location.href;
 	</script>
-
+<?php 
+	echo GOOGLE_ANALYTICAL_CODE;
+	echo "\n";
+?>
 </head>
 
 <body>
