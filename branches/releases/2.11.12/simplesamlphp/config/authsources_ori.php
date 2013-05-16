@@ -110,7 +110,7 @@ $config = array(
 	),
 	*/
 
-	/*
+	
 	'openid' => array(
 		'openid:OpenIDConsumer',
 		'attributes.required' => array('nickname'),
@@ -121,9 +121,9 @@ $config = array(
 		// Prefer HTTP redirect over POST
 		// 'prefer_http_redirect' => FALSE,
 	),
-	*/
+	
 
-	/*
+
 	// Example of an authsource that authenticates against Google.
 	// See: http://code.google.com/apis/accounts/docs/OpenID.html
 	'google' => array(
@@ -148,7 +148,16 @@ $config = array(
 			//),
 		),
 	),
-	*/
+	'nbcu-sp' => array(
+        'saml:SP',
+        'idp' => 'lighthouse',
+        'entityID' => 'lighthouse',
+        'RelayState' => 'http://dev3.lighthouse.nbcuots.com',
+     //   'privatekey' => 'STAR_ lighthouse.com.key', /* if you have*/
+      // 'certificate' => 'STAR_ lighthouse.com.crt', /* if you have*/
+        'NameIDPolicy' => NULL
+    ),
+	
 
 	/*
 	'papi' => array(
