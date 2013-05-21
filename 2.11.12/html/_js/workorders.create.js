@@ -1071,7 +1071,7 @@ function submitComment() {
 	var p_cc_users = $('#hidden_p_cclist').val();*/
     //##############
 	if($.trim(comment) != "" &&  woId != "") {
-		alert("sddd");
+		
 		$('#comment_dimmer').css({display:"block"});	
 		//LH#23699
 		//if(comment != "" && userId != "" && woId != "") {
