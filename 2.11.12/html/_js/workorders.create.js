@@ -137,7 +137,7 @@ function getRequestType(reqType) {
 		$('#pageLoadHide').css({display:'block'});
 
 		$('#wo_save').unbind('click');
-		$('#wo_save').attr('onclick','');
+		$('#wo_save').removeAttr('onclick','');
 		$('#wo_save').bind('click', function() {
 			 saveWorkOrder();
 			 return false;
@@ -158,7 +158,7 @@ function getRequestType(reqType) {
 			document.getElementById("INFRA_TYPE").options[0].value = 'disable';
 	
 			$('#wo_save').unbind('click');
-			$('#wo_save').attr('onclick','');
+			$('#wo_save').removeAttr('onclick','');
 			$('#wo_save').bind('click', function() {
 				 saveWorkOrderConfirm();
 				 return false;
@@ -207,7 +207,7 @@ function getRequestTypeNew(reqType) {
 		$('#pageLoadHide').css({display:'block'});
 
 		$('#wo_save').unbind('click');
-		$('#wo_save').attr('onclick','');
+		$('#wo_save').removeAttr('onclick','');
 		$('#wo_save').bind('click', function() {
 			 saveWorkOrder();
 			 return false;
@@ -230,7 +230,7 @@ function getRequestTypeNew(reqType) {
 			document.getElementById("INFRA_TYPE").options[0].value = 'disable';
 	
 			$('#wo_save').unbind('click');
-			$('#wo_save').attr('onclick','');
+			$('#wo_save').removeAttr('onclick','');
 			$('#wo_save').bind('click', function() {
 				 saveWorkOrderConfirm();
 				 return false;
@@ -795,6 +795,12 @@ function saveWorkOrder(from) {
 			$('#estimated_completion_date').val(timeSensDate+" "+timeSensTime);
 
 		}
+		//on New ticket Onclick disabled
+		if(woId == ""){
+		
+			$('#wo_save span').html("Please Wait...");
+			$('#wo_save').unbind("click");
+		}
 		$('#wo_dimmer').css({display:'block'});
 		$('#wo_dimmer').css({backgroundColor:'#FFFFFF'});
 		$('#wo_dimmer').css({opacity:'0.7'});
@@ -1035,7 +1041,7 @@ function submitComment() {
 	//var assignedToHidden = $('#assignedToUserIdHidden').val();
 	var woStatusHidden = $('#woStatusIdHidden').val();
 	var woStatus = $('#wo_status').val();
-		
+	
 									
    /*
     * Private Comment
@@ -1065,8 +1071,10 @@ function submitComment() {
 	var p_cc_users = $('#hidden_p_cclist').val();*/
     //##############
 	if($.trim(comment) != "" &&  woId != "") {
-	//LH#23699
-	//if(comment != "" && userId != "" && woId != "") {
+		alert("sddd");
+		$('#comment_dimmer').css({display:"block"});	
+		//LH#23699
+		//if(comment != "" && userId != "" && woId != "") {
 		var status = saveWorkOrder('comment');		
 		if(status != false){
 		statusChangeNotifiction();
@@ -1084,6 +1092,7 @@ function submitComment() {
 					$('.message_required p').html('The comment is saved successfully.');
 					$('.message_required').css({display:'block'});
 					updateComments();
+					//$('#comment_dimmer').css({display:"none"});	
 					
 				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
