@@ -906,6 +906,8 @@
 				<div class="content">';
 					if(!isset($_REQUEST['wo_id'])) {
 						echo '<div class="wo_dimmer" id="comment_dimmer"></div>';
+					}else{
+						echo '<div class="wo_dimmer" id="comment_dimmer" style="display:none;"></div>';
 					}
 					
 					$project_data = WoDisplay::getQuery("SELECT * FROM `projects` WHERE `id`='" .@$wo_data[0]['project_id'] ."' LIMIT 1");
