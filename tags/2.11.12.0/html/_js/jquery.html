@@ -1,0 +1,114 @@
+<html>
+<head>
+<style>
+	body { text-align: center; background: #00215c url('images/temp_bg.gif') top center no-repeat; }
+	.popHours { display: none; }
+	.popHeader { width: 327px; height: 3px; background: url('images/panel_dialogue.gif') no-repeat; }
+	.popMain { width: 291px; padding: 10px 20px 7px 16px; background: url('images/panel_dialogue_tile.gif') repeat-y; }
+		.popMain label { font-family: Arial; font-size: 11px; color: #34556c; font-weight: bold; }
+		.popMain input, .popMain textarea, .popMain select { font-size: 11px; color: #505050; font-weight: regular; border: 1px solid #559cd2; }
+		.popMain button { position: relative; left: 2px; margin: 0 !important; padding: 0 !important; border: none; background: transparent; }
+	.popFooter { width: 327px; height: 23px; background: url('images/panel_dialogue.gif') no-repeat; background-position: 0 -18px; }
+
+	.tempBtn { position: absolute; left: 50%; top: 427px; margin-left: -275px; }
+	
+	.blur { position: absolute; top: 203px; left: 50%; margin-left: -488px; width: 652px; height: 361px; display: none; background: url('images/blackout.png'); }
+	.datePick { position: absolute; top: 213px; left: 50%; margin-left: 56px; }
+	
+	.jHelperTipClose { }
+	
+</style>
+<link rel="stylesheet" href="css/jquery.tooltip.css" />
+<link rel="stylesheet" href="css/ui.datepicker.css" />
+
+<script type="text/javascript" src="_js/jquery-1.2.6.js"></script>
+		
+
+</head>
+
+<body>
+	
+	<div class="datePick">
+		<input type="text" size="10" value="click here" id="basics"/> 
+	</div>
+	
+	<div id="blur" class="blur jHelperTipClose"></div>
+
+	<div class="tempBtn">
+		
+		<img id="h1tool" title="Tooltip Test<br />asdasd" src="images/temp_btn.gif">
+	</div>
+	
+	<div id="popHours" class="popHours">
+	<div class="popHeader"></div>
+	<div class="popMain">
+		<table>
+		<tr>
+			<td colspan=2>
+				<label>Projects:</label>
+				<select style="width: 290px;">
+					<option value=1>Name / Number</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td width="80">
+				<label>Hours:</label>
+				<select style="width: 57px;">
+					<option value=1></option>
+				</select>
+			</td>
+			<td>
+				<label>Mile Stone:</label>
+				<select style="width: 207px;">
+					<option value=1>Select current milestone</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2>
+				<label>Notes:</label>
+				<textarea style="width: 290px; height: 48px"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2 align="right">
+				<button id="saveBtn"><img src="images/save_button.gif"></button>
+			</td>
+		</tr>
+		</table>
+	</div>
+	<div class="popFooter"></div>
+	</div>
+
+			<script type="text/javascript" src="_js/ui/ui.core.js"></script>
+			<script type="text/javascript" src="_js/ui/ui.datepicker.js"></script>
+
+<script src="_js/jquery.bgiframe.js" type="text/javascript"></script>
+<script src="_js/jquery.dimensions.js" type="text/javascript"></script>
+<script src="_js/jquery.jhelpertip.js" type="text/javascript"></script>
+			
+<script language="javascript">
+	$(document).ready(function(){
+		$("#h1tool").jHelperTip({
+			topOff: -220,
+			leftOff: 20,
+			pC: "#h1tool",
+			trigger: "click",
+			dC:"#popHours",
+			autoClose: false
+		}); 
+		
+		$(".datePick input").datepicker({ 
+    		showOn: "both" 
+		});
+		
+		$("#blur").click(function() {
+			//$("#popHours").css("display","none");
+			//$("#blur").css("display","none");
+		});
+	});
+</script>
+
+</body>
+</html>
