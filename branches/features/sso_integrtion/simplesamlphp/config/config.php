@@ -81,7 +81,7 @@ $config = array (
 	 * A possible way to generate a random salt is by running the following command from a unix shell:
 	 * tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo
 	 */
-	'secretsalt' => 'lighthouse',
+	//'secretsalt' => 'lighthouse',
 	
 	/*
 	 * Some information about the technical persons running this installation.
@@ -89,7 +89,7 @@ $config = array (
 	 * also as the technical contact in generated metadata.
 	 */
 	'technicalcontact_name'     => 'Administrator',
-	'technicalcontact_email'    => 'shobhit.bhadauria@nbcuni.com',
+	'technicalcontact_email'    => 'shobhitsingh.bhadauria@nbcuni.com',
 
 	/*
 	 * The timezone of the server. This option should be set to the timezone you want
@@ -634,5 +634,9 @@ $config = array (
 	 *   'proxy' => 'tcp://proxy.example.com:5100'
 	 */
 	'proxy' => NULL,
+	 
+	'override.host' => array(
+          'dev3.lighthouse.nbcuots.com' => 'config.lighthouse.php',
+        )
 
 );
