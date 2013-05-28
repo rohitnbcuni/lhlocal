@@ -487,7 +487,11 @@ class XMLSecurityKey {
 	    if (! empty($this->cryptParams['digest'])) {
 	        $algo = $this->cryptParams['digest'];
 	    }
-        return openssl_verify ($data, $signature, $this->key, $algo);
+       //Need to comment below line 
+		//return openssl_verify ($data, $signature, $this->key, $algo);
+		//Get the ket details 
+		$key_details = openssl_pkey_get_details($this->key);
+		return openssl_verify ($data, $signature, $key_details['key'], $algo);
     }
 
     public function encryptData($data) {
