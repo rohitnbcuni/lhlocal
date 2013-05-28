@@ -1,11 +1,10 @@
 <?php
 
-
 $config = array(
 /* This is the name of this authentication source, and will be used to access it later. */
     "nbcu-sp" => array(
         'saml:SP',
-        'idp' => 'lighthouse',
+        'idp' => 'nbcufssstg',
         'entityID' => 'lighthouse',
         'RelayState' => 'http://dev3.lighthouse.nbcuots.com',
      //   'privatekey' => 'STAR_ lighthouse.com.key', /* if you have*/
