@@ -67,6 +67,7 @@
 		
 		public function ssologinAction(){
 			include("../simplesamlphp/lib/_autoload.php");
+			
 
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
 			if (!$auth->isAuthenticated()) {
@@ -75,9 +76,16 @@
 				));
 			}
 			if ($auth->isAuthenticated()) {
-				  $attributes = $auth->getAttributes();
-
-			print_r($attributes);
+				include("SSOLogin.php");
+				$attributes = array();
+				$attributes = $auth->getAttributes();
+				if(count($attributes) > 0){
+					$sso_obj = new SSOLogin();
+					$user_details = $sso_obj->checkUser($attributes);
+					print_r($user_details);
+				}
+				 
+			
 			}
 
 		
