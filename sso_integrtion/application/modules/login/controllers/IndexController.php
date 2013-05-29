@@ -146,7 +146,7 @@
 		}
 		
 		function ssologoutAction(){
-			/*$_session = new Zend_Session_Namespace('Zend_BC_Auth');
+			$_session = new Zend_Session_Namespace('Zend_BC_Auth');
 				setcookie("lighthouse_id", '', time() - 3600, '/');
 				setcookie("lighthouse_xp", '', time() - 3600, '/');
 				setcookie("lh_user", '', time() - 3600, '/');
@@ -158,14 +158,15 @@
 				unset($_COOKIE);
 				unset($_session->loggedin);
 				unset($_SESSION);
-				Zend_Session::destroy();*/
+				Zend_Session::destroy();
 			
 			include("../simplesamlphp/lib/_autoload.php");
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
 			//$auth->logout();
 			$B_URL = BASE_URL."/login/?signout=true";
-			echo $url = $auth->getLogoutURL($B_URL);
-			//print('<a href="' . htmlspecialchars($url) . '">Logout</a>');
+			$url = $auth->getLogoutURL($B_URL);
+			
+			print('<a href="' . htmlspecialchars($url) . '">Logout</a>');
 			$this->_helper->layout->disableLayout();
 		
 		}
