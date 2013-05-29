@@ -4,12 +4,17 @@
 			<h2>Powered By</h2>
 			<ul class="settings">
 			<?PHP
+			include("../simplesamlphp/lib/_autoload.php");
+			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
+			//$auth->logout();
+			$b = BASE_URL."/login/?signout=true";
+		    $url = $auth->getLogoutURL($b);
 				//@$menu_array[5]['url']
 				if(@$menu_url[0] != "login") {
 					echo '<li class="risk"><button style="display:none" onclick="showUserRisks(\'' . $_SESSION['user_id'] . '\');" id="back_button"><span class="my_risk">you have ' . $my_risk_count . '</span></button></li>';
 				 echo '<li class="first">' .@$_SESSION['lh_username'] .'</li>
                                         <!--<li><a href="">My Profile</a></li>-->
-                                        <li><a href="/login/?signout=true">Sign Out</a></li>';		
+                                        <li><a href="'.$url.'">Sign Out</a></li>';		
 		
 		$pageURL = BASE_URL; 
 
