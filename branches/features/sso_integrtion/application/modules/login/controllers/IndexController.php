@@ -64,5 +64,26 @@
 			<!--==| END: Content |==-->';
 			$this->render("index");
 		}
+		
+		public funtion ssloginAction(){
+			include("../../simplesamlphp/lib/_autoload.php");
+
+			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
+			if (!$auth->isAuthenticated()) {
+				$auth->requireAuth(array(
+					'KeepPost' => FALSE,
+				));
+			}
+			if ($auth->isAuthenticated()) {
+				  $attributes = $auth->getAttributes();
+
+			print_r($attributes);
+			}
+
+
+		
+		
+		}
+		
 	}
 ?>
