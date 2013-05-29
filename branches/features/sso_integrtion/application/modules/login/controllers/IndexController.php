@@ -162,7 +162,9 @@
 			
 			include("../simplesamlphp/lib/_autoload.php");
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
-			$auth->logout();
+			//$auth->logout();
+			$url = $auth->getLogoutURL();
+			print('<a href="' . htmlspecialchars($url) . '">Logout</a>');
 			$this->_helper->layout->disableLayout();
 		
 		}
