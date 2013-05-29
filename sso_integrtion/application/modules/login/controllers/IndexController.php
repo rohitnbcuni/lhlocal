@@ -76,7 +76,7 @@
 				));
 			}
 			if ($auth->isAuthenticated()) {
-				include("SSOLogin.php");
+				include("SSOLogin.inc");
 				$attributes = array();
 				$attributes = $auth->getAttributes();
 				if(count($attributes) > 0){
