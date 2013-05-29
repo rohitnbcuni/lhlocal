@@ -132,7 +132,8 @@
 						$user_session['loggedin'] = true;
 						$this->set_session($user_session, "lh_user");
 						$this->_session->loggedin = true;
-						$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
+						print_r($row);
+						//$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
 					}else{
 						echo "Invalid Username and PAssword";
 					
