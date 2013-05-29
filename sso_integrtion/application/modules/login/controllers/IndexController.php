@@ -65,8 +65,8 @@
 			$this->render("index");
 		}
 		
-		public funtion ssologinAction(){
-			include("/var/www/lighthouse-uxd/dev3/current/simplesamlphp/lib/_autoload.php");
+		public function ssologinAction(){
+			include("../simplesamlphp/lib/_autoload.php");
 
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
 			if (!$auth->isAuthenticated()) {
@@ -80,8 +80,6 @@
 			print_r($attributes);
 			}
 
-
-		
 		
 		}
 		
