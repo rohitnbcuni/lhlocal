@@ -163,10 +163,8 @@
 			include("../simplesamlphp/lib/_autoload.php");
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
 			//$auth->logout();
-			$B_URL = BASE_URL."/login/?signout=true";
-			echo $url = $auth->getLogoutURL($B_URL);
-			
-			print('<a href="' . htmlspecialchars($url) . '">Logout</a>');
+			echo $url = $auth->getLogoutURL();
+			//print('<a href="' . htmlspecialchars($url) . '">Logout</a>');
 			$this->_helper->layout->disableLayout();
 		
 		}
