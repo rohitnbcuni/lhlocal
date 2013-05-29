@@ -145,5 +145,13 @@
 		
 		}
 		
+		function ssologoutAction(){
+			include("../simplesamlphp/lib/_autoload.php");
+			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
+			$auth->logout($base_url."/login/?signout=true");
+			$this->_helper->layout->disableLayout();
+		
+		}
+		
 	}
 ?>
