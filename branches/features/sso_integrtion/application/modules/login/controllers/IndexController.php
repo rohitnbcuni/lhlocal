@@ -65,7 +65,7 @@
 			$this->render("index");
 		}
 		
-		public funtion ssloginAction(){
+		public funtion ssologinAction(){
 			include("/var/www/lighthouse-uxd/dev3/current/simplesamlphp/lib/_autoload.php");
 
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
