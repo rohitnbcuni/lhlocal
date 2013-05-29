@@ -164,7 +164,7 @@
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
 			//$auth->logout();
 			$b = BASE_URL."/login/?signout=true";
-		    $url = $auth->getLogoutURL($b);
+		    $url = "http://dev3.lighthouse.nbcuots.com/simplesaml/module.php/core/authenticate.php?as=nbcu-sp&logout";
 			print('<a href="' . htmlspecialchars($url) . '">Logout</a>');
 			$this->_helper->layout->disableLayout();
 		
