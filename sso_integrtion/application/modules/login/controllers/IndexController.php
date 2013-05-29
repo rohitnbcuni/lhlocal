@@ -146,9 +146,24 @@
 		}
 		
 		function ssologoutAction(){
+			$_session = new Zend_Session_Namespace('Zend_BC_Auth');
+			if(isset($_GET['signout'])) {
+				setcookie("lighthouse_id", '', time() - 3600, '/');
+				setcookie("lighthouse_xp", '', time() - 3600, '/');
+				setcookie("lh_user", '', time() - 3600, '/');
+				setcookie("lighthouse_rp_data", '', time() - 3600, '/resourceplanner');
+				setcookie("lighthouse_ct_data", '', time() - 3600, '/controltower');
+				setcookie("lighthouse_create_wo_data", '', time() - 3600, '/workorders');
+				setcookie("lighthouse_wo_data", '', time() - 3600, '/');
+				
+				unset($_COOKIE);
+				unset($_session->loggedin);
+				unset($_SESSION);
+				Zend_Session::destroy();
+			}
 			include("../simplesamlphp/lib/_autoload.php");
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
-			$auth->logout($base_url."/login/?signout=true");
+			$auth->logout(BASE_URL."/login/?signout=true");
 			$this->_helper->layout->disableLayout();
 		
 		}
