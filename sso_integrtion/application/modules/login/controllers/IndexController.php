@@ -147,7 +147,6 @@
 		
 		function ssologoutAction(){
 			$_session = new Zend_Session_Namespace('Zend_BC_Auth');
-			if(isset($_GET['signout'])) {
 				setcookie("lighthouse_id", '', time() - 3600, '/');
 				setcookie("lighthouse_xp", '', time() - 3600, '/');
 				setcookie("lh_user", '', time() - 3600, '/');
@@ -160,7 +159,7 @@
 				unset($_session->loggedin);
 				unset($_SESSION);
 				Zend_Session::destroy();
-			}
+			
 			include("../simplesamlphp/lib/_autoload.php");
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
 			$auth->logout(BASE_URL."/login/?signout=true");
