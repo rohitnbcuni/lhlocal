@@ -87,7 +87,7 @@
 					$sso_obj = new SSOLogin();
 					$row = $sso_obj->checkUser($attributes);
 					if(count($row) > 0){
-						/*$this->_session->lh_username = $row['user_name'];
+						$this->_session->lh_username = $row['user_name'];
 						$_SESSION['lh_username'] = $row['user_name'];
 						//$this->_session->lh_password = $_POST['lh_password'];
 						//$_SESSION['lh_password'] = $_POST['lh_password'];
@@ -131,9 +131,9 @@
 						$_SESSION['loggedin'] = true;
 						$user_session['loggedin'] = true;
 						$this->set_session($user_session, "lh_user");
-						$this->_session->loggedin = true;*/
-						print_r($row);
-						//$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
+						$this->_session->loggedin = true;
+						//print_r($row);
+						$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
 					}else{
 						echo "Invalid Username and PAssword";
 					
