@@ -66,7 +66,7 @@
 		}
 		
 		public funtion ssloginAction(){
-			include("../simplesamlphp/lib/_autoload.php");
+			include("/var/www/lighthouse-uxd/dev3/current/simplesamlphp/lib/_autoload.php");
 
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
 			if (!$auth->isAuthenticated()) {
