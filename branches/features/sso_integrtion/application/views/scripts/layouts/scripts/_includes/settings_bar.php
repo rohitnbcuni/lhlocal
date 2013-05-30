@@ -7,7 +7,7 @@
 			
 			//$auth->logout();
 			$b = BASE_URL."/login/?signout=true";
-			$sign_out_url = BASE_URL."/simplesaml/module.php/core/as_logout.php?AuthId=nbcu-sp&ReturnTo=".$b
+			echo $sign_out_url = BASE_URL."/simplesaml/module.php/core/as_logout.php?AuthId=nbcu-sp&ReturnTo=".$b
 			
 		   // $url = $auth->getLogoutURL($b);
 				//@$menu_array[5]['url']
