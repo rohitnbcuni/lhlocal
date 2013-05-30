@@ -88,7 +88,7 @@
 					$row = $sso_obj->checkUser($attributes);
 					//If User have SSO id but not Active user in LH application
 					
-					if(count($row) > 0){
+					if((!empty($row)) && (count($row) > 0)){
 						echo "ass";
 						print_r($row);
 						die;
