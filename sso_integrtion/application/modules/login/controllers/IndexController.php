@@ -86,6 +86,8 @@
 					$row = array();
 					$sso_obj = new SSOLogin();
 					$row = $sso_obj->checkUser($attributes);
+					//If User have SSO id but not Active user in LH application
+					print_r($row);
 					if(count($row) > 0){
 						$this->_session->lh_username = $row['user_name'];
 						$_SESSION['lh_username'] = $row['user_name'];
@@ -164,8 +166,8 @@
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
 			//$auth->logout();
 			$b = BASE_URL."/login/?signout=true";
-		    $url = "http://dev3.lighthouse.nbcuots.com/simplesaml/module.php/core/authenticate.php?as=nbcu-sp&logout";
-			print('<a href="' . htmlspecialchars($url) . '">Logout</a>');
+		    $url = $auth->getLogoutURL($b);
+			//print('<a href="' . htmlspecialchars($url) . '">Logout</a>');
 			$this->_helper->layout->disableLayout();
 		
 		}
