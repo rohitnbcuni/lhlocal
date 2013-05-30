@@ -67,7 +67,7 @@
 		}
 		
 		public function ssologinAction(){
-			include("../simplesamlphp/lib/_autoload.php");
+			include_once("../simplesamlphp/lib/_autoload.php");
 			$this->_session = new Zend_Session_Namespace('Zend_BC_Auth');
 			$this->_session->setExpirationSeconds(365 * 24 * 60 * 60);
 			
