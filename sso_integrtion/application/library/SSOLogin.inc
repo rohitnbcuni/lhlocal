@@ -12,8 +12,6 @@
 			if(count($get_user) > 0){
 				$userInfo = $db->fetchRow($get_user);
 				return $userInfo;
-			}else{
-				return false;
 			}
 		}
 		
