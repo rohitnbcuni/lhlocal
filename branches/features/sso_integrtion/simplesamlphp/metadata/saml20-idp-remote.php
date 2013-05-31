@@ -16,7 +16,7 @@
 $metadata['nbcufssstg'] = array(
         'name' => array('en' => 'Non-Prod lighthouse'),
         'SingleSignOnService' => 'https://fss.external.stg.nbcuni.com/fss/idp/SSO.saml2',
-        'SingleLogoutService' => 'https://ssologin.external.stg.nbcuni.com/ssologin/logoff.jsp?=http://dev3.lighthouse.nbcuots.com',
+        'SingleLogoutService' => "https://ssologin.external.stg.nbcuni.com/ssologin/logoff.jsp?referrer=http://dev3.lighthouse.nbcuots.com/login/?signout=true",
         // Artifact Resolution Services URL => 'https://fss.external.nbcuni.com/fss/idp/ARS.ssaml2',
         // Attribute Query Services URL => 'https://fss.external.nbcuni.com/fss/idp/attrsvc.ssaml2',
         'certificate' => 'nbcustage.crt',
