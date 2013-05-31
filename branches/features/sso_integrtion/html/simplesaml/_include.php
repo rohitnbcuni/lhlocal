@@ -1,7 +1,7 @@
 <?php
 
 //Add cron config file to fetchout the path absolute path 
-include "../../cron/cron.config.php";
+include "../crons/cron.config.php";
 /* Remove magic quotes. */
 if(get_magic_quotes_gpc()) {
 	foreach(array('_GET', '_POST', '_COOKIE', '_REQUEST') as $a) {
