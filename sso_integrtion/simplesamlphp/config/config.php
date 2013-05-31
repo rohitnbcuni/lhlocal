@@ -635,8 +635,8 @@ $config = array (
 	 */
 	'proxy' => NULL,
 	 
-	'override.host' => array(
+	/*'override.host' => array(
           'dev3.lighthouse.nbcuots.com' => 'config.lighthouse.php',
-        )
+        )*/
 
 );
