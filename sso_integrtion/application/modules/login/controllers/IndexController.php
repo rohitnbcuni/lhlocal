@@ -137,8 +137,15 @@
 						$user_session['loggedin'] = true;
 						$this->set_session($user_session, "lh_user");
 						$this->_session->loggedin = true;
-						//print_r($row);
-						$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
+						$redirect_url = $this->get_session_value('lighthouse_ru');
+						echo $redirect_url; die;
+						if(!empty($redirect_url)){
+							$this->_redirect($redirect_url);
+							setcookie("lighthouse_ru", '', time() - 3600, '/');	
+						}else{
+							//print_r($row);
+							$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
+						}
 					}else{
 						echo "Invalid Username and PAssword";
 					
@@ -149,22 +156,17 @@
 
 		
 		}
+		public function get_session_value($key){
+		if(isset($_COOKIE[$key])){
+			$cookie_value = $_COOKIE[$key];
+			$cookie_value = base64_decode($cookie_value);
+			$cookie_value = unserialize($cookie_value);			
+		}
+		return $cookie_value;
+	}
 		
 		function ssologoutAction(){
-			/*$_session = new Zend_Session_Namespace('Zend_BC_Auth');
-				setcookie("lighthouse_id", '', time() - 3600, '/');
-				setcookie("lighthouse_xp", '', time() - 3600, '/');
-				setcookie("lh_user", '', time() - 3600, '/');
-				setcookie("lighthouse_rp_data", '', time() - 3600, '/resourceplanner');
-				setcookie("lighthouse_ct_data", '', time() - 3600, '/controltower');
-				setcookie("lighthouse_create_wo_data", '', time() - 3600, '/workorders');
-				setcookie("lighthouse_wo_data", '', time() - 3600, '/');
-				
-				unset($_COOKIE);
-				unset($_session->loggedin);
-				unset($_SESSION);
-				Zend_Session::destroy();*/
-			
+						
 			include("../simplesamlphp/lib/_autoload.php");
 			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
 			//$auth->logout();
