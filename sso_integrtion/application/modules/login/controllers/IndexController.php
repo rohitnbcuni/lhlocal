@@ -138,9 +138,9 @@
 						$this->set_session($user_session, "lh_user");
 						$this->_session->loggedin = true;
 						$redirect_url = $this->get_session_value('lighthouse_ru');
-						echo $redirect_url; die;
+						//echo $redirect_url; die;
 						if(!empty($redirect_url)){
-							$this->_redirect($redirect_url);
+							$this->_redirect("workorders/index/edit/?wo_id=38708");
 							setcookie("lighthouse_ru", '', time() - 3600, '/');	
 						}else{
 							//print_r($row);
