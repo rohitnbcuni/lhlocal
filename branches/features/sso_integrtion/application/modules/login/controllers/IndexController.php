@@ -142,7 +142,7 @@
 						if(!empty($redirect_url)){
 							setcookie("lighthouse_ru", '', time() - 3600, '/');	
 							//$this->_redirect("workorders/index/edit/?wo_id=38708");
-							header("Location:".$redirect_url);
+							$this->_forward($redirect_url);
 							
 						}else{
 							//print_r($row);
