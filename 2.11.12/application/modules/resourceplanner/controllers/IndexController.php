@@ -347,9 +347,9 @@
 						<!--==| END: Bucket |==-->
 
 						<!--==| START: Bucket |==-->
-						<div class="schedules_container"  id="scroll_div" style="overflow:auto;max-height:936px;_max-height:936px;*max-height:936px;height:auto;width:651px;margin-top:0px">
+						<div class="schedules_container"   style="overflow:auto;max-height:936px;_max-height:936px;*max-height:936px;height:auto;width:651px;margin-top:0px">
 							<div class="schedules_controller">
-							
+							' .RpDisplay::fullListInit($savedProgram , $savedRole, $savedDate, $is_filter_selected, $savedCompany,$endDate) .'
 							</div>
 						</div>
 						<!--==| END: Bucket |==-->
