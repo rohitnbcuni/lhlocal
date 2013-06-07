@@ -232,13 +232,13 @@ class LighthouseApp {
 			//Echo the errors for the bootstrap
 			//LH#23703
 			$_SESSION['error_handler']  = $exp;
-			header('Location: /noaccess/index/error/'); 
-			/*$contentType = 'text/html';
+			//header('Location: /noaccess/index/error/'); 
+			$contentType = 'text/html';
 			
 			header("Content-Type: $contentType; charse=utf-8");
 			echo 'An unexpected error occurred. in bootstrap init. Controller did not initialize';
 			echo '<h3>Unexpected Exception: ' .$exp->getMessage() .'</h3><br /><pre>';
-			echo $exp->getTraceAsString();*/
+			echo $exp->getTraceAsString();
 		}
 	}
 	
