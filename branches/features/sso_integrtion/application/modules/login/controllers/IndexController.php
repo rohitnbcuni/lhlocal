@@ -3,7 +3,8 @@
 	class Login_IndexController extends LighthouseController  { 
 		public $_session;
 		public function indexAction() {
-			$publickey = "6Lf5B80SAAAAAMjwfX5OBpvylvOA7IhZjcSKW1l9"; // you got this from the signup page
+			$this->_redirect("login/index/ssologin");
+			/*$publickey = "6Lf5B80SAAAAAMjwfX5OBpvylvOA7IhZjcSKW1l9"; // you got this from the signup page
          		$this->view->recaptcha = recaptcha_get_html($publickey);
 			$this->view->loginform = "login_form";
 			if($_SESSION['captcha_error']){
@@ -18,11 +19,12 @@
 					}
 			if($atm_val > 3){
 				$this->view->loginform = "login_form_captcha";
-			}	
+			}	*/
 		}
 		public function mobileloginAction(){
+			$this->_redirect("login/index/ssologin");
 //			$this->indexAction();
-			echo '<!--==| START: Content |==-->
+			/*echo '<!--==| START: Content |==-->
 				<div class="login_box_container" style="width:360px;">
 					<div class="login_box">
 						<div class="login_box_inner">
@@ -63,7 +65,7 @@
 
 				</div>
 			<!--==| END: Content |==-->';
-			$this->render("index");
+			$this->render("index");*/
 		}
 		
 		public function ssologinAction(){
