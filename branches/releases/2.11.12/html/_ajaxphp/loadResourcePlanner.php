@@ -128,8 +128,9 @@
  	
   $p_limit = 4;
   if($page_count >=$p_limit){
-		$page_count++;
+		
 		$sql_user .=  " LIMIT $page_count,1";
+		$page_count++;
 		//$next_page_counter = $page_count+3;
 		
   }else{
