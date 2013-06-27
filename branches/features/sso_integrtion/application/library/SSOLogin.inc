@@ -15,7 +15,10 @@
 			//Check User Is Active with email ID in DB
 			$get_user = "SELECT * FROM `users` WHERE `email`='" .$userData['mail'][0] ."' AND `active` = '1'  AND `deleted` = '0' ORDER BY  `users`.`id` DESC LIMIT 1";
 			$userInfo = $db->fetchRow($get_user);
-			if(count($userInfo) > 0){
+			
+			if($userInfo == true){
+				echo "ss";
+				
 				
 				return $userInfo;
 			}else{
