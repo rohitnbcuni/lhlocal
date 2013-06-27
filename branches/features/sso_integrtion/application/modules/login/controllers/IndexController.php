@@ -138,8 +138,12 @@
 						$this->set_session($user_session, "lh_user");
 						$this->_session->loggedin = true;
 						$redirect_url = $this->get_session_value('lighthouse_ru');
-						//echo $redirect_url; die;
-						if(!empty($redirect_url)){
+						//If company is empty mean user are authenticated from SSO but company is not registered
+						//By default we assign only to access workorder
+						if(empty($row['company'])){
+							$this->_redirect("workorders");
+						
+						}else if((!empty($redirect_url)) && (!empty($row['company']))){
 							setcookie("lighthouse_ru", '', time() - 3600, '/');	
 							//$this->_redirect("workorders/index/edit/?wo_id=38708");
 							header("Location:".$redirect_url);
