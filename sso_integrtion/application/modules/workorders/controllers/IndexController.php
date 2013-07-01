@@ -1974,6 +1974,23 @@
 		}
 		
 		
+		public function getssoProjectOptionHTML(){
+			$proj_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
+			if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
+			//if(isset($_REQUEST['wid']) || isset($_REQUEST['copyWO'])) {
+				echo WoDisplay::getssoProjectOptionHTML($_REQUEST['project_id']);
+			} else if($proj_select != ""){
+				echo WoDisplay::getssoProjectOptionHTML($proj_select);
+			}else {  
+				$pj = @$_REQUEST['project'];
+				echo WoDisplay::getssojectOptionHTML($pj);
+			}
+			$this->_helper->layout->disableLayout();
+		
+		
+		}
+		
+		
 		public function wostatusAction(){
 		
 			$wid = $_REQUEST['woId'];
