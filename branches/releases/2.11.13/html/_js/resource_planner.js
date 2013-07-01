@@ -986,7 +986,12 @@ jQuery(function($){
 			success: function(next_record){
 				$(".rp_loading_pagination").remove();
 				$("#scroll_div_con").append(next_record);
-				
+				$('.viewmonth').bind("click",function(e){ show_viewMonth( $(this).attr("id")); });
+				$(".schedules_controller").selectable("refresh");
+				$($(".schedules_container .schedules_controller")).ready(function() {
+				reloadContent();
+				attachResourcePlannerClickEvents();
+				});		
 			} 
 
 			});
