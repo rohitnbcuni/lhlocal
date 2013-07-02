@@ -73,7 +73,7 @@ $(document).ready(function() {
 	var hidden_projecd_id = $('#hidden_projecd_id').val();
 	$.ajax({
 	type: "POST",
-	url:"/workorders/index/projectssoselect", 
+	url:"/workorders/index/projectselect", 
 	data:{wid:workorder_id,project_id:hidden_projecd_id,copyWO:copyWO},
 	success: function(data){
 		$('#project_loader').css('display','none');
