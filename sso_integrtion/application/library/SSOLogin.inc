@@ -17,9 +17,7 @@
 			$userInfo = $db->fetchRow($get_user);
 			
 			if($userInfo == true){
-				echo "ss";
-				
-				
+							
 				return $userInfo;
 			}else{
 				//Check USER in LH but In deleted mode
