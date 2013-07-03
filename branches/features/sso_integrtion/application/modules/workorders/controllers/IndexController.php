@@ -1974,7 +1974,7 @@
 		}
 		
 		
-		public function getssoProjectOptionHTML(){
+		public function projectssoselectAction(){
 			$proj_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
 			if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
 			//if(isset($_REQUEST['wid']) || isset($_REQUEST['copyWO'])) {
