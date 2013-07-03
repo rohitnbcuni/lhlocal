@@ -121,7 +121,8 @@ $date_range_filter_sql = " AND b.`closed_date` >= '".date('Y-m-d',strtotime($_RE
 	 $page_number_filter_sql = " LIMIT ".(($page_num-1)*50).",".'50';//page_size;
   }
 
-  $user_pjt_sql = " JOIN `user_project_permissions` c ON a.`id`=c.`project_id`";
+  //$user_pjt_sql = " JOIN `user_project_permissions` c ON a.`id`=c.`project_id`";
+  $user_pjt_sql = "":
   $pjt_sql = " JOIN `projects` a ON a.`id`=b.`project_id`";
   $where_clause = " WHERE c.`user_id`='" .$_SESSION['user_id']."' ";
   $count_wo = "select count(distinct b.`id`) as cnt from   `workorders` b " .$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql .$req_filter_sql. $date_range_filter_sql . $search_filter_sql;
