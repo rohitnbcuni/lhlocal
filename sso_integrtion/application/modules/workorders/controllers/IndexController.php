@@ -1024,8 +1024,8 @@
 										
 										for($lstx = 0; $lstx < sizeof($cclist); $lstx++) {
 											if(!empty($cclist[$lstx])) {
-												$cc_user_data = WoDisplay::getQuery("SELECT * FROM `users` WHERE `id`='" .$cclist[$lstx] ."'");
-												
+												$cc_user_data = WoDisplay::getQuery("SELECT * FROM `users` WHERE `id`='" .$cclist[$lstx] ."' WHERE active ='1' AND deleted='0'");
+												if(count($cc_user_data[0]) > 0){
 												echo '<li><div class="cclist_name">'
 														.ucfirst($cc_user_data[0]['first_name']) .' ' .$cc_user_data[0]['last_name']
 													.'</div>
@@ -1033,6 +1033,7 @@
 														.$cclist[$lstx]
 													.'); return false;"><span>remove</span></button>
 												</li>';
+											}
 											}
 										}
 									}
