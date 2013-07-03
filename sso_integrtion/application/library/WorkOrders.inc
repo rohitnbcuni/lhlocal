@@ -160,9 +160,9 @@
 			$html .= '<option value="">--Select Project--</option>';
 			$companyId = false;
 			for($i = 0; $i < sizeof($projects); $i++) {
-				$perms = self::getQuery("SELECT * FROM `user_project_permissions` WHERE `user_id`='" .$_SESSION['user_id'] ."' AND `project_id`='" .$projects[$i]['id'] ."'");
+				//$perms = self::getQuery("SELECT * FROM `user_project_permissions` WHERE `user_id`='" .$_SESSION['user_id'] ."' AND `project_id`='" .$projects[$i]['id'] ."'");
 				
-				if(sizeof($perms) > 0) {
+				//if(sizeof($perms) > 0) {
 					if($projects[$i]['company'] != $companyId) {
 //						$company = self::getQuery("SELECT * FROM `companies` WHERE `id`='" .$projects[$i]['company'] ."' LIMIT 1");
 //						$html .= '<optgroup label="' . $company[0]['name'] .'" title="' . $company[0]['name'] .'">';
@@ -186,7 +186,7 @@
 					if($projects[$nxt]['company'] != $companyId) {
 						$html .= '</optgroup>';
 					}
-				}
+				//}
 			}
 			
 			return $html;
