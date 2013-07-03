@@ -1983,7 +1983,7 @@
 				echo WoDisplay::getssoProjectOptionHTML($proj_select);
 			}else {  
 				$pj = @$_REQUEST['project'];
-				echo WoDisplay::getssojectOptionHTML($pj);
+				echo WoDisplay::getssoProjectOptionHTML($pj);
 			}
 			$this->_helper->layout->disableLayout();
 		
