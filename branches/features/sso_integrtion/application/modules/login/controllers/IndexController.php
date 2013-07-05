@@ -89,8 +89,6 @@
 					$sso_obj = new SSOLogin();
 					$row = $sso_obj->checkUser($attributes);
 					//If User have SSO id but not Active user in LH application
-					print_r($row); 
-					die;
 					if((!empty($row)) && (count($row) > 0)){
 						
 						$this->_session->lh_username = $row['user_name'];
