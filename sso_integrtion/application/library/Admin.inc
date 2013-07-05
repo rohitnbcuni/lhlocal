@@ -367,14 +367,18 @@
 		
 		
 
-		public function getCompanyHTML() {
+		public function getCompanyHTML($userCOmpany = '') {
 			$html = '';
 			$comp = self::getQuery(QRY_COMPANIES_ASC);
 			
 			$html = '';
 			
 			for($i = 0; $i < sizeof($comp); $i++) {
-				$html .= '<option value="' .$comp[$i]['id'] .'">' .$comp[$i]['name'] .'</option>';
+				if($userCOmpany == $comp[$i]['id']){
+					$sel = " select='select'";
+				
+				}
+				$html .= '<option value="' .$comp[$i]['id'] .'"  "'.$sel'" >' .$comp[$i]['name'] .'</option>';
 			}
 			
 			
