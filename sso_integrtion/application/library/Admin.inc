@@ -367,7 +367,7 @@
 		
 		
 
-		public function getCompanyHTML($userCOmpany = '') {
+		public function getCompanyHTML() {
 			$html = '';
 			$comp = self::getQuery(QRY_COMPANIES_ASC);
 			
