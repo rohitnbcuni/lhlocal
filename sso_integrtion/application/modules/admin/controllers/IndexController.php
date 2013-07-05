@@ -892,11 +892,11 @@
 							$r = '';
 							if(empty($users['company']) || $users['company'] == ''){
 								echo '<select id="user_company" name="user_company">
-									<option value="-1">Show All</option>
+									<option value="-1">Show Company</option>
 									'.AdminDisplay::getCompanyHTML().'
 									</select>';
 							}else{
-								echo '<input type="text"  '.$r.' name="userID" id="userID" value="'. AdminDisplay::getUserCompany($users['company']).'" >
+								echo '<input type="text"  class="readonly" readonly="readonly"  name="userID" id="userID" value="'. AdminDisplay::getUserCompany($users['company']).'" >
 								<input type="hidden" id="user_company" value="'.$users['company'].'">';
 							}
 						echo '</div>					
