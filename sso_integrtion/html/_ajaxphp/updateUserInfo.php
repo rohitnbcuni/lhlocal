@@ -8,7 +8,7 @@
 	$userTitlesArray = explode(",",$userTitles);
 	if(!empty($userID))
 	{
-		$update_role = "UPDATE `users` SET `company` = '".$_REQUEST['userTitle']."', `user_title`='".$_REQUEST['userTitle']."',`role`='" . $_REQUEST['userRole']."',`agency`='". $_REQUEST['userVendorName'] ."',`program`='".$_REQUEST['userProgram']."',`active`='". $_REQUEST['userActiveStatus']."',`deleted`='". $_REQUEST['userDeletedStatus']."',`login_status`='". $_REQUEST['userAdminAccess']."',`user_access`='".$_REQUEST['user_access_bit']."' where `id`='" . $userID ."'";
+		$update_role = "UPDATE `users` SET `company` = '".$_REQUEST['user_company']."', `user_title`='".$_REQUEST['userTitle']."',`role`='" . $_REQUEST['userRole']."',`agency`='". $_REQUEST['userVendorName'] ."',`program`='".$_REQUEST['userProgram']."',`active`='". $_REQUEST['userActiveStatus']."',`deleted`='". $_REQUEST['userDeletedStatus']."',`login_status`='". $_REQUEST['userAdminAccess']."',`user_access`='".$_REQUEST['user_access_bit']."' where `id`='" . $userID ."'";
 		$mysql->sqlordie($update_role);
 	}
 	if($_REQUEST['isUserTitleChanged']=='Y'){
