@@ -378,7 +378,7 @@
 					$sel = " select='select'";
 				
 				}
-				$html .= '<option value="' .$comp[$i]['id'] .'"  "'.$sel'" >' .$comp[$i]['name'] .'</option>';
+				$html .= '<option value="' .$comp[$i]['id'] .'"  '.$sel' >' .$comp[$i]['name'] .'</option>';
 			}
 			
 			
