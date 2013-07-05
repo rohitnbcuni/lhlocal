@@ -246,55 +246,60 @@ var reg = new RegExp (s + "$");
 return reg.test(str);
 }
 function updateUser(USER_ACCESS) {
-	var userActiveStatus = 0;
-	var userDeletedStatus = 0;
-	var userAdminAccess = '';
-	if($('#userActiveStatus').is(':checked')){
-		userActiveStatus = 1;
-	} 
-	if($('#userDeletedStatus').is(':checked')){
-		userDeletedStatus = 1;  
-	}
-	
-	if($('#userAdminAccess').is(':checked')){
-		userAdminAccess = 'admin';  
-	}
-	else
-	{
-		userAdminAccess = ''; 
-	}
-	var user_project_array = $("#user_project_array").val();
-	
-	var user_access_bit = "";
-	var count_access = 0;
-	for(var i = 0; i < USER_ACCESS.length; i++) {
-
-		if($('#'+USER_ACCESS[i]).is(':checked')){
-			user_access_bit = user_access_bit+'1';  
-			count_access++;
+	if($('#user_company').val() ==''){
+		alert("Please select a company");
+		return false;
+	}else{
+		var userActiveStatus = 0;
+		var userDeletedStatus = 0;
+		var userAdminAccess = '';
+		if($('#userActiveStatus').is(':checked')){
+			userActiveStatus = 1;
+		} 
+		if($('#userDeletedStatus').is(':checked')){
+			userDeletedStatus = 1;  
+		}
+		
+		if($('#userAdminAccess').is(':checked')){
+			userAdminAccess = 'admin';  
 		}
 		else
 		{
-			user_access_bit = user_access_bit+'0';  
+			userAdminAccess = ''; 
 		}
-	}
-	if($('#user_company').val()=='2' && count_access<4 ||(count_access==4 && $('#ADMIN_ACCESS').is(':checked') == true))
-	{
-		var html = '<div class="file_message_confirm">';
-			html +=	'<p> DPS User should have access to all section of Lighthouse, are you sure you want to revoke the permission? </p>';
-			html +=	'<div style="clear: both;"></div>';
-			html +=	'<div class="duplicate_buttons">';
-			html +=	'	<button onClick="updateUserConfirmed('+userDeletedStatus+','+userActiveStatus+',\''+userAdminAccess+'\',\''+user_access_bit+'\');return false;"><span>Yes</span></button>';
-			html +=	'	<button class="cancel" onClick="$(\'.file_message_confirm\').css({display:\'none\'}); return false;"><span>No</span></button>';
-			html +=	'	<div style="clear: both;"></div>';
-			html +=	'</div>';
-			html +=	'</div>';
-		$('body').append(html);
-		$('.file_message_confirm').css({display:'block'});
-	}
-	else
-	{
-		updateUserConfirmed(userDeletedStatus,userActiveStatus,userAdminAccess,user_access_bit);
+		var user_project_array = $("#user_project_array").val();
+		
+		var user_access_bit = "";
+		var count_access = 0;
+		for(var i = 0; i < USER_ACCESS.length; i++) {
+
+			if($('#'+USER_ACCESS[i]).is(':checked')){
+				user_access_bit = user_access_bit+'1';  
+				count_access++;
+			}
+			else
+			{
+				user_access_bit = user_access_bit+'0';  
+			}
+		}
+		if($('#user_company').val()=='2' && count_access<4 ||(count_access==4 && $('#ADMIN_ACCESS').is(':checked') == true))
+		{
+			var html = '<div class="file_message_confirm">';
+				html +=	'<p> DPS User should have access to all section of Lighthouse, are you sure you want to revoke the permission? </p>';
+				html +=	'<div style="clear: both;"></div>';
+				html +=	'<div class="duplicate_buttons">';
+				html +=	'	<button onClick="updateUserConfirmed('+userDeletedStatus+','+userActiveStatus+',\''+userAdminAccess+'\',\''+user_access_bit+'\');return false;"><span>Yes</span></button>';
+				html +=	'	<button class="cancel" onClick="$(\'.file_message_confirm\').css({display:\'none\'}); return false;"><span>No</span></button>';
+				html +=	'	<div style="clear: both;"></div>';
+				html +=	'</div>';
+				html +=	'</div>';
+			$('body').append(html);
+			$('.file_message_confirm').css({display:'block'});
+		}
+		else
+		{
+			updateUserConfirmed(userDeletedStatus,userActiveStatus,userAdminAccess,user_access_bit);
+		}
 	}
 }
 
