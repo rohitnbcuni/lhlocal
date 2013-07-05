@@ -893,7 +893,7 @@
 							//if(empty($users['company']) || $users['company'] == ''){
 								echo '<select id="user_company" name="user_company">
 									<option value="-1">Select a Company</option>
-									'.AdminDisplay::getCompanyHTML().'
+									'.AdminDisplay::getCompanyHTML($users['company']).'
 									</select>';
 							/*}else{
 								echo '<input type="text"  class="readonly" readonly="readonly"  name="userID" id="userID" value="'. AdminDisplay::getUserCompany($users['company']).'" >
