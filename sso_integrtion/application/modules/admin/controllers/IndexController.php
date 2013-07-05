@@ -890,15 +890,15 @@
 						<div class="row">
 							<div class="label"><label>Company:</label></div>';
 							$r = '';
-							//if(empty($users['company']) || $users['company'] == ''){
+							if(empty($users['company']) || $users['company'] == ''){
 								echo '<select id="user_company" name="user_company">
 									<option value="-1">Select a Company</option>
-									'.AdminDisplay::getCompanyHTML($users['company']).'
+									'.AdminDisplay::getCompanyHTML().'
 									</select>';
-							/*}else{
+							}else{
 								echo '<input type="text"  class="readonly" readonly="readonly"  name="userID" id="userID" value="'. AdminDisplay::getUserCompany($users['company']).'" >
 								<input type="hidden" id="user_company" value="'.$users['company'].'">';
-							}*/
+							}
 						echo '</div>					
 							
 						
