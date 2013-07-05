@@ -147,7 +147,10 @@
 							//$this->_redirect("workorders/index/edit/?wo_id=38708");
 							header("Location:".$redirect_url);
 							
-						}else{
+						}else if(!empty($row['company']) && ($login_status == "client")){
+							$this->_redirect("workorders");
+							
+							}else{
 							//print_r($row);
 							$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
 						}
