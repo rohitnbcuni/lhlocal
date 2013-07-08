@@ -41,13 +41,17 @@
 					$uData['sso'] = $userData['uid'][0];
 					$uData['user_access'] =  "00100000";
 					$uData['role'] =  UNASSIGNED_PHASE;
+					
 					try{
 						$db->insert("users", $uData);
+						
+						$get_user = "SELECT * FROM `users` WHERE `sso`='" .$userData['uid'][0] ."' AND `active` = '1'  AND `deleted` = '0' ORDER BY  `users`.`id` DESC LIMIT 1";
+						$userInfo = $db->fetchRow($get_user);
 					}catch(Exception $e){
 						
-						echo "USers Insert ERROR".$e->getMessage();
+						//echo "USers Insert ERROR".$e->getMessage();
 					}
-					return $uData;
+					return $userInfo;
 				}else{
 					//User is deleted in LH Application
 					$userInfo['error'] = "Invalid User";
