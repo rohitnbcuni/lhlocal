@@ -138,7 +138,7 @@
   //if($alpha != ucfirst(substr($user_row['last_name'], 0, 1))) {					
   $id = ucfirst(substr($user_row['last_name'], 0, 1));				
   //}				
-  $sqlrpOt = "SELECT COUNT(a.`id`) as total FROM `resource_blocks` a WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '9' AND `hours` > 0 ORDER BY a.`datestamp`";				
+  /*$sqlrpOt = "SELECT COUNT(a.`id`) as total FROM `resource_blocks` a WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '9' AND `hours` > 0 ORDER BY a.`datestamp`";				
   $resrpOt = @$mysql->sqlordie($sqlrpOt);			
   if($resrpOt->num_rows > 0) {					
     $resrpOt_row = $resrpOt->fetch_assoc();					
@@ -150,7 +150,7 @@
   } 
   else {					
   $otClass = "overtime";				
-  }    
+  } */   
       				
   //$overtimeID = 'overtime_' .$user_row['id'];				
   $html .= '<div class="schedules_row title_' .$title_row['id'] .' sort_' .$id .'" style="min-width:628px;width:auto;">						
