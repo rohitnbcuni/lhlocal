@@ -36,11 +36,6 @@ monthText[12] = "December";
 $(document).ready(function(){
 	/** jQuery Variables **/
     contextMenu = $('.allocation_type').clone(true).addClass('context_menu');
-	
-	if($('#user_session_id').val() === undefined){
-		//alert($('#user_session_id').val());
-		changeDateContent('false');
-	}
 
 	$('.close_rp_report').click(function(){
 		$('.rp_report').css({display:'none'});
@@ -427,7 +422,7 @@ function refresh_jumptolist(is_filter_changed){
 		}
 	});
 }
-var xhr_loading;
+
 function jumpToChar(theId){
 	$('#jumptoID').val(theId);
 	changeDateContent();
@@ -495,13 +490,9 @@ function updateLoading(){
 	}
 	var passDate = date_split[3]+"/"+date_split[1]+"/"+date_split[2];
 	//alert("date="+passDate+"&part=week=");
-	
-	if(xhr_loading && xhr_loading.readyState != 4){
-			$(".rp_loading_pagination").remove();
-			xhr_loading.abort();
-		}
+
 	//Ajax call to get percent calues
-	xhr_loading = $.ajax({
+	$.ajax({
 		type: "GET",
 		url: "/_ajaxphp/update_rp_load_percents.php",
 		data: "date="+passDate+"&showUser="+jumpTo+"&role="+jumpToRole+"&program_type="+$('#selected_program').val(),
@@ -915,86 +906,6 @@ function changeDateContent(is_filter_changed) {
 	});
 	updateLoading();
 }
-
-
-
-jQuery(function($){
-	
-  //var next_page_counter = $("input[name='next_page_counter']").length;
- // var taskArray = new Array();
-	
-	//alert("ss"+taskArray.toSource());
-  /*if(sd > ed)
-  {
-	$(".content_loader").remove();
-    alert("Please enter proper date");
-    return false;
-  }	*/
-  var xhr;
-	$('#scroll_div2').bind('scroll', function(){
-	var jumpTo = $('#jumptoID').val();
-	
-	var jumpToRole = $('.resource_types').val();
-	var jumpToComp = $('.company_list').val();
-	var startDay = $('#basics').val();
-	var endDay = $('#basicsFrom').val();
-	var programType = $('#selected_program').val();
-	var pattern=/undefined/gi;
-	var sd = new Date(startDay);
-	var ed = new Date(endDay);
-	if(startDay){
-	startDay = convertDateFormat(startDay);
-	}
-	if(endDay){
-	endDay = convertDateFormat(endDay); 
-	}
-	var filterChanged='';
-		if($('.resource_types').val() != '' || $('#selected_program').val() != '' ){
-			filterChanged = '1';
-		}
-  //updateWeekDisplay();
-
-  if(startDay.match(pattern) != null || endDay.match(pattern) != null || startDay == "" || endDay == ""){
-    startDay="";
-    endDay = "";
-    basicValue = false;   
-  }   
-  	
-	var is_filter_changed = filterChanged;
-		if($(this).scrollTop() + $(this).innerHeight()>=$(this)[0].scrollHeight)
-		{
-		
-		//changeDateContent2('1',xhr);
-		if(xhr && xhr.readyState != 4){
-			$(".rp_loading_pagination").remove();
-			xhr.abort();
-		}
-		var taskArray = new Array();
-		$("input[name=next_page_counter]").each(function() {
-		  page_count = $(this).val();
-		});
-			//$('#dimmer_rp').css({display: 'block'});
-			//$("#scroll_div_con").append('<p id="resource_planner_loading"><center><img src="/_images/ajax-loader.gif" alt="loading.." ><br/>Please wait..</center></p>');
-			xhr  = $.ajax({
-			type: "POST",
-			url: "/_ajaxphp/loadResourcePlanner.php",
-			data: "startDate="+startDay+"&endDate="+endDay+"&lastDay="+lastDay+"&basicValue="+basicValue+"&fromArrow="+fromArrow+"&showUser="+jumpTo+"&role="+jumpToRole+"&company="+jumpToComp+"&programType="+programType+"&filterChanged="+is_filter_changed+"&page_count="+page_count,
-			beforeSend: function(xhr){
-				$("#scroll_div_con").append('<span class="rp_loading_pagination"><center><img src="/_images/ajax-loader.gif" alt="loading.." ><br/>Please wait..</center></span>');	
-				//$("#scroll_div_con > div:last-child").html('Loading...');
-			  },
-			success: function(next_record){
-				$(".rp_loading_pagination").remove();
-				$("#scroll_div_con").append(next_record);
-				
-			} 
-
-			});
-		}
-	});
-	});
-	
-
 
 
 function convertDateFormat(date){
