@@ -1026,8 +1026,8 @@
 										
 										for($lstx = 0; $lstx < sizeof($cclist); $lstx++) {
 											if(!empty($cclist[$lstx])) {
-												$cc_user_data = WoDisplay::getQuery("SELECT * FROM `users` WHERE `id`='" .$cclist[$lstx] ."'");
-												
+												$cc_user_data = WoDisplay::getQuery("SELECT * FROM `users` WHERE `id`='" .$cclist[$lstx] ."' AND active ='1' AND deleted='0'");
+												if(count($cc_user_data[0]) > 0){
 												echo '<li><div class="cclist_name">'
 														.ucfirst($cc_user_data[0]['first_name']) .' ' .$cc_user_data[0]['last_name']
 													.'</div>
@@ -1035,6 +1035,7 @@
 														.$cclist[$lstx]
 													.'); return false;"><span>remove</span></button>
 												</li>';
+											}
 											}
 										}
 									}
@@ -1973,6 +1974,23 @@
 				echo WoDisplay::getProjectOptionHTML($pj);
 			}
 		$this->_helper->layout->disableLayout();
+		}
+		
+		
+		public function projectssoselectAction(){
+			$proj_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
+			if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
+			//if(isset($_REQUEST['wid']) || isset($_REQUEST['copyWO'])) {
+				echo WoDisplay::getssoProjectOptionHTML($_REQUEST['project_id']);
+			} else if($proj_select != ""){
+				echo WoDisplay::getssoProjectOptionHTML($proj_select);
+			}else {  
+				$pj = @$_REQUEST['project'];
+				echo WoDisplay::getssoProjectOptionHTML($pj);
+			}
+			$this->_helper->layout->disableLayout();
+		
+		
 		}
 		
 		
