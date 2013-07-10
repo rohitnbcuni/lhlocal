@@ -4,12 +4,18 @@
 			<h2>Powered By</h2>
 			<ul class="settings">
 			<?PHP
+			
+			//$auth->logout();
+			$b = BASE_URL."/login/?signout=true";
+			$sign_out_url = BASE_URL."/simplesaml/module.php/core/as_logout.php?AuthId=nbcu-sp&ReturnTo=".$b;
+		
+		   // $url = $auth->getLogoutURL($b);
 				//@$menu_array[5]['url']
 				if(@$menu_url[0] != "login") {
-					echo '<li class="risk"><button style="display:none" onclick="showUserRisks(\'' . $_SESSION['user_id'] . '\');" id="back_button"><span class="my_risk">you have ' . $my_risk_count . '</span></button></li>';
+				echo '<li class="risk"><button style="display:none" onclick="showUserRisks(\'' . $_SESSION['user_id'] . '\');" id="back_button"><span class="my_risk">you have ' . $my_risk_count . '</span></button></li>';
 				 echo '<li class="first">' .@$_SESSION['lh_username'] .'</li>
                                         <!--<li><a href="">My Profile</a></li>-->
-                                        <li><a href="/login/?signout=true">Sign Out</a></li>';		
+                                        <li><a href="'.$sign_out_url.'">Sign Out</a></li>';		
 		
 		$pageURL = BASE_URL; 
 

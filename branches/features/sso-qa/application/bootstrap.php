@@ -77,8 +77,8 @@ class LighthouseApp {
 
 			$_session = new Zend_Session_Namespace('Zend_BC_Auth');
 
-			include(WEBPATH."/html/mobile_redirects.php");
-			$this->view->mobileuser = mobile_device_detect();
+			//include(WEBPATH."/html/mobile_redirects.php");
+			//$this->view->mobileuser = mobile_device_detect();
 
 			if(isset($_GET['signout'])) {
 				setcookie("lighthouse_id", '', time() - 3600, '/');
@@ -88,6 +88,7 @@ class LighthouseApp {
 				setcookie("lighthouse_ct_data", '', time() - 3600, '/controltower');
 				setcookie("lighthouse_create_wo_data", '', time() - 3600, '/workorders');
 				setcookie("lighthouse_wo_data", '', time() - 3600, '/');
+				
 				unset($_COOKIE);
 				unset($_session->loggedin);
 				unset($_SESSION);
@@ -97,8 +98,8 @@ class LighthouseApp {
 				if(!isset($_session->loggedin) || !$_session->loggedin) {
 								
 					Zend_Session::regenerateId();
-					if(!$bc->bcLogin()) {
-					
+					//if(!$bc->bcLogin()) {
+					if($_session->loggedin == false){
 						if($_controller != "login" && $_controller != "loginindexmobilelogin") {
 							if($_SERVER['REQUEST_URI'] != '/favicon.ico' && $_SERVER['REQUEST_URI'] != '/'){
 
@@ -106,13 +107,7 @@ class LighthouseApp {
 								$bc->set_session((string)$_SERVER['REQUEST_URI'], "lighthouse_ru");								
 								session_write_close();
 							}
-							if($this->view->mobileuser){
-								header('Location: /login/index/mobilelogin');
-							}else{
-								header('Location: /login/');
-							}
-						}else if($_controller == "login" && $this->view->mobileuser){
-							header('Location: /login/index/mobilelogin');
+							
 						}
 						
 					} else {
