@@ -194,9 +194,9 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			if($req_type_row_critical['field_id']== '13'){
 				$headers .= "\r\n";
 				$headers .= "X-Priority: 1 (Highest)";
-				 $headers .= "\r\n";
+				$headers .= "\r\n";
 				$headers .= "X-MSMail-Priority: High";
-				 $headers .= "\r\n";
+				$headers .= "\r\n";
 				$headers .= "Importance: High";
 			}
 			///////////////////END 
