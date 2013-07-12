@@ -74,7 +74,7 @@
 			$this->_session->setExpirationSeconds(365 * 24 * 60 * 60);
 			
 
-			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
+			$auth = new SimpleSAML_Auth_Simple(SAML_SP_ENTITY_ID);
 			if (!$auth->isAuthenticated()) {
 				$auth->requireAuth(array(
 					'KeepPost' => FALSE,
@@ -176,7 +176,7 @@
 		function ssologoutAction(){
 						
 			include("../simplesamlphp/lib/_autoload.php");
-			$auth = new SimpleSAML_Auth_Simple('nbcu-sp');
+			$auth = new SimpleSAML_Auth_Simple(SAML_SP_ENTITY_ID);
 			//$auth->logout();
 			$b = BASE_URL."/login/?signout=true";
 		    $url = $auth->getLogoutURL($b);
