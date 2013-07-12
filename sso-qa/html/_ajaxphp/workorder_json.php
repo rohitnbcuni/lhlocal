@@ -20,6 +20,13 @@ $page_number_filter_sql = "";
 $column_filter_sql = "";   // for sorting based on assigned_to or requested by 
                                                       // query for filters start
 $type = '';
+
+if(checkUserComapny() == false){
+	$user_id = $_SESSION['user_id'];
+	$sso_user_sql =  " AND b.requested_by = $user_id";
+
+
+}
 if(array_key_exists("report", $_GET)){
 	$type = $_GET['report'];
 }
@@ -172,10 +179,10 @@ $distinct_requested_by_sql_result = $mysql->sqlordie($distinct_requested_by_sql)
 
 
 if('0' == $_GET['status']){ 
-  $workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM  `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql .$req_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql . $requestedby_filter_sql .$date_range_filter_sql .$search_filter_sql." ORDER BY a.`company`, a.`project_name`" . $column_filter_sql . $page_number_filter_sql;
+  $workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM  `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql .$req_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql . $requestedby_filter_sql .$date_range_filter_sql .$search_filter_sql.$sso_user_sql." ORDER BY a.`company`, a.`project_name`" . $column_filter_sql . $page_number_filter_sql;
 } else {
   //$workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM `projects` a, `workorders` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND c.`user_id`='" .$_SESSION['user_id'] ."'  " . $archive_sql . " ORDER BY a.`company`, a.`project_name`, b.`title` ASC";
-  $workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM `projects` a INNER JOIN `workorders` b ON (a.`id`=b.`project_id`) WHERE  1  " . $archive_sql . " ORDER BY a.`company`, a.`project_name`, b.`title` ASC";
+  $workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM `projects` a INNER JOIN `workorders` b ON (a.`id`=b.`project_id`) WHERE  1  " . $archive_sql .$sso_user_sql. " ORDER BY a.`company`, a.`project_name`, b.`title` ASC";
 }	
 //echo "qry".$workorder_list_query;
 $workorder_result = $mysql->sqlordie($workorder_list_query);
@@ -491,4 +498,27 @@ if(isset($from_action) && $from_action){
   	
   echo $jsonSettings;
 }
+
+
+
+function checkUserComapny(){
+	global $mysql;
+	
+	$user_id = $_SESSION['user_id'];
+	$current_user = "SELECT company FROM `users` WHERE `id`= ?";
+	$current_user_sql = $mysql->sqlprepare($current_user,array($user_id) );
+	$rs = $current_user_sql->fetch_assoc();
+	if(($rs['company'] == '') OR ($rs['company'] == NULL)){
+		
+		return false;
+	
+	}else{
+	
+		return true;
+	}
+	
+
+}
+
+
 ?>
