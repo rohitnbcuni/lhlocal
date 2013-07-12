@@ -294,10 +294,18 @@
 		    $request_type_string = substr($request_type_string, 0, -1);
 		    $workorder_custom_sql = " JOIN `workorder_custom_fields` e ON W.`id` = e.`workorder_id`";
 		    $req_filter_sql =  " AND e.`field_id` IN(".$request_type_string.")";
-	  	} 
+	  	}
+		$sso_user_sql = '';
+		if(checkUserComapny() == false){
+			$user_id = $_SESSION['user_id'];
+			$sso_user_sql =  " AND W.requested_by = $user_id";
+
+
+		}
 		$workorder_list_query .= "SELECT W.id ,W.project_id, W.title ,W.active , W.status, DATE_FORMAT(W.launch_date,'%Y-%m-%d') as required_date , P.project_code FROM `workorders` W INNER JOIN projects P ON (P.id = W.project_id)";
-		$workorder_list_query .= " INNER JOIN user_project_permissions UPP ON (P.id = UPP.project_id) $workorder_custom_sql WHERE UPP.user_id = $userId  AND "; 
-		$workorder_list_query .= " EXTRACT(MONTH FROM W.launch_date) = '$data->month'  AND EXTRACT(YEAR FROM W.launch_date) = '$data->year'  $archive_sql $project_filter_sql $status_filter_sql $assigned_to_filter_sql $req_filter_sql $client_filter_sql $requestedby_filter_sql ORDER BY W.launch_date ASC";
+		//$workorder_list_query .= " INNER JOIN user_project_permissions UPP ON (P.id = UPP.project_id) $workorder_custom_sql WHERE UPP.user_id = $userId  AND "; 
+		$workorder_list_query .= "  $workorder_custom_sql WHERE 1  AND "; 
+		$workorder_list_query .= " EXTRACT(MONTH FROM W.launch_date) = '$data->month'  AND EXTRACT(YEAR FROM W.launch_date) = '$data->year'  $archive_sql $project_filter_sql $status_filter_sql $assigned_to_filter_sql $req_filter_sql $client_filter_sql $requestedby_filter_sql $sso_user_sql ORDER BY W.launch_date ASC";
 		//$workorder_list_query .= " W.launch_date LIKE '%$data->required_date%' ";
 	  //  echo $workorder_list_query;
 		//echo $archive_sql .$client_filter_sql;
@@ -361,6 +369,26 @@
 			12 => "#FFF",
 			);
 		return $color_code[$val];
+	}
+	
+	
+	function checkUserComapny(){
+		global $mysql;
+		
+		$user_id = $_SESSION['user_id'];
+		$current_user = "SELECT company FROM `users` WHERE `id`= ?";
+		$current_user_sql = $mysql->sqlprepare($current_user,array($user_id) );
+		$rs = $current_user_sql->fetch_assoc();
+		if(($rs['company'] == '') OR ($rs['company'] == NULL)){
+			
+			return false;
+		
+		}else{
+		
+			return true;
+		}
+	
+
 	}
 	//E9C8CA//DAE7B2//DDF2FF
 ?>
