@@ -122,15 +122,6 @@ $date_range_filter_sql = " AND b.`closed_date` >= '".date('Y-m-d',strtotime($_RE
  if($type != 'excel') {
 	 $page_number_filter_sql = " LIMIT ".(($page_num-1)*50).",".'50';//page_size;
   }
-	if(checkUserComapny() == false){
-		$user_id = $_SESSION['user_id'];
-		$sso_user_sql =  " AND b.requested_by = $user_id";
-
-	}else{
-		$user_pjt_sql = " JOIN `user_project_permissions` c ON a.`id`=c.`project_id`";
-		$where_clause = " WHERE c.`user_id`='" .$_SESSION['user_id']."' ";
-
-	}
   
   $pjt_sql = " JOIN `projects` a ON a.`id`=b.`project_id`";
   
@@ -143,6 +134,17 @@ $date_range_filter_sql = " AND b.`closed_date` >= '".date('Y-m-d',strtotime($_RE
 }else if('-1' == $_GET['status']){    // for draft workorders
 	$archive_sql = " AND b.`active`='0' AND b.`requested_by`='".$_SESSION['user_id']."'";
 }
+
+if(checkUserComapny() == false){
+	$user_id = $_SESSION['user_id'];
+	$sso_user_sql =  " AND b.requested_by = $user_id";
+
+}else{
+	$user_pjt_sql = " JOIN `user_project_permissions` c ON a.`id`=c.`project_id`";
+	$where_clause = " WHERE c.`user_id`='" .$_SESSION['user_id']."' ";
+
+}
+
 
 $distinct_project_list_sql = "select distinct project_name,a.id,project_code from `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_sql . $client_filter_sql .$req_filter_sql. $status_filter_sql . $date_range_filter_sql  . "order by `project_code`"; //  $project_filter_sql   $assigned_to_filter_sql  $search_filter_sql
 $distinct_project_list_result = $mysql->sqlordie($distinct_project_list_sql);
@@ -190,6 +192,7 @@ if('0' == $_GET['status']){
 		$workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM `projects` a, `workorders` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND c.`user_id`='" .$_SESSION['user_id'] ."'  " . $archive_sql . " ORDER BY a.`company`, a.`project_name`, b.`title` ASC";
 	}
 }	
+
 //echo "qry".$workorder_list_query;
 $workorder_result = $mysql->sqlordie($workorder_list_query);
 $i=-1;
