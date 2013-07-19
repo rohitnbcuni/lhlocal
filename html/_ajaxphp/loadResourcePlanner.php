@@ -17,11 +17,6 @@
   $start_date_part = explode("-", $startDate);		
   $end_date_part = explode("-", $endDate);
   $savedProgram = $mysql->real_escape_string($_REQUEST['programType']);	
-  $page_count = 1;
-  if (ISSET($_POST['page_count'])){ 
-	$page_count = $_POST['page_count'];
-  }
- 
   
 
 /*if(isset($savedProgram) || isset($role) ||isset($savedCompany)) {
@@ -107,8 +102,7 @@
   }
 
   if($role == ''){			
-   $sql_user = "SELECT id, user_title,first_name,last_name FROM `users` WHERE `company`='2' AND $program_filter `deleted`='0' $charLimit $companyFilter ORDER BY `last_name`";
-	 
+    $sql_user = "SELECT * FROM `users` WHERE `company`='2' AND $program_filter `deleted`='0' $charLimit $companyFilter ORDER BY `last_name`";		
   }else{                     
       $pos = strpos($role, "parent_");
 			$subcategoryFlag = strpos($role, "subcat_");
@@ -119,28 +113,11 @@
 				$flag = 'subcategory';
 			}
 			if($pos === false){
-				$sql_user = "SELECT id, user_title,first_name,last_name FROM `users` WHERE `company`='2' AND $program_filter `deleted`='0' AND id IN (SELECT user_id FROM user_roles WHERE category_subcategory_id='$role' AND `flag`='".$flag."') $charLimit  $companyFilter ORDER BY `last_name`";
+				$sql_user = "SELECT * FROM `users` WHERE `company`='2' AND $program_filter `deleted`='0' AND id IN (SELECT user_id FROM user_roles WHERE category_subcategory_id='$role' AND `flag`='".$flag."') $charLimit  $companyFilter ORDER BY `last_name`";
 			}else{
-				$sql_user = "SELECT id, user_title,first_name,last_name FROM `users` WHERE `company`='2' AND $program_filter `deleted`='0' AND id IN (SELECT user_id FROM user_roles WHERE category_subcategory_id in (SELECT id FROM `lnk_user_subtitles` WHERE parentTitleId = '".str_replace("parent_","",$role)."') AND `flag`='subcategory') $charLimit  $companyFilter ORDER BY `last_name`";
+				$sql_user = "SELECT * FROM `users` WHERE `company`='2' AND $program_filter `deleted`='0' AND id IN (SELECT user_id FROM user_roles WHERE category_subcategory_id in (SELECT id FROM `lnk_user_subtitles` WHERE parentTitleId = '".str_replace("parent_","",$role)."') AND `flag`='subcategory') $charLimit  $companyFilter ORDER BY `last_name`";
 		}
   }    
-  //$sql_user = "SELECT * FROM `users` WHERE `company`='2' LIMIT 2";  
- 	
-  $p_limit = 4;
-  if($page_count >=$p_limit){
-		
-		$sql_user .=  " LIMIT $page_count,1";
-		$page_count++;
-		//$next_page_counter = $page_count+3;
-		
-  }else{
-	 $sql_user .=  " LIMIT $p_limit";
-	 //$next_page_counter = $page_count;
-	 //$page_count++;
-  
-  
-  }
-  //echo $sql_user;
   $schedule_width_header = $schedule_width + 10;	
   $user_res = $mysql->sqlordie($sql_user);   
   $htmlHeader = '<div class="resources_controller" style="width:'.$schedule_width_header.'px;padding-left:119px;min-width:515px;"><ul class="days_container" style="width:100%;"><li class="arrows"><button class="arrows arrows_left"></button></li>';		
@@ -155,34 +132,35 @@
   if(stristr($returnString, 'rp_edit') === FALSE && $_SESSION['login_status'] != 'admin'){					
     $sel_class_flag = false;			
   }				
-  $sql_title = "SELECT id FROM `lnk_user_titles` WHERE `id`= ?  LIMIT 1";
+  $sql_title = "SELECT * FROM `lnk_user_titles` WHERE `id`= ?  LIMIT 1";
   $title_res = $mysql->sqlprepare($sql_title, array($user_row['user_title']));		
   $title_row = $title_res->fetch_assoc();			
   //if($alpha != ucfirst(substr($user_row['last_name'], 0, 1))) {					
   $id = ucfirst(substr($user_row['last_name'], 0, 1));				
   //}				
-  /* if($page_count >=$p_limit){
-		$next_page_counter = $next_page_counter+1;
-		
-  }else{
-	 $next_page_counter = $page_count;
-	 $page_count++;
-  
-  
-  }*/
-  $next_page_counter = $page_count;
-  $page_count++;
-  $full_name_user = (!empty($user_row['last_name']))? ucfirst($user_row['last_name']) .',<br>' .ucfirst($user_row['first_name']):ucfirst($user_row['first_name']);    				
+  /*$sqlrpOt = "SELECT COUNT(a.`id`) as total FROM `resource_blocks` a WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' AND a.`daypart` = '9' AND `hours` > 0 ORDER BY a.`datestamp`";				
+  $resrpOt = @$mysql->sqlordie($sqlrpOt);			
+  if($resrpOt->num_rows > 0) {					
+    $resrpOt_row = $resrpOt->fetch_assoc();					
+  if(@$resrpOt_row['total'] > 0) {						
+    $otClass = "cancel";					
+  } else {						
+    $otClass = "overtime";					
+  }				
+  } 
+  else {					
+  $otClass = "overtime";				
+  } */   
+      				
   //$overtimeID = 'overtime_' .$user_row['id'];				
   $html .= '<div class="schedules_row title_' .$title_row['id'] .' sort_' .$id .'" style="min-width:628px;width:auto;">						
   <div class="schedule_owner" style="min-width:628px;width:auto;padding:10px 0 0 5px;">						
-  <strong style="width:100px;min-height:45px;">'.$full_name_user .'</strong>							
-  <input type="hidden" name="next_page_counter" id="next_page_counter"  value="'.$next_page_counter.'">					
+  <strong style="width:100px;min-height:45px;">' .ucfirst($user_row['last_name']) .',<br>' .ucfirst($user_row['first_name']) .'</strong>							
+  					
   <button class="secondary viewmonth" id="viewmonth_' .$user_row['id'] .'"><span>view month</span></button><br><br><br>							
- 				
+  <!-- <button onclick="displayOvertime(\'' . $overtimeID . '\')" id="' . $overtimeID . '" class="' .$otClass .'"><span>+overtime</span></button> -->					
   </div>            
   <ul class="schedule" style="float:left;overflow:visible;width:'.$schedule_width.'px;margin-top:-95px;margin-left:110px;padding-top:5px;">';
-  
   $next_day = "";						
   $day = 1;						
   $hour = 1;						
@@ -217,12 +195,10 @@
                               						
   if($loop == 0){											
   
-  // creating header section separately & appending it later 
-  if(!ISSET($_POST['page_count'])){
-	  $htmlHeader = $htmlHeader.'<li class="'.$isfirst.$col.'_col">            
-	  <span>'.date("D",$start_day).'</span><br><span>'.date("m",$start_day).'/'.date("j",$start_day).'</span>           
-	  <span class="days_full_date">'.date("n",$start_day)."/".date("j",$start_day)."/".date("Y",$start_day).'</span></li>';  
-   }
+  // creating header section separately & appending it later            
+  $htmlHeader = $htmlHeader.'<li class="'.$isfirst.$col.'_col">            
+  <span>'.date("D",$start_day).'</span><br><span>'.date("m",$start_day).'/'.date("j",$start_day).'</span>           
+  <span class="days_full_date">'.date("n",$start_day)."/".date("j",$start_day)."/".date("Y",$start_day).'</span></li>';            
   }            					
   
   $html .= '<li class="schedule_day">							            								
@@ -230,13 +206,10 @@
   //$sqlrp = "SELECT COUNT(a.`id`) FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`='" .$user_row['id'] ."' AND a.`datestamp` = '" .date("Y-m-d", $start_day) ." 00:00:00' ORDER BY a.`datestamp`, a.`daypart`";
   //$resrp = $mysql->query($sqlrp);								
   for($i = 0; $i < 8; $i++) {								
-  //$sqlrp = "SELECT b.projectid,b.project_name,b.project_code,a.status ,b.company FROM `resource_blocks` a , `projects` b WHERE a.`projectid`=b.`id` AND  a.`userid`= '".$user_row['id']."' AND a.`datestamp` = '".date("Y-m-d", $start_day) .' 00:00:00'."' AND a.`daypart` = '".($i+1)."' ORDER BY a.`datestamp`, a.projectid desc Limit 0,1 ";
-  $sqlrp = "SELECT a.projectid ,b.project_name,b.project_code,a.status ,b.company FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`= ? AND a.`datestamp` = ? AND a.`daypart` = ? ORDER BY a.`datestamp`, a.projectid desc Limit 0,1 ";								
-  $resrp = $mysql->sqlprepare($sqlrp,array($user_row['id'],date("Y-m-d", $start_day) .' 00:00:00',  ($i+1)) );
-  //$resrp = $mysql->sqlordie($sqlrp);  
+  $sqlrp = "SELECT * FROM `resource_blocks` a LEFT JOIN `projects` b ON a.`projectid`=b.`id`  WHERE a.`userid`= ? AND a.`datestamp` = ? AND a.`daypart` = ? ORDER BY a.`datestamp`, a.projectid desc Limit 0,1 ";								
+  $resrp = $mysql->sqlprepare($sqlrp,array($user_row['id'],date("Y-m-d", $start_day) .' 00:00:00',  ($i+1)) );							
   if($resrp->num_rows == 1) {						
-    $rpRow = $resrp->fetch_assoc();	
-	
+    $rpRow = $resrp->fetch_assoc();			
     $status = "";									
     switch($rpRow['status']) {											
     case 1: {												
@@ -307,21 +280,20 @@
   
   //appending header section to the content			 
   $htmlHeader = $htmlHeader.'<li class="arrows"><button class="arrows arrows_right"></button></li></ul></div>';			        
-  if(!ISSET($_POST['page_count'])){
-	  //display date range on the header       
-	  $html = $htmlHeader.$html.'<script type="text/javascript">              
-	  var sd = new Date('.$week_start_day.' * 1000);      
-	  var sdYear = sd.getFullYear();       sdYear = sdYear.toString().slice(2);              
-	  var ed = new Date('.$week_end_day.' * 1000);       
-	  var edYear = ed.getFullYear();       
-	  edYear = edYear.toString().slice(2);                  
-	  $(".week_label").html("for "+(sd.getMonth()+1)+"/"+sd.getDate()+"/"+sdYear + " - " + (ed.getMonth()+1)+"/"+ed.getDate()+"/"+edYear);';	
-	  if($loopCount == 0 || $loopCount == "" ){
-		$html .= '$(".arrows").css("display","none");</script>'; 
-	  }else{
-		$html .= '</script>';
-	  }		
-	}
+  
+  //display date range on the header       
+  $html = $htmlHeader.$html.'<script type="text/javascript">              
+  var sd = new Date('.$week_start_day.' * 1000);      
+  var sdYear = sd.getFullYear();       sdYear = sdYear.toString().slice(2);              
+  var ed = new Date('.$week_end_day.' * 1000);       
+  var edYear = ed.getFullYear();       
+  edYear = edYear.toString().slice(2);                  
+  $(".week_label").html("for "+(sd.getMonth()+1)+"/"+sd.getDate()+"/"+sdYear + " - " + (ed.getMonth()+1)+"/"+ed.getDate()+"/"+edYear);';	
+  if($loopCount == 0 || $loopCount == "" ){
+    $html .= '$(".arrows").css("display","none");</script>'; 
+  }else{
+    $html .= '</script>';
+  }		
   }
   
   function resourceBlockLockHtml($date, $week, $user, $first_week_flag, $mysql){				  
