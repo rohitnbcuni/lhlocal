@@ -1979,18 +1979,28 @@
 		
 		public function projectssoselectAction(){
 			$proj_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
-			if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
-			//if(isset($_REQUEST['wid']) || isset($_REQUEST['copyWO'])) {
-				echo WoDisplay::getssoProjectOptionHTML($_REQUEST['project_id']);
-			} else if($proj_select != ""){
-				echo WoDisplay::getssoProjectOptionHTML($proj_select);
-			}else {  
-				$pj = @$_REQUEST['project'];
-				echo WoDisplay::getssoProjectOptionHTML($pj);
+			if(empty($_SESSION['company'])){
+			//if company empty then user can use any project
+				if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
+					echo WoDisplay::getssoProjectOptionHTML($_REQUEST['project_id']);
+				} else if($proj_select != ""){
+					echo WoDisplay::getssoProjectOptionHTML($proj_select);
+				}else {  
+					$pj = @$_REQUEST['project'];
+					echo WoDisplay::getssoProjectOptionHTML($pj);
+				}
+			}else{
+			//If user have company then he can access only assign project
+				if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
+					echo WoDisplay::getProjectOptionHTML($_REQUEST['project_id']);
+				} else if($proj_select != ""){
+					echo WoDisplay::getProjectOptionHTML($proj_select);
+				}else {  
+					$pj = @$_REQUEST['project'];
+					echo WoDisplay::getProjectOptionHTML($pj);
+				}
 			}
 			$this->_helper->layout->disableLayout();
-		
-		
 		}
 		
 		
