@@ -1071,6 +1071,7 @@
                         $(".date_picker").datepicker({
                         numberOfMonths: 2,
                         showOn: "both",
+						minDate: 0 ,
 						buttonImage: "/_images/date_picker_trigger.gif", 
 						buttonImageOnly: true 
 						});
