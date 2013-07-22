@@ -246,7 +246,7 @@ var reg = new RegExp (s + "$");
 return reg.test(str);
 }
 function updateUser(USER_ACCESS) {
-	if($('#user_company').val() ==''){
+	if($('#user_company').val() =='' || $('#user_company').val() =='-1'){
 		alert("Please select a company");
 		return false;
 	}else{
