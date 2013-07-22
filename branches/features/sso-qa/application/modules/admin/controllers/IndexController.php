@@ -890,8 +890,8 @@
 						<div class="row">
 							<div class="label"><label>Company:</label></div>';
 							$r = '';
-							if(empty($users['company']) || $users['company'] == ''){
-								echo '<select id="user_company" name="user_company">
+							if(empty($users['company']) || $users['company'] == '' || $users['company'] == '-1'){
+								echo '<select id="user_company" name="user_company" class="field_medium">
 									<option value="-1">Select a Company</option>
 									'.AdminDisplay::getCompanyHTML().'
 									</select>';
