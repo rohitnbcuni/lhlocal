@@ -903,8 +903,8 @@
 							
 						
 						<div class="row">
-							<div class="label"><label>Basecamp ID:</label></div>
-								<input type="text" class="readonly" readonly name="userID" id="userID" value="'. $users['bc_id'].'" >
+							<div class="label"><label>SSO ID:</label></div>
+								<input type="text" class="readonly" readonly name="userID" id="userID" value="'. $users['sso'].'" >
 						</div>';
 
 						if($users['login_status']=='admin')
