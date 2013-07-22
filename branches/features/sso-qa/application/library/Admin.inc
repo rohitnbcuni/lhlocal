@@ -605,7 +605,7 @@
 
 		public function getUserProgramsHTML($user_id){
 			$user_program = self::getQuery("SELECT program FROM `users` WHERE id='".$user_id."'");
-			$html="<option value=''>--select a program--</option>";
+			$html="<option value=''>--Select a Program--</option>";
 			$programs_list = self::getQuery("SELECT id,program from lnk_programs");
 			foreach($programs_list as $key=>$value){
 				if($value['id'] == $user_program[0]['program']){
