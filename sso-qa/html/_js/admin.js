@@ -248,10 +248,10 @@ return reg.test(str);
 function updateUser(USER_ACCESS) {
 	if($('#user_company').val() =='' || $('#user_company').val() =='-1'){
 		var html = '<div class="file_message_confirm">';
-				html +=	'<p> Please Select Company </p>';
+				html +=	'<p> Please Select a Company </p>';
 				html +=	'<div style="clear: both;"></div>';
 				html +=	'<div class="duplicate_buttons">';
-				html +=	'	<button class="cancel" onClick="$(\'.file_message_confirm\').css({display:\'none\'}); return false;"><span>No</span></button>';
+				html +=	'	<button class="cancel" onClick="$(\'.file_message_confirm\').css({display:\'none\'}); return false;"><span>OK</span></button>';
 				html +=	'	<div style="clear: both;"></div>';
 				html +=	'</div>';
 				html +=	'</div>';
