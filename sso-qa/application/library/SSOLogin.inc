@@ -39,7 +39,7 @@
 					$uData['phone_mobile'] = $userData['mobile'][0];
 					$uData['user_img'] = '/_images/empty_mugshot.gif';
 					$uData['sso'] = $userData['uid'][0];
-					$uData['user_access'] =  "00100000";
+					$uData['user_access'] =  "00100011";
 					$uData['role'] =  UNASSIGNED_PHASE;
 					
 					try{
