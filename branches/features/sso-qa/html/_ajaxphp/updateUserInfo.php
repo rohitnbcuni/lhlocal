@@ -4,11 +4,23 @@
 	global $mysql;
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);  
 	$userID = $mysql->real_escape_string(@$_REQUEST['user_id']);
-	$userTitles = $_REQUEST['userTitle'];
+	$company = $mysql->real_escape_string($_REQUEST['user_company']);
+	$userTitle = $mysql->real_escape_string($_REQUEST['userTitle']);
+	$userVendorName = $mysql->real_escape_string($_REQUEST['userVendorName']);
+	$userActiveStatus = $mysql->real_escape_string($_REQUEST['userActiveStatus']);
+	$userDeletedStatus = $mysql->real_escape_string($_REQUEST['userDeletedStatus']);
+	$userAdminAccess = $mysql->real_escape_string($_REQUEST['userAdminAccess']);
+	$user_access_bit = $mysql->real_escape_string($_REQUEST['user_access_bit']);
+	$userProgram = $mysql->real_escape_string($_REQUEST['userProgram']);
+	
+	//$userTitles = $_REQUEST['userTitle'];
 	$userTitlesArray = explode(",",$userTitles);
 	if(!empty($userID))
 	{
-		$update_role = "UPDATE `users` SET `company` = '".$_REQUEST['user_company']."', `user_title`='".$_REQUEST['userTitle']."',`role`='" . $_REQUEST['userRole']."',`agency`='". $_REQUEST['userVendorName'] ."',`program`='".$_REQUEST['userProgram']."',`active`='". $_REQUEST['userActiveStatus']."',`deleted`='". $_REQUEST['userDeletedStatus']."',`login_status`='". $_REQUEST['userAdminAccess']."',`user_access`='".$_REQUEST['user_access_bit']."' where `id`='" . $userID ."'";
+		$update_role = "UPDATE `users` SET `company` = '".$company."', `user_title`='".$userTitle."',`role`='" . $userRole."',
+		`agency`='". $userVendorName ."',`program`='".$userProgram."',`active`='". $userActiveStatus."',
+		`deleted`='". $userDeletedStatus."',`login_status`='". $userAdminAccess."',`user_access`='".$user_access_bit."' 
+		where `id`='" . $userID ."'";
 		$mysql->sqlordie($update_role);
 	}
 	if($_REQUEST['isUserTitleChanged']=='Y'){
