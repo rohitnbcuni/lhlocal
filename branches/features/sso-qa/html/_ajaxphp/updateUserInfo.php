@@ -12,12 +12,15 @@
 	$userAdminAccess = $mysql->real_escape_string($_REQUEST['userAdminAccess']);
 	$user_access_bit = $mysql->real_escape_string($_REQUEST['user_access_bit']);
 	$userProgram = $mysql->real_escape_string($_REQUEST['userProgram']);
-	
+	if(($company != '-1' )|| ($company == '') || ($company == '0')){
+		$userCompany = $company;
+
+	}
 	//$userTitles = $_REQUEST['userTitle'];
 	$userTitlesArray = explode(",",$userTitles);
 	if(!empty($userID))
 	{
-		$update_role = "UPDATE `users` SET `company` = '".$company."', `user_title`='".$userTitle."',`role`='" . $userRole."',
+		$update_role = "UPDATE `users` SET `company` = '".$userCompany."', `user_title`='".$userTitle."',`role`='" . $userRole."',
 		`agency`='". $userVendorName ."',`program`='".$userProgram."',`active`='". $userActiveStatus."',
 		`deleted`='". $userDeletedStatus."',`login_status`='". $userAdminAccess."',`user_access`='".$user_access_bit."' 
 		where `id`='" . $userID ."'";
