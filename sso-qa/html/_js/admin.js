@@ -247,7 +247,16 @@ return reg.test(str);
 }
 function updateUser(USER_ACCESS) {
 	if($('#user_company').val() =='' || $('#user_company').val() =='-1'){
-		alert("Please select a company");
+		var html = '<div class="file_message_confirm">';
+				html +=	'<p> Please Select Company </p>';
+				html +=	'<div style="clear: both;"></div>';
+				html +=	'<div class="duplicate_buttons">';
+				html +=	'	<button class="cancel" onClick="$(\'.file_message_confirm\').css({display:\'none\'}); return false;"><span>No</span></button>';
+				html +=	'	<div style="clear: both;"></div>';
+				html +=	'</div>';
+				html +=	'</div>';
+			$('body').append(html);
+			$('.file_message_confirm').css({display:'block'});
 		return false;
 	}else{
 		var userActiveStatus = 0;
@@ -285,7 +294,7 @@ function updateUser(USER_ACCESS) {
 		if($('#user_company').val()=='2' && count_access<4 ||(count_access==4 && $('#ADMIN_ACCESS').is(':checked') == true))
 		{
 			var html = '<div class="file_message_confirm">';
-				html +=	'<p> DPS User should have access to all section of Lighthouse, are you sure you want to revoke the permission? </p>';
+				html +=	'<p> NBCU O&TS User should have access to all section of Lighthouse, are you sure you want to revoke the permission? </p>';
 				html +=	'<div style="clear: both;"></div>';
 				html +=	'<div class="duplicate_buttons">';
 				html +=	'	<button onClick="updateUserConfirmed('+userDeletedStatus+','+userActiveStatus+',\''+userAdminAccess+'\',\''+user_access_bit+'\');return false;"><span>Yes</span></button>';
