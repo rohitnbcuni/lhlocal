@@ -12,6 +12,7 @@
 	$userAdminAccess = $mysql->real_escape_string($_REQUEST['userAdminAccess']);
 	$user_access_bit = $mysql->real_escape_string($_REQUEST['user_access_bit']);
 	$userProgram = $mysql->real_escape_string($_REQUEST['userProgram']);
+	$userRole = $mysql->real_escape_string($_REQUEST['userRole']);
 	if(($company != '-1' )|| ($company == '') || ($company == '0')){
 		$userCompany = $company;
 
