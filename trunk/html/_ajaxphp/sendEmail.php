@@ -50,6 +50,20 @@
 			
 			//$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1";
 			$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
+			//If ticket is critical then set header as Higher Priority
+			$select_req_type_qry_critical = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a INNER JOIN `lnk_custom_fields_value` b  ON (a.field_id = b.field_id) WHERE `workorder_id`='$wo_id' and a.field_key='CRITICAL' ";
+			$req_type_res_cri = $mysql->sqlordie($select_req_type_qry_critical);
+			$req_type_row_critical = $req_type_res_cri->fetch_assoc();
+			
+			if($req_type_row_critical['field_id']== '13'){
+				$headers .= "\r\n";
+				$headers .= "X-Priority: 1 (Highest)";
+				$headers .= "\r\n";
+				$headers .= "X-MSMail-Priority: High";
+				$headers .= "\r\n";
+				$headers .= "Importance: High";
+			}
+			///////////////////END
 			$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
 			$requestor_user_res = $mysql->sqlordie($requestor_qry);
 			$requestor_user_row = $requestor_user_res->fetch_assoc();
@@ -172,7 +186,20 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			$wo_status_row = $wo_status_res->fetch_assoc();			
 			$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 			//$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1";
-	  
+	 		//If ticket is critical then set header as Higher Priority
+			$select_req_type_qry_critical = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a INNER JOIN `lnk_custom_fields_value` b  ON (a.field_id = b.field_id) WHERE `workorder_id`='$wo_id' and a.field_key='CRITICAL' ";
+			$req_type_res_cri = $mysql->sqlordie($select_req_type_qry_critical);
+			$req_type_row_critical = $req_type_res_cri->fetch_assoc();
+			
+			if($req_type_row_critical['field_id']== '13'){
+				$headers .= "\r\n";
+				$headers .= "X-Priority: 1 (Highest)";
+				$headers .= "\r\n";
+				$headers .= "X-MSMail-Priority: High";
+				$headers .= "\r\n";
+				$headers .= "Importance: High";
+			}
+			///////////////////END 
 			$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
 			$requestor_user_res = $mysql->sqlordie($requestor_qry);
 			$requestor_user_row = $requestor_user_res->fetch_assoc();

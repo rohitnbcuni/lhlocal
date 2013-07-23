@@ -23,7 +23,8 @@ class createNewWoService{
     {
         if (!isset(self::$instance)) {
             //echo 'Creating new instance.';
-            $mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+			global $mysql;
+            //$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
             self::$instance = $mysql;
         }
         return self::$instance;
