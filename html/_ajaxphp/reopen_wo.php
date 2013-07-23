@@ -50,6 +50,22 @@
 	$req_type_res = $mysql->sqlprepare($select_req_type_qry, array($woId));
 	$req_type_row = $req_type_res->fetch_assoc();
 	
+	$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
+	//If ticket is critical then set header as Higher Priority
+	$select_req_type_qry_critical = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a INNER JOIN `lnk_custom_fields_value` b  ON (a.field_id = b.field_id) WHERE `workorder_id`='$woId' and a.field_key='CRITICAL' ";
+	$req_type_res_cri = $mysql->sqlordie($select_req_type_qry_critical);
+	$req_type_row_critical = $req_type_res_cri->fetch_assoc();
+	
+	if($req_type_row_critical['field_id']== '13'){
+		$headers .= "\r\n";
+		$headers .= "X-Priority: 1 (Highest)";
+		$headers .= "\r\n";
+		$headers .= "X-MSMail-Priority: High";
+		$headers .= "\r\n";
+		$headers .= "Importance: High";
+	}
+		///////////////////END
+	
 	$select_user = "SELECT * FROM `users` WHERE `id`='" .$wo_row['assigned_to'] ."'";
 	$user_res = $mysql->sqlordie($select_user);
 	$assigned_user_row = $user_res->fetch_assoc();
@@ -127,7 +143,7 @@
 	function lh_sendEmail($to, $subject, $msg, $headers){
 		$msg = nl2br($msg);
 		$subject='=?UTF-8?B?'.base64_encode($subject).'?=';
-		$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
+		
 		$headers .= "\r\n" .
     					"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";
 		mail($to, $subject, $msg, $headers);

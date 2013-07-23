@@ -549,7 +549,20 @@
 						$msg .="<b>WO [" . $link . "] </b>".$bodyTxt."<br><br>";
 						$msg .="<b>Request Type: </b>" .$request_type_arr[$wo_req_type_row['field_name']] ."<br>";
 
-
+						//If ticket is critical then set header as Higher Priority
+						$select_req_type_qry_critical = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a INNER JOIN `lnk_custom_fields_value` b  ON (a.field_id = b.field_id) WHERE `workorder_id`='$getWoId' and a.field_key='CRITICAL' ";
+						$req_type_res_cri = $mysql->sqlordie($select_req_type_qry_critical);
+						$req_type_row_critical = $req_type_res_cri->fetch_assoc();
+						
+						if($req_type_row_critical['field_id']== '13'){
+							$headers .= "\r\n";
+							$headers .= "X-Priority: 1 (Highest)";
+							$headers .= "\r\n";
+							$headers .= "X-MSMail-Priority: High";
+							$headers .= "\r\n";
+							$headers .= "Importance: High";
+						}
+						///////////////////END
 
 
 

@@ -68,6 +68,21 @@
 	$subject = "WO ".$woId.": Closed - ".$req_type_row['field_name']." - " . html_entity_decode($row['title'],ENT_NOQUOTES,'UTF-8') . "";
 	//$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1";
 	$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
+	
+	//If ticket is critical then set header as Higher Priority
+	$select_req_type_qry_critical = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a INNER JOIN `lnk_custom_fields_value` b  ON (a.field_id = b.field_id) WHERE `workorder_id`='$woId' and a.field_key='CRITICAL' ";
+	$req_type_res_cri = $mysql->sqlordie($select_req_type_qry_critical);
+	$req_type_row_critical = $req_type_res_cri->fetch_assoc();
+	
+	if($req_type_row_critical['field_id']== '13'){
+		$headers .= "\r\n";
+		$headers .= "X-Priority: 1 (Highest)";
+		$headers .= "\r\n";
+		$headers .= "X-MSMail-Priority: High";
+		$headers .= "\r\n";
+		$headers .= "Importance: High";
+	}
+		///////////////////END
 	$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
     $description=($row['body']);
     $desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description,ENT_NOQUOTES,'UTF-8'));
