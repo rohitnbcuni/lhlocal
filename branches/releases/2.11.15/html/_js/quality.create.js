@@ -909,7 +909,15 @@ function showTooltip(){
 	function hideTooltip(){
 	$('#qa_tooltip').css({display:'none'});
 	}
+function showQATooltip(){
+	var topVar = ($('#qa_upload_tooltip').offset().top + 58); 
+	var leftVar = 175; 
+	$('#qa_upload_tooltip').css({display:'block', left: leftVar + 'px'});
+	}
 
+	function hideQATooltip(){
+	$('#qa_upload_tooltip').css({display:'none'});
+	}
 
 function create( template, vars, opts ){
 	return $container.notify("create", template, vars, opts);
