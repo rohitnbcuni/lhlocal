@@ -221,7 +221,7 @@
 		}
 		if(isset($_REQUEST['status_filter']) && $_REQUEST['status_filter'] != '-1'){  
 		    $status_table_sql = "select `id` from `lnk_workorder_status_types` where name = ?";
-		  	$status_result = $mysql->prepare($status_table_sql, array($_REQUEST['status_filter']));
+		  	$status_result = $mysql->sqlprepare($status_table_sql, array($_REQUEST['status_filter']));
 		    if($status_result->num_rows == 1){
 		       $status_row = $status_result->fetch_assoc();
 		    		       $status_filter_sql = " AND W.`status` = ".$status_row['id'];
