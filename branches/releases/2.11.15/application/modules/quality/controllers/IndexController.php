@@ -404,7 +404,7 @@
 									<input type="hidden" name="defect_id" id="defect_id" value="' .@$defect_id .'" />
 									<input type="hidden" name="dirName" id="dirName" value="' .@$defect_id .'" />
 									
-									<label for="upload_file" id="upload_file_label">Attach files (each file should be under 10MB)
+									<label id="upload_file_label">Attach files (each file should be under 10MB)
 									<img onmouseover="showQATooltip();" onmouseout="hideQATooltip();" src="/_images/tool-tip-lighthouse-v2.png" style="cursor:help;" align="absmiddle">
 										<div style="display: none;marggin-top:-6px;" class="wo_comment" id="qa_upload_tooltip"><div class="wo_comment_header"></div><div class="wo_comment_content"><p class="risk_desc">
 										<b>Allowed File Extensions:</b>
