@@ -659,7 +659,7 @@
 									<input type="hidden" name="workorder_id" id="workorder_id" value="' .@$wo_id .'" />
 									<input type="hidden" name="copyWO" id="copyWO" value="' .@$_REQUEST['copyWO'] .'" />
 									<input type="hidden" name="dirName" id="dirName" value="' .@$wo_id .'" />
-									<label for="upload_file" id="upload_file_label">Attach files (each file should be under 10MB)
+									<label  id="upload_file_label">Attach files (each file should be under 10MB)
 										<img onmouseover="showWOTooltip();" onmouseout="hideWOTooltip();" align="absmiddle" src="/_images/tool-tip-lighthouse-v2.png" style="cursor:help;">
 										<div style="display: none;margin-top:-6px;" class="wo_comment" id="wo_tooltip"><div class="wo_comment_header"></div><div class="wo_comment_content"><p class="risk_desc">
 										<b>Allowed File Extensions:</b>
