@@ -69,12 +69,13 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 	
 	<?PHP
 	}
-//	 Zend_Debug::dump("head");
-		switch($_controller) {
-			if($menu_url['1'] == 'profile'){
+	if($menu_url['1'] == 'profile'){
 				$_action = 'profile';
 			
 			}
+//	 Zend_Debug::dump("head");
+		switch($_controller) {
+			
 		
 			//Resource Planner
 			case 'resourceplanner': {
