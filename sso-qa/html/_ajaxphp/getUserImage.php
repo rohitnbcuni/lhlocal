@@ -11,6 +11,6 @@
 		$user_row = $user_res->fetch_assoc();		
 		echo $user_row['user_img'];
 	} else {
-		echo "else /_images/empty_mugshot.gif";
+		echo "/_images/empty_mugshot.gif";
 	}
 ?>
