@@ -1,0 +1,94 @@
+<div class="column_full_workorders">	
+	<div class="title_med workorders_filter">
+		
+		<h4>User Profile </h4>
+	</div>
+	<div class="content">
+
+
+		<div class="workorder_content_col1">
+
+<?php //p($this->userInfo); ?>
+			<ul>
+				<li>
+					<label for="fname" id="fname_lbl">First Name:</label>
+					<input type="text"  id="fname" name="fname" readonly="readonly" class="field_large"  value="<?php echo $this->userInfo['first_name'] ?>"/>
+					<input type="hidden"  id="userId" name="userId"   value="<?php echo $this->userInfo['id'] ?>" class="requestor_photo" />
+				
+				</li>
+				<li>
+					<label for="lname" id="lname_lbl">Last Name:</label>
+					<input type="text"  id="lname" name="lname" readonly="readonly" class="field_large" value="<?php echo $this->userInfo['last_name'] ?>" />
+					
+				</li>
+				<li>
+					<label for="Email" id="email_lbl">Email:</label>
+					<input type="text"  id="email" name="email" readonly="readonly" class="field_large" value="<?php echo $this->userInfo['email'] ?>" />
+					
+				</li>
+				<li>
+					<label for="sso" id="sso_lbl">SSO:</label>
+					<input type="text"  id="sso" name="sso" readonly="readonly" class="field_large"  value="<?php echo $this->userInfo['sso'] ?>"/>
+					
+				</li>
+				<li>
+				
+					<label for="image_upload" id="image_lbl">Image:<br/>(Upto 2MB file size)</label>
+					<div class="wo_dimmer" id="file_upload_dimmer" style="display: none;"></div>
+					<form id="file_upload_form" name="file_upload_form" accept-charset="utf-8" method="post" action="" enctype="multipart/form-data">
+						<input type="file"  id="image_upload" name="image_upload" readonly="readonly" class="field_large" onChange="return checkDirName('file_upload_form');"/><br/>
+						
+						<div style="margin-left:134px;margin-top:10px;" id="thumb_img">
+							
+								<img id="requestor_photo" src="/_images/empty_mugshot.gif" class="requestor_photo">
+							
+						</div>
+					</form>
+				</li>
+				<li>
+					<label for="sso" id="sso_lbl">Phone:</label>
+					<input type="text"  id="phone" name="phone"  class="field_large" maxlength="20" value="<?php echo $this->userInfo['phone_office'] ?>" />
+					
+				</li>
+
+				<li>
+					<label for="company" id="company_lbl">Company:</label>
+					<?php
+						$r = '';
+							if(empty($this->userInfo['company']) || $this->userInfo['company'] == '' || $this->userInfo['company'] == '-1'){ ?>
+								<select id="user_company" name="user_company" class="field_medium" width="210" style="width: 210px">
+									<option value="-1">--Select a Company--</option>
+									<?php echo AdminDisplay::getCompanyHTML(); ?>
+									</select>
+							<?php }else{ ?>
+								<input type="text"  class="readonly" readonly="readonly"  name="company_name" id="company_name" value="<?php echo AdminDisplay::getUserCompany($this->userInfo['company'])?>" >
+								<input type="hidden" id="user_company" value="<?php echo $this->userInfo['company']?>" class="field_large" >
+							<?php } ?>
+					
+					
+				</li>
+				<li style="margin-left:150px;">
+				
+				 <button id="profile_save"  ><span>Update</span></button>
+				 <button id="profile_cancel"  ><span>Cancel</span></button>
+				<li>
+			</ul>
+		</div>
+	</div>
+	<div class="message_cancel message_close" style="width:3000px;height:1024px;position:fixed;background-color:#fffff;z-index:1.0;margin-top:-500px;margin-left:-630px;opacity: 0.3;filter:alpha(opacity=30);zoom:1.0;"></div>
+				<div class="message_required">
+					<p>
+						Please fill in the required fields?
+					</p>					
+					<div style="clear: both;"></div>
+					
+					<div class="duplicate_buttons">
+						<button onClick="$('.message_required').css({display:'none'}); $('#file_upload_dimmer').css({display:'none'});return false;"><span>OK</span></button>
+						<div style="clear: both;"></div>
+					</div>
+				</div>
+</div>
+
+				
+			
+							
