@@ -42,7 +42,7 @@
 					$file_full_path = $_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName .$cleaned_filename;
 					chmod($file_full_path, 0655);
 					$sso_profile = new SSOLogin();
-					if (function_exists('imagecreate')) {
+					if (function_exists('imagecreatefromjpeg')) {
 						$thumb_image_name = $this->resizeImage($file_full_path,56,56,$file_full_path);
 					}
 					$userData = '/files/'.$dirName .$cleaned_filename;
