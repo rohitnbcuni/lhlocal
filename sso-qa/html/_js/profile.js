@@ -41,7 +41,7 @@ $('#profile_save').click(function(){
 	
 	$.ajax({
 		type: "POST",
-		url: "companyupdate",
+		url: "/workorders/profile/companyupdate",
 		data: "companyId="+user_company+"&phone="+phone,
 		success: function(msg) {
 			$('.message_required p').html('User Profile has completed.You Can start to create Workorders');
@@ -83,7 +83,7 @@ function ajaxUploadFile(fileForm){
 	$.ajaxFileUpload
 	(
 		{
-			url:'imageupdate',
+			url:'/workorders/profile/imageupdate',
 			secureuri:false,
 			fileElementId:'image_upload',
 			dataType: 'text',
