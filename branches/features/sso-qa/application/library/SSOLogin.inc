@@ -15,7 +15,7 @@
 			//Check User Is Active with email ID in DB
 			$get_user = "SELECT * FROM `users` WHERE `email`='" .$userData['mail'][0] ."' AND `active` = '1'  AND `deleted` = '0' ORDER BY  `users`.`id` DESC LIMIT 1";
 			$userInfo = $db->fetchRow($get_user);
-			$where[] = 'email =  '.$userData['mail'][0];
+			$where[] = "email =  '".$userData['mail'][0]."'";
 			$dataArray = array('sso' => $userData['uid'][0]);
 			$db->update("users", $dataArray, $where);
 			if($userInfo == true){
