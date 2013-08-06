@@ -71,6 +71,10 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 	}
 //	 Zend_Debug::dump("head");
 		switch($_controller) {
+			if($menu_url['1'] == 'profile'){
+				$_action = 'profile';
+			
+			}
 		
 			//Resource Planner
 			case 'resourceplanner': {
@@ -174,6 +178,14 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						echo '';
 						break;						
 					}//end 
+					case 'profile':{
+						echo	"<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n";
+						echo    "\t<script src=\"/_js/ajaxfileupload.js\" type=\"text/javascript\"></script>\n";
+						echo    "\t<script src=\"/_js/profile.js\" type=\"text/javascript\"></script>\n";
+						echo    "\t<script src=\"/_js/jquery-ui-1.8.19.custom.min.js\" type=\"text/javascript\"></script>"
+						. "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
+						break;						
+					}//end
 					default: {
 					echo	"<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n";
 					echo "<script src=\"/_js/workorders.filter.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
