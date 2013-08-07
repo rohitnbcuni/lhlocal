@@ -62,6 +62,7 @@
 			if ($this->_request->isPost()){
 				$where[] = 'id =  '.$_SESSION['user_id'];
 				$user_company = $this->_request->getParam('companyId');
+				$_SESSION['company'] = $user_company;
 				$phone = trim($this->_request->getParam('phone'));
 				if($phone != ''){
 					$dataArray = array('company' => $user_company, "phone_office" => $phone);
