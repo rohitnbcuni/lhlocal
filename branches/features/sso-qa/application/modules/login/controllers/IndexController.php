@@ -88,7 +88,7 @@
 					$row = array();
 					$sso_obj = new SSOLogin();
 					$row = $sso_obj->checkUser($attributes);
-					//If User have SSO id but not Active user in LH application
+					
 					if((!empty($row)) && (count($row) > 0)){
 						
 						$this->_session->lh_username = $row['user_name'];
@@ -140,7 +140,7 @@
 						//If company is empty mean user are authenticated from SSO but company is not registered
 						//By default we assign only to access workorder
 						if(empty($row['company'])){
-							$this->_redirect("workorders");
+							$this->_redirect("workorders/profile");
 						
 						}else if((!empty($redirect_url)) && (!empty($row['company']))){
 							setcookie("lighthouse_ru", '', time() - 3600, '/');	
