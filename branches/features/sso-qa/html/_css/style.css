@@ -1836,3 +1836,33 @@ background: none repeat scroll 0 0 #FFFFFF;
     position: relative;
     width: 96%;
 }
+
+/*###########DROP down menu###############*/
+.top-menu-dropdown {color: #555;margin: 3px -22px 0 0;width: 143px;position: relative;height: 17px;text-align:left;}
+.top-menu-dropdown .submenu ul.root  li{width:85%}
+.top-menu-dropdown .submenu{background: #fff;position: absolute;top: 13px;left: -20px;z-index: 100;width: 135px;display: none;margin-left: 10px;padding: 40px 0 5px; border-radius: 6px;box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);}
+.top-menu-dropdown .submenu ul.root  li a {color: #555555;display: block;font-family: arial;font-weight: bold;padding: 6px 15px;cursor: pointer;text-decoration:none;}
+.top-menu-dropdown .submenu  ul.root li a:hover{background:#155FB0;color: #FFFFFF;text-decoration: none;}
+.top-menu-dropdown  a.account {background: url("/_images/expand_arrow-down_large.gif") no-repeat scroll 206px 16px transparent;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: block;
+    font-size: 11px;
+    height: 28px;
+    line-height: 16px;
+    margin: -15px 0 0 -90px;
+    padding: 11px 0 0 20px;
+    position: absolute;
+    text-decoration: none;
+    width: 201px;
+    z-index: 110;}
+.top-menu-dropdown .submenu .root{list-style:none;margin:0px;padding:0px;font-size: 11px;padding: 11px 0 0 0px;}
+.top-menu-dropdown .submenu .username{ color: #555555;
+    cursor: none;
+    display: block;
+    font-family: arial;
+    font-weight: bold;
+    padding: 6px 15px;
+    text-decoration: none
+	}
+/*************************************/
