@@ -32,6 +32,7 @@ $('#profile_save').click(function(){
 	if(user_company == '-1'){
 		$('.message_required p').html('Please select a company.');
 		$('.message_required').css({display:'block'});
+		return false;
 	}
 	/*if(user_company == 'other'){
 		
