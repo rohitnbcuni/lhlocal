@@ -767,4 +767,16 @@ String.prototype.search_split = function (separator, limit) {
     return cbSplit(this, separator, limit);
 };
 
+$(document).ready(function(){
+		$(".top-menu-dropdown a.account").click(function(){
+			var X=$(this).attr('id');if(X==1){$(".top-menu-dropdown .submenu").hide();$(this).attr('id', '0');
+			}else{$(".top-menu-dropdown .submenu").show();$(this).attr('id', '1');}
+		});
+    //Mouse click on sub menu
+	$(".submenu").mouseup(function(){return false});
+    //Mouse click on my account link
+	$(".account").mouseup(function(){return false});
 
+    //Document Click
+	$(document).mouseup(function(){$(".top-menu-dropdown .submenu").hide();$(".top-menu-dropdown .account").attr('id', '');});
+	});
