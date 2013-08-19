@@ -1,4 +1,3 @@
-
 function checkDirName(fileForm){
 
 	
@@ -32,7 +31,6 @@ $('#profile_save').click(function(){
 	if(user_company == '-1'){
 		$('.message_required p').html('Please select a company.');
 		$('.message_required').css({display:'block'});
-		return false;
 	}
 	/*if(user_company == 'other'){
 		
@@ -42,7 +40,7 @@ $('#profile_save').click(function(){
 	
 	$.ajax({
 		type: "POST",
-		url: "/workorders/profile/companyupdate",
+		url: "companyupdate",
 		data: "companyId="+user_company+"&phone="+phone,
 		success: function(msg) {
 			$('.message_required p').html('User Profile has completed.You Can start to create Workorders');
@@ -84,7 +82,7 @@ function ajaxUploadFile(fileForm){
 	$.ajaxFileUpload
 	(
 		{
-			url:'/workorders/profile/imageupdate',
+			url:'imageupdate',
 			secureuri:false,
 			fileElementId:'image_upload',
 			dataType: 'text',

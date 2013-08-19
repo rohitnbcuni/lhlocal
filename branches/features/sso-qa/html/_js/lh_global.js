@@ -767,7 +767,8 @@ String.prototype.search_split = function (separator, limit) {
     return cbSplit(this, separator, limit);
 };
 
-$(document).ready(function(){
+
+	 $(document).ready(function(){
 		$(".top-menu-dropdown a.account").click(function(){
 			var X=$(this).attr('id');if(X==1){$(".top-menu-dropdown .submenu").hide();$(this).attr('id', '0');
 			}else{$(".top-menu-dropdown .submenu").show();$(this).attr('id', '1');}
