@@ -605,7 +605,7 @@
 
 		public function getUserProgramsHTML($user_id){
 			$user_program = self::getQuery("SELECT program FROM `users` WHERE id='".$user_id."'");
-			$html="<option value=''>--Select a Program--</option>";
+			$html="<option value=''>--select a program--</option>";
 			$programs_list = self::getQuery("SELECT id,program from lnk_programs");
 			foreach($programs_list as $key=>$value){
 				if($value['id'] == $user_program[0]['program']){
@@ -773,5 +773,45 @@
 			return $affectedRows = $result->rowCount();
 		
 		}
+		
+		private function  __userExistingCompany($userID){
+			$db = Zend_Registry::get('db');
+			$query = "SELECT company_id from users_companies WHERE user_id=".$userID;
+			$comapny = $db->fetchAll($query);
+			//$affectedRows = $query->rowCount();
+			if(count($comapny) > 0){
+				
+				foreach($comapny as $k => $v){
+					$r[] = $v['company_id'];
+					
+					
+				}
+				
+			}
+			return $r;
+		}
+		
+		static public function getUserCompanyHTML($userId){
+			$db = Zend_Registry::get('db');
+			$html = '';
+			$allCompanies = $db->fetchAll("SELECT id, name from companies WHERE  active ='1' AND deleted='0' ORDER BY name ASC");
+			$existingCompany = self::__userExistingCompany($userId);
+			foreach($allCompanies as $company_key => $company_val){
+				$s = '';
+				if(in_array($company_val['id'],$existingCompany)){
+					$s = "selected='selected'";
+					
+				
+				}
+				$html .= "<option ".$s." value=".$company_val['id'].">".$company_val['name']."</option>";
+				
+			}	
+			
+			return $html;
+		
+		
+		}
+		
+		
 	}
 ?>
