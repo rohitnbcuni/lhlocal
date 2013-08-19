@@ -70,22 +70,7 @@ $(document).ready(function() {
 		}
 	});
 	var copyWO = $('#copyWO').val();
-	var hidden_projecd_id = $('#hidden_projecd_id').val();
-	$.ajax({
-	type: "POST",
-	url:"/workorders/index/projectssoselect", 
-	data:{wid:workorder_id,project_id:hidden_projecd_id,copyWO:copyWO},
-	success: function(data){
-		$('#project_loader').css('display','none');
-		
-		$('#wo_project').html(data);
-		changeImage($('#wo_requested_by').val());
-		getRequestorsInfo($('#wo_requested_by').val());
-		//$('#wo_requested_by').addClass('chzn-select');
-		$('#project_loader_field').css('display','block');
-		
-		}
-	});
+	
 /*------ ------Lazy Load------------*/
 });
 
@@ -510,7 +495,7 @@ function saveWorkOrder(from) {
 	var woId = document.getElementById('workorder_id').value;
 	var dirName = document.getElementById('dirName').value;
 	var requestedId = document.getElementById('wo_requested_by').value;
-	var projectId = document.getElementById('wo_project').value;
+	var company_id = document.getElementById('company_id').value;
 	/*var woTypeId = document.getElementById('wo_type').value;*/
 	var woTypeId = "";
 	var priorityId = '';//document.getElementById('wo_priority').value;
@@ -572,7 +557,7 @@ function saveWorkOrder(from) {
 
 	if(document.getElementById('wo_rally_flag')){
 		rallyFlag = document.getElementById('wo_rally_flag').value;
-		rallyProject = document.getElementById('wo_project').value;
+		//rallyProject = document.getElementById('wo_project').value;
 	}
 
 	if(requestedId == "") {
@@ -581,11 +566,11 @@ function saveWorkOrder(from) {
 	} else {
 		document.getElementById('wo_requested_by_label').style.color = "#000000";
 	}
-	if(projectId == "") {
+	if(company_id == "") {
 		valid = false;
-		document.getElementById('wo_project_label').style.color = "#FF0000";
+		document.getElementById('company_id_label').style.color = "#FF0000";
 	} else {
-		document.getElementById('wo_project_label').style.color = "#000000";
+		document.getElementById('company_id_label').style.color = "#000000";
 	}
 	if(woTitle == "") {
 		valid = false;
@@ -751,7 +736,7 @@ function saveWorkOrder(from) {
 			
 				$('.message_required p').html('Please enter current or future time for required time.');
 				$('.message_required').css({display:'block'});
-		        return;
+		        return false;
 			} 
 			if(wo_draft == true) {
 
@@ -789,7 +774,7 @@ function saveWorkOrder(from) {
 	
 		
 	if(valid) {
-		data = {woId:woId,dirName:dirName,requestedId:requestedId,projectId:projectId,woTypeId:woTypeId,priorityId:priorityId,timeSens:timeSens,timeSensDate:timeSensDate,timeSensTime:timeSensTime,ampm:ampm,wo_draft:wo_draft,timeSensDate_draft:timeSensDate_draft,timeSensTime_draft:timeSensTime_draft,ampm_draft:ampm_draft,woTitle:woTitle,woExampleURL:woExampleURL,woDesc:woDesc,woStatus:woStatus,woAssignedTo:woAssignedTo,woStartDate:woStartDate,woEstDate:woEstDate,rallyType:rallyType,rallyProject:rallyProject,rallyFlag:rallyFlag,woREQ_TYPE:woREQ_TYPE,woSEVERITY:woSEVERITY,woSITE_NAME:woSITE_NAME,woINFRA_TYPE:woINFRA_TYPE,woCRITICAL:woCRITICAL,woCCList:woCCList,launchDate:launchDate,currmin:currmin,draftDate:draftDate,commentSubmit:from,woStatusIdHidden:woStatusIdHidden};
+		data = {woId:woId,dirName:dirName,requestedId:requestedId,woTypeId:woTypeId,company_id:company_id,priorityId:priorityId,timeSens:timeSens,timeSensDate:timeSensDate,timeSensTime:timeSensTime,ampm:ampm,wo_draft:wo_draft,timeSensDate_draft:timeSensDate_draft,timeSensTime_draft:timeSensTime_draft,ampm_draft:ampm_draft,woTitle:woTitle,woExampleURL:woExampleURL,woDesc:woDesc,woStatus:woStatus,woAssignedTo:woAssignedTo,woStartDate:woStartDate,woEstDate:woEstDate,rallyType:rallyType,rallyProject:rallyProject,rallyFlag:rallyFlag,woREQ_TYPE:woREQ_TYPE,woSEVERITY:woSEVERITY,woSITE_NAME:woSITE_NAME,woINFRA_TYPE:woINFRA_TYPE,woCRITICAL:woCRITICAL,woCCList:woCCList,launchDate:launchDate,currmin:currmin,draftDate:draftDate,commentSubmit:from,woStatusIdHidden:woStatusIdHidden};
 		//LH34096 if request type is request then estimate time will same launch date
 		if(woREQ_TYPE == '3'){
 			$('#estimated_completion_date').val(timeSensDate+" "+timeSensTime);
@@ -835,8 +820,8 @@ function saveWorkOrder(from) {
 					}
 					
 					if(woId == "") {
-						Set_Cookie( "lighthouse_create_wo_data", projectId, "7", "/", "", "");
-						Set_Cookie( "lighthouse_wo_data", '-1~' + projectId + '~-1~-1', "7", "/", "", "");
+						Set_Cookie( "lighthouse_create_wo_data", company_id, "7", "/", "", "");
+						Set_Cookie( "lighthouse_wo_data", '-1~' + company_id + '~-1~-1', "7", "/", "", "");
 						window.location = '/workorders/?status='+redirect_status_val;
 					} else {
 						if(res_woAssignedList != ''){

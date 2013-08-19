@@ -70,8 +70,8 @@ $(document).ready(function(){
 
 $(document).ready(function(){
 	//$(".ui-multiselect").removeClass('button');
-	if($("#userProjectArray")){
-		$("#userProjectArray").multiselect({create: function(){ $(this).next().width(200); }}).multiselectfilter();
+	if($("#user_company")){
+		$("#user_company").multiselect({create: function(){ $(this).next().width(200); }}).multiselectfilter();
 	
 	}
 	
@@ -246,19 +246,7 @@ var reg = new RegExp (s + "$");
 return reg.test(str);
 }
 function updateUser(USER_ACCESS) {
-	if($('#user_company').val() =='' || $('#user_company').val() =='-1'){
-		var html = '<div class="file_message_confirm">';
-				html +=	'<p> Please Select a Company </p>';
-				html +=	'<div style="clear: both;"></div>';
-				html +=	'<div class="duplicate_buttons">';
-				html +=	'	<button class="cancel" onClick="$(\'.file_message_confirm\').css({display:\'none\'}); return false;"><span>OK</span></button>';
-				html +=	'	<div style="clear: both;"></div>';
-				html +=	'</div>';
-				html +=	'</div>';
-			$('body').append(html);
-			$('.file_message_confirm').css({display:'block'});
-		return false;
-	}else{
+	
 		var userActiveStatus = 0;
 		var userDeletedStatus = 0;
 		var userAdminAccess = '';
@@ -276,7 +264,7 @@ function updateUser(USER_ACCESS) {
 		{
 			userAdminAccess = ''; 
 		}
-		var user_project_array = $("#user_project_array").val();
+		//var user_project_array = $("#user_project_array").val();
 		
 		var user_access_bit = "";
 		var count_access = 0;
@@ -291,25 +279,10 @@ function updateUser(USER_ACCESS) {
 				user_access_bit = user_access_bit+'0';  
 			}
 		}
-		if($('#user_company').val()=='2' && count_access<4 ||(count_access==4 && $('#ADMIN_ACCESS').is(':checked') == true))
-		{
-			var html = '<div class="file_message_confirm">';
-				html +=	'<p> NBCU O&TS User should have access to all section of Lighthouse, are you sure you want to revoke the permission? </p>';
-				html +=	'<div style="clear: both;"></div>';
-				html +=	'<div class="duplicate_buttons">';
-				html +=	'	<button onClick="updateUserConfirmed('+userDeletedStatus+','+userActiveStatus+',\''+userAdminAccess+'\',\''+user_access_bit+'\');return false;"><span>Yes</span></button>';
-				html +=	'	<button class="cancel" onClick="$(\'.file_message_confirm\').css({display:\'none\'}); return false;"><span>No</span></button>';
-				html +=	'	<div style="clear: both;"></div>';
-				html +=	'</div>';
-				html +=	'</div>';
-			$('body').append(html);
-			$('.file_message_confirm').css({display:'block'});
-		}
-		else
-		{
-			updateUserConfirmed(userDeletedStatus,userActiveStatus,userAdminAccess,user_access_bit);
-		}
-	}
+		
+		updateUserConfirmed(userDeletedStatus,userActiveStatus,userAdminAccess,user_access_bit);
+		
+	
 }
 
 function updateUserConfirmed(userDeletedStatus,userActiveStatus,userAdminAccess,user_access_bit)
@@ -321,18 +294,19 @@ function updateUserConfirmed(userDeletedStatus,userActiveStatus,userAdminAccess,
 	}
 	//alert("string"+$('#userProjectStr').val());
 	var userStatus = $('#userStatus').val();
-	if($('#userProjectArray').val()  == 0){
+	/*if($('#userProjectArray').val()  == 0){
 		isUserProjectChanged = 'N';
 	}else{
 		isUserProjectChanged = 'Y';
-	}
+	}*/
 	
 	var user_company = $('#user_company').val();
+	
 	//alert("string2"+$('#userProjectArray').val()+"flag"+isUserProjectChanged);
 	$.ajax({
 		type: "POST",
 		url: "/_ajaxphp/updateUserInfo.php",
-		data: "user_id="+$('#userID').val()+"&userTitle="+$('#user_title_id').val()+"&isUserTitleChanged="+isUserTitleChanged+"&userRole="+$('#user_Role_id').val()+"&userProgram="+$('#user_program option:selected').val()+"&userVendorName="+$('#user_vendor_name').val()+"&userDeletedStatus="+userDeletedStatus+"&userActiveStatus="+userActiveStatus+"&userAdminAccess="+userAdminAccess+"&user_access_bit="+user_access_bit+"&isUserProjectChanged="+isUserProjectChanged+"&userStatus="+userStatus+"&userProjectArray="+$('#userProjectArray').val()+"&user_company="+user_company,
+		data: "user_id="+$('#userID').val()+"&userTitle="+$('#user_title_id').val()+"&isUserTitleChanged="+isUserTitleChanged+"&userRole="+$('#user_Role_id').val()+"&userProgram="+$('#user_program option:selected').val()+"&userVendorName="+$('#user_vendor_name').val()+"&userDeletedStatus="+userDeletedStatus+"&userActiveStatus="+userActiveStatus+"&userAdminAccess="+userAdminAccess+"&user_access_bit="+user_access_bit+"&userStatus="+userStatus+"&user_company="+user_company,
 		success: function(msg) {
 			$('.message_required p').html('The User data has been updated Successfully.');
 			$('.message_required').css({display:'block'});
