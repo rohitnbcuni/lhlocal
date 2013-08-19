@@ -557,7 +557,7 @@ a:hover { text-decoration: underline; }
 				.project_results_details ul.alert li .percentage { color: #f00; }
 
 				.project_risk{ background:url(../_images/flag_overlay_bg.png); height:191px; position:absolute; width:233px; z-index:1; display:block; left:726px;}
-				.wo_comment{position:absolute; width:233px; z-index:25; display:block; left:726px;margin-top:10px;}
+				.wo_comment{position:absolute; width:233px; z-index:1; display:block; left:726px;margin-top:10px;}
 					.project_risk .risk_content { margin:34px 7px 5px;}
 					.wo_comment .wo_comment_content { background:transparent url(../_images/flag_overlay_Mid.png) repeat-y; min-height:80px;}
 					.wo_comment .wo_comment_header{background:transparent url(../_images/flag_overlay_Top.png) no-repeat;height:37px;}
@@ -1836,6 +1836,8 @@ background: none repeat scroll 0 0 #FFFFFF;
     position: relative;
     width: 96%;
 }
+
+
 
 /*###########DROP down menu###############*/
 .top-menu-dropdown {color: #555;margin: 3px -22px 0 0;width: 143px;position: relative;height: 17px;text-align:left;}
