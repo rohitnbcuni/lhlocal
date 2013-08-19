@@ -151,46 +151,6 @@
 			
 			return $html;
 		}
-		
-		public function getssoProjectOptionHTML($pj) {
-			$projects = self::getQuery("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a, `companies` com WHERE a.`company`=com.`id` AND a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1' ORDER BY com.`name`, a.`project_code` ASC");
-
-			$html = '';
-			
-			$html .= '<option value="">--Select Project--</option>';
-			$companyId = false;
-			for($i = 0; $i < sizeof($projects); $i++) {
-				//$perms = self::getQuery("SELECT * FROM `user_project_permissions` WHERE `user_id`='" .$_SESSION['user_id'] ."' AND `project_id`='" .$projects[$i]['id'] ."'");
-				
-				//if(sizeof($perms) > 0) {
-					if($projects[$i]['company'] != $companyId) {
-//						$company = self::getQuery("SELECT * FROM `companies` WHERE `id`='" .$projects[$i]['company'] ."' LIMIT 1");
-//						$html .= '<optgroup label="' . $company[0]['name'] .'" title="' . $company[0]['name'] .'">';
-						$html .= '<optgroup label="' . $projects[$i]['company_name'] .'" title="' . $projects[$i]['company_name'] .'">';
-					}
-					if($projects[$i]['id'] == $pj) {
-						$selected = " selected='selected' ";
-					} else {
-						$selected = "";
-					}
-					$html .= '<option title="'.$projects[$i]['project_code']
-						.' - ' 
-						.$projects[$i]['project_name']
-					.'" value="' .$projects[$i]['id'] .'"' .$selected .'>' 
-						.$projects[$i]['project_code']
-						.' - ' 
-						.$projects[$i]['project_name']
-					.'</option>';
-					$companyId = $projects[$i]['company'];
-					$nxt = $i+1;
-					if($projects[$nxt]['company'] != $companyId) {
-						$html .= '</optgroup>';
-					}
-				//}
-			}
-			
-			return $html;
-		}
 		public function getPriorityOptionHTML() {
 			$priorities = self::getQuery(QRY_WO_PRIORITY_ASC);
 			$html = '';
@@ -706,5 +666,32 @@
 			
 			return $html;
 		}
+		
+		static function getUserCompany($cid = null){
+			$db = Zend_Registry::get('db');
+			$html = '';
+			$user_id = $_SESSION['user_id'];
+		
+			$allCompanies = $db->fetchAll("SELECT c.id, c.name FROM companies c INNER JOIN users_companies uc ON (uc.company_id = c.id) WHERE uc.user_id = ".$user_id." AND c.active ='1' AND c.deleted='0' ORDER BY c.name ASC");
+			
+			foreach($allCompanies as $company_key => $company_val){
+				$s = '';
+				if($company_val['id'] == $cid){
+					$s = "selected='selected'";
+					
+				
+				}
+				$html .= "<option ".$s." value=".$company_val['id'].">".$company_val['name']."</option>";
+				
+			}	
+			
+			return $html;
+		
+		
+		}
+		
+		
+		
+		
 	}
 ?>
