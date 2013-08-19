@@ -13,15 +13,15 @@
 	$user_access_bit = $mysql->real_escape_string($_REQUEST['user_access_bit']);
 	$userProgram = $mysql->real_escape_string($_REQUEST['userProgram']);
 	$userRole = $mysql->real_escape_string($_REQUEST['userRole']);
-	if(($company != '-1' )|| ($company == '') || ($company == '0')){
+	/*if(($company != '-1' )|| ($company == '') || ($company == '0')){
 		$userCompany = $company;
 
-	}
+	}*/
 	//$userTitles = $_REQUEST['userTitle'];
 	$userTitlesArray = explode(",",$userTitles);
 	if(!empty($userID))
 	{
-		$update_role = "UPDATE `users` SET `company` = '".$userCompany."', `user_title`='".$userTitle."',`role`='" . $userRole."',
+		$update_role = "UPDATE `users` SET  `user_title`='".$userTitle."',`role`='" . $userRole."',
 		`agency`='". $userVendorName ."',`program`='".$userProgram."',`active`='". $userActiveStatus."',
 		`deleted`='". $userDeletedStatus."',`login_status`='". $userAdminAccess."',`user_access`='".$user_access_bit."' 
 		where `id`='" . $userID ."'";
@@ -44,54 +44,72 @@
 		}
 		$mysql->sqlordie($insertQuery );
 	}
-	if($_REQUEST['isUserProjectChanged'] == 'Y'){
-		$newUserProjectArray = array();
-		$oldProjectArray = array();
-		$deleteArrayDiff = array();
-		$userProjectStr = array();
-		if($_POST['userStatus'] == "client") {
-			//	$comp_query = " AND a.`company` = '".$_POST['user_company'] ."'";
-				 $comp_query = "";
-
-			} else {
-				$comp_query = "";
-			}
-		$userExistingProject = "SELECT distinct UP.project_id FROM `user_project_permissions` UP INNER JOIN `projects` a  ON (a.`id`=UP.`project_id`) WHERE UP.`user_id`='" .$userID."' AND  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`wo_permission` = '1' $comp_query ORDER BY a.`project_code` ASC ";
-		$result_wo = $mysql->sqlordie($userExistingProject);
-		if($result_wo->num_rows > 0){
-		while($comRow = $result_wo->fetch_assoc()) {
-					//p($comRow);
-					$oldProjectArray[] = $comRow['project_id'];
-			}
-		$countOldProjectArray = count($oldProjectArray);
-		}else{
-			$countOldProjectArray = 0;
-		}
-		$userProjectArray = $_REQUEST['userProjectArray'];
-		$newUserProjectArray = @explode(",",$userProjectArray);
-		if($newUserProjectArray[0] == ''){
-			$countOldProjectArray = 0;
-		}else{
-			$countNewUserProjectArray = count($newUserProjectArray);
-		}
-		if($countOldProjectArray > $countNewUserProjectArray){
-			$deleteArrayDiff = array_diff($oldProjectArray,$newUserProjectArray);
-			foreach($deleteArrayDiff as $pKey => $projectId){
-				$update_perms = "DELETE FROM `user_project_permissions` WHERE `project_id`='$projectId' AND `user_id` ='".$mysql->real_escape_string($userID)."'";
-				$mysql->sqlordie($update_perms);
+	$usersExistingCompany = array();
+	$usersExistingCompany = getUserExistingCompanies($userID);
+	$company = explode(",",$company);
+	if(count($usersExistingCompany) > 0){
+		//Check the differnce
+		if(count($company) >0){
+			foreach($company as $company_key => $new_company_id){
+				if(!in_array($new_company_id,$usersExistingCompany)){
+					$insertCompanyQuery = "INSERT INTO `users_companies` SET `user_id` =".$userID."
+					, `company_id` = ".$new_company_id.", `deleted` ='0', 
+					`modify_date` = '".date('Y-m-d H:i:s')."' ";
+					$mysql->sqlordie($insertCompanyQuery );
+				
 				}
 			
-		}
-		if($countOldProjectArray < $countNewUserProjectArray){
-			$deleteArrayDiff = array_diff($newUserProjectArray,$oldProjectArray);
-			foreach($deleteArrayDiff as $pKey => $projectId){
-				$update_perms = "INSERT INTO `user_project_permissions` (`user_id`,`project_id`,`active`) VALUES";
-				$update_perms .= "('" .$mysql->real_escape_string($userID) ."','$projectId','1')";
-				//echo $update_perms;
-				$mysql->sqlordie($update_perms);
-				}
-		}
+			}
 		
+		}
+	
+	}else{//First time
+		if(count($company) > 0){
+			foreach($company as $company_key => $new_company_id){
+				$insertCompanyQuery = "INSERT INTO `users_companies` SET `user_id` =".$userID."
+				, `company_id` = ".$new_company_id.", `deleted` ='0', 
+				`modify_date` = '".date('Y-m-d H:i:s')."' ";
+				$mysql->sqlordie($insertCompanyQuery );
+			}
+		
+		}
 	}
+	//For removi g the company
+	if(count($company) >0){
+		if(count($usersExistingCompany) > 0){
+			foreach($usersExistingCompany as $company_key => $new_company_id){
+				if(!in_array($new_company_id,$company)){
+					/*echo $uCompanyQuery = "UPDATE `users_companies` SET `deleted` ='1', 
+					`modify_date` = '".date('Y-m-d H:i:s')."'  WHERE  `user_id` =".$userID."
+					AND `company_id` = ".$new_company_id;
+					$mysql->sqlordie($uCompanyQuery );*/
+					$uCompanyQuery = "DELETE FROM `users_companies`  WHERE  `user_id` =".$userID."
+					AND `company_id` = ".$new_company_id;
+					$mysql->sqlordie($uCompanyQuery );
+					
+				}		
+			
+			}	
+		
+	
+		}
+	
+	}
+	
+	function getUserExistingCompanies($userID){
+		global $mysql;
+		$company_array = array();
+		$query = "SELECT company_id from users_companies WHERE user_id=".$userID;
+		$comm_result = $mysql->sqlordie($query );
+		if($comm_result->num_rows > 0){
+			while($comRow = $comm_result->fetch_assoc()){
+				$company_array[] = $comRow['company_id'];
+			
+			}
+		}
+		return $company_array;
+	
+	}
+	
  
 ?>
