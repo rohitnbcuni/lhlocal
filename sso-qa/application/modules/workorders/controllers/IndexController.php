@@ -38,12 +38,9 @@
 					<label for="client_filter" id="client_filter_label">Client</label>
 					<select id="client_filter" onchange="changeCompany();">
 						<option value="-1">Show All</option>
-					'.WoDisplay::getCompanyHTML().'
+					'.WoDisplay::getUserCompany().'
 					</select>
-					<label for="project_filter" id="project_filter_label">Project</label>
-					<select id="project_filter" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'2\');">
-						<option value="-1">Show All</option>
-					</select>
+					
 					<label for="status_filter" id="status_filter_label">Status</label>
 					<select id="status_filter" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\');">
 						<option value="-1">Show All</option>
@@ -95,7 +92,7 @@
 				<INPUT TYPE="hidden" ID="search_hidden" VALUE="" />';
 
 				echo '<div class="title_med2 workorders_filter">
-				<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE"" />
+				<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE="Outage,Problem,Request" />
 					<label for="project_status_filter" style="color: #fff;float: left; margin-top: 10px; font-size: 15px;" id="project_status_filter_label">Request Type</label>
 					<select id="control_7" name="control_7[]" multiple="multiple" size="5">
 						<option value=""></option>
@@ -540,17 +537,7 @@
 									$draft_pm = '';
 								}
 						echo'</ul><div '.$pageLoadHide.' id="pageLoadHide"> <ul>
-							<li>
-								<label for="wo_project" id="wo_project_label">Project:</label>';
-								$project_by_prev = ($wo_data[0]['project_id'] != '')?$wo_data[0]['project_id']:'';
-								echo '<input type="hidden" name="hidden_projecd_id" id="hidden_projecd_id" value="'.$project_by_prev.'">
-								<div id="project_loader" style="margin-left:186px"><img  src="/_images/loading.gif" alt="loading.." /></div>
-								<div id="project_loader_field" style="display:none;">
-								<select "'.$closed_wo_style.'" class="field_medium" name="wo_project" id="wo_project">';
-									
-								echo '</select>
-								</div>
-							</li>
+							
 							<li id="li_CRITICAL" '.$li_CRITICAL.' >
 								<label for="wo_critical" id="wo_critical_label">Critical:</label>
 								<input "'.$closed_wo_style.'" type="checkbox" name="CRITICAL" value="TRUE" id="CRITICAL"  '.WoDisplay::getcustomCheckbox("CRITICAL",$custom_feild_arr['CRITICAL']).' >';
@@ -647,7 +634,18 @@
 								echo WoDisplay::getcustomDropDown("SITE_NAME",$custom_feild_arr['SITE_NAME']);
 								echo '</select>
 							</li>
-
+							<li>
+								<label for="company_id" id="company_id_label">Company:</label>
+								<select "'.$closed_wo_style.'" class="field_medium" name="company_id" id="company_id">
+									<option value=""></option>	
+								';
+								if(isset($_REQUEST['wo_id'])) {
+									echo WoDisplay::getUserCompany($wo_data[0]['company_id']);
+								} else {
+									echo WoDisplay::getUserCompany();
+								}
+								echo '</select>
+							</li>
 							<li><label for="wo_title" id="wo_title_label">Brief Description:</label><input "'.$closed_wo_style.'" name="wo_title" id="wo_title" class="field_large" type="text" value="' . htmlspecialchars(@$wo_data[0]['title']) .'" /></li>
 							<li><label for="wo_example_url" id="wo_example_url_label">Example URL:</label><input "'.$closed_wo_style.'" name="wo_example_url" id="wo_example_url" class="field_large" type="text" value="' . htmlspecialchars(@$wo_data[0]['example_url']) .'"/></li>
 <!--=========== Ticket# 16857  wrap description body by html_entity_decode ===========-->						
