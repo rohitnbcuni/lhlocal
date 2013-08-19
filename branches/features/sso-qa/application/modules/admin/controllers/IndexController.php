@@ -890,16 +890,16 @@
 						<div class="row">
 							<div class="label"><label>Company:</label></div>';
 							$r = '';
-							if(empty($users['company']) || $users['company'] == '' || $users['company'] == '-1'){
-								echo '<select id="user_company" name="user_company" class="field_medium" width="210" style="width: 210px">
+							
+							//if(empty($users['company']) || $users['company'] == '' || $users['company'] == '-1'){
+								echo '<div style="margin-left:-202px;float:left;">
+								<select id="user_company" name="user_company" class="field_medium"  multiple="multiple" style="width: 210px;margin:0px;">
 									<option value="-1">--Select a Company--</option>
-									'.AdminDisplay::getCompanyHTML().'
+									'.AdminDisplay::getUserCompanyHTML($users['id']).'
 									</select>';
-							}else{
-								echo '<input type="text"  class="readonly" readonly="readonly"  name="userID" id="userID" value="'. AdminDisplay::getUserCompany($users['company']).'" >
-								<input type="hidden" id="user_company" value="'.$users['company'].'">';
-							}
-						echo '</div>					
+							//}
+						echo '</div>
+						</div>
 							
 						
 						<div class="row">
@@ -932,14 +932,7 @@
 							<div class="label"><label>Deleted:</label></div>
 								<input type="checkBox" class="adminCheckBox" DISABLED style="width:10px;" name="userDeletedStatus" id="userDeletedStatus" value="" '.$deletedCheck.'>
 						</div>
-						<div class="row" >
-							<div class="label2"><label><u>User Project Permission:</u></label></div>
-							
-							<input type="hidden" name="userStatus" id="userStatus" value="'.$userStatus.'">
-							<div style="margin-left:-73px;">
-							<select class="field_medium" name="userProjectArray" id="userProjectArray" multiple="multiple">';
-								echo AdminDisplay::getAllCompaniesProjectOptionEditHTML($users['id'], $userStatus,$users['company'],$userProjectListArray);
-						echo'</select></div></div>
+						
 						<div class="row">
 							<div class="label2"><label><u>User Access</u></label></div>						
 						</div>';
