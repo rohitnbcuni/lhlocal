@@ -16,7 +16,7 @@
 		$woId = $mysql->real_escape_string(@$_POST['woId']);
 		$dirName = $mysql->real_escape_string(@$_POST['dirName']);
 		$requestedId = $mysql->real_escape_string(@$_POST['requestedId']);
-		$projectId = $mysql->real_escape_string(@$_POST['projectId']);
+		$company_id = $mysql->real_escape_string(@$_POST['company_id']);
 		$woTypeId = $mysql->real_escape_string(@$_POST['woTypeId']);
 		$priorityId = $mysql->real_escape_string(@$_POST['priorityId']);
 		$timeSens = $mysql->real_escape_string(@$_POST['timeSens']);
@@ -199,11 +199,11 @@
 			}
 
 			$insert_wo = "INSERT INTO `workorders` "
-				."(`project_id`,`assigned_to`,`type`,`status`,`title`,"
+				."(`company_id`,`assigned_to`,`type`,`status`,`title`,"
 				."`example_url`,`body`,`requested_by`,`assigned_date`,`estimated_date`,"
 				."`creation_date`,`rally_type`,`rally_project_id`,`launch_date`,`cclist`,`draft_date`,`active`) "
 				."VALUES "
-				."('$projectId','$woAssignedTo',$woTypeId,'$woStatus','$woTitle',"
+				."('$company_id','$woAssignedTo',$woTypeId,'$woStatus','$woTitle',"
 				."'$woExampleURL','$woDesc','$requestedId',$assignedDate,'$sql_date',"
 				."NOW(), '$rallyType','$rallyProject','$sql_date','$cc_arrayData','$insertsql_draft_date','$isActive')";
 			@$mysql->sqlordie($insert_wo);
@@ -297,7 +297,7 @@
 			
 			
 			$update_wo = "UPDATE `workorders` SET "
-				."`project_id`='$projectId', "
+				."`company_id`='$company_id', "
 				."`assigned_to`='$woAssignedTo', "
 				.$assigned_date
 				.$close_date
@@ -549,20 +549,7 @@
 						$msg .="<b>WO [" . $link . "] </b>".$bodyTxt."<br><br>";
 						$msg .="<b>Request Type: </b>" .$request_type_arr[$wo_req_type_row['field_name']] ."<br>";
 
-						//If ticket is critical then set header as Higher Priority
-						$select_req_type_qry_critical = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a INNER JOIN `lnk_custom_fields_value` b  ON (a.field_id = b.field_id) WHERE `workorder_id`='$getWoId' and a.field_key='CRITICAL' ";
-						$req_type_res_cri = $mysql->sqlordie($select_req_type_qry_critical);
-						$req_type_row_critical = $req_type_res_cri->fetch_assoc();
-						
-						if($req_type_row_critical['field_id']== '13'){
-							$headers .= "\r\n";
-							$headers .= "X-Priority: 1 (Highest)";
-							$headers .= "\r\n";
-							$headers .= "X-MSMail-Priority: High";
-							$headers .= "\r\n";
-							$headers .= "Importance: High";
-						}
-						///////////////////END
+
 
 
 
