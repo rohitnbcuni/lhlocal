@@ -66,9 +66,13 @@
 				$phone = trim($this->_request->getParam('phone'));
 				if($phone != ''){
 					$dataArray = array('company' => $user_company, "phone_office" => $phone);
+					
 				}else{
 					$dataArray = array('company' => $user_company);
+					
 				}
+				$dataArray2 = array('company_id' => $user_company,'modify_date' => date("Y-m-d H:i:s"), 'user_id' => $_SESSION['user_id']);
+				$db->insert("users_companies", $dataArray2);
 				
 				$db->update("users", $dataArray, $where);
 				

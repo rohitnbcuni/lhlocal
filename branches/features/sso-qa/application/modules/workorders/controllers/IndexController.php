@@ -38,7 +38,7 @@
 					<label for="client_filter" id="client_filter_label">Client</label>
 					<select id="client_filter" onchange="changeCompany();">
 						<option value="-1">Show All</option>
-					'.WoDisplay::getUserCompany().'
+					'.WoDisplay::getUserCompany($_COOKIE["lighthouse_create_wo_data"]).'
 					</select>
 					
 					<label for="status_filter" id="status_filter_label">Status</label>
