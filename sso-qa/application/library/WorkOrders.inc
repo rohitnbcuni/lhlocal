@@ -671,7 +671,11 @@
 			$db = Zend_Registry::get('db');
 			$html = '';
 			$user_id = $_SESSION['user_id'];
-		
+			if($cid == ''){
+				$query = "SELECT company  from users WHERE id = $user_id";
+				$result = $db->fetchOne($query);
+				$cid = $result['company'];
+			}
 			$allCompanies = $db->fetchAll("SELECT c.id, c.name FROM companies c INNER JOIN users_companies uc ON (uc.company_id = c.id) WHERE uc.user_id = ".$user_id." AND c.active ='1' AND c.deleted='0' ORDER BY c.name ASC");
 			
 			foreach($allCompanies as $company_key => $company_val){
