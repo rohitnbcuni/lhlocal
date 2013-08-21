@@ -6,7 +6,7 @@
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 	if(isset($_SESSION['user_id'])) {
 		$user = $_SESSION['lh_username'];
-	    $password = $_SESSION['lh_password'];
+	    //$password = $_SESSION['lh_password'];
 		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 		global $mysql;
 		//$sanitized['woTitle'] = filter_input( INPUT_POST, 'woTitle', FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
@@ -75,10 +75,12 @@
 		if($isActive == 0){
 			$updatesql_draft_date = "`draft_date`='".dateTimeToSql_new($timeSensDate_draft,$timeSensTime_draft,$ampm_draft,'00')."', ";
 			$insertsql_draft_date = dateTimeToSql_new($timeSensDate_draft,$timeSensTime_draft,$ampm_draft,'00');
-		} 
-		$select_wo_old = "SELECT * FROM `workorders` WHERE `id`= ?";
-		$wo_old_res = $mysql->sqlprepare($select_wo_old, array($woId));
-		$wo_old_row = $wo_old_res->fetch_assoc();
+		}
+		if($woId != ''){	
+			$select_wo_old = "SELECT * FROM `workorders` WHERE `id`= ?";
+			$wo_old_res = $mysql->sqlprepare($select_wo_old, array($woId));
+			$wo_old_row = $wo_old_res->fetch_assoc();
+		}
 
 		$commentSubmit = $mysql->real_escape_string(@$_POST['commentSubmit']);
 		if(isset($commentSubmit) && !empty($commentSubmit) && $commentSubmit == 'comment' && !empty($woId)){
@@ -143,10 +145,10 @@
 			}
 		
 
-			$proj_default_cc = "SELECT `cclist` FROM `projects` WHERE `id`= ?";
+			/*$proj_default_cc = "SELECT `cclist` FROM `projects` WHERE `id`= ?";
 			$proj_default_cc_res = $mysql->sqlprepare($proj_default_cc, array($projectId));
 			$proj_default_cc_row = $proj_default_cc_res->fetch_assoc();
-			$defaultCC = $proj_default_cc_row['cclist'];
+			$defaultCC = $proj_default_cc_row['cclist'];*/
 
 			$company_default_cc = "SELECT c.`cclist` FROM `companies` c,`projects` p WHERE p.`id`= ? AND p.`company` = c.`id`";
 			$company_default_cc_res = $mysql->sqlprepare($company_default_cc,array($projectId));
@@ -410,12 +412,12 @@
 
 		$user_keys = array_keys($users_email);
 		$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
-		$select_project = "SELECT * FROM `projects` WHERE `id`= ?";
+		/*$select_project = "SELECT * FROM `projects` WHERE `id`= ?";
 		$project_res = $mysql->sqlprepare($select_project,array($wo_row['project_id']) );
 		$project_row = $project_res->fetch_assoc();
-		//p($project_row);
+		//p($project_row);*/
 		$select_company = "SELECT * FROM `companies` WHERE `id`= ?";
-		$company_res = $mysql->sqlprepare($select_company ,array($project_row['company']));
+		$company_res = $mysql->sqlprepare($select_company ,array($wo_row['company_id']));
 		$company_row = $company_res->fetch_assoc();
 		$wo_status = "SELECT * FROM `lnk_workorder_status_types` WHERE `id`= ?";
 		$wo_status_res = $mysql->sqlprepare($wo_status,array($woStatus));
@@ -544,7 +546,7 @@
 							
 						$msg =  "<b>Requestor: </b>" . $requestor_user_row['first_name'].' '. $requestor_user_row['last_name']. "<br><br>";
 						$msg .="<b>Company: </b>" . $company_row['name'] . "<br><br>";
-						$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
+						//$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
 						$msg .="<b>Site: </b>" .$site_name_row['field_name'] ."<br><br>";				
 						$msg .="<b>WO [" . $link . "] </b>".$bodyTxt."<br><br>";
 						$msg .="<b>Request Type: </b>" .$request_type_arr[$wo_req_type_row['field_name']] ."<br>";

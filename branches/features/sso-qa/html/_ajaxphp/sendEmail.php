@@ -36,11 +36,11 @@
 			$request_type_arr = array(	"Submit a Request" => "Request",
 										"Report a Problem" => "Problem",
 										"Report an Outage" => "Outage");
-			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
+			/*$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
 			$project_res = $mysql->sqlordie($select_project);
-			$project_row = $project_res->fetch_assoc();
+			$project_row = $project_res->fetch_assoc();*/
 	  
-			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
+			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $wo_row['company_id'] . "'";
 			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
 	  
@@ -97,7 +97,7 @@
 	  
 				$msg =  "<b>Requestor: </b>" . $requestor_user_row['first_name'].' '. $requestor_user_row['last_name']. "<br><br>";
 				$msg .="<b>Company: </b>" . $company_row['name'] . "<br><br>";
-				$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
+				//$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
 				$msg .="<b>Site: </b>" .$site_name_row['field_name'] ."<br><br>";
 				
 				if($user == $requestedId )
@@ -173,11 +173,11 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			$request_type_arr = array(	"Submit a Request" => "Request",
 										"Report a Problem" => "Problem",
 										"Report an Outage" => "Outage");
-			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
+			/*$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
 			$project_res = $mysql->sqlordie($select_project);
-			$project_row = $project_res->fetch_assoc();
+			$project_row = $project_res->fetch_assoc();*/
 	  
-			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
+			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $wo_row['company_id']. "'";
 			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
 	  
@@ -239,7 +239,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 				$to = $email_addr_row['email'];
 				$msg =  "<b>Requestor: </b>" . $requestor_user_row['first_name'].' '. $requestor_user_row['last_name']. "<br><br>";
 				$msg .="<b>Company: </b>" . $company_row['name'] . "<br><br>";
-				$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
+				//$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
 				$msg .="<b>Site: </b>" .$site_name_row['field_name'] ."<br><br>";
 
 
@@ -359,7 +359,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 	  
 				$msg =  "<b>Requestor: </b>" . $requestor_user_row['first_name'].' '. $requestor_user_row['last_name']. "<br><br>";
 				$msg .="<b>Company: </b>" . $company_row['name'] . "<br><br>";
-				$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
+				//$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
 				$msg .="<b>Site: </b>" .$site_name_row['field_name'] ."<br><br>";
 				if($user == $woAssignedTo)
 				{
@@ -468,7 +468,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 	  
 				$msg =  "<b>Requestor: </b>" . $requestor_user_row['first_name'].' '. $requestor_user_row['last_name']. "<br><br>";
 				$msg .="<b>Company: </b>" . $company_row['name'] . "<br><br>";
-				$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
+				//$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
 				$msg .="<b>Site: </b>" .$site_name_row['field_name'] ."<br><br>";
 				if($woStatus == 5){
 					$feedbackType = "marked Needs More Info";
