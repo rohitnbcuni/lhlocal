@@ -3,7 +3,8 @@
 	define('NBCDOTCOM' , 8);
 	class Workorders_IndexController extends LighthouseController { 
 		public function indexAction() {
-		$cnt = 5;
+			$this->checkCompany();
+			$cnt = 5;
 			if($_SESSION['login_status'] == "client") {
 				echo '<input type="hidden" name="client_login" id="client_login" value="client" />';
 			} else {
@@ -2046,6 +2047,25 @@
 			}
 			$this->_helper->layout->disableLayout();
 		
+		
+		}
+		
+		
+		public function checkCompany(){
+			//print_r($_SESSION);
+			if(empty($_SESSION['company'])){
+				$user_id = $_SESSION['user_id'];
+				$u_data = WoDisplay::getQuery("SELECT company FROM `users` WHERE `id`='$user_id' LIMIT 1");
+				//print_r($u_data);
+				//die;
+				if(($u_data[0]['company'] != '') AND($u_data[0]['company'] > 0)){
+					$_SESSION['company'] = $u_data[0]['company'];
+				}else{
+					$this->_redirect("workorders/profile/index");
+				
+				}
+		
+			}
 		
 		}
 		
