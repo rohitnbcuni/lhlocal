@@ -182,11 +182,11 @@
 			}
 			$user_keys = array_keys($users_email);
 			$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
-			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$bc_id_row['project_id'] ."'";
+			/*$select_project = "SELECT * FROM `projects` WHERE `id`='" .$bc_id_row['project_id'] ."'";
 			$project_res = $mysql->sqlordie($select_project);
-			$project_row = $project_res->fetch_assoc();
+			$project_row = $project_res->fetch_assoc();*/
 
-			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
+			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $bc_id_row['company_id'] . "'";
 			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
             /*$latest_comment=(Util::escapewordquotes($_POST['comment']));
@@ -219,7 +219,7 @@
 				$msg ="<b>Latest Comment:</b> " .$latest_string ."<br><br>";
 				$msg .=  "<b>Requestor: </b>" . $requestor_user_row['first_name'].' '. $requestor_user_row['last_name']. "<br><br>";
 				$msg .="<b>Company: </b>" . $company_row['name'] . "<br><br>";
-				$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
+				//$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
 				$msg .="<b>Site: </b>" .$site_name_row['field_name'] ."<br><br>";				
 				$msg .="<b>".ucfirst($commenter_row['first_name']) ." " .ucfirst($commenter_row['last_name']) ."</b> commented on work order "."<b>[" . $link . "]</b><br><br>";
 				$msg .="<b>Request Type: </b>" .$request_type_arr[$req_type_row['field_name']] ."<br>";
