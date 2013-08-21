@@ -186,7 +186,7 @@
 			$project_res = $mysql->sqlordie($select_project);
 			$project_row = $project_res->fetch_assoc();*/
 
-			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $bc_id_row['company_id'] . "'";
+			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $email_row['company_id'] . "'";
 			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
             /*$latest_comment=(Util::escapewordquotes($_POST['comment']));
