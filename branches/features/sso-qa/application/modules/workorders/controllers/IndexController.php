@@ -252,6 +252,7 @@
 			</div>';
 		}
 		public function createAction() {
+			$this->checkCompany();
 			if($_SESSION['login_status'] == "client") {
 				$hideStyle = "display: none;";
 				if($_SESSION['company'] == NBCDOTCOM){
