@@ -71,7 +71,7 @@
 				{
 
 					$wo_data_cookie_all = explode("~", @$wo_data_cookie);
-					$requestTypeFilter = $wo_data_cookie_all[4];
+					$requestTypeFilter = $wo_data_cookie_all[3];
 					if(!empty($requestTypeFilter))
 					{
 						$req_Type_Arr = Array();
