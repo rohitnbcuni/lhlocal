@@ -39,7 +39,7 @@
 					<label for="client_filter" id="client_filter_label">Client</label>
 					<select id="client_filter" onchange="changeCompany();">
 						<option value="-1">Show All</option>
-					'.WoDisplay::getUserCompany($_COOKIE["lighthouse_create_wo_data"]).'
+					'.WoDisplay::getUserCompany().'
 					</select>
 					
 					<label for="status_filter" id="status_filter_label">Status</label>
@@ -67,7 +67,7 @@
 				$req_Type_Arr['Problem'] = ' selected="selected"';
 				$req_Type_Arr['Request'] = ' selected="selected"';
 
-				if(!empty($wo_data_cookie))
+				/*if(!empty($wo_data_cookie))
 				{
 
 					$wo_data_cookie_all = explode("~", @$wo_data_cookie);
@@ -83,7 +83,7 @@
 							}
 						}
 					}
-				}
+				}*/
 				$end_date_default = date("m/d/Y");// current date;
 				$start_date_add_one_month = strtotime(date("m/d/Y", strtotime($end_date_default)) . "-1 month");
 				$start_date_default = date("m/d/Y", $start_date_add_one_month);
@@ -2061,11 +2061,24 @@
 				//die;
 				if(($u_data[0]['company'] != '') AND($u_data[0]['company'] > 0)){
 					$_SESSION['company'] = $u_data[0]['company'];
+					$this->updateUserCompany($_SESSION['company'],$user_id );
 				}else{
 					$this->_redirect("workorders/profile/index");
 				
 				}
 		
+			}
+		
+		}
+		
+		
+		function updateUserCompany($company_id, $user_id){
+			$db = Zend_Registry::get('db');
+			$query = "SELECT user_id FROM `users_companies` WHERE `company_id`='$company_id' AND user_id  = '$user_id'  LIMIT 1"; 
+	   		$result = $db->fetchOne($query);
+			if($result == ''){
+				$dataArray2 = array('company_id' => $company_id,'modify_date' => date("Y-m-d H:i:s"), 'user_id' => $user_id, 'deleted' => '0');
+				$db->insert("users_companies", $dataArray2);
 			}
 		
 		}
