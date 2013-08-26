@@ -894,7 +894,6 @@
 							//if(empty($users['company']) || $users['company'] == '' || $users['company'] == '-1'){
 								echo '<div style="margin-left:-202px;float:left;">
 								<select id="user_company" name="user_company" class="field_medium"  multiple="multiple" style="width: 210px;margin:0px;">
-									<option value="-1">--Select a Company--</option>
 									'.AdminDisplay::getUserCompanyHTML($users['id']).'
 									</select>';
 							//}
