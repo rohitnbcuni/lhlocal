@@ -2054,20 +2054,20 @@
 		
 		public function checkCompany(){
 			//print_r($_SESSION);
+			
 			if(empty($_SESSION['company'])){
-				$user_id = $_SESSION['user_id'];
 				$u_data = WoDisplay::getQuery("SELECT company FROM `users` WHERE `id`='$user_id' LIMIT 1");
-				//print_r($u_data);
-				//die;
 				if(($u_data[0]['company'] != '') AND($u_data[0]['company'] > 0)){
 					$_SESSION['company'] = $u_data[0]['company'];
-					$this->updateUserCompany($_SESSION['company'],$user_id );
+					
 				}else{
 					$this->_redirect("workorders/profile/index");
 				
 				}
 		
 			}
+			$user_id = $_SESSION['user_id'];
+			$this->updateUserCompany($_SESSION['company'],$user_id );
 		
 		}
 		
