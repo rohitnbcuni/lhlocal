@@ -39,8 +39,8 @@ if(ISSET($_SESSION['user_id'])){
 	
 	}
 	
-    $workorder_list_query = "SELECT w.*, c.name as company_name FROM workorders w INNER JOIN companies c ON (c.id=w.company_id) WHERE company_id IN ($company_ids)";
-	$workorder_result = $mysql->sqlordie($workorder_list_query);
+    $workorder_list_query = "SELECT w.*, c.name as company_name FROM workorders w INNER JOIN companies c ON (c.id=w.company_id) WHERE company_id IN ($company_ids) AND w.active='1' AND w.deleted ='0' AND w.archived='0' ORDER BY w.`company_id`,  w.`title` ASC";
+	$workorder_result = $mysql->sqlordie($workorder_list_query) ;
 	$i=-1;
 
 	$wo_status_array = array();
@@ -88,6 +88,7 @@ if(ISSET($_SESSION['user_id'])){
 
 	$previous_compnay_id = '';
 	$previous_key = '';
+	$i = -1;
 	while($workorder_row = $workorder_result->fetch_assoc()) {
 		//print_r($workorder_row); die;
 		if($workorder_row['company_id'] != $previous_compnay_id){
@@ -95,7 +96,7 @@ if(ISSET($_SESSION['user_id'])){
 			$previous_key = $i;
 			$i=$i+1;
 		}
-
+		//echo $i;
 		if(!array_key_exists($i, $postingList)){
 			$postingList[$i] = Array();
 		}
@@ -258,6 +259,7 @@ if(ISSET($_SESSION['user_id'])){
 		
 		//array_push($postingList[$i]['workorders'],Array('id' => $workorder_row['id'], 'title' => htmlentities(substr($workorder_row['title'], 0, 37).$elipse), 'full_title' => htmlentities($workorder_row['title']), 'status' => $wo_status_array[$workorder_row['status']],'status_id' => $workorder_row['status'], 'req_type' => $REQ_TYPE,'severity'=>$WO_SEVERITY, 'requested_by' => $requested, 'requested_by_id' => $workorder_row['requested_by'], 'assigned_to' => $assigned,'assigned_to_id' => $workorder_row['assigned_to'],'open_date' => format_date($workorder_row['creation_date']), 'assigned_date' => format_date($workorder_row['assigned_date']), 'completed' => format_date($woCompletedDate),'launch_date' => format_date($workorder_row['launch_date']), 'estimated_date' => format_date($woEastimateDate), 'class' => $dlClass, 'overdue_flag' => $overdue_flag,'wo_last_comment'=> nl2br(htmlentities($wo_last_comment)),'wo_last_comment_user_id'=>$wo_last_comment_user_id,'wo_last_comment_user'=>$wo_last_comment_user ,'wo_last_comment_date'=>format_date($wo_last_comment_date)));
 //	echo count($postingList);
+	//print "<pre>";
 	//print_r($postingList);
   }
 }
