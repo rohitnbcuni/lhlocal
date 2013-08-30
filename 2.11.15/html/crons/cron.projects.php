@@ -118,7 +118,7 @@
 			if(sizeof($name_split) >= 2) {
 				//$project_code = $name_split[0];
 				//$project_name = $name_split[1];
-				list($project_code, $project_name) = explode('-', $name_split,2);
+				list($project_code, $project_name) = explode('-', $name,2);
 			} else {
 				$project_code = "";
 				$project_name = $name_split[0];
