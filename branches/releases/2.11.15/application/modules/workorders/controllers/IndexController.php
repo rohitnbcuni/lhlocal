@@ -725,7 +725,7 @@
 										if($_SESSION['login_status'] != "client" || isset($_REQUEST['wo_id'])) {
 											echo '<select "'.$closed_wo_style.'" class="field_small" name="wo_status" id="wo_status" onchange="changeAssignedToUser();return false;">';
 												if(isset($_REQUEST['wo_id'])) {
-													echo WoDisplay::getStatusOptionEditHTML($wo_data[0]['status'],  $readonly, $wo_data[0]['project_id'], $wo_data[0]['active'],$wo_data[0]['archived']);
+													echo WoDisplay::getStatusOptionEditHTML($wo_data[0]['status'],  false, $wo_data[0]['project_id'], $wo_data[0]['active'],$wo_data[0]['archived']);
 												} else {
 													echo WoDisplay::getStatusOptionHTML($readonly);
 												}
