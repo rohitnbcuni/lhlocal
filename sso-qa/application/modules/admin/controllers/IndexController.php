@@ -906,13 +906,27 @@
 								<input type="text" class="readonly" readonly name="userID" id="userID" value="'. $users['sso'].'" >
 						</div>';
 
-						if($users['login_status']=='admin')
-						{
-							$adminCheck = " checked";
-						}
+						
+						
+						$login_status = array("admin" => "Admin", "client" => "Client", "employee" => "Employee");
 						echo '<div class="row">
-							<div class="label"><label>Admin:</label></div>
-								<input type="checkBox" class="adminCheckBox" DISABLED style="width:10px;" name="userAdminAccess" id="userAdminAccess" value="" '.$adminCheck.'>
+							<div class="label"><label>Login Status:</label></div>
+								<select id="userAdminAccess" name="userAdminAccess" class="field_medium">';
+								if($users['login_status'] == ''){
+										$users['login_status'] = 'client';
+										
+									}
+								foreach($login_status as $status_key => $status_val){
+									$adminCheck = "";
+									if($status_key == $users['login_status']){
+										$adminCheck = " selected='selected'";
+									
+									}
+									echo '<option value="'.$status_key.'">'.$status_val.'</option>';
+									
+								}
+								
+								echo'</select>
 						</div>';
 						if($users['active']=='1')
 						{
