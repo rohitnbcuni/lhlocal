@@ -913,7 +913,12 @@
 							<div class="label"><label>Login Status:</label></div>
 								<select id="userAdminAccess" name="userAdminAccess" class="field_medium">';
 								if($users['login_status'] == ''){
-										$users['login_status'] = 'client';
+										//@TODO: Need to change with Config variable
+										if($users['company'] == '2'){
+											$users['login_status'] = 'admin';
+										}else{
+											$users['login_status'] = 'client';
+										}
 										
 									}
 								foreach($login_status as $status_key => $status_val){
