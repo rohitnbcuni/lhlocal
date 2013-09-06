@@ -256,14 +256,14 @@ function updateUser(USER_ACCESS) {
 		if($('#userDeletedStatus').is(':checked')){
 			userDeletedStatus = 1;  
 		}
-		
-		if($('#userAdminAccess').is(':checked')){
+		userAdminAccess = $('#userAdminAccess').val();
+		/*if($('#userAdminAccess').is(':checked')){
 			userAdminAccess = 'admin';  
 		}
 		else
 		{
 			userAdminAccess = ''; 
-		}
+		}*/
 		//var user_project_array = $("#user_project_array").val();
 		
 		var user_access_bit = "";
