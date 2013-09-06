@@ -3,7 +3,7 @@
 	class Login_IndexController extends LighthouseController  { 
 		public function indexAction() {
 			$publickey = "6Lf5B80SAAAAAMjwfX5OBpvylvOA7IhZjcSKW1l9"; // you got this from the signup page
-         		$this->view->recaptcha = recaptcha_get_html($publickey);
+         		$this->view->recaptcha = recaptcha_get_html($publickey,'',true);
 			$this->view->loginform = "login_form";
 			if($_SESSION['captcha_error']){
 				$this->view->error = $_SESSION['captcha_error'];
