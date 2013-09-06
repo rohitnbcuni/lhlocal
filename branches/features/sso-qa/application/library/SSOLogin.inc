@@ -24,7 +24,7 @@
 				if($userInfo['login_status'] == ''){
 					$data_array_login_status =  array();
 					//@TODO: Need to change with Config variable
-					if(in_array($userInfo['company'],$nbc_employee_ids){
+					if(in_array($userInfo['company'],$nbc_employee_ids)){
 						$data_array_login_status = array("login_status" => 'employee');
 					
 					}else{
