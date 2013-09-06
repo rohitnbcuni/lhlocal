@@ -101,6 +101,10 @@
 						$_SESSION['first'] = $row['first_name'];
 						$this->_session->last = $row['last_name'];
 						$_SESSION['last'] = $row['last_name'];
+						if($row['login_status'] == ''){
+							$row['login_status'] = 'client';
+						
+						}
 						$this->_session->login_status = $row['login_status'];
 						$_SESSION['login_status'] = $row['login_status'];
 						$this->_session->role = $row['role'];
@@ -117,21 +121,24 @@
 						$user_session['user_id'] = $row['id'];
 						$user_session['first'] = $row['first_name'];
 						$user_session['last'] = $row['last_name'];
+						
 						$user_session['login_status'] = $row['login_status'];
 						$user_session['role'] = $row['role'];
 						$user_session['resource'] = $row['resource'];
 						$user_session['company'] = $row['company'];
 						$user_session['user_access_bits'] = $row['user_access'];
 
-						if($row['login_status'] != "admin"){
+						/*if($row['login_status'] != "admin"){
 							if($row['company'] == "2" || $row['company'] == "136" || $row['company'] == "141") {
 								$login_status = "employee";
 							} else {
 								$login_status = "client";
 							}
-							$_SESSION['login_status'] = $login_status;
-							$user_session['login_status'] = $login_status;
-						}
+							
+						}*/
+						
+						$_SESSION['login_status'] = $row['login_status'];
+						
 						$_SESSION['loggedin'] = true;
 						$user_session['loggedin'] = true;
 						$this->set_session($user_session, "lh_user");
