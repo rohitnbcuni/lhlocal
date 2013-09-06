@@ -158,15 +158,16 @@
 							$this->_redirect("workorders");
 							
 							}else{
-							$pos = strpos($row['user_access'],'1');
+							$pos = strpos($row['user_access'],1);
 							if( $pos === true){
 								if($pos == 0){
 									$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
 								}else{
 									$this->_redirect("workorders");
 								}
-								$this->_redirect("workorders");
+								
 							}
+							$this->_redirect("workorders");
 							//print_r($row);
 							
 						}
