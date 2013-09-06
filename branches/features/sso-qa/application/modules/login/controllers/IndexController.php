@@ -158,11 +158,19 @@
 							$this->_redirect("workorders");
 							
 							}else{
+							$pos = strpos($row['user_access'],'1');
+							if( $pos === true){
+								if($pos =='0'){
+									$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
+								}else{
+									$this->_redirect("workorders");
+								}
+							}
 							//print_r($row);
-							$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
+							
 						}
 					}else{
-						echo "Invalid Username and PAssword";
+						echo "User has deleted from Lighhouse Application. Please contact Admin";
 					
 					}
 				 
