@@ -922,7 +922,7 @@
 										$adminCheck = " selected='selected'";
 									
 									}
-									echo '<option value="'.$status_key.'">'.$status_val.'</option>';
+									echo '<option value="'.$status_key.'" '.$adminCheck.' >'.$status_val.'</option>';
 									
 								}
 								
