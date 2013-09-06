@@ -6,6 +6,7 @@
 	
 		public function checkUser($userData){
 			//$userData
+			$nbc_employee_ids = array('2');
 			$userInfo = array();
 			$db = Zend_Registry::get('db');
 			//Check sso user in LH DB
@@ -15,11 +16,24 @@
 			//Check User Is Active with email ID in DB
 			$get_user = "SELECT * FROM `users` WHERE `email`='" .$userData['mail'][0] ."' AND `active` = '1'  AND `deleted` = '0' ORDER BY  `users`.`id` DESC LIMIT 1";
 			$userInfo = $db->fetchRow($get_user);
-			$where[] = "email =  '".$userData['mail'][0]."'";
-			$dataArray = array('sso' => $userData['uid'][0]);
-			$db->update("users", $dataArray, $where);
+			
 			if($userInfo == true){
-							
+				$where[] = "email =  '".$userData['mail'][0]."'";
+				$dataArray = array('sso' => $userData['uid'][0]);
+				//If login status
+				if($userInfo['login_status'] == ''){
+					$data_array_login_status =  array();
+					//@TODO: Need to change with Config variable
+					if(in_array($userInfo['company'],$nbc_employee_ids){
+						$data_array_login_status = array("login_status" => 'employee');
+					
+					}else{
+						$data_array_login_status = array("login_status" => 'client');
+					
+					}
+					$dataArray = array_merge($dataArray,$data_array_login_status);	
+				}
+				$db->update("users", $dataArray, $where);			
 				return $userInfo;
 			}else{
 				//Check USER in LH but In deleted mode
@@ -41,9 +55,13 @@
 					$uData['phone_mobile'] = $userData['mobile'][0];
 					$uData['user_img'] = '/_images/empty_mugshot.gif';
 					$uData['sso'] = $userData['uid'][0];
+					
+					//By Default Assign Client Role to all New Users
+					$uData['login_status'] = 'client';
 					$uData['user_access'] =  "00100011";
 					$uData['role'] =  UNASSIGNED_PHASE;
-					
+					$uData['active'] = '1';
+					$uData['deleted'] = '0';
 					try{
 						$db->insert("users", $uData);
 						
@@ -56,7 +74,7 @@
 					return $userInfo;
 				}else{
 					//User is deleted in LH Application
-					$userInfo['error'] = "Invalid User";
+					//$userInfo['error'] = "Invalid User";
 					
 				}
 			
