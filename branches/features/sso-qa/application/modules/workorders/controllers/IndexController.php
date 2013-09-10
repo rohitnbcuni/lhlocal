@@ -2,7 +2,9 @@
 	include('WorkOrders.inc');
 	define('NBCDOTCOM' , 8);
 	class Workorders_IndexController extends LighthouseController { 
+		
 		public function indexAction() {
+		
 			$this->checkCompany();
 			$cnt = 5;
 			if($_SESSION['login_status'] == "client") {
@@ -2054,8 +2056,10 @@
 		
 		public function checkCompany(){
 			//print_r($_SESSION);
-			
+			$user_id = $_SESSION['user_id'];
+			$this->updateUserCompany($_SESSION['company'],$user_id );
 			if(empty($_SESSION['company'])){
+				
 				$u_data = WoDisplay::getQuery("SELECT company FROM `users` WHERE `id`='$user_id' LIMIT 1");
 				if(($u_data[0]['company'] != '') AND($u_data[0]['company'] > 0)){
 					$_SESSION['company'] = $u_data[0]['company'];
@@ -2066,11 +2070,8 @@
 				}
 		
 			}
-			$user_id = $_SESSION['user_id'];
-			$this->updateUserCompany($_SESSION['company'],$user_id );
 		
 		}
-		
 		
 		function updateUserCompany($company_id, $user_id){
 			$db = Zend_Registry::get('db');
