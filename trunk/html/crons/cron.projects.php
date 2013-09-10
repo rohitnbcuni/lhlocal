@@ -103,7 +103,7 @@
 	foreach($feed->project as $project) {
 		$bc_id = $mysql->real_escape_string($project->id);
 		$name = $mysql->real_escape_string($project->name);
-		$name_split = explode(" - ", $name);
+		$name_split = explode("-", $name);
 		$comp_id = $mysql->real_escape_string($project->company->id);
 		$select_proj = "SELECT * FROM `projects` WHERE `bc_id`='$bc_id' and `YEAR`='".$curr_year."'";
 		$proj_res = $mysql->sqlordie($select_proj);
@@ -115,13 +115,16 @@
 			} else {
 				$archive = 1;
 			}
-			if(sizeof($name_split) == 2) {
-				$project_code = $name_split[0];
-				$project_name = $name_split[1];
+			if(sizeof($name_split) >= 2) {
+				//$project_code = $name_split[0];
+				//$project_name = $name_split[1];
+				list($project_code, $project_name) = explode('-', $name,2);
 			} else {
 				$project_code = "";
 				$project_name = $name_split[0];
 			}
+			$project_code = @trim($project_code);
+			$project_name = @trim($project_name);
 			if(array_key_exists($comp_id, $companyArray)){
 				$company = $companyArray[$comp_id];
 			}else{
