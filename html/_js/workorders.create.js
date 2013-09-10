@@ -1531,3 +1531,14 @@ function statusupdatNotifiction(){
 }
 
 
+function showWOTooltip(){
+	var topVar = ($('#wo_tooltip').offset().top + 58); 
+	var leftVar = 175; 
+	$('#wo_tooltip').css({display:'block', left: leftVar + 'px'});
+	}
+
+	function hideWOTooltip(){
+	$('#wo_tooltip').css({display:'none'});
+	}
+
+
