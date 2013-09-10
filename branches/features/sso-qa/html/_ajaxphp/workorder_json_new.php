@@ -22,6 +22,115 @@ if(ISSET($_SESSION['user_id'])){
 	$column_filter_sql = "";   // for sorting based on assigned_to or requested by 
 														  // query for filters start
 	$type = '';
+	$archive_sql = " AND b.`archived`='0' and b.`active`='1'";
+	//$project_archive = " AND b.`archived`='0'";
+	
+	if('1' == $_GET['status']){         // for active workorders
+		$archive_sql = " AND b.`archived`='0' and b.`active`='1'";
+		//$project_archive = " AND b.`archived`='0'";
+	}else if('0' == $_GET['status']){   // for archieved workorders
+		$archive_sql = " AND b.`archived`='1' and b.`active`='1'";
+		//$project_archive = " AND b.`archived`='1'";
+		if(isset($_REQUEST['client']) && $_REQUEST['client'] != '-1'){
+			$client_filter_sql = " AND a.`company` = ".$_REQUEST['client'];
+		}
+		if(isset($_REQUEST['proj_id']) && $_REQUEST['proj_id'] != '-1'){
+			$project_filter_sql = " AND a.`id` = ".$_REQUEST['proj_id'];
+		} 
+		if(isset($_REQUEST['status_filter']) && $_REQUEST['status_filter'] != '-1'){  
+			$status_table_sql = "select `id` from `lnk_workorder_status_types` where name = ?";
+			$status_result = $mysql->sqlprepare($status_table_sql, array($_REQUEST['status_filter']));
+			if($status_result->num_rows == 1){
+			   $status_row = $status_result->fetch_assoc();
+			}	
+			$status_filter_sql = " AND b.`status` = ".$status_row['id'];
+		}
+		if(isset($_REQUEST['assigned_to']) && $_REQUEST['assigned_to'] != '-1'){  
+			$assigned_to_filter_sql = " AND b.`assigned_to` = ".$_REQUEST['assigned_to'];
+		}
+
+		if(isset($_REQUEST['requested_by']) && $_REQUEST['requested_by'] != '-1'){  
+			$requestedby_filter_sql = " AND b.`requested_by` = ".$_REQUEST['requested_by'];
+		}
+
+		if(isset($_REQUEST['column']) && isset($_REQUEST['order'])){     // for column and sorting order
+		$column = $_REQUEST['column'];
+		if($_REQUEST['order'] == '1'){
+		  $sort_order = 'ASC';
+		} else if($_REQUEST['order'] == '0'){
+		  $sort_order = 'DESC';
+		} 
+		if($_REQUEST['column'] == 'open_date'){
+		  $column = 'creation_date';
+		} else if($_REQUEST['column'] == 'due_date'){
+		  $column = 'launch_date';
+		} else if($_REQUEST['column'] == 'assigned_to'){      // joining with users table in case of sorting by assigned_to and request_by
+		  $column = '`users`.`last_name`';
+		  $assigned_to_sort_sql = " JOIN `users` ON b.assigned_to = users.id ";
+		} else if($_REQUEST['column'] == 'requested_by'){
+		  $column = '`users`.`last_name`';
+		  $requested_by_sort_table_sql = " JOIN `users` ON b.requested_by = users.id ";  
+		} else if($_REQUEST['column'] == 'req_type'){
+		  $column = 'lc.`field_name`';    
+		  $req_type_sql = " JOIN `lnk_custom_fields_value` lc ON lc.`field_key` = e.`field_key` AND lc.`field_id` = e.`field_id`";      
+		  if($sort_order == 'ASC'){         //separate sort order only for req_type refer lnk_custom_fields_value
+			$sort_order = 'DESC';
+		  } else if($sort_order == 'DESC'){
+			$sort_order = 'ASC';
+		  }    
+		} else if($_REQUEST['column'] == 'status'){
+		  $column = "lt.`name`";
+		  $status_sql = " JOIN `lnk_workorder_status_types` lt ON lt.`id` = b.`status`";
+		}
+		$column_filter_sql = ",".$column." ".$sort_order;
+		}
+		if(isset($_REQUEST['req_type']) && !empty($_REQUEST['req_type'])){
+		$request_types_array = array("Outage" => "1","Problem" => "2","Request" => "3","noneselected" => "999");
+		$request_array = explode(",",$_REQUEST['req_type']);
+		$request_type_string = "";
+		foreach($request_types_array as $key => $value){
+		  if(in_array($key,$request_array)){
+			$request_type_string = $request_type_string.$value.",";
+		  }
+		} 
+		$request_type_string = substr($request_type_string, 0, -1);
+		$workorder_custom_sql = " JOIN `workorder_custom_fields` e ON b.`id` = e.`workorder_id`";
+		$req_filter_sql =  " AND e.`field_id` IN(".$request_type_string.")";
+		}
+		if(isset($_REQUEST['start_date']) && !empty($_REQUEST['start_date']) && isset($_REQUEST['end_date']) && !empty($_REQUEST['end_date'])){  
+		//  $date_range_filter_sql = " AND b.`creation_date` > '".date('Y-m-d',strtotime($_REQUEST['start_date']))."' AND b.`creation_date` < '".date('Y-m-d',strtotime($_REQUEST['end_date']))."'";
+		$date_range_filter_sql = " AND b.`closed_date` >= '".date('Y-m-d',strtotime($_REQUEST['start_date']))." 00:00:00"."' AND b.`closed_date` <= '".date('Y-m-d',strtotime($_REQUEST['end_date']))." 23:59:00"."'";
+
+		}
+		if(isset($_REQUEST['search']) && !empty($_REQUEST['search'])){
+			$search_filter_table_sql = " LEFT JOIN workorder_comments wc ON wc.workorder_id = b.id";
+			$search_filter_sql = " AND (`title` like '%".$_REQUEST['search']."%' OR `body` like '%".$_REQUEST['search']."%' OR `example_url` like '%".$_REQUEST['search']."%' OR `comment` like '%".$_REQUEST['search']."%')";
+		}
+		if(isset($_REQUEST['page_num'])){
+			$page_num = intval($_REQUEST['page_num']);
+		if($page_num <= 1){
+			$page_num = 1;
+		}
+		} else {
+		$page_num = 1;
+		}
+
+		$page_number_filter_sql = "";
+		if($type != 'excel') {
+		 $page_number_filter_sql = " LIMIT ".(($page_num-1)*50).",".'50';//page_size;
+		}
+
+		$pjt_sql = " JOIN `projects` a ON a.`id`=b.`project_id`";
+
+		$count_wo = "select count(distinct b.`id`) as cnt from   `workorders` b " .$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql .$req_filter_sql. $date_range_filter_sql . $search_filter_sql;
+		$count_result = $mysql->sqlordie($count_wo);
+		if($count_result->num_rows == 1){
+		 $count_row = $count_result->fetch_assoc();
+		}
+		$count = $count_row['cnt']; 
+		}else if('-1' == $_GET['status']){    // for draft workorders
+		$archive_sql = " AND b.`active`='0' AND b.`requested_by`='".$_SESSION['user_id']."'";
+	}
 
 	$user_id = $_SESSION['user_id'];
 	
@@ -38,8 +147,39 @@ if(ISSET($_SESSION['user_id'])){
 		$company_ids = implode(",",$company_row_array);
 	
 	}
+	//////////////////
 	
-    $workorder_list_query = "SELECT w.*, c.name as company_name FROM workorders w INNER JOIN companies c ON (c.id=w.company_id) WHERE company_id IN ($company_ids) AND w.active='1' AND w.deleted ='0' AND w.archived='0' ORDER BY w.`company_id`,  w.`title` ASC";
+	$distinct_assigned_to_sql = "select distinct assigned_to as assigned from `workorders` b".$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_sql . $client_filter_sql .$req_filter_sql. $status_filter_sql . $date_range_filter_sql ; //  $project_filter_sql $assigned_to_filter_sql  $search_filter_sql
+	$distinct_assigned_to_sql = "select id,last_name,first_name from (".$distinct_assigned_to_sql.") as assigned_table,users where users.id = assigned order by last_name";
+	$distinct_assigned_to_sql_result = $mysql->sqlordie($distinct_assigned_to_sql);
+	if($distinct_assigned_to_sql_result->num_rows > 0){
+		while($assigned_to_row = $distinct_assigned_to_sql_result->fetch_assoc()){
+			$assigned_to_user_id_array[] = $assigned_to_row['id'];
+			$assigned_to_user_name_array[] = $assigned_to_row['last_name'].",".$assigned_to_row['first_name'];
+		}
+		$wo_distinct_values_assigned_to = array($assigned_to_user_id_array,$assigned_to_user_name_array);
+	}	
+//	echo "assign+".$distinct_assigned_to_sql;die();
+
+	$distinct_requested_by_sql = "select distinct requested_by as requested_by from `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$requested_by_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_sql . $client_filter_sql .$req_filter_sql. $status_filter_sql . $date_range_filter_sql ; //  $project_filter_sql $assigned_to_filter_sql  $search_filter_sql
+	$distinct_requested_by_sql = "select id,last_name,first_name from (".$distinct_requested_by_sql.") as assigned_table,users where users.id = requested_by order by last_name";
+	$distinct_requested_by_sql_result = $mysql->sqlordie($distinct_requested_by_sql);
+	if($distinct_requested_by_sql_result->num_rows > 0){
+		while($requested_by_row = $distinct_requested_by_sql_result->fetch_assoc()){
+			$requested_by_user_id_array[] = $requested_by_row['id'];
+			$requested_by_user_name_array[] = $requested_by_row['last_name'].",".$requested_by_row['first_name'];
+		}
+		
+		$wo_distinct_values_requested_by = array($requested_by_user_id_array,$requested_by_user_name_array);
+	}
+	
+	///////////////////////////////////
+	if('0' == $_GET['status']){ 
+		$workorder_list_query = "SELECT w.*, c.name as company_name FROM workorders w INNER JOIN companies c ON (c.id=w.company_id) WHERE company_id IN ($company_ids) AND w.active='1' AND w.deleted ='0' AND w.archived='1' ORDER BY w.`company_id`,  w.`title` ASC";
+	}else{
+		$workorder_list_query = "SELECT w.*, c.name as company_name FROM workorders w INNER JOIN companies c ON (c.id=w.company_id) WHERE company_id IN ($company_ids) AND w.active='1' AND w.deleted ='0' AND w.archived='0' ORDER BY w.`company_id`,  w.`title` ASC";
+	}
+	
 	$workorder_result = $mysql->sqlordie($workorder_list_query) ;
 	$i=-1;
 
@@ -264,7 +404,9 @@ if(ISSET($_SESSION['user_id'])){
   }
 }
 
-	
+if('0' == $_GET['status']){
+  $postingList = array($postingList,$count,$wo_distinct_values_assigned_to,$wo_distinct_values_requested_by);
+} 	
 	
 }
 
