@@ -40,13 +40,14 @@ $(document).ready(function() {
 	// Options displayed in comma-separated list
 	 var requestTypeFilter = '';
 	$("#control_7").multiSelect({ selectAll: false, oneOrMoreSelected: '*' }, function (json){
-		requestTypeFilter = '';
+		//requestTypeFilter = '';
 		   $(".multiSelectOptions input[type=checkbox]:checked").each(function(){
 				if( $(this).val() != '' ) {				
 					requestTypeFilter = requestTypeFilter+','+$(this).val();
 				}
 		   });
 		  $("#requestTypeFilter").val(requestTypeFilter);
+		  //alert(requestTypeFilter);
 			displayWorkorders('1','first','title','1','3');
 	});
 
@@ -201,16 +202,16 @@ function getWO_On_Status(){
 		});
   }
 	$('#wo_dimmer_ajax').css({display:'none'});
-	  if($('#project_status_filter').val() == '0'){  
+	  if($('#project_status_filter').val() == '0'){ 
       displayWorkorders();
     } else {
       sortDir = 1;
-      jQuery.getJSON('/_ajaxphp/workorder_json.php?status='+typeFilter, function(json) {
+      jQuery.getJSON('/_ajaxphp/workorder_json_new.php?status='+typeFilter, function(json) {
         workorderList = json;
         displayWorkorders();
 //        sortWorkorders("title");
 		    //loadAllProjectList();
-		    loadProjectList();
+		    //loadProjectList();
 		    loadAllAssignedList();
             loadAllRequestedbyList();		
 		$('#wo_dimmer_ajax').css({display:'none'});
@@ -668,7 +669,7 @@ function displayWorkorders(page_no,isNextClicked,column,order,isFilterClicked) {
 		calenderViewWorkorderList();
 		
 	}else{
-	 if($('#client_filter').val() == '0'){         // for archived workorders
+	 if($('#project_status_filter').val() == '0'){         // for archived workorders
 		
 		
 		if(typeof column == "undefined"){
@@ -715,11 +716,11 @@ function displayWorkorders(page_no,isNextClicked,column,order,isFilterClicked) {
 		}
 		$('#wo_dimmer_ajax').css({display:'block'});
 	  
-		jQuery.getJSON('/_ajaxphp/workorder_new_json.php?status='+$("#project_status_filter").val()+'&client='+$("#client_filter").val()+'&status_filter='+$("#status_filter").val()+'&assigned_to='+$("#assigned_filter").val()+'&requested_by='+$("#requestedby_filter").val()+'&req_type='+req_type+'&page_num='+page_no+'&column='+column_name+'&order='+sort_order+'&start_date='+$("#start_date_hidden").val()+'&end_date='+$("#end_date_hidden").val()+"&search="+$("#search_text").val(), function(json) {  //+"&search="+$("#search_text").val()
+		jQuery.getJSON('/_ajaxphp/workorder_json_new.php?status='+$("#project_status_filter").val()+'&client='+$("#client_filter").val()+'&status_filter='+$("#status_filter").val()+'&assigned_to='+$("#assigned_filter").val()+'&requested_by='+$("#requestedby_filter").val()+'&req_type='+req_type+'&page_num='+page_no+'&column='+column_name+'&order='+sort_order+'&start_date='+$("#start_date_hidden").val()+'&end_date='+$("#end_date_hidden").val()+"&search="+$("#search_text").val(), function(json) {  //+"&search="+$("#search_text").val()
 		  workorderList = json[0];
 		  //projectList = json[2]; 
-		  assignedToList = json[3];
-		  requestedbyList = json[4];
+		  assignedToList = json[1];
+		  requestedbyList = json[2];
 		  
 		  $('#wo_dimmer_ajax').css({display:'none'});    
 		  $('#pagination').css('display','block');
@@ -816,6 +817,7 @@ function buildWorkordersHTML() {
 	if(document.getElementById("requestTypeFilter")!=null)
 	{
 		requestTypeFilter = document.getElementById("requestTypeFilter").value;
+		//alert(requestTypeFilter+"requestTypeFilter");
 	}
 	var assocReqTypeArray = [];
 	assocReqTypeArray["Outage"] = "Outage";
