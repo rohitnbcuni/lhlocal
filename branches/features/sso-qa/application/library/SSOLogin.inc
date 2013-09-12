@@ -56,8 +56,8 @@
 					$uData['user_img'] = '/_images/empty_mugshot.gif';
 					$uData['sso'] = $userData['uid'][0];
 					
-					//By Default Assign Client Role to all New Users
-					$uData['login_status'] = 'client';
+					//By Default Assign employee Role to all New Users
+					$uData['login_status'] = 'employee';
 					$uData['user_access'] =  "00100011";
 					$uData['role'] =  UNASSIGNED_PHASE;
 					$uData['active'] = '1';
