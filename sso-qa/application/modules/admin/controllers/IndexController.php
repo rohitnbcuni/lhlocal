@@ -908,17 +908,14 @@
 
 						
 						
-						$login_status = array("admin" => "Admin", "client" => "Client", "employee" => "Employee");
+						$login_status = array("admin" => "Admin", "employee" => "Employee");
 						echo '<div class="row">
 							<div class="label"><label>Login Status:</label></div>
 								<select id="userAdminAccess" name="userAdminAccess" class="field_medium">';
 								if($users['login_status'] == ''){
 										//@TODO: Need to change with Config variable
-										if($users['company'] == '2'){
-											$users['login_status'] = 'admin';
-										}else{
-											$users['login_status'] = 'client';
-										}
+										$users['login_status'] = 'employee';
+										
 										
 									}
 								foreach($login_status as $status_key => $status_val){
@@ -965,7 +962,7 @@
 
 							$user_access_bit = $user_access_bits[$i];
 							$access_name = $controller."_ACCESS";
-							echo "USER_ACCESS[".$i."] = '".$access_name."'; ";
+							//echo "USER_ACCESS[".$i."] = '".$access_name."'; ";
 							if($access == '1')
 							{
 								$access_check = "";
