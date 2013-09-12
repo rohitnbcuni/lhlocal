@@ -58,7 +58,8 @@
 		
 		function companyupdateAction(){
 			$db = Zend_Registry::get('db');
-			
+			$dataArray = array();
+			$dataArray2 = array();
 			if ($this->_request->isPost()){
 				$where[] = 'id =  '.$_SESSION['user_id'];
 				$user_company = $this->_request->getParam('companyId');
@@ -73,9 +74,7 @@
 				}
 				$dataArray2 = array('company_id' => $user_company,'modify_date' => date("Y-m-d H:i:s"), 'user_id' => $_SESSION['user_id']);
 				$db->insert("users_companies", $dataArray2);
-				
 				$db->update("users", $dataArray, $where);
-				
 				$this->_helper->layout->disableLayout();
 			}
 		
