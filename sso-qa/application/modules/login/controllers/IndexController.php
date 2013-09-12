@@ -102,7 +102,7 @@
 						$this->_session->last = $row['last_name'];
 						$_SESSION['last'] = $row['last_name'];
 						if($row['login_status'] == ''){
-							$row['login_status'] = 'client';
+							$row['login_status'] = 'employee';
 						
 						}
 						$this->_session->login_status = $row['login_status'];
