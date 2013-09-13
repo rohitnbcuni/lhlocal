@@ -302,6 +302,27 @@
 				if(count($wo_data) == 0){
 					$this->_redirect("workorders/index/");
 				}
+				//Does USer have the access of workorder
+				$current_session_id = $_SESSION['user_id'];
+				$wo_company = $wo_data[0]['company_id'];
+				$user_company_data = WoDisplay::getQuery("SELECT * FROM `users_companies` WHERE `user_id`='$current_session_id' AND company_id ='$wo_company'  LIMIT 1");
+				if(count($user_company_data) == 0){
+					//IF user have not access of this workeorder compnay then check is USer in CC list
+					$ccUsersArray = array();
+					if(!empty($wo_data[0]['cclist'])){
+						$ccUsersArray = explode(",",$wo_data[0]['cclist']);
+						if($_SESSION['login_status'] != 'admin'){
+							if(in_array($current_session_id,$ccUsersArray)){
+								$hideStyle = "display: none;";
+								$readonly = true;
+							}else{
+								//if company has not assigned to User and not in CC'd list
+								$this->_redirect("workorders/index/");
+							
+							}
+						}
+					}
+				}
       
 				if($wo_data[0]['active'] == 0) {
 					$draft_style = "block";
