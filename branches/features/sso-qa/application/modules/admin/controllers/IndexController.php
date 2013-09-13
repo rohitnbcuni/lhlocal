@@ -962,7 +962,7 @@
 
 							$user_access_bit = $user_access_bits[$i];
 							$access_name = $controller."_ACCESS";
-							//echo "USER_ACCESS[".$i."] = '".$access_name."'; ";
+							echo "USER_ACCESS[".$i."] = '".$access_name."'; ";
 							if($access == '1')
 							{
 								$access_check = "";
