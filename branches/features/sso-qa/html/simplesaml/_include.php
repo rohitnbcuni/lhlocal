@@ -1,8 +1,10 @@
 <?php
 
 //Add cron config file to fetchout the path absolute path 
-include "../crons/cron.config.php";
-
+$fullPath = str_replace("simplesaml","crons", dirname(__FILE__));
+require  $fullPath."/cron.config.php";
+//echo dirname(__FILE__);
+//echo $rootPath; die;
 
 /* Remove magic quotes. */
 if(get_magic_quotes_gpc()) {
