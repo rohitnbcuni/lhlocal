@@ -210,18 +210,18 @@
 		}else if($_REQUEST['status'] == '-1'){    // for draft workorders
 			$archive_sql = " AND W.`active`='0' AND W.`requested_by`='".$_SESSION['user_id']."'";
 		}
-		if(isset($_REQUEST['proj_id']) && $_REQUEST['requested_by'] != '-1'){
+		if(isset($_REQUEST['requested_by']) && $_REQUEST['requested_by'] != '-1'){
 			$requestedby_filter_sql = " AND  W.requested_by = '".$_REQUEST['requested_by']."'";
 		}
-		if(isset($_REQUEST['proj_id']) && $_REQUEST['proj_id'] != '-1'){
+		/*if(isset($_REQUEST['proj_id']) && $_REQUEST['proj_id'] != '-1'){
   			$project_filter_sql = " AND P.`id` = ".$_REQUEST['proj_id'];
-  		}
+  		}*/
 		if(isset($_REQUEST['client']) && $_REQUEST['client'] != '-1'){
-			$client_filter_sql = " AND P.`company` = ".$_REQUEST['client'];
+			$client_filter_sql = " AND W.`company_id` = ".$_REQUEST['client'];
 		}
 		if(isset($_REQUEST['status_filter']) && $_REQUEST['status_filter'] != '-1'){  
 		    $status_table_sql = "select `id` from `lnk_workorder_status_types` where name = ?";
-		  	$status_result = $mysql->prepare($status_table_sql, array($_REQUEST['status_filter']));
+		  	$status_result = $mysql->sqlprepare($status_table_sql, array($_REQUEST['status_filter']));
 		    if($status_result->num_rows == 1){
 		       $status_row = $status_result->fetch_assoc();
 		    		       $status_filter_sql = " AND W.`status` = ".$status_row['id'];
@@ -296,18 +296,12 @@
 		    $req_filter_sql =  " AND e.`field_id` IN(".$request_type_string.")";
 	  	}
 		$sso_user_sql = '';
-		if(checkUserComapny() == false){
-			$user_id = $_SESSION['user_id'];
-			$sso_user_sql =  " AND W.requested_by = $user_id";
-
-
-		}
-		$workorder_list_query .= "SELECT W.id ,W.project_id, W.title ,W.active , W.status, DATE_FORMAT(W.launch_date,'%Y-%m-%d') as required_date , P.project_code FROM `workorders` W INNER JOIN projects P ON (P.id = W.project_id)";
-		//$workorder_list_query .= " INNER JOIN user_project_permissions UPP ON (P.id = UPP.project_id) $workorder_custom_sql WHERE UPP.user_id = $userId  AND "; 
+		
+		$workorder_list_query .= "SELECT W.id ,C.name as company_name, W.title ,W.active , W.status, DATE_FORMAT(W.launch_date,'%Y-%m-%d') as required_date  FROM `workorders` W
+		INNER JOIN companies C ON (C.id = W.company_id)";
 		$workorder_list_query .= "  $workorder_custom_sql WHERE 1  AND "; 
-		$workorder_list_query .= " EXTRACT(MONTH FROM W.launch_date) = '$data->month'  AND EXTRACT(YEAR FROM W.launch_date) = '$data->year'  $archive_sql $project_filter_sql $status_filter_sql $assigned_to_filter_sql $req_filter_sql $client_filter_sql $requestedby_filter_sql $sso_user_sql ORDER BY W.launch_date ASC";
-		//$workorder_list_query .= " W.launch_date LIKE '%$data->required_date%' ";
-	  //  echo $workorder_list_query;
+		$workorder_list_query .= " EXTRACT(MONTH FROM W.launch_date) = '$data->month'  AND EXTRACT(YEAR FROM W.launch_date) = '$data->year'  $archive_sql $status_filter_sql $assigned_to_filter_sql $req_filter_sql $client_filter_sql $requestedby_filter_sql ORDER BY W.launch_date ASC";
+	  // echo $workorder_list_query;
 		//echo $archive_sql .$client_filter_sql;
 		//echo $pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql .$req_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql . $requestedby_filter_sql .$date_range_filter_sql .$search_filter_sql;
 		try{
@@ -320,7 +314,7 @@
 			if($workorder_result->num_rows > 0) {
 				while($workorder_row = $workorder_result->fetch_assoc()){
 						$row[$i]['tickets_id'] = $workorder_row['id'];
-						$row[$i]['tickets_project_name'] = $workorder_row['project_code'];
+						$row[$i]['tickets_project_name'] = $workorder_row['company_name'];
 						$row[$i]['tickets_title'] = $workorder_row['title'];
 						$row[$i]['launch_date'] = $workorder_row['required_date'];
 						$row[$i]['status'] = $workorder_row['status'];
