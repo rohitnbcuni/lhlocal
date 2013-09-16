@@ -1765,11 +1765,7 @@
 					<label for="client_filter" id="client_filter_label">Client</label>
 					<select id="client_filter" onchange="changeCompany();">
 						<option value="-1">Show All</option>
-					'.WoDisplay::getCompanyHTML().'
-					</select>
-					<label for="project_filter" id="project_filter_label">Project</label>
-					<select id="project_filter" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'2\');">
-						<option value="-1">Show All</option>
+					'.WoDisplay::getUserCompany().'
 					</select>
 					<label for="status_filter" id="status_filter_label">Status</label>
 					<select id="status_filter" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\');">
