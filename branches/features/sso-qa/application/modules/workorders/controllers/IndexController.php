@@ -1791,7 +1791,7 @@
 				$req_Type_Arr['Problem'] = ' selected="selected"';
 				$req_Type_Arr['Request'] = ' selected="selected"';
 
-				if(!empty($wo_data_cookie))
+				/*if(!empty($wo_data_cookie))
 				{
 
 					$wo_data_cookie_all = explode("~", @$wo_data_cookie);
@@ -1807,7 +1807,7 @@
 							}
 						}
 					}
-				}
+				}*/
 				echo '<input type="hidden" name="currentMonthData" id="currentMonthData" value="'.date('n-Y').'">';
 				echo '<div class="title_med2 workorders_filter">
 				<INPUT TYPE="hidden" ID="requestTypeFilter" VALUE"" />
