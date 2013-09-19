@@ -40,7 +40,7 @@ $(document).ready(function() {
 	// Options displayed in comma-separated list
 	 var requestTypeFilter = '';
 	$("#control_7").multiSelect({ selectAll: false, oneOrMoreSelected: '*' }, function (json){
-		//requestTypeFilter = '';
+		requestTypeFilter = '';
 		   $(".multiSelectOptions input[type=checkbox]:checked").each(function(){
 				if( $(this).val() != '' ) {				
 					requestTypeFilter = requestTypeFilter+','+$(this).val();

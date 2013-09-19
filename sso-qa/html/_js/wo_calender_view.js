@@ -102,14 +102,15 @@ $('#update_cal').click(function(){
 
 
 function workOrdercalender() {
-        $('#wo_dimmer_ajax_cal').css({display:'block'});
+    $('#wo_dimmer_ajax_cal').css({display:'block'});
 	$('.wo_month_controller_display').text(monthText[selDate.getMonth()+1]+" "+selDate.getFullYear());
 	var req_type = $("#requestTypeFilter").val();
+	
 	var client_filter = $('.#client_filter').val();
 	$.ajax({
 		type: "POST",
 		url: "/_ajaxphp/wo_calendarview_all.php",
-		data: "userid="+$("#userid").val()+"&date="+selDate.getFullYear()+"/"+(selDate.getMonth()+1)+"/"+selDate.getDate()+'&status='+$("#project_status_filter").val()+'&client='+$("#client_filter").val()+'&proj_id='+$("#project_filter").val()+'&status_filter='+$("#status_filter").val()+'&assigned_to='+$("#assigned_filter").val()+'&requested_by='+$("#requestedby_filter").val()+'&req_type='+req_type+'&page_num='+page_no+'&column='+column_name+'&order='+sort_order+'&start_date='+$("#start_date_hidden").val()+'&end_date='+$("#end_date_hidden").val()+"&search="+$("#search_text").val(),
+		data: "userid="+$("#userid").val()+"&date="+selDate.getFullYear()+"/"+(selDate.getMonth()+1)+"/"+selDate.getDate()+'&status='+$("#project_status_filter").val()+'&client='+$("#client_filter").val()+'&status_filter='+$("#status_filter").val()+'&assigned_to='+$("#assigned_filter").val()+'&requested_by='+$("#requestedby_filter").val()+'&req_type='+req_type+'&page_num='+page_no+'&column='+column_name+'&order='+sort_order+'&start_date='+$("#start_date_hidden").val()+'&end_date='+$("#end_date_hidden").val()+"&search="+$("#search_text").val(),
 		success: function(msg){
 		$('#wo_dimmer_ajax_cal').css({display:'none'});	
 		$('.wo_calender_view').html(msg+"<br/>");
