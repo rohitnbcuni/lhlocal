@@ -301,7 +301,7 @@
 		INNER JOIN companies C ON (C.id = W.company_id)";
 		$workorder_list_query .= "  $workorder_custom_sql WHERE 1  AND "; 
 		$workorder_list_query .= " EXTRACT(MONTH FROM W.launch_date) = '$data->month'  AND EXTRACT(YEAR FROM W.launch_date) = '$data->year'  $archive_sql $status_filter_sql $assigned_to_filter_sql $req_filter_sql $client_filter_sql $requestedby_filter_sql ORDER BY W.launch_date ASC";
-	  // echo $workorder_list_query;
+	  echo $workorder_list_query;
 		//echo $archive_sql .$client_filter_sql;
 		//echo $pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_filter_sql .$req_filter_sql . $project_filter_sql . $status_filter_sql . $assigned_to_filter_sql . $requestedby_filter_sql .$date_range_filter_sql .$search_filter_sql;
 		try{
