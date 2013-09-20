@@ -7,6 +7,7 @@
 		
 			$this->checkCompany();
 			$cnt = 5;
+			$client_id_cookie ='';
 			if($_SESSION['login_status'] == "client") {
 				echo '<input type="hidden" name="client_login" id="client_login" value="client" />';
 			} else {
@@ -15,6 +16,34 @@
 			$status_active = ($_REQUEST['status'] == '1') ? 'selected' : '';
 			$status_archive = ($_REQUEST['status'] == '0') ? 'selected' : '';
 			$status_draft = ($_REQUEST['status'] == '-1') ? 'selected' : '';
+			
+			$wo_data_cookie = isset($_COOKIE["lighthouse_wo_data"])? $_COOKIE["lighthouse_wo_data"] : "";
+				$req_Type_Arr = Array();
+				$req_Type_Arr['Outage'] = ' selected="selected"';
+				$req_Type_Arr['Problem'] = ' selected="selected"';
+				$req_Type_Arr['Request'] = ' selected="selected"';
+				
+				if(!empty($wo_data_cookie))
+				{
+
+					$wo_data_cookie_all = explode("~", @$wo_data_cookie);
+					//print_r($wo_data_cookie_all);
+					$requestTypeFilter = $wo_data_cookie_all[3];
+					
+					if(!empty($requestTypeFilter))
+					{
+						$req_Type_Arr = Array();
+						$requestTypeFilter_all = explode(",", @$requestTypeFilter);
+						for($u = 0; $u < sizeof($requestTypeFilter_all); $u++) {
+							if(!empty($requestTypeFilter_all[$u]))
+							{
+								$req_Type_Arr[$requestTypeFilter_all[$u]] = ' selected="selected"';
+							}
+						}
+					}
+					
+					$client_id_cookie = $wo_data_cookie_all[0];
+				}
 			echo '<!--=========== START: COLUMNS ===========-->
 				<!--==| START: Bucket |==-->
 					<div class="message_archive_select_check message_archive message_unarchive message_active" style="width:3000px;height:1024px;position:fixed;background-color:#ffffff;z-index:1;margin-top:-500px;margin-left:-630px;opacity: 0.3; filter: alpha(opacity = 30); zoom:1;"></div>
@@ -41,7 +70,7 @@
 					<label for="client_filter" id="client_filter_label">Client</label>
 					<select id="client_filter" onchange="changeCompany();">
 						<option value="-1">Show All</option>
-					'.WoDisplay::getUserCompany().'
+					'.WoDisplay::getUserCompany($client_id_cookie).'
 					</select>
 					
 					<label for="status_filter" id="status_filter_label">Status</label>
@@ -63,29 +92,7 @@
 						<option value="-1" '.$status_draft.'>Draft</option>
 					</select>
 				</div>';
-				$wo_data_cookie = isset($_COOKIE["lighthouse_wo_data"])? $_COOKIE["lighthouse_wo_data"] : "";
-				$req_Type_Arr = Array();
-				$req_Type_Arr['Outage'] = ' selected="selected"';
-				$req_Type_Arr['Problem'] = ' selected="selected"';
-				$req_Type_Arr['Request'] = ' selected="selected"';
-
-				/*if(!empty($wo_data_cookie))
-				{
-
-					$wo_data_cookie_all = explode("~", @$wo_data_cookie);
-					$requestTypeFilter = $wo_data_cookie_all[3];
-					if(!empty($requestTypeFilter))
-					{
-						$req_Type_Arr = Array();
-						$requestTypeFilter_all = explode(",", @$requestTypeFilter);
-						for($u = 0; $u < sizeof($requestTypeFilter_all); $u++) {
-							if(!empty($requestTypeFilter_all[$u]))
-							{
-								$req_Type_Arr[$requestTypeFilter_all[$u]] = ' selected="selected"';
-							}
-						}
-					}
-				}*/
+				
 				$end_date_default = date("m/d/Y");// current date;
 				$start_date_add_one_month = strtotime(date("m/d/Y", strtotime($end_date_default)) . "-1 month");
 				$start_date_default = date("m/d/Y", $start_date_add_one_month);
