@@ -133,19 +133,22 @@ if(ISSET($_SESSION['user_id'])){
 	}
 
 	$user_id = $_SESSION['user_id'];
-	
-	$companySql = "SELECT company_id FROM users_companies WHERE user_id = ".$user_id;
-	$company_result = $mysql->sqlordie($companySql);
-	$company_row_array = array();
-	if($company_result->num_rows > 0){
-		while($company_row = $company_result->fetch_assoc()){
-			$company_row_array[] = $company_row['company_id'];
+	$user_company_sql = " 1 ";
+	if($_SESSION['login_status'] != 'admin'){
+		$companySql = "SELECT company_id FROM users_companies WHERE user_id = ".$user_id;
+		$company_result = $mysql->sqlordie($companySql);
+		$company_row_array = array();
+		if($company_result->num_rows > 0){
+			while($company_row = $company_result->fetch_assoc()){
+				$company_row_array[] = $company_row['company_id'];
+			
+			}
+		}
+		if(count($company_row_array) > 0){
+			$company_ids = implode(",",$company_row_array);
 		
 		}
-	}
-	if(count($company_row_array) > 0){
-		$company_ids = implode(",",$company_row_array);
-	
+		$user_company_sql = " company_id IN ($company_ids) ";
 	}
 	//////////////////
 	
@@ -175,9 +178,9 @@ if(ISSET($_SESSION['user_id'])){
 	
 	///////////////////////////////////
 	if('0' == $_GET['status']){ 
-		$workorder_list_query = "SELECT w.*, c.name as company_name FROM workorders w INNER JOIN companies c ON (c.id=w.company_id) WHERE company_id IN ($company_ids) AND w.active='1' AND w.deleted ='0' AND w.archived='1' ORDER BY w.`company_id`,  w.`title` ASC";
+		$workorder_list_query = "SELECT w.*, c.name as company_name FROM workorders w INNER JOIN companies c ON (c.id=w.company_id) WHERE $user_company_sql AND w.active='1' AND w.deleted ='0' AND w.archived='1' ORDER BY w.`company_id`,  w.`title` ASC";
 	}else{
-		$workorder_list_query = "SELECT w.*, c.name as company_name FROM workorders w INNER JOIN companies c ON (c.id=w.company_id) WHERE company_id IN ($company_ids) AND w.active='1' AND w.deleted ='0' AND w.archived='0' ORDER BY w.`company_id`,  w.`title` ASC";
+		$workorder_list_query = "SELECT w.*, c.name as company_name FROM workorders w INNER JOIN companies c ON (c.id=w.company_id) WHERE $user_company_sql AND w.active='1' AND w.deleted ='0' AND w.archived='0' ORDER BY w.`company_id`,  w.`title` ASC";
 	}
 	
 	$workorder_result = $mysql->sqlordie($workorder_list_query) ;

@@ -295,7 +295,7 @@
 		    $workorder_custom_sql = " JOIN `workorder_custom_fields` e ON W.`id` = e.`workorder_id`";
 		    $req_filter_sql =  " AND e.`field_id` IN(".$request_type_string.")";
 	  	}
-		$sso_user_sql = '';
+		
 		
 		$workorder_list_query .= "SELECT W.id ,C.name as company_name, W.title ,W.active , W.status, DATE_FORMAT(W.launch_date,'%Y-%m-%d') as required_date  FROM `workorders` W
 		INNER JOIN companies C ON (C.id = W.company_id)";
