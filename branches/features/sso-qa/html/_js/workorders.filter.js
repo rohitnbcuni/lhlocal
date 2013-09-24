@@ -480,6 +480,7 @@ function loadAllAssignedList() {
 	var allUsers = new Array();
 	var sortedList = new Array();
 	userid = '';
+
 	html = '<option value="-1">Show All</option>';
   if($('#project_status_filter').val() == '0'){
     if(assignedToList != null){
@@ -689,7 +690,7 @@ function displayWorkorders(page_no,isNextClicked,column,order,isFilterClicked) {
 		}
 		
 		$('#current_page').val(page_no);
-
+	var req_type = $("#requestTypeFilter").val();
 		if(isFilterClicked == "1"){         // dates or search go button cicked
 		  if(timeSpan($('#start_date_input').val(),$('#end_date_input').val(),"days")>0){
 			$("#start_date_hidden").val($('#start_date_input').val());
@@ -710,69 +711,71 @@ function displayWorkorders(page_no,isNextClicked,column,order,isFilterClicked) {
 		}
 		$('.pagination').removeClass('pagination_button');
 		$('.pagination').removeClass('pagination_left_button');
-		var req_type = $("#requestTypeFilter").val();
+		
 		if(isNextClicked == "first"){
 		  $('#pagination').html("");            // rebuild pagination
 		}
 		$('#wo_dimmer_ajax').css({display:'block'});
 	  
 		jQuery.getJSON('/_ajaxphp/workorder_json_new.php?status='+$("#project_status_filter").val()+'&client='+$("#client_filter").val()+'&status_filter='+$("#status_filter").val()+'&assigned_to='+$("#assigned_filter").val()+'&requested_by='+$("#requestedby_filter").val()+'&req_type='+req_type+'&page_num='+page_no+'&column='+column_name+'&order='+sort_order+'&start_date='+$("#start_date_hidden").val()+'&end_date='+$("#end_date_hidden").val()+"&search="+$("#search_text").val(), function(json) {  //+"&search="+$("#search_text").val()
-		  workorderList = json[0];
-		  //projectList = json[2]; 
-		  assignedToList = json[1];
-		  requestedbyList = json[2];
-		  
-		  $('#wo_dimmer_ajax').css({display:'none'});    
-		  $('#pagination').css('display','block');
-			  $('#search_and_date_filters').css('display','block');
-			  htm = "";
-		  cnt = json[1];
-	//      $('#pagination').html("");
-		  if(isNextClicked == "prev"){        //code for pagination start
-			$('#current_page_set').val(page_no-pages+1);
-		  } else if(isNextClicked == "first"){
-			$('#current_page_set').val("1");      
-		  } else if(isNextClicked == "last"){
+			workorderList = json[0];
+			// alert(json.toSource());
+			// alert(workorderList.toSource());
+			//projectList = json[2]; 
+			// projectList = json[2]; 
+			assignedToList = json[2];
+			requestedbyList = json[3];
+			$('#wo_dimmer_ajax').css({display:'none'});    
+			$('#pagination').css('display','block');
+			$('#search_and_date_filters').css('display','block');
+			htm = "";
+			cnt = json[1];
+		    // $('#pagination').html("");
+		    if(isNextClicked == "prev"){        //code for pagination start
+				$('#current_page_set').val(page_no-pages+1);
+			} else if(isNextClicked == "first"){
+				$('#current_page_set').val("1");      
+			} else if(isNextClicked == "last"){
 			if(Math.ceil(json[1]/50,10)%pages != 0){
-			  var getPagesToDisp = Math.ceil(json[1]/50,10)%pages;
+				var getPagesToDisp = Math.ceil(json[1]/50,10)%pages;
 			} else {
-			  var getPagesToDisp = pages;
+				var getPagesToDisp = pages;
 			}
 			$('#current_page_set').val((Math.ceil(json[1]/50,10) - getPagesToDisp)+1);        
 	//        alert("one+"+Math.ceil(json[1]/50,10));
 	//        alert("two+"+Math.ceil(json[1]/50,10)%pages);
 	//        alert("got set"+$('#current_page_set').val());
 		  }
-			  if(cnt >1 && isNextClicked != "no"){
-			  if(parseInt($('#current_page_set').val()) >pages-1 && page_no >pages){
+		if(cnt >1 && isNextClicked != "no"){
+			if(parseInt($('#current_page_set').val()) >pages-1 && page_no >pages){
 				htm = htm+'<button onclick="displayWorkorders(\'1\',\'first\');"><span>FIRST</span></button>';
 				htm = htm+'<button onclick="displayWorkorders('+($("#current_page_set").val()-1)+',\'prev\');"><span>PREV</span></button>';      
 			}
 			j = parseInt($('#current_page_set').val());
 			if((j+pages) > Math.ceil(json[1]/50,10)){
-			  cnt = Math.ceil(json[1]/50)+1;
+				cnt = Math.ceil(json[1]/50)+1;
 			} else {
-			  cnt = j+pages;
+				cnt = j+pages;
 			}
 			if(cnt > 2){
 				  for(i=j;i<cnt;i++){
-				htm = htm+'<button class = "pagination" id = "page_'+i+'"  value = "'+i+'" onclick="displayWorkorders('+i+',\'no\');"><span class = "pagination" id = "page_left_'+i+'">'+i+'</span></button>';
-			  }       
+						htm = htm+'<button class = "pagination" id = "page_'+i+'"  value = "'+i+'" onclick="displayWorkorders('+i+',\'no\');"><span class = "pagination" id = "page_left_'+i+'">'+i+'</span></button>';
+					}       
 			}
-			  if(Math.ceil(json[1]/50,10) > (j+pages)){
+			if(Math.ceil(json[1]/50,10) > (j+pages)){
 				$('#current_page_set').val(j+pages);	    
-			  htm = htm+'<button onclick="displayWorkorders('+$('#current_page_set').val()+',\'next\');"><span>NEXT</span></button>';
-			  htm = htm+'<button onclick="displayWorkorders('+Math.ceil(json[1]/50,10)+',\'last\');"><span>LAST</span></button>';
+				htm = htm+'<button onclick="displayWorkorders('+$('#current_page_set').val()+',\'next\');"><span>NEXT</span></button>';
+				htm = htm+'<button onclick="displayWorkorders('+Math.ceil(json[1]/50,10)+',\'last\');"><span>LAST</span></button>';
 			}
 			$('#pagination').html(htm);
-			  }                                 // code for pagination end
-		  if(typeof page_no == 'undefined'){
-			page_no = 1;
-			$('#page_1').addClass('pagination_button');
-			$('#page_left_1').addClass('pagination_left_button');
-		  } else {
-			$('#page_'+page_no).addClass('pagination_button');
-			$('#page_left_'+page_no).addClass('pagination_left_button');    
+		}                                 // code for pagination end
+		if(typeof page_no == 'undefined'){
+				page_no = 1;
+				$('#page_1').addClass('pagination_button');
+				$('#page_left_1').addClass('pagination_left_button');
+			} else {
+				$('#page_'+page_no).addClass('pagination_button');
+				$('#page_left_'+page_no).addClass('pagination_left_button');    
 		  }
 			  //loadAllProjectList();
 			  //loadProjectList();
