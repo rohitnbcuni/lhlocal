@@ -100,7 +100,7 @@ $(document).ready(function() {
 		$("#wo_containter .title_small").css({display:"none"});
 		$("#wo_containter .workorders_rows").css({display:"none"});
 //		wo_sortWorkorders("title");
-		wo_loadAllProjectList();
+		//wo_loadAllProjectList();
 		wo_loadAllAssignedList();
 		wo_loadAllRequestedbyList();
 		
@@ -313,7 +313,7 @@ function unarchiveWo(theId) {
 	});
 }
 function wo_changeCompany(){
-	wo_loadProjectList(); 
+	//wo_loadProjectList(); 
 	wo_loadAssignedList	();
 	wo_loadRequestedbyList
       displayWorkorders();
@@ -603,7 +603,189 @@ function DistinctArray(array,ignorecase) {
     }
     return newArray;
 }
+
 function buildWorkordersHTML() {
+	html = "";
+    var exp = /((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+
+
+	//alert("sss");
+	clientId = document.getElementById("client_filter").value;
+	//projectId = document.getElementById("project_filter").value;
+	statusId = document.getElementById("status_filter").value;
+	assignedTo = document.getElementById("assigned_filter").value;
+	requestedby = document.getElementById("requestedby_filter").value;
+//alert(requestedby);
+	// Added this fix for finding previously selected project exists -Chandra
+	//var isProjectSelectedPresent = 0;
+	//alert(workorderList.toSource());
+	for (var i = 0; i < workorderList.length; i++) {
+		if(workorderList[i]['company_id'] == clientId){
+			isProjectSelectedPresent = 1;
+			break;
+		}
+	}
+	/*if(isProjectSelectedPresent == 0 ) {
+		projectId = "-1";
+	}*/
+	var requestTypeFilter = "";
+	if(document.getElementById("requestTypeFilter")!=null)
+	{
+		requestTypeFilter = document.getElementById("requestTypeFilter").value;
+		//alert(requestTypeFilter+"requestTypeFilter");
+	}
+	var assocReqTypeArray = [];
+	assocReqTypeArray["Outage"] = "Outage";
+	assocReqTypeArray["Problem"] = "Problem";
+	assocReqTypeArray["Change"] = "Change";
+	var req_txt = "";
+	if(requestTypeFilter != null && requestTypeFilter!='' ){
+		reqTypeFilter = requestTypeFilter.split(',');
+		if(reqTypeFilter.length > 1)
+		{
+			 assocReqTypeArray = [];
+			for (var i = 0; i < reqTypeFilter.length; i++) {
+				if(reqTypeFilter[i]!=null && reqTypeFilter[i]!='')
+				{
+					assocReqTypeArray[reqTypeFilter[i]] = reqTypeFilter[i];
+				}
+			}
+		}
+	}
+	var statusActiveArray = [];
+	if(statusId=='99')
+	{
+		statusActiveArray["Feedback Provided"] = "Feedback Provided";
+		statusActiveArray["On Hold"] = "On Hold";
+		statusActiveArray["In Progress"] = "In Progress";
+		statusActiveArray["Need More Info"] = "Need More Info";
+		statusActiveArray["New"] = "New";
+		statusActiveArray["Rejected"] = "Rejected";
+		statusActiveArray["Reopened"] = "Reopened";
+	}else{
+		statusActiveArray[statusId] = statusId;
+	}
+	
+	var lastComp;
+	
+	for (var i = 0; i < workorderList.length; i++) {
+			
+			html_top = '';
+			html_body = '';
+			html_bottom = '';
+			if ((clientId < 0 || clientId == workorderList[i]['client']) ){
+				if((i-1 >= 0 && workorderList[i-1]['client'] != workorderList[i]['client']) || i == 0){
+					//html_top += '<div class="title_small"><h6>' + workorderList[i]['company_name'] + ' - ' + workorderList[i]['client'] + '</h6></div>';
+			}
+				//alert(html_top+"test"+workorderList.length);
+				html_top += '<div class="workorders_rows">';
+				for (var e = 0; e < workorderList[i]['workorders'].length; e++) {
+					if (((statusActiveArray[statusId] < 0 || statusActiveArray[workorderList[i]['workorders'][e]['status']] == workorderList[i]['workorders'][e]['status'])|| 
+						('over_due' == statusId && '1' == workorderList[i]['workorders'][e]['overdue_flag'])) &&
+						(assignedTo < 0 || (assignedTo > 0 && assignedTo == workorderList[i]['workorders'][e]['assigned_to_id'])) && (requestedby < 0 || (requestedby > 0 && requestedby == workorderList[i]['workorders'][e]['requested_by_id']))
+&& ((assocReqTypeArray[workorderList[i]['workorders'][e]['req_type']] == workorderList[i]['workorders'][e]['req_type'])||document.getElementById("project_status_filter").value==0 )) {
+						tClass = workorderList[i]['workorders'][e]['class'];
+						html_body += '<dl id="' + workorderList[i]['workorders'][e]['id'] + '" class="' + tClass + '">';
+
+						var wo_id = workorderList[i]['workorders'][e]['id']
+
+						html_body += '<dd class="archivecheck" >';
+						html_body += '<input type="checkbox" name="wo_archive_list" value="'+wo_id+'">';
+						html_body += '</dd>';
+
+						html_body += '<dd class="id"><a href="/workorders/index/edit/?wo_id=' + workorderList[i]['workorders'][e]['id'] + '">' + wo_id + '</a></dd>';
+						html_body += '<dd class="overdue">';
+						if(workorderList[i]['workorders'][e]['overdue_flag'] == '1'){
+							html_body += '<img src="/_images/flag_icon_red_new.png" title="Over due"/>';
+						}
+						html_body += '</dd>';
+						html_body += '<dt class="title" title="' + workorderList[i]['workorders'][e]['full_title'] + '"><a href="/workorders/index/edit/?wo_id=' + workorderList[i]['workorders'][e]['id'] + '">' + workorderList[i]['workorders'][e]['title'] + '</a></dt>';
+						html_body += '<dd class="req_type">' + workorderList[i]['workorders'][e]['req_type'] + '</dd>';
+						//html_body += '<dd class="status">' + workorderList[i]['workorders'][e]['status'] + '</dd>';
+						html_body += '<dd style="height: 27px;" class="status" id="status' + workorderList[i]['workorders'][e]['id'] + '">';
+						html_body += '<span id="status_' + workorderList[i]['workorders'][e]['id'] + '" onClick="woShowStatus(' + workorderList[i]['workorders'][e]['id'] + ',' + workorderList[i]['workorders'][e]['status_id'] + ');">';
+						html_body += workorderList[i]['workorders'][e]['status'];
+						html_body += '</span><select id="status_select_' + workorderList[i]['workorders'][e]['id'] + '" style="display: none;" onChange="changeStatus(this.value, ' + workorderList[i]['workorders'][e]['id'] + ');">';
+						html_body += '</select></dd>';
+						html_body += '<dt class="requested">' + workorderList[i]['workorders'][e]['requested_by'] + '</dt>';
+						//html_body += '<dd class="assigned"><!-- <a href="">Vorbeck, Garrett</a> --><select><option></option></select></dd>';
+						
+						
+						html_body += '<dd style="height: 27px;" class="assigned" id="assigned_' + workorderList[i]['workorders'][e]['id'] + '">';
+						if(workorderList[i]['workorders'][e]['assigned_to'] != null){
+							html_body += '<span title="'+workorderList[i]['workorders'][e]['assigned_to']+'" id="assigned_a_' + workorderList[i]['workorders'][e]['id'] + '" onClick="woShowAssigned(' + workorderList[i]['workorders'][e]['id'] + ');">';
+							if(workorderList[i]['workorders'][e]['assigned_to'].length > 22){
+								var shortText = jQuery.trim(workorderList[i]['workorders'][e]['assigned_to']).substring(0, 22).split(" ").slice(0, 4).join(" ") + "...";
+							}else{
+								shortText = workorderList[i]['workorders'][e]['assigned_to'];
+							}
+						}
+						html_body += shortText;
+						html_body += '</span><select id="assigned_select_' + workorderList[i]['workorders'][e]['id'] + '" style="display: none;" onChange="changeAssigned(this.value, ' + workorderList[i]['workorders'][e]['id'] + ');">';
+						html_body += '</select></dd>';
+						
+						html_body += '<dd class="opendate">' + workorderList[i]['workorders'][e]['open_date'] + '</dd>';
+
+						html_body += '<dd class="due_date">' + workorderList[i]['workorders'][e]['launch_date'] + '</dd>';
+	
+						if(workorderList[i]['workorders'][e]['wo_last_comment_date']!='N/A' || workorderList[i]['workorders'][e]['wo_last_comment_user'] != 'N/A')
+						{					
+							html_body += '<dd class="lastcommentby" onmouseover="showComment('+wo_id  +',1);" onmouseout="hideComment('+wo_id  +');">';
+							html_body += workorderList[i]['workorders'][e]['wo_last_comment_user'];
+							html_body += '</dd>';			
+							html_body += '<dd class="commentdate" >';
+							html_body += workorderList[i]['workorders'][e]['wo_last_comment_date'];
+							html_body += '</dd>';
+						}
+						else
+						{
+							html_body += '<dd class="lastcommentby" style="text-align:center;">';
+							html_body += workorderList[i]['workorders'][e]['wo_last_comment_user'];
+							html_body += '</dd>';			
+							html_body += '<dd class="commentdate" style="text-align:center;">';
+							html_body += workorderList[i]['workorders'][e]['wo_last_comment_date'];
+							html_body += '</dd>';
+						}
+						var replacedText = (workorderList[i]['workorders'][e]['wo_last_comment']).replace(exp,"<a href='$1' target='_blank'>$1</a>");
+						/**
+						 * Ticket no 16857,19352
+						 */
+						//var replacedText = ( unescape(workorderList[i]['workorders'][e]['wo_last_comment']).replace(/\+/g, " ")).replace(exp,"<a href='$1' target='_blank'>$1</a>");
+                        //End Ticket
+                        html_body += '<dd id ="wo_comment_'+wo_id+'" class="wo_comment" style="display:none;"  onmouseover="showComment('+wo_id  +',3);" onmouseout="hideComment('+wo_id +');"><div class="wo_comment_header"></div><div class="wo_comment_content"><p class="risk_desc">';
+						html_body += replacedText;
+						html_body += '</p></div><div class="wo_comment_footer"></div></dd>';
+						/*if(document.getElementById('client_login').value != "client" && document.getElementById('project_status_filter').value == "1") {
+							html_body += '<dd class="action" onClick="archiveAlert(' + workorderList[i]['workorders'][e]['id'] + ');">Archive</dd>';
+						}
+						if(document.getElementById('client_login').value != "client" && document.getElementById('project_status_filter').value == "0") {
+							html_body += '<dd class="action" onClick="unarchiveAlert(' + workorderList[i]['workorders'][e]['id'] + ');">Un-Archive</dd>';
+						}*/
+						html_body += '</dl>';
+					}
+				}
+				//alert(html_body);
+				html_bottom += '</div>';
+				//alert(html_body);
+				if(html_body != ''){
+					if(workorderList[i]['client'] != lastComp) {
+						html_company_top = '<div class="title_small"><h5>' + workorderList[i]['company_name'] + '</h5></div>';
+					}else{
+						html_company_top = '';
+					}
+					html += html_company_top + html_top + html_body + html_bottom;
+					lastComp = workorderList[i]['client'];
+				}
+				html += '<input type=hidden id="active_wo" value=5>'; 
+			}
+	}
+	//Set_Cookie( "lighthouse_wo_data", clientId + '~' + statusId + '~' + assignedTo + '~' + requestTypeFilter + '~' + requestedby , "7", "/", "", "");
+	//alert("html"+html);
+	$("#wo_containter").html(html);
+	wo_loadAssignedList(assignedTo);
+	$('#wo_dimmer_ajax').css({display:'none'});
+}
+function buildWorkordersHTML2() {
 	html = "";
     var exp = /((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     var clientId = '';
@@ -614,7 +796,7 @@ function buildWorkordersHTML() {
     var project_status_filter = '';
     if(document.getElementById("client_filter")){
 	clientId = document.getElementById("client_filter").value;
-	projectId = document.getElementById("project_filter").value;
+	//projectId = document.getElementById("project_filter").value;
 	statusId = document.getElementById("status_filter").value;
 	assignedTo = document.getElementById("assigned_filter").value;
 	requestedby = document.getElementById("requestedby_filter").value;
