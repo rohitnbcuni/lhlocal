@@ -165,12 +165,9 @@ $search_text= str_replace("'", "",$search_text);
 					<label for="client_filter" id="client_filter_label">Client</label>
 					<select id="client_filter" onchange="wo_changeCompany();">
 						<option value="-1">Show All</option>
-					'.WoDisplay::getCompanyHTML().'
+					'.WoDisplay::getUserCompany($client_id_cookie).'
 					</select>
-					<label for="project_filter" id="project_filter_label">Project</label>
-					<select id="project_filter" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'2\');">
-						<option value="-1">Show All</option>
-					</select>
+					
 					<label for="status_filter" id="status_filter_label">Status</label>
 					<select id="status_filter" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\');">
 						<option value="-1" selected>Show All</option>
