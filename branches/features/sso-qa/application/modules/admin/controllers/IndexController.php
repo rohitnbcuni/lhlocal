@@ -1225,6 +1225,97 @@
 		
 		}
 		
+		function companydefaultccAction(){
+			$adminDisplay = new AdminDisplay();
+			$explodeCCList = array();
+			$usersArray = array();
+					
+			$c_id = ($this->_request->getParam('c_id') != '')?$this->_request->getParam('c_id'):null;
+			$companies = $adminDisplay->getCompaniesCCList($c_id);
+			if(!empty($c_id)){
+				$ccList = $adminDisplay->getCompaniesCCUsers($c_id);
+				if(!empty($ccList['cclist'])){
+					$explodeCCList = explode(",",$ccList['cclist']);
+					
+					if(count($explodeCCList) > 0){
+						foreach($explodeCCList as $key => $userVal){
+							if(!empty($userVal)){
+								$usersArray[] = $adminDisplay->getUsersDetails($userVal);
+							
+							}
+						
+						}
+					
+					}
+				
+				}
+				$this->view->assign('ccList',$usersArray);
+				$this->view->assign('ccListStr',$ccList);
+			
+			
+			}
+			$this->view->assign('companies',$companies);
+		}
+		
+		public function removecompanyccuserAction(){
+			$adminDisplay = new AdminDisplay();
+			$userId = $this->_request->getParam('id');
+			$c_id = $this->_request->getParam('c_id');
+			$ccList = $adminDisplay->getCompaniesCCUsers($c_id);
+			$remomeUser = str_replace($userId,'',$ccList['cclist']);
+			$remomeUserStr = str_replace(",,",',',$remomeUser);
+			$adminDisplay->updateCompanyStr($remomeUserStr,$c_id);
+			
+		
+			$this->_helper->layout->disableLayout();
+		
+		
+		}
+		
+		public function addcompanyccuserAction(){
+			$adminDisplay = new AdminDisplay();
+			$userId = $this->_request->getParam('user_id');
+			$c_id = $this->_request->getParam('c_id');
+			$ccList = $adminDisplay->getCompaniesCCUsers($c_id);
+			//print_r($ccList);
+			try{
+				
+				$explodeCCList = explode(",",$ccList['cclist']);
+				if(!in_array($userId,$explodeCCList)){
+					$ccListStr = rtrim($ccList['cclist'],",").",".$userId.",";
+					$adminDisplay->updateCompanyStr($ccListStr,$c_id);
+					//$this->view->assign('companies',$companies);
+					
+					
+				}	
+				$ccList = $adminDisplay->getCompaniesCCUsers($c_id);
+				if(!empty($ccList['cclist'])){
+					$explodeCCList = explode(",",$ccList['cclist']);
+					
+					if(count($explodeCCList) > 0){
+						foreach($explodeCCList as $key => $userVal){
+							if(!empty($userVal)){
+								$usersArray[] = $adminDisplay->getUsersDetails($userVal);
+							
+							}
+						
+						}
+					
+					}
+				
+				}
+				$this->view->assign('ccList',$usersArray);
+				//}
+					
+				}catch(Exception $e){
+			
+			}
+		
+			$this->_helper->layout->disableLayout();
+		
+		
+		}
+		
 		
 		
 		
