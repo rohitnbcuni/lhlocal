@@ -40,7 +40,7 @@ $('#profile_save').click(function(){
 	
 	$.ajax({
 		type: "POST",
-		url: "companyupdate",
+		url: "/workorders/index/companyupdate",
 		data: "companyId="+user_company+"&phone="+phone,
 		success: function(msg) {
 			$('.message_required p').html('User Profile has completed.You Can start to create Workorders');
