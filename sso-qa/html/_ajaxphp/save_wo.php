@@ -150,8 +150,8 @@
 			$proj_default_cc_row = $proj_default_cc_res->fetch_assoc();
 			$defaultCC = $proj_default_cc_row['cclist'];*/
 
-			$company_default_cc = "SELECT c.`cclist` FROM `companies` c,`projects` p WHERE p.`id`= ? AND p.`company` = c.`id`";
-			$company_default_cc_res = $mysql->sqlprepare($company_default_cc,array($projectId));
+			$company_default_cc = "SELECT c.`cclist` FROM `companies` c WHERE c.`id`= ? ";
+			$company_default_cc_res = $mysql->sqlprepare($company_default_cc,array($company_id));
 			$company_default_cc_row = $company_default_cc_res->fetch_assoc();
 			$companyDefaultCC = $company_default_cc_row['cclist'];
 
