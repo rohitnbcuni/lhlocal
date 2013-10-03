@@ -212,6 +212,10 @@
 			$fetchProjectCCList = self::getQuery("SELECT * FROM `projects` WHERE `id` = '".$proj_id."'");			
 			return $fetchProjectCCList;
 		}
+		public function fetchCompanyCCList($proj_id) {
+			$fetchProjectCCList = self::getQuery("SELECT id,name,cclist FROM `companies` WHERE `id` = '".$proj_id."'");			
+			return $fetchProjectCCList;
+		}
 
  //////18474//////
 			public function fetchQCProjectCCList($proj_id) {
@@ -813,5 +817,54 @@
 		}
 		
 		
-	}
-?>
+		public function getCompaniesCCList($cid = null){
+			$db = Zend_Registry::get('db');
+			$html = '';
+			//echo $cid;
+			$allCompanies = $db->fetchAll("SELECT id, name from companies WHERE  active ='1' AND deleted='0' ORDER BY name ASC");
+			$html .= "<option>--Please Select--</option>";
+			//print_r($allCompanies);
+			foreach($allCompanies as $company_key => $company_val){
+				$s = '';
+				if($cid != ''){
+					if($company_val['id']== $cid){
+						$s = "selected='selected'";
+						
+					
+					}
+				}
+				$html .= "<option ".$s." value=".$company_val['id'].">".$company_val['name']."</option>";
+				
+			}	
+			
+			return $html;
+		
+		}
+		
+		public function getCompaniesCCUsers($cid){
+			$db = Zend_Registry::get('db');
+		 	$query = "SELECT id, name,cclist from companies WHERE id  = '$cid'";
+	   		$result = $db->fetchRow($query);
+			return $result;	
+		
+		
+		}
+		
+		public function getUsersDetails($uid){
+			$db = Zend_Registry::get('db');
+		 	$query = "SELECT id, CONCAT_WS(' ', first_name,last_name) as full_name FROM users WHERE id  = '$uid'";
+	   		$result = $db->fetchRow($query);
+			return $result;	
+		
+		
+		}
+		
+		public function updateCompanyStr($cclist,$company_id){
+			$db = Zend_Registry::get('db');
+			$dataArray = array("cclist" => $cclist);
+		 	$where[] = 'id =  '.$company_id;
+			return $db->update("companies", $dataArray, $where);
+		
+		}
+
+	}	
