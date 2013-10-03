@@ -91,27 +91,7 @@ function editUser() {
 	$('#updateButton').css({display:'block'});
 	$('#editButton').css({display:'none'});
 }
-function addCcUser(projectId) {
-	var cc = document.getElementById('cc_user').value;
-	
-	if(endsWith(cc,",")){
-    	 document.getElementById('cclist').value += cc +",";
-	}else{
-        document.getElementById('cclist').value += ","+cc +",";
-	} 
-	
-	var cclist = document.getElementById('cclist').value;
-	//alert('add cc: '+woId+":"+cc);
 
-	$.ajax({
-		type: "GET",
-		url: "/_ajaxphp/add_default_cc.php",
-		data: "projectId="+projectId+"&cc="+cclist,
-		success: function(msg) {
-			document.getElementById('cc_list').innerHTML = msg;
-		}
-	});
-}
 
 function addDefaultCompany(projectId) {
 	var cclist = document.getElementById('cclist').value;
@@ -550,6 +530,26 @@ function projectDefaultCC(proj_id)
 	 document.body.appendChild(form);   
 	 form.submit();
 }
+function companyDefaultCC(c_id)
+{
+	if(c_id==null)
+	{
+		proj_id = '';
+	}
+
+	var form = document.createElement("form");
+	form.setAttribute("method", 'post');
+	form.setAttribute("action", '/admin/index/companydefaultcc/');
+
+	 var hiddenField1 = document.createElement("input");
+	 hiddenField1.setAttribute("type", "hidden");
+	 hiddenField1.setAttribute("name", 'c_id');
+	 hiddenField1.setAttribute("value", c_id);
+	 form.appendChild(hiddenField1);
+
+	 document.body.appendChild(form);   
+	 form.submit();
+}
 ///////////18474///////
 function QCprojectDefaultCC(proj_id)
 {
@@ -913,5 +913,30 @@ function deleteRallyProject(id){
 				});
 
 
+function removeCompanyCcUser(id){
+	var c_id = $('#admin_company_select').val();
+	$.post("/admin/index/removecompanyccuser",{id:id,c_id:c_id},
+		function(data){
+				if(data != ''){
+					$('#row_'+id).css('display','none');
+					//$('.message_required p').html('The information has been delete successfully.');
+					//$('.message_required').css({display:'block'});
+				}
+				
+		});	
 
+
+}
+
+function addCcUser() {
+	var cc = $('#cc_user').val();
+	var comp_id = $('#admin_company_select').val();
+	$.post("/admin/index/addcompanyccuser",{user_id:cc,c_id:comp_id},
+		function(data){
+				if($.trim(data) != ''){
+					$('#cc_list').html(data);
+				}
+				
+		});
+	
 }
