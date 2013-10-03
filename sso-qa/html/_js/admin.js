@@ -912,7 +912,7 @@ function deleteRallyProject(id){
 						
 				});
 
-
+}
 function removeCompanyCcUser(id){
 	var c_id = $('#admin_company_select').val();
 	$.post("/admin/index/removecompanyccuser",{id:id,c_id:c_id},
