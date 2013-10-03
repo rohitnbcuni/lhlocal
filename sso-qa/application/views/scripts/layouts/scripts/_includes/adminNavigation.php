@@ -22,8 +22,8 @@
 							<li class="alt" id="fetchProjProduct" onClick="fetchProjProduct();">
 								<img src="/_images/yellow_status.gif">QA Project Products
 							</li>							
-							<li class="alt" id="projectDefaultCC" onClick="projectDefaultCC();">
-							<img src="/_images/yellow_status.gif">WO Project Default CC
+							<li class="alt" id="companyDefaultCC" onClick="companyDefaultCC();">
+							<img src="/_images/yellow_status.gif">WO Company Default CC
 							</li>	
 							<li class="alt" id="QCprojectDefaultCC" onClick="QCprojectDefaultCC();">
 							<img src="/_images/yellow_status.gif">Quality Project Default CC
