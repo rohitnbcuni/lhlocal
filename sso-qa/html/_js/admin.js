@@ -75,6 +75,53 @@ $(document).ready(function(){
 	
 	}
 	
+	if($('#userAdminAccess')){
+		if($('#userAdminAccess').val() == 'employee'){
+				
+			$("#ADMIN_ACCESS").removeAttr('checked');
+			$("#ADMIN_ACCESS").attr('disabled',"disabled");
+			
+			
+		}else{
+			$("#ADMIN_ACCESS").removeAttr('readonly');
+			
+		}
+				
+		
+		$('#ADMIN_ACCESS').click(function(){
+			if (($('#ADMIN_ACCESS').is(':checked')) && ($('#userAdminAccess').val() == 'employee')) {
+			
+				//$("#ADMIN_ACCESS").removeAttr('checked');
+				$("#ADMIN_ACCESS").removeAttr('checked');
+				$("#ADMIN_ACCESS").attr('disabled',"disabled");
+				$('.message_required p').html('Admin Tab access only to Admin role.');
+				$('.message_required').css({display:'block'});
+			}else{
+				//$("#ADMIN_ACCESS").removeAttr('checked');
+				$("#ADMIN_ACCESS").removeAttr('disabled');
+			
+			}
+		
+		});
+		
+		$('#userAdminAccess').change(function(){
+			
+			if ($('#userAdminAccess').val() == 'employee') {
+			
+				//$("#ADMIN_ACCESS").removeAttr('checked');
+				$('.message_required p').html('Admin Tab access only to Admin role.');
+				$('.message_required').css({display:'block'});
+				$("#ADMIN_ACCESS").removeAttr('checked');
+				$("#ADMIN_ACCESS").attr('disabled',"disabled");
+			}else{
+				//$("#ADMIN_ACCESS").removeAttr('checked');
+				$("#ADMIN_ACCESS").removeAttr('disabled');
+			
+			}
+		
+		});
+	}
+	
 		
 	});
 
