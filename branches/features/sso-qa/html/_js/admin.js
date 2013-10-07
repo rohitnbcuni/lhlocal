@@ -94,7 +94,7 @@ $(document).ready(function(){
 				//$("#ADMIN_ACCESS").removeAttr('checked');
 				$("#ADMIN_ACCESS").removeAttr('checked');
 				$("#ADMIN_ACCESS").attr('disabled',"disabled");
-				$('.message_required p').html('Admin Tab access only to Admin role.');
+				$('.message_required p').html('Admin Tab can access only for Admin role.');
 				$('.message_required').css({display:'block'});
 			}else{
 				//$("#ADMIN_ACCESS").removeAttr('checked');
@@ -109,7 +109,7 @@ $(document).ready(function(){
 			if ($('#userAdminAccess').val() == 'employee') {
 			
 				//$("#ADMIN_ACCESS").removeAttr('checked');
-				$('.message_required p').html('Admin Tab access only to Admin role.');
+				$('.message_required p').html('Admin Tab can access only for Admin role.');
 				$('.message_required').css({display:'block'});
 				$("#ADMIN_ACCESS").removeAttr('checked');
 				$("#ADMIN_ACCESS").attr('disabled',"disabled");
