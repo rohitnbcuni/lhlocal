@@ -82,7 +82,7 @@ function ajaxUploadFile(fileForm){
 	$.ajaxFileUpload
 	(
 		{
-			url:'imageupdate',
+			url:'/workorders/profile/imageupdate',
 			secureuri:false,
 			fileElementId:'image_upload',
 			dataType: 'text',
