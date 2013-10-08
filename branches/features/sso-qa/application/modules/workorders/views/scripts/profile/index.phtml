@@ -11,6 +11,21 @@
 <?php //p($this->userInfo); ?>
 			<ul>
 				<li>
+				
+					<label for="image_upload" id="image_lbl">Image:<br/>(Upto 2MB file size)</label>
+					<div class="wo_dimmer" id="file_upload_dimmer" style="display: none;"></div>
+					<div style="margin-left:134px;margin-top:10px;" id="thumb_img">
+							
+								<img id="requestor_photo" src="/_images/empty_mugshot.gif" class="requestor_photo">
+							
+						</div>
+					<form id="file_upload_form" name="file_upload_form" accept-charset="utf-8" method="post" action="" enctype="multipart/form-data">
+						<input type="file"  id="image_upload" name="image_upload" readonly="readonly" class="field_large" style="width:273px;" onChange="return checkDirName('file_upload_form');"/><br/>
+						
+						
+					</form>
+				</li>
+				<li>
 					<label for="fname" id="fname_lbl">First Name:</label>
 					<input type="text"  id="fname" name="fname" readonly="readonly" class="field_large"  value="<?php echo $this->userInfo['first_name'] ?>"/>
 					<input type="hidden"  id="userId" name="userId"   value="<?php echo $this->userInfo['id'] ?>" class="requestor_photo" />
@@ -31,20 +46,7 @@
 					<input type="text"  id="sso" name="sso" readonly="readonly" class="field_large"  value="<?php echo $this->userInfo['sso'] ?>"/>
 					
 				</li>
-				<li>
 				
-					<label for="image_upload" id="image_lbl">Image:<br/>(Upto 2MB file size)</label>
-					<div class="wo_dimmer" id="file_upload_dimmer" style="display: none;"></div>
-					<form id="file_upload_form" name="file_upload_form" accept-charset="utf-8" method="post" action="" enctype="multipart/form-data">
-						<input type="file"  id="image_upload" name="image_upload" readonly="readonly" class="field_large" onChange="return checkDirName('file_upload_form');"/><br/>
-						
-						<div style="margin-left:134px;margin-top:10px;" id="thumb_img">
-							
-								<img id="requestor_photo" src="/_images/empty_mugshot.gif" class="requestor_photo">
-							
-						</div>
-					</form>
-				</li>
 				<li>
 					<label for="sso" id="sso_lbl">Phone:</label>
 					<input type="text"  id="phone" name="phone"  class="field_large" maxlength="20" value="<?php echo $this->userInfo['phone_office'] ?>" />
@@ -61,16 +63,16 @@
 									<?php echo AdminDisplay::getCompanyHTML(); ?>
 									</select>
 							<?php }else{ ?>
-								<input type="text"  class="readonly" readonly="readonly"  name="company_name" id="company_name" value="<?php echo AdminDisplay::getUserCompany($this->userInfo['company'])?>" >
+								<input type="text"  class="field_large readonly" readonly="readonly"  name="company_name" id="company_name" value="<?php echo AdminDisplay::getUserCompany($this->userInfo['company'])?>" >
 								<input type="hidden" id="user_company" value="<?php echo $this->userInfo['company']?>" class="field_large" >
 							<?php } ?>
 					
 					
 				</li>
-				<li style="margin-left:150px;">
+				<li style="margin-left:128px;">
 				
 				 <button id="profile_save"  ><span>Update</span></button>
-				 <button id="profile_cancel"  ><span>Cancel</span></button>
+				 <button id="profile_cancel"  style="padding-left: 33px;"><span>Cancel</span></button>
 				<li>
 			</ul>
 		</div>
