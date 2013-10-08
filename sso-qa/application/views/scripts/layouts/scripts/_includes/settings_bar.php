@@ -4,30 +4,14 @@
 			<h2>Powered By</h2>
 			<ul class="settings">
 			<?PHP
-			
-			//$auth->logout();
-			$b = BASE_URL."/login/?signout=true";
-			$sign_out_url = BASE_URL."/simplesaml/module.php/core/as_logout.php?AuthId=".SAML_SP_ENTITY_ID."&ReturnTo=".$b;
-		
-		  
-											
-				if(@$menu_url[0] != "login") { ?>
-					 <li class="first">
-					 <div class="top-menu-dropdown">
-						<a class="account" ><?php print @$_SESSION['lh_username'] ?></a>
-						
-						<div class="submenu">
-							<div class="username"><?php echo @$_SESSION['sso'] ?></div>
-							<ul class="root">
-								<li ><a href="/workorders/profile" >Profile</a></li>
-								<li ><a href="<?php echo $sign_out_url ?>">Signout</a></li>
-								
-							</ul>
-						</div>
-					</div>
-					</li>
-										
-		
+			//@$menu_array[5]['url']
+			if(@$menu_url[0] != "login") {
+				echo '<li class="risk"><button style="display:none" onclick="showUserRisks(\'' . $_SESSION['user_id'] . '\');" id="back_button"><span class="my_risk">you have ' . $my_risk_count . '</span></button></li>';
+				echo '<li class="first">' .@$_SESSION['lh_username'] .'</li>
+				<li><a href="/login/?signout=true">Sign Out</a></li>
+				 <li><a href="/workorders/profile/index">My Profile</a></li>
+				';		
+		?>
 		<?php $pageURL = BASE_URL; 	?>
 		<li style="border-left:none;padding: 0 4px;"><div id="search_top">
 		<div><form action="<?php echo $pageURL;?>/search" method="post" name="search_box_form" id="search_box_form" >
