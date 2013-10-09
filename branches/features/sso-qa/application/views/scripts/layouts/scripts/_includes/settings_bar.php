@@ -4,11 +4,14 @@
 			<h2>Powered By</h2>
 			<ul class="settings">
 			<?PHP
+			$b = BASE_URL."/login/?signout=true";
+			$sign_out_url = BASE_URL."/simplesaml/module.php/core/as_logout.php?AuthId=".SAML_SP_ENTITY_ID."&ReturnTo=".$b;
+
 			//@$menu_array[5]['url']
 			if(@$menu_url[0] != "login") {
 				echo '<li class="risk"><button style="display:none" onclick="showUserRisks(\'' . $_SESSION['user_id'] . '\');" id="back_button"><span class="my_risk">you have ' . $my_risk_count . '</span></button></li>';
 				echo '<li class="first">' .@$_SESSION['lh_username'] .'</li>
-				<li><a href="/login/?signout=true">Sign Out</a></li>
+				<li><a href="'.$sign_out_url .'">Sign Out</a></li>
 				 <li><a href="/workorders/profile/index">My Profile</a></li>
 				';		
 		?>
