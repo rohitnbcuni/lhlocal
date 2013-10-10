@@ -300,14 +300,14 @@
 				 * LH#21355
 				 */
 				if(!is_numeric($new_wo_id )){
-					$this->_redirect("workorders/index/");
+					$this->_redirect("workorders/index/error");
 				}
 				$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`='$new_wo_id' LIMIT 1");
 				/* LH fixes
 				 * LH#21355
 				 */
 				if(count($wo_data) == 0){
-					$this->_redirect("workorders/index/");
+					$this->_redirect("workorders/index/error");
 				}
 				//Does USer have the access of workorder
 				$current_session_id = $_SESSION['user_id'];
@@ -324,7 +324,7 @@
 								$readonly = true;
 							}else{
 								//if company has not assigned to User and not in CC'd list
-								$this->_redirect("workorders/index/");
+								$this->_redirect("workorders/index/error");
 							
 							}
 						}
