@@ -300,14 +300,14 @@
 				 * LH#21355
 				 */
 				if(!is_numeric($new_wo_id )){
-					$this->_redirect("workorders/index/error");
+					$this->_redirect("workorders/index/invalidworkorder");
 				}
 				$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`='$new_wo_id' LIMIT 1");
 				/* LH fixes
 				 * LH#21355
 				 */
 				if(count($wo_data) == 0){
-					$this->_redirect("workorders/index/error");
+					$this->_redirect("workorders/index/invalidworkorder");
 				}
 				//Does USer have the access of workorder
 				$current_session_id = $_SESSION['user_id'];
