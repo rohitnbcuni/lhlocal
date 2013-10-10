@@ -179,6 +179,14 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						echo '';
 						break;						
 					}//end 
+					case 'error':{
+						echo '';
+						break;						
+					}//end 
+					case 'invalidworkorder':{
+						echo '';
+						break;						
+					}//end 
 					case 'profile':{
 						echo	"<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n";
 						echo    "\t<script src=\"/_js/ajaxfileupload.js\" type=\"text/javascript\"></script>\n";
