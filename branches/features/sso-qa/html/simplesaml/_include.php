@@ -1,5 +1,6 @@
 <?php
 
+ob_start();
 //Add cron config file to fetchout the path absolute path 
 $fullPath = str_replace("simplesaml","crons", dirname(__FILE__));
 require  $fullPath."/cron.config.php";
