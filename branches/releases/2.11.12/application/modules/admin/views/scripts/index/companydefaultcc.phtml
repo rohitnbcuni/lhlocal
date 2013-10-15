@@ -1,0 +1,54 @@
+<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="WO Default CC List">  
+<input type="hidden" name="ccList" id="ccList" value="">  
+<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
+	<div class="adminSelect">
+		<div >
+		<p>Company:</p>
+			<select class="field_medium" name="admin_company_select" id="admin_company_select" onChange="companyDefaultCC(this.value);" >
+			<?php echo $this->companies; ?>
+			</select>
+		</div>
+	</div>
+	<br><hr style="clear:both;margin-top:30px;" />
+	
+	<div class="admin_content_col4">
+		<div class="side_bucket_container bucket_container_last">
+
+			<div class="side_bucket_title">CC List</div>
+			<div class="side_bucket_content">
+			
+				<ul id="cc_list">
+				<?php if(count($this->ccList) > 0) : ?>
+					<?php foreach($this->ccList as $usersList) : ?>
+					<li class="admincc_listli" id="row_<?php echo $usersList['id']; ?>" ><div class="admincclist_name"> <?php echo $usersList['full_name'] ?></div>
+						<button class="status admincclist_remover" onclick="removeCompanyCcUser(<?php echo $usersList['id'] ?>); return false;"><span>remove</span></button>
+					</li>
+					<?php endforeach; ?>
+				<?php endif; ?>	
+				</ul>
+				
+				<div class="cclist_actions" id="add_cc">
+					<button class="secondary" onclick="$('#add_cc').css({display:'none'});$('#select_cc').css({display:'block'}); return false;"><span>+ Add Person to CC List</span></button>
+				</div>
+				<div class="cclist_actions" id="select_cc" style="display: none;">
+					<select name="cc_user" id="cc_user" style="margin-bottom:2px;">';
+
+					<?php echo AdminDisplay::getUserOptionEditHTML(); ?>
+
+					</select>
+					<p><button class="secondary" onclick="addCcUser(); $('#select_cc').css({display:'none'});$('#add_cc').css({display:'block'}); return false;"><span>Add</span></button>
+					<button class="cancel" onclick="$('#add_cc').css({display:'block'}); $('#select_cc').css({display:'none'}); return false;"><span>Cancel</span></button>
+					</p>  
+				</div>
+				<div class="clearer"></div>
+				<input type="hidden" name="cclist" id="cclist" value="" />
+			</div>
+		</div>
+	</div>
+	
+
+
+
+
+
+
