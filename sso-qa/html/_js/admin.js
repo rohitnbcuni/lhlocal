@@ -61,6 +61,11 @@ $(document).ready(function(){
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #searchLHProjects').addClass('active');
 	}
+ else if(adminTitlemsg == 'Company List')
+	{
+		$('#create_sections li').removeClass('active');
+		$('#create_sections #createCompany').addClass('active');
+	}
 	$('.title_lrg h4').html(adminTitlemsg);
 	
 	
@@ -581,7 +586,7 @@ function companyDefaultCC(c_id)
 {
 	if(c_id==null)
 	{
-		proj_id = '';
+		c_id = '';
 	}
 
 	var form = document.createElement("form");
@@ -882,6 +887,15 @@ function solrSearchLog(field_id)
 	form.submit();
 }
 
+function companyList(field_id)
+{
+
+	var form = document.createElement("form");
+	form.setAttribute("method", 'post');
+	form.setAttribute("action", '/admin/index/companylist/');	
+	document.body.appendChild(form);   
+	form.submit();
+}
 function setQadataGrid(){
 	var qaProjectValues = new Array();
 	$.each($("input[name='qaGrid[]']:checked"), function() {
@@ -987,3 +1001,120 @@ function addCcUser() {
 		});
 	
 }
+
+function loadCompany(c_id){
+
+	if(c_id==null)
+	{
+		c_id = '';
+	}
+
+	var form = document.createElement("form");
+	form.setAttribute("method", 'post');
+	form.setAttribute("action", '/admin/index/companylist/');
+
+	 var hiddenField1 = document.createElement("input");
+	 hiddenField1.setAttribute("type", "hidden");
+	 hiddenField1.setAttribute("name", 'c_id');
+	 hiddenField1.setAttribute("value", c_id);
+	 form.appendChild(hiddenField1);
+
+	 document.body.appendChild(form);   
+	 form.submit();
+
+
+}
+
+function addNewCompany_div(){
+
+	$('#admindisplayCompanyInfo').slideUp('slow');
+	$('#adminAddNewCompany').slideDown('slow');
+	
+
+}
+
+function updateCompany_div(){
+	$('#admindisplayCompanyInfo').slideDown('slow');
+	$('#adminAddNewCompany').slideUp('slow');
+
+
+}
+
+function updateCompany(){
+	var admin_company_select = $('#admin_company_select').val();
+	if(admin_company_select != ''){
+		var company_name = $('#company_name').val();
+		var street_addr1 = $('#street_addr1').val();
+		var street_addr2 = $('#street_addr2').val();
+		var client_of = $('#client_of').val();
+		var web_address = $('#web_address').val();
+		var phone = $('#phone').val();
+		var contact_person_name = $('#contact_person_name').val();
+		$.ajax({
+		type: "POST",
+		url: "/admin/index/updatecompany",
+		data: {id:admin_company_select,company_name:company_name,street_addr1:street_addr1,street_addr2:street_addr2,client_of:client_of,web_address:web_address,phone:phone,contact_person_name:contact_person_name},
+		success: function(data) {
+				
+					if(data == 1){
+					
+					//$('#tr_'+id).css('display','none');
+					$('.message_required p').html('The information has been updated successfully.');
+					$('.message_required').css({display:'block'});
+				}
+			
+			}	
+			});
+		}
+	}
+
+function isUrl(s) {
+    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+    return regexp.test(s);
+}
+function addNewCompany(){
+	var company_name = $.trim($('#new_company_name').val());
+	
+	if(company_name == ''){
+		$('.message_required p').html('Please Enter the Company Name.');
+		$('.message_required').css({display:'block'});
+		return false;
+	}
+	var web_address = $('#new_web_address').val();
+	if(isUrl(web_address) ==  false){
+		$('.message_required p').html('Please Enter the Valid Web Address.');
+		$('.message_required').css({display:'block'});
+		return false;
+	
+	}
+	
+	
+	if(company_name != ''){
+		
+		var street_addr1 = $('#new_street_addr1').val();
+		var street_addr2 = $('#new_street_addr2').val();
+		var client_of = $('#new_client_of').val();
+		
+		var phone = $('#new_phone').val();
+		var contact_person_name = $('#contact_person_name').val();
+		$.ajax({
+		type: "POST",
+		url: "/admin/index/insertcompany",
+		data: {company_name:company_name,street_addr1:street_addr1,street_addr2:street_addr2,client_of:client_of,web_address:web_address,phone:phone,contact_person_name:contact_person_name},
+		success: function(data) {
+				data = $.trim(data);
+				if(data == 'Exist'){
+					$('.message_required p').html('Company is already in LH Database.');
+					$('.message_required').css({display:'block'});
+				}
+				if(data == 'done'){
+					//$('#tr_'+id).css('display','none');
+					$('.message_required p').html('The information has been saved successfully.');
+					$('.message_required').css({display:'block'});
+					window.location = "/admin/index/companylist/";
+				}
+				}
+				
+			});
+		}
+	}
