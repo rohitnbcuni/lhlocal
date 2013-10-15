@@ -1,0 +1,9 @@
+<?php if(count($this->ccList) > 0) : ?>
+<ul id="cc_list">
+	<?php foreach($this->ccList as $usersList) : ?>
+	<li class="admincc_listli" id="row_<?php echo $usersList['id']; ?>" ><div class="admincclist_name"> <?php echo $usersList['full_name'] ?></div>
+		<button class="status admincclist_remover" onclick="removeCompanyCcUser(<?php echo $usersList['id'] ?>); return false;"><span>remove</span></button>
+	</li>
+	<?php endforeach; ?>
+</ul>
+<?php endif; ?>	

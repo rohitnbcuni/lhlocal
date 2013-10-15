@@ -1,0 +1,103 @@
+<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Company List">  
+<input type="hidden" name="ccList" id="ccList" value="">  
+<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
+	<div class="adminSelect">
+		<div >
+		<p>Company:</p>
+			<select class="field_medium" name="admin_company_select" id="admin_company_select" onChange="loadCompany(this.value);" >
+			<?php echo $this->companies; ?>
+			</select>
+		</div>
+		
+		<div class="row">
+			<button  onclick="addNewCompany_div();"><span>Add New</span></button>
+			<button  onclick="updateCompany_div();"><span>Edit</span></button>
+		</div>
+		
+		
+	</div>
+	<br><hr style="clear:both;margin-top:30px;" />
+<?php if(count($this->company_details) > 0 ) : ?>
+<div class="admindisplayUserInfo" id="admindisplayCompanyInfo" style="display:none;">
+	<div class="row">
+		<div class="label"><label>Company Name:</label></div>
+				<input type="text" value="<?php echo $this->company_details['name'] ?>" id="company_name" name="company_name" >
+	</div>
+	<div class="row">
+		<div class="label"><label>street_addr1:</label></div>
+				<input type="text" value="<?php echo $this->company_details['street_addr1'] ?>" id="street_addr1" name="street_addr1" >
+	</div>
+	<div class="row">
+		<div class="label"><label>street_addr2:</label></div>
+				<input type="text" value="<?php echo $this->company_details['street_addr2'] ?>" id="street_addr2" name="userID" >
+	</div>
+	<div class="row">
+		<div class="label"><label>Client off Number:</label></div>
+				<input type="text" value="<?php echo $this->company_details['client_of'] ?>" id="client_of" name="client_of" >
+	</div>
+	<div class="row">
+		<div class="label"><label>Web Address:</label></div>
+				<input type="text" value="<?php echo $this->company_details['web_address'] ?>" id="web_address" name="web_address" >
+	</div>
+	<div class="row">
+		<div class="label"><label>Phone:</label></div>
+				<input type="text" value="<?php echo $this->company_details['phone'] ?>" id="phone" name="phone" maxlength="100">
+	</div>
+	<div class="row">
+		<div class="label"><label>Contact Person Name:</label></div>
+				<input type="text" value="<?php echo $this->company_details['contact_person_name'] ?>" id="contact_person_name" name="contact_person_name" maxlength="100">
+	</div>
+	<div class="row">
+			<button  onclick="updateCompany();"><span>Update</span></button>
+	</div>
+	
+</div>
+<?php endif; ?>
+	
+<div  class="admindisplayUserInfo" id="adminAddNewCompany" style="display:none;" >
+	<div class="row">
+		<div class="label"><label>Company Name:</label></div>
+				<input type="text" value="" id="new_company_name" name="new_company_name" maxlength="100">
+	</div>
+	<div class="row">
+		<div class="label"><label>street_addr1:</label></div>
+				<input type="text"  id="new_street_addr1" name="new_street_addr1" maxlength="100">
+	</div>
+	<div class="row">
+		<div class="label"><label>street_addr2:</label></div>
+				<input type="text"  id="new_userID" name="new_userID"  maxlength="100">
+	</div>
+	<div class="row">
+		<div class="label"><label>Client off Number:</label></div>
+				<input type="text"  id="new_client_of" name="new_client_of"  maxlength="100">
+	</div>
+	<div class="row">
+		<div class="label"><label>Web Address:</label></div>
+				<input type="text"  id="new_web_address" name="new_web_address" maxlength="100">
+	</div>
+	<div class="row">
+		<div class="label"><label>Phone:</label></div>
+				<input type="text"  id="new_phone" name="new_phone" maxlength="100">
+	</div>
+	<div class="row">
+		<div class="label"><label>Contact Person Name:</label></div>
+				<input type="text"  id="new_contact_person_name" name="new_contact_person_name" maxlength="100">
+	</div>
+	<div class="row">
+			<button  onclick="addNewCompany();"><span>Save</span></button>
+	</div>
+	
+</div>	
+
+<div class="message_required">
+	<p></p>
+	<div style="clear: both;"></div>
+		<div class="duplicate_buttons">
+		<button onClick="$('.message_required').css({display:'none'}); return false;"><span>OK</span></button>
+	<div style="clear: both;"></div>
+</div>					
+<div style="clear: both;"></div>
+
+
+
+
