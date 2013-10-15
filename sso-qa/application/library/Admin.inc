@@ -866,5 +866,20 @@
 			return $db->update("companies", $dataArray, $where);
 		
 		}
-
+		
+		public function getCompanyDetailsByName($name){
+			$db = Zend_Registry::get('db');
+			$row = array();
+			$sql = 'SELECT * from companies WHERE name LIKE ?';
+			$row = $db->fetchRow($sql, $name);
+			if(count($row) > 0){
+				return $row;
+			
+			}else{
+				return false;
+			
+			}
+		
+		
+		}
 	}	
