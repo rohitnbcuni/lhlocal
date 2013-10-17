@@ -850,6 +850,18 @@
 		
 		}
 		
+		public function getCompanyDetails($cid){
+			$db = Zend_Registry::get('db');
+			if($cid != ''){
+				$query = "SELECT * from companies WHERE id  = '$cid'";
+				$result = $db->fetchRow($query);
+				return $result;	
+			}else{
+				return false;
+			}
+		
+		
+		}
 		public function getUsersDetails($uid){
 			$db = Zend_Registry::get('db');
 		 	$query = "SELECT id, CONCAT_WS(' ', first_name,last_name) as full_name FROM users WHERE id  = '$uid'";
