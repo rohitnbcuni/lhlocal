@@ -12,7 +12,10 @@
 						<ul id="create_sections">
 							<li class="alt active" id="fetchUser" onClick="fetchUser();">
 							<img src="/_images/yellow_status.gif">User Info
-							</li>								
+							</li>
+							<li class="alt" id="createCompany" onClick="companyList();">
+								<img src="/_images/yellow_status.gif">Company List
+							</li>
 							<li class="alt" id="fetchProjVersion" onClick="fetchProjVersion();">
 							<img src="/_images/yellow_status.gif">QA Project Versions
 							</li>
