@@ -1,9 +1,9 @@
 <input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Company List">  
 <input type="hidden" name="ccList" id="ccList" value="">  
 <div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
-	<div class="adminSelect">
-		<div >
-		<p>Company:</p>
+	<div class="admindisplayUserInfo">
+		<div class="row">
+		<div class="label"><label>Company:</label></div>
 			<select class="field_medium" name="admin_company_select" id="admin_company_select" onChange="loadCompany(this.value);" >
 			<?php echo $this->companies; ?>
 			</select>
