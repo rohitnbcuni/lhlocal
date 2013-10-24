@@ -797,7 +797,7 @@ function updateFieldValue(OP){
 	} 
 
 	if($('#fieldname').val().length == 0){
-		$('.message_required p').html('Pls Fill the required feild.');
+		$('.message_required p').html('Please Fill the required feild.');
 		$('.message_required').css({display:'block'});
 		$('.message_required button').click(function(){
 			$('.message_required').css({display:'none'});
