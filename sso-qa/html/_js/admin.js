@@ -66,6 +66,11 @@ $(document).ready(function(){
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #createCompany').addClass('active');
 	}
+	else if(adminTitlemsg == 'WO Company Default CC List')
+	{
+		$('#create_sections li').removeClass('active');
+		$('#create_sections #companyDefaultCC').addClass('active');
+	}
 	$('.title_lrg h4').html(adminTitlemsg);
 	
 	
