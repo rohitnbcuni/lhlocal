@@ -1012,6 +1012,9 @@ function loadCompany(c_id){
 	if(c_id==null)
 	{
 		c_id = '';
+		//$('#admindisplayCompanyInfo').css("display","none");
+		
+		
 	}
 
 	var form = document.createElement("form");
@@ -1039,8 +1042,11 @@ function addNewCompany_div(){
 }
 
 function updateCompany_div(){
-	$('#admindisplayCompanyInfo').slideDown('slow');
-	$('#adminAddNewCompany').slideUp('slow');
+	var admin_company_select = $('#admin_company_select').val();
+	if(admin_company_select ! = ''){
+		$('#admindisplayCompanyInfo').slideDown('slow');
+		$('#adminAddNewCompany').slideUp('slow');
+	}
 
 
 }
