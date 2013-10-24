@@ -112,7 +112,7 @@
 				</select>';
 
 				echo '<div class="title_med workorders_filter" style="position: inherit;align:center;">
-				   <label style="padding-left:15px;" for="requestedby_filter" id="requestedby_filter_label">Request By</label>
+				   <label style="padding-left:15px;" for="requestedby_filter" id="requestedby_filter_label">Requested By</label>
 					<select id="requestedby_filter" style="width: 140px;" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'2\');">
 						<option value="-1">Show All</option>
 					</select>
@@ -1827,7 +1827,7 @@
 				</select>';
 
 				echo '<div class="title_med workorders_filter" style="position: inherit;align:center;">
-				   <label style="padding-left:15px;" for="requestedby_filter" id="requestedby_filter_label">Request By</label>
+				   <label style="padding-left:15px;" for="requestedby_filter" id="requestedby_filter_label">Requested By</label>
 					<select id="requestedby_filter" style="width: 140px;" onchange="displayWorkorders(\'1\',\'first\',\'title\',\'1\',\'2\');">
 						<option value="-1">Show All</option>
 					</select>
