@@ -1339,14 +1339,24 @@
 				$db = Zend_Registry::get('db');
 				$comnpany_array = array();
 				$comnpany_array['name'] = $this->_request->getParam('company_name');
-				$comnpany_array['street_addr1'] = $this->_request->getParam('street_addr1');
-				$comnpany_array['street_addr2'] = $this->_request->getParam('street_addr1');
-				$comnpany_array['client_of'] = $this->_request->getParam('client_of');
-				$comnpany_array['web_address'] = $this->_request->getParam('web_address');
-				$comnpany_array['phone'] = $this->_request->getParam('phone');
-				$comnpany_array['contact_person_name'] = $this->_request->getParam('contact_person_name');
-				$where[] = 'id =  '.$company_id;
-				echo $result = $db->update("companies", $comnpany_array, $where);
+				$adminDisplay = new AdminDisplay();
+				$exist_comapny = $adminDisplay->getCompanyDetailsByName($comnpany_array['name'],$company_id);
+				if($exist_comapny == true){
+					echo "Exist";
+				
+				}else{
+					
+					$comnpany_array['street_addr1'] = $this->_request->getParam('street_addr1');
+					$comnpany_array['street_addr2'] = $this->_request->getParam('street_addr1');
+					$comnpany_array['client_of'] = $this->_request->getParam('client_of');
+					$comnpany_array['web_address'] = $this->_request->getParam('web_address');
+					$comnpany_array['phone'] = $this->_request->getParam('phone');
+					$comnpany_array['contact_person_name'] = $this->_request->getParam('contact_person_name');
+					$where[] = 'id =  '.$company_id;
+					echo $result = $db->update("companies", $comnpany_array, $where);
+				
+				
+				}
 				
 			
 			}
