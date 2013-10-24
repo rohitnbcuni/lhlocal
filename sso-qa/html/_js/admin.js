@@ -1044,10 +1044,30 @@ function updateCompany(){
 	var admin_company_select = $('#admin_company_select').val();
 	if(admin_company_select != ''){
 		var company_name = $('#company_name').val();
+		if(company_name == ''){
+			$('.message_required p').html('Please Enter the Company Name.');
+			$('.message_required').css({display:'block'});
+			$('#company_name').val('');
+			$('#company_name').focus();
+			return false;
+		}
 		var street_addr1 = $('#street_addr1').val();
 		var street_addr2 = $('#street_addr2').val();
 		var client_of = $('#client_of').val();
 		var web_address = $('#web_address').val();
+		
+	
+		if(web_address != ''){
+			
+			if(isUrl(web_address) ==  false){
+				$('.message_required p').html('Please Enter the Valid Web Address.');
+				$('.message_required').css({display:'block'});
+				$('#web_address').focus();
+				$('#web_address').val('');
+				return false;
+			
+			}
+		}
 		var phone = $('#phone').val();
 		var contact_person_name = $('#contact_person_name').val();
 		$.ajax({
@@ -1055,8 +1075,11 @@ function updateCompany(){
 		url: "/admin/index/updatecompany",
 		data: {id:admin_company_select,company_name:company_name,street_addr1:street_addr1,street_addr2:street_addr2,client_of:client_of,web_address:web_address,phone:phone,contact_person_name:contact_person_name},
 		success: function(data) {
-				
-					if(data == 1){
+				if($.trim(data) == 'Exist'){
+					$('.message_required p').html('Company name is already used with some other Company.');
+					$('.message_required').css({display:'block'});
+				}
+				if(data == 1){
 					
 					//$('#tr_'+id).css('display','none');
 					$('.message_required p').html('The information has been updated successfully.');
@@ -1078,14 +1101,23 @@ function addNewCompany(){
 	if(company_name == ''){
 		$('.message_required p').html('Please Enter the Company Name.');
 		$('.message_required').css({display:'block'});
+		$('#new_company_name').val('');
+		$('#new_company_name').focus();
 		return false;
 	}
-	var web_address = $('#new_web_address').val();
-	if(isUrl(web_address) ==  false){
-		$('.message_required p').html('Please Enter the Valid Web Address.');
-		$('.message_required').css({display:'block'});
-		return false;
 	
+	var web_address = $('#new_web_address').val();
+	
+	if(web_address != ''){
+		
+		if(isUrl(web_address) ==  false){
+			$('.message_required p').html('Please Enter the Valid Web Address.');
+			$('.message_required').css({display:'block'});
+			$('#new_web_address').focus();
+			$('#new_web_address').val('');
+			return false;
+		
+		}
 	}
 	
 	
@@ -1104,7 +1136,7 @@ function addNewCompany(){
 		success: function(data) {
 				data = $.trim(data);
 				if(data == 'Exist'){
-					$('.message_required p').html('Company is already in LH Database.');
+					$('.message_required p').html('Company name is not available .');
 					$('.message_required').css({display:'block'});
 				}
 				if(data == 'done'){
