@@ -1043,7 +1043,7 @@ function addNewCompany_div(){
 
 function updateCompany_div(){
 	var admin_company_select = $('#admin_company_select').val();
-	if(admin_company_select ! = ''){
+	if(admin_company_select != ''){
 		$('#admindisplayCompanyInfo').slideDown('slow');
 		$('#adminAddNewCompany').slideUp('slow');
 	}
