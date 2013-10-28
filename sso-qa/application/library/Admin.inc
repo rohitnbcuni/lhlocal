@@ -212,6 +212,7 @@
 			$fetchProjectCCList = self::getQuery("SELECT * FROM `projects` WHERE `id` = '".$proj_id."'");			
 			return $fetchProjectCCList;
 		}
+		
 		public function fetchCompanyCCList($proj_id) {
 			$fetchProjectCCList = self::getQuery("SELECT id,name,cclist FROM `companies` WHERE `id` = '".$proj_id."'");			
 			return $fetchProjectCCList;
@@ -341,6 +342,9 @@
 			}			
 			return $html;
 		}
+		
+		
+		
 
 		public function getPriorityOptionEditHTML($itemId) {
 			$priorities = self::getQuery(QRY_WO_PRIORITY_ASC);
@@ -862,6 +866,7 @@
 		
 		
 		}
+		
 		public function getUsersDetails($uid){
 			$db = Zend_Registry::get('db');
 		 	$query = "SELECT id, CONCAT_WS(' ', first_name,last_name) as full_name FROM users WHERE id  = '$uid'";
@@ -879,19 +884,37 @@
 		
 		}
 		
-		public function getCompanyDetailsByName($name){
+		public function getCompanyDetailsByName($name, $cid = NULL){
 			$db = Zend_Registry::get('db');
+			$name = trim($name);
 			$row = array();
-			$sql = 'SELECT * from companies WHERE name LIKE ?';
-			$row = $db->fetchRow($sql, $name);
-			if(count($row) > 0){
-				return $row;
-			
+			if($cid == NULL){
+				$sql = 'SELECT * from companies WHERE name LIKE ?';
+				$row = $db->fetchRow($sql, $name);
+				if(count($row) > 0){
+					return $row;
+				
+				}else{
+					return false;
+				
+				}
 			}else{
-				return false;
+				$sql = "SELECT * from companies WHERE name LIKE '$name' AND id <> $cid";
+				$row = $db->fetchRow($sql);
+				if(count($row) > 0){
+					return $row;
+				
+				}else{
+					return false;
+				
+				}
+			
 			
 			}
 		
 		
 		}
-	}	
+		
+		
+	}
+?>
