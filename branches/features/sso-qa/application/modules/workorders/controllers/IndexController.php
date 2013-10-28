@@ -178,7 +178,7 @@
 			<!--=========== END: COLUMNS ===========-->
 			<div class="message_archive">
 				<p>
-					You are about to archive this work order. <br /> you want to continue?
+					You are about to archive this work order. <br /> Do you want to continue?
 				</p>
 				<input type="hidden" name="archive_project_confirm" id="archive_project_confirm" value="" />
 				
