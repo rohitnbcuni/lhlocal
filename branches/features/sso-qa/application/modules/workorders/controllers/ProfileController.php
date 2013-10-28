@@ -36,16 +36,16 @@
 				}	
 				
 
-				if (!copy($_FILES['image_upload']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName .$cleaned_filename)) {
+				if (!copy($_FILES['image_upload']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] .'/' .$dirName .$cleaned_filename)) {
 					echo "fail";
 				} else {
-					$file_full_path = $_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName .$cleaned_filename;
+					$file_full_path = $_SERVER['DOCUMENT_ROOT'] .'/' .$dirName .$cleaned_filename;
 					chmod($file_full_path, 0655);
 					$sso_profile = new SSOLogin();
 					//GD is not on server
 					$thumb_image_name = $this->smart_resize_image($file_full_path,56,56,$file_full_path);
 					
-					$userData = '/files/'.$dirName .$cleaned_filename;
+					$userData = '/'.$dirName .$cleaned_filename;
 					$sso_profile->updateUserImage($userData,$user_id);
 					echo "success";
 				}
