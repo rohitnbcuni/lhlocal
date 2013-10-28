@@ -1211,10 +1211,10 @@ function sortByCommentDate(a, b) {
 
 function generateWOReport(){
 	if($('#project_status_filter').val() == '0'){	 
-		window.open('/_ajaxphp/workorder_json.php?report=excel&status='+$("#project_status_filter").val()+'&client='+$("#client_filter").val()+'&proj_id='+$("#project_filter").val()+'&status_filter='+$("#status_filter").val()+'&assigned_to='+$("#assigned_filter").val()+'&req_type='+$("#requestTypeFilter").val()+'&page_num='+page_num+'&column='+column_name+'&order='+sort_order+'&start_date='+$("#start_date_hidden").val()+'&end_date='+$("#end_date_hidden").val()+"&search="+$("#search_text").val());
+		window.open('/_ajaxphp/workorder_json_new.php?report=excel&status='+$("#project_status_filter").val()+'&client='+$("#client_filter").val()+'&status_filter='+$("#status_filter").val()+'&assigned_to='+$("#assigned_filter").val()+'&req_type='+$("#requestTypeFilter").val()+'&page_num='+page_num+'&column='+column_name+'&order='+sort_order+'&start_date='+$("#start_date_hidden").val()+'&end_date='+$("#end_date_hidden").val()+"&search="+$("#search_text").val());
 //	alert("page="+page_num+"col="+column_name+"order="+sort_order+"status="+$("#project_status_filter").val()+"client="+$("#client_filter").val()+"proj="+$("#project_filter").val()+"satfilt="+$("#status_filter").val()+"assign="+$("#assigned_filter").val()+"req="+$("#requestTypeFilter").val());
   }else{
-		window.open('/_ajaxphp/workorder_json.php?report=excel&status='+$("#project_status_filter").val());
+		window.open('/_ajaxphp/workorder_json_new.php?report=excel&status='+$("#project_status_filter").val());
 	}
 }
 
