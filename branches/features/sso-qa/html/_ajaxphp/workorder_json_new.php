@@ -25,6 +25,10 @@ if(ISSET($_SESSION['user_id'])){
 	//$archive_sql = " AND b.`archived`='0' and b.`active`='1'";
 	//$project_archive = " AND b.`archived`='0'";
 	
+	if(array_key_exists("report", $_GET)){
+		$type = $_GET['report'];
+	}
+	
 	$user_id = $_SESSION['user_id'];
 	$user_company_sql = " WHERE 1 ";
 	if($_SESSION['login_status'] != 'admin'){
@@ -422,24 +426,131 @@ if(ISSET($_SESSION['user_id'])){
 
 }
 
-$jsonSettings = json_encode($postingList);
+/*$jsonSettings = json_encode($postingList);
 
 // output correct header
 $isXmlHttpRequest = (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) ?
 (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') ? true : false: false;
 ($isXmlHttpRequest) ? header('Content-type: application/json') : header('Content-type: text/plain');
 
-echo $jsonSettings;
+echo $jsonSettings;*/
 
 
 function format_date($date){
-if($date != 'N/A'){
-	$str_date = strtotime($date);
-	return Date('Y-m-d h:i:s A', $str_date);
+	if($date != 'N/A'){
+		$str_date = strtotime($date);
+		return Date('Y-m-d h:i:s A', $str_date);
+	}else{
+		return $date;
+	}
+}
+
+if(isset($from_action) && $from_action){
+  //		return $postingList;
+}else if($type == 'excel'){
+
+   
+  $header = "Id\t Title\t  Company\t Request Type\t Severity\t Status\t Requested By\t Assigned To\t Open Date\t Assigned Date\t Completed Date\t Due Date\t Estimate Date\t Last Commented By\t Last Commented Date\n";
+  $excel_body = '';
+  $lhwoValue = $_COOKIE['lighthouse_wo_data'];
+  $lhwoArray = explode('~',$lhwoValue);
+ 
+  $clientId = $lhwoArray[0];
+  //$projectId = $lhwoArray[1];
+  $statusId = $lhwoArray[1];
+  $assignedTo = $lhwoArray[2];
+  $request_type = $lhwoArray[3];
+  $requested_by = $lhwoArray[4];
+  
+  $req_Type_Arr = Array();
+  $statusActiveArray = Array();
+  if(!empty($request_type))
+  {
+	  $requestTypeFilter_all = explode(",", @$request_type);
+	  for($u = 0; $u < sizeof($requestTypeFilter_all); $u++) {
+	  	  if(!empty($requestTypeFilter_all[$u]))
+		  {
+		 	  $req_Type_Arr[$requestTypeFilter_all[$u]] = $requestTypeFilter_all[$u];
+		  }
+	  }
+  }
+
+
+	if($statusId=='99')
+	{
+		$statusActiveArray["Feedback Provided"] = "Feedback Provided";
+		$statusActiveArray["On Hold"] = "On Hold";
+		$statusActiveArray["In Progress"] = "In Progress";
+		$statusActiveArray["Need More Info"] = "Need More Info";
+		$statusActiveArray["New"] = "New";
+		$statusActiveArray["Rejected"] = "Rejected";
+		$statusActiveArray["Reopened"] = "Reopened";
+	}else{
+		$statusActiveArray[$statusId] = $statusId;
+	}
+	if('0' == $_GET['status']){
+		$projectList = $postingList[0];
+	} else {
+		$projectList = $postingList;
+	}
+	
+  foreach($projectList as $project){
+ 
+    if(($clientId < 0 || $clientId == $project['client'])){
+	
+      foreach($project['workorders'] as $wo){
+		if((($statusActiveArray[$statusId] < 0 || $statusActiveArray[$wo['status']] == $wo['status']) || ($statusId =='over_due' && $wo['overdue_flag'] =='1' ) ) && ($assignedTo < 0 || $assignedTo == $wo['assigned_to_id']) && ($requested_by < 0 || $requested_by == $wo['requested_by']) && ($req_Type_Arr[$wo['req_type']]==$wo['req_type'])){
+		  if($wo['req_type'] == 'Problem'){
+			$severity = $wo['severity'];
+		  } else {
+			$severity = 'N/A';
+		  }
+   
+		  $excel_body .=  $wo['id'] . "\t " .
+          $wo['full_title'] . "\t " .
+         // $project['project_code'] . " : " . $project['project_name'] . "\t " .
+          $project['company_name'] . "\t " .
+          $wo['req_type'] . "\t " .
+          $severity . "\t " .     
+          $wo['status'] . "\t " .
+          $wo['requested_by'] . "\t " .
+          $wo['assigned_to'] . "\t " .
+          $wo['open_date'] . "\t " .
+          $wo['assigned_date'] . "\t " .
+          $wo['completed'] . "\t".
+          $wo['launch_date'] . "\t".
+		  $wo['estimated_date'] . "\t".
+          $wo['wo_last_comment_user'] . "\t".
+          $wo['wo_last_comment_date'] . "\n";
+        }
+      }
+    }
+  }
+//  Header("Content-Disposition: attachment; filename=wo_report.xls");
+
+    header("Pragma: public");
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Content-Type: application/force-download");
+   header("Content-Type: application/octet-stream");
+    header("Content-Type: application/download");
+    header("Content-Disposition: attachment;filename=wo_report.xls"); 
+    header("Content-Transfer-Encoding: binary ");
+  echo $header;
+  echo $excel_body;
+
 }else{
-	return $date;
+  $jsonSettings = json_encode($postingList);
+
+  // output correct header
+  $isXmlHttpRequest = (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) ?
+  (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') ? true : false: false;
+  ($isXmlHttpRequest) ? header('Content-type: application/json') : header('Content-type: text/plain');
+  	
+  echo $jsonSettings;
 }
-}
+
+
 
 
 
