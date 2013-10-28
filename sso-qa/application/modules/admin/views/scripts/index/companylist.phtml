@@ -18,7 +18,7 @@
 		
 	</div>
 	<br><hr style="clear:both;margin-top:30px;" />
-<?php if(count($this->company_details) > 0 ) : ?>
+<?php if(isset($this->company_details['id']) && count($this->company_details) > 0 ) : ?>
 <div class="admindisplayUserInfo" id="admindisplayCompanyInfo" style="display:none;">
 	<div class="row">
 		<div class="label"><label>Company Name:</label></div>
