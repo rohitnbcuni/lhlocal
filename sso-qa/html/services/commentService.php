@@ -47,7 +47,7 @@ class commentServices {
 	 		$uid = $userResult['id'];
 	 		$comment = $mysql->real_escape_string($this->escapewordquotes($Workorder->comment));
 	 		$curDateTime = date("Y-m-d H:i:s");
-	 		$bc_id_query = "SELECT  `bcid`, `project_id`, `title`,requested_by, `priority`,`status`,`assigned_to`,`body`,cclist,archived FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($wid) ."'  LIMIT 1";
+	 		$bc_id_query = "SELECT  `bcid`, `company_id`, `title`,requested_by, `priority`,`status`,`assigned_to`,`body`,cclist,archived FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($wid) ."'  LIMIT 1";
 			$bc_id_result = $mysql->query($bc_id_query);
 			$bc_id_row = $bc_id_result->fetch_assoc();
 			if(count($bc_id_row) > 0){
@@ -119,16 +119,16 @@ class commentServices {
 			$commenter_row = $commenter_res->fetch_assoc();
  				
  			$wid = $mysql->real_escape_string($Workorder->wid);
- 			$bc_id_query = "SELECT  `bcid`, `project_id`, `title`, `priority`,`status`,`assigned_to`,`body`,`requested_by` FROM `workorders` WHERE `id`='" .$wid ."' LIMIT 1";
+ 			$bc_id_query = "SELECT  `bcid`, company_id, `title`, `priority`,`status`,`assigned_to`,`body`,`requested_by` FROM `workorders` WHERE `id`='" .$wid ."' LIMIT 1";
 			$bc_id_result = $mysql->query($bc_id_query);
 			$bc_id_row = $bc_id_result->fetch_assoc();
 			
 			$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
-			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$bc_id_row['project_id'] ."'";
+			/*$select_project = "SELECT * FROM `projects` WHERE `id`='" .$bc_id_row['project_id'] ."'";
 			$project_res = $mysql->query($select_project);
-			$project_row = $project_res->fetch_assoc();
+			$project_row = $project_res->fetch_assoc();*/
 
-			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
+			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $bc_id_row['company_id'] . "'";
 			$company_res = $mysql->query($select_company);
 			$company_row = $company_res->fetch_assoc();
 			
@@ -155,7 +155,7 @@ class commentServices {
 				$msg ="<b>Latest Comment:</b> " .$latest_string;
 				$msg .=  "<b>Requestor: </b>" . $requestor_user_row['first_name'].' '. $requestor_user_row['last_name']. "<br><br>";
 				$msg .="<b>Company: </b>" . $company_row['name'] . "<br><br>";
-				$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
+				//$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
 				$msg .="<b>Site: </b>" .$req_type_row['field_name'] ."<br><br>";				
 				$msg .="<b>".ucfirst($commenter_row['first_name']) ." " .ucfirst($commenter_row['last_name']) ."</b> commented on work order "."<b>[" . $link . "]</b><br><br>";
 				$msg .="<b>Request Type: </b>" .$request_type_arr[$req_type_row['field_name']] ."<br>";
