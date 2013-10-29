@@ -30,7 +30,7 @@
 					//print_r($wo_data_cookie_all);
 					$requestTypeFilter = $wo_data_cookie_all[3];
 					
-					if(!empty($requestTypeFilter))
+					if(!empty($requestTypeFilter) && ($requestTypeFilter  != '-1'))
 					{
 						$req_Type_Arr = Array();
 						$requestTypeFilter_all = explode(",", @$requestTypeFilter);
