@@ -342,7 +342,7 @@ class Basecamp{
 						$redirect_url = $this->get_session_value('lighthouse_ru');
 						//If company is empty mean user are authenticated from SSO but company is not registered
 						//By default we assign only to access workorder
-						if(empty($row['company'])){
+						/*if(empty($row['company'])){
 							$this->_redirect("workorders/profile");
 						
 						}else if((!empty($redirect_url)) && (!empty($row['company']))){
@@ -366,7 +366,7 @@ class Basecamp{
 							$this->_redirect("workorders");
 							//print_r($row);
 							
-						}
+						}*/
 					}else{
 						echo "User has deleted from Lighhouse Application. Please contact Admin";
 					
