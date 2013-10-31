@@ -342,39 +342,47 @@ class Basecamp{
 						$redirect_url = $this->get_session_value('lighthouse_ru');
 						//If company is empty mean user are authenticated from SSO but company is not registered
 						//By default we assign only to access workorder
-						/*if(empty($row['company'])){
-							$this->_redirect("workorders/profile");
+						if(empty($row['company'])){
+							header("Location:/workorders/profile");
+							exit;
 						
 						}else if((!empty($redirect_url)) && (!empty($row['company']))){
 							setcookie("lighthouse_ru", '', time() - 3600, '/');	
 							//$this->_redirect("workorders/index/edit/?wo_id=38708");
 							header("Location:".$redirect_url);
+							exit;
 							
 						}else if(!empty($row['company']) && ($login_status == "client")){
-							$this->_redirect("workorders");
+							header("Location:/workorders");
+							exit;
 							
 							}else{
 							$pos = strpos($row['user_access'],1);
 							if( $pos === true){
 								if($pos == 0){
-									$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
+									header("Location:/resourceplanner/?userid=".$_SESSION['user_id']);
+									exit;
 								}else{
-									$this->_redirect("workorders");
+									header("Location:/workorders");
+									exit;
 								}
 								
 							}
-							$this->_redirect("workorders");
+							header("Location:/workorders");
+							exit;
 							//print_r($row);
 							
-						}*/
+							}
 					}else{
-						echo "User has deleted from Lighhouse Application. Please contact Admin";
+					
+					return false;
+						
 					
 					}
 				 
 				}
 			}
-	
+			return false;
 	
 	
 	}
