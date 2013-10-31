@@ -340,6 +340,7 @@ class Basecamp{
 						$this->set_session($user_session, "lh_user");
 						$this->_session->loggedin = true;
 						$redirect_url = $this->get_session_value('lighthouse_ru');
+						print_r($_SESSION);
 						//If company is empty mean user are authenticated from SSO but company is not registered
 						//By default we assign only to access workorder
 						if(empty($row['company'])){
