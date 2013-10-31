@@ -280,6 +280,7 @@ class Basecamp{
 				include("SSOLogin.inc");
 				$attributes = array();
 				$attributes = $auth->getAttributes();
+				
 				if(count($attributes) > 0){
 					$row = array();
 					$sso_obj = new SSOLogin();
@@ -340,10 +341,10 @@ class Basecamp{
 						$this->set_session($user_session, "lh_user");
 						$this->_session->loggedin = true;
 						$redirect_url = $this->get_session_value('lighthouse_ru');
-						print_r($_SESSION);
+						
 						//If company is empty mean user are authenticated from SSO but company is not registered
 						//By default we assign only to access workorder
-						if(empty($row['company'])){
+						/*if(empty($row['company'])){
 							header("Location:/workorders/profile");
 							exit;
 						
@@ -373,7 +374,9 @@ class Basecamp{
 							exit;
 							//print_r($row);
 							
-							}
+							}*/
+							
+							return true;
 					}else{
 					
 					return false;
