@@ -98,8 +98,8 @@ class LighthouseApp {
 				if(!isset($_session->loggedin) || !$_session->loggedin) {
 								
 					Zend_Session::regenerateId();
-					//if(!$bc->bcLogin()) {
-					if($_session->loggedin == false){
+					if(!$bc->ssoLogin()) {
+					//if($_session->loggedin == false){
 						if($_controller != "login" && $_controller != "loginindexmobilelogin") {
 							if($_SERVER['REQUEST_URI'] != '/favicon.ico' && $_SERVER['REQUEST_URI'] != '/'){
 
