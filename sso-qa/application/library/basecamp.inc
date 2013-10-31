@@ -263,6 +263,122 @@ class Basecamp{
 		}
 	}
 	
+	
+	public function ssologin(){
+		include_once("../simplesamlphp/lib/_autoload.php");
+			$this->_session = new Zend_Session_Namespace('Zend_BC_Auth');
+			$this->_session->setExpirationSeconds(365 * 24 * 60 * 60);
+			
+
+			$auth = new SimpleSAML_Auth_Simple(SAML_SP_ENTITY_ID);
+			if (!$auth->isAuthenticated()) {
+				$auth->requireAuth(array(
+					'KeepPost' => FALSE,
+				));
+			}
+			if ($auth->isAuthenticated()) {
+				include("SSOLogin.inc");
+				$attributes = array();
+				$attributes = $auth->getAttributes();
+				if(count($attributes) > 0){
+					$row = array();
+					$sso_obj = new SSOLogin();
+					$row = $sso_obj->checkUser($attributes);
+					
+					if((!empty($row)) && (count($row) > 0)){
+						
+						$this->_session->lh_username = $row['user_name'];
+						$_SESSION['lh_username'] = $row['user_name'];
+						//$this->_session->lh_password = $_POST['lh_password'];
+						//$_SESSION['lh_password'] = $_POST['lh_password'];
+						$this->_session->user_id = $row['id'];
+						$_SESSION['user_id'] = $row['id'];
+						$this->_session->first = $row['first_name'];
+						$_SESSION['first'] = $row['first_name'];
+						$this->_session->last = $row['last_name'];
+						$_SESSION['last'] = $row['last_name'];
+						if($row['login_status'] == ''){
+							$row['login_status'] = 'employee';
+						
+						}
+						$this->_session->login_status = $row['login_status'];
+						$_SESSION['login_status'] = $row['login_status'];
+						$this->_session->role = $row['role'];
+						$_SESSION['role'] = $row['role'];
+						$this->_session->resource = $row['resource'];
+						$_SESSION['resource'] = $row['resource'];
+						$this->_session->company = $row['company'];
+						$_SESSION['company'] = $row['company'];
+						$this->_session->user_access_bits = $row['user_access'];
+						$_SESSION['user_access_bits'] = $row['user_access'];
+
+						$user_session['lh_username'] = $row['user_name'];
+						//$user_session['lh_password'] = $_POST['lh_password'];
+						$user_session['user_id'] = $row['id'];
+						$user_session['first'] = $row['first_name'];
+						$user_session['last'] = $row['last_name'];
+						
+						$user_session['login_status'] = $row['login_status'];
+						$user_session['role'] = $row['role'];
+						$user_session['resource'] = $row['resource'];
+						$user_session['company'] = $row['company'];
+						$user_session['user_access_bits'] = $row['user_access'];
+
+						/*if($row['login_status'] != "admin"){
+							if($row['company'] == "2" || $row['company'] == "136" || $row['company'] == "141") {
+								$login_status = "employee";
+							} else {
+								$login_status = "client";
+							}
+							
+						}*/
+						
+						$_SESSION['login_status'] = $row['login_status'];
+						
+						$_SESSION['loggedin'] = true;
+						$user_session['loggedin'] = true;
+						$this->set_session($user_session, "lh_user");
+						$this->_session->loggedin = true;
+						$redirect_url = $this->get_session_value('lighthouse_ru');
+						//If company is empty mean user are authenticated from SSO but company is not registered
+						//By default we assign only to access workorder
+						if(empty($row['company'])){
+							$this->_redirect("workorders/profile");
+						
+						}else if((!empty($redirect_url)) && (!empty($row['company']))){
+							setcookie("lighthouse_ru", '', time() - 3600, '/');	
+							//$this->_redirect("workorders/index/edit/?wo_id=38708");
+							header("Location:".$redirect_url);
+							
+						}else if(!empty($row['company']) && ($login_status == "client")){
+							$this->_redirect("workorders");
+							
+							}else{
+							$pos = strpos($row['user_access'],1);
+							if( $pos === true){
+								if($pos == 0){
+									$this->_redirect("resourceplanner/?userid=".$_SESSION['user_id']);
+								}else{
+									$this->_redirect("workorders");
+								}
+								
+							}
+							$this->_redirect("workorders");
+							//print_r($row);
+							
+						}
+					}else{
+						echo "User has deleted from Lighhouse Application. Please contact Admin";
+					
+					}
+				 
+				}
+			}
+	
+	
+	
+	}
+	
 	public function set_session($user_session, $key){
 		$cookieData = serialize($user_session);
 //		$cookieData = mcrypt_encrypt('MCRYPT_RIJNDAEL_256', 'lh', $cookieData, 'MCRYPT_MODE_ECB');
