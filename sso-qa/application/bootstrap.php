@@ -118,14 +118,14 @@ class LighthouseApp {
  						//print_r($_SESSION); die;
 						if(empty($_SESSION['company'])){
 							 $redirect = '/wordorders/profile/index';
-						}else{
-						if(!empty($user_access_bits)){
-							global $USER_ACCESS;
-							global $USER_ACCESS_MENU;
-							$menu_array  = $this->getUserAccess($USER_ACCESS,$USER_ACCESS_MENU,$user_access_bits);
-							$_SESSION['menu_array'] = $menu_array;
 						}
-						
+						if(!empty($user_access_bits)){
+								global $USER_ACCESS;
+								global $USER_ACCESS_MENU;
+								$menu_array  = $this->getUserAccess($USER_ACCESS,$USER_ACCESS_MENU,$user_access_bits);
+								$_SESSION['menu_array'] = $menu_array;
+						}
+							
 						if($_controller == "login") {											
 							
 							if(is_array($menu_array) && !empty($menu_array))
@@ -166,7 +166,7 @@ class LighthouseApp {
 								header('Location: /workorders/index/list');
 							}
 						}
-					}												
+																	
 					}
 				} 
 				else 
@@ -174,7 +174,9 @@ class LighthouseApp {
 					// Logged in User is Navigating in differect Tabs or URLs.
 					$bc->get_session("lh_user");
 					$user_access_bits = $_SESSION['user_access_bits'];
-
+					if(empty($_SESSION['company'])){
+						$redirect = '/wordorders/profile/index';
+					}
 					if(!empty($user_access_bits)){
 						global $USER_ACCESS;
 						global $USER_ACCESS_MENU;
