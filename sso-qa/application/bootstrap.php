@@ -123,10 +123,8 @@ class LighthouseApp {
 								$menu_array  = $this->getUserAccess($USER_ACCESS,$USER_ACCESS_MENU,$user_access_bits);
 								$_SESSION['menu_array'] = $menu_array;
 						}
-						if(empty($_SESSION['company'])){
-							 $redirect = '/wordorders/profile/index';
-						}
-						echo $redirect; die;
+						
+						
 						if($_controller == "login") {											
 							
 							if(is_array($menu_array) && !empty($menu_array))
@@ -156,7 +154,12 @@ class LighthouseApp {
 								$redirect = $redirect_url;
 								setcookie("lighthouse_ru", '', time() - 3600, '/');	
 							}
+							//If company not found
+							if(empty($_SESSION['company'])){
+								$redirect = '/wordorders/profile/index';
+							}
 							session_write_close();
+							
 							header('Location: ' . $redirect);							
 						}else if($_controller == "loginindexmobilelogin"){
 							
@@ -182,9 +185,7 @@ class LighthouseApp {
 						$menu_array  = $this->getUserAccess($USER_ACCESS,$USER_ACCESS_MENU,$user_access_bits);
 						$_SESSION['menu_array'] = $menu_array;
 					}
-					if(empty($_SESSION['company'])){
-						$redirect = '/wordorders/profile/index';
-					}
+					
 					if($_controller == "login") 
 					{
 						$redirect_controller = $this->getRedirectController($menu_array);
@@ -204,8 +205,11 @@ class LighthouseApp {
 									$redirect = '/noaccess/';
 							}
 						}
-			      
-				header('Location: ' . $redirect);						
+					//Company has removed 
+					if(empty($_SESSION['company'])){
+						$redirect = '/wordorders/profile/index';
+					}
+					header('Location: ' . $redirect);						
 				}					
 				}
 			}
