@@ -102,9 +102,9 @@ class LighthouseApp {
 					//if($_session->loggedin == false){
 						if($_controller != "login" && $_controller != "loginindexmobilelogin") {
 							if($_SERVER['REQUEST_URI'] != '/favicon.ico' && $_SERVER['REQUEST_URI'] != '/'){
-
 								$_session->lh_ru = (string)$_SERVER['REQUEST_URI']; // 'http://' . $_SERVER['HTTP_HOST'] . 
-								$bc->set_session((string)$_SERVER['REQUEST_URI'], "lighthouse_ru");								
+								$bc->set_session((string)$_SERVER['REQUEST_URI'], "lighthouse_ru");
+								$_SESSION['lh_ru'] = (string)$_SERVER['REQUEST_URI'];
 								session_write_close();
 							}
 							
@@ -115,7 +115,10 @@ class LighthouseApp {
 						// When User Name and Password gets authenticated it will be redirected to appropriate page.
 
 						$user_access_bits = $_SESSION['user_access_bits'];
-
+ 						//print_r($_SESSION); die;
+						if(empty($_SESSION['company'])){
+							 $redirect = '/wordorders/profile/index';
+						}else{
 						if(!empty($user_access_bits)){
 							global $USER_ACCESS;
 							global $USER_ACCESS_MENU;
@@ -162,7 +165,8 @@ class LighthouseApp {
 							}else{
 								header('Location: /workorders/index/list');
 							}
-						}												
+						}
+					}												
 					}
 				} 
 				else 
@@ -232,13 +236,13 @@ class LighthouseApp {
 			//Echo the errors for the bootstrap
 			//LH#23703
 			$_SESSION['error_handler']  = $exp;
-			header('Location: /noaccess/index/error/'); 
-			/*$contentType = 'text/html';
+			//header('Location: /noaccess/index/error/'); 
+			$contentType = 'text/html';
 			
 			header("Content-Type: $contentType; charse=utf-8");
 			echo 'An unexpected error occurred. in bootstrap init. Controller did not initialize';
 			echo '<h3>Unexpected Exception: ' .$exp->getMessage() .'</h3><br /><pre>';
-			echo $exp->getTraceAsString();*/
+			echo $exp->getTraceAsString();
 		}
 	}
 	
