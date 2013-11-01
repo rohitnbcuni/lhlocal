@@ -69,7 +69,7 @@
 		}
 		
 		public function ssologinAction(){
-			include_once("../simplesamlphp/lib/_autoload.php");
+			/*include_once("../simplesamlphp/lib/_autoload.php");
 			$this->_session = new Zend_Session_Namespace('Zend_BC_Auth');
 			$this->_session->setExpirationSeconds(365 * 24 * 60 * 60);
 			
@@ -126,7 +126,7 @@
 						$user_session['role'] = $row['role'];
 						$user_session['resource'] = $row['resource'];
 						$user_session['company'] = $row['company'];
-						$user_session['user_access_bits'] = $row['user_access'];
+						$user_session['user_access_bits'] = $row['user_access'];*/
 
 						/*if($row['login_status'] != "admin"){
 							if($row['company'] == "2" || $row['company'] == "136" || $row['company'] == "141") {
@@ -137,7 +137,7 @@
 							
 						}*/
 						
-						$_SESSION['login_status'] = $row['login_status'];
+						/*$_SESSION['login_status'] = $row['login_status'];
 						
 						$_SESSION['loggedin'] = true;
 						$user_session['loggedin'] = true;
@@ -177,7 +177,7 @@
 					}
 				 
 				}
-			}
+			}*/
 
 		
 		}
