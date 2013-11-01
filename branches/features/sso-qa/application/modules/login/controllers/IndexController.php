@@ -80,7 +80,7 @@
 					'KeepPost' => FALSE,
 				));
 			}
-			/*if ($auth->isAuthenticated()) {
+			if ($auth->isAuthenticated()) {
 				include("SSOLogin.inc");
 				$attributes = array();
 				$attributes = $auth->getAttributes();
@@ -126,7 +126,7 @@
 						$user_session['role'] = $row['role'];
 						$user_session['resource'] = $row['resource'];
 						$user_session['company'] = $row['company'];
-						$user_session['user_access_bits'] = $row['user_access'];*/
+						$user_session['user_access_bits'] = $row['user_access'];
 
 						/*if($row['login_status'] != "admin"){
 							if($row['company'] == "2" || $row['company'] == "136" || $row['company'] == "141") {
@@ -137,7 +137,7 @@
 							
 						}*/
 						
-						/*$_SESSION['login_status'] = $row['login_status'];
+						$_SESSION['login_status'] = $row['login_status'];
 						
 						$_SESSION['loggedin'] = true;
 						$user_session['loggedin'] = true;
@@ -177,7 +177,7 @@
 					}
 				 
 				}
-			}*/
+			}
 
 		
 		}
