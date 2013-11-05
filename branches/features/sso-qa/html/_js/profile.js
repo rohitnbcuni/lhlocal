@@ -31,22 +31,26 @@ $('#profile_save').click(function(){
 	if(user_company == '-1'){
 		$('.message_required p').html('Please select a company.');
 		$('.message_required').css({display:'block'});
-	}
+		return false;
+	}else{
 	/*if(user_company == 'other'){
 		
 		$('.message_required p').html('Please select a company.');
 		$('.message_required').css({display:'block'});
 	}*/
 	
-	$.ajax({
-		type: "POST",
-		url: "/workorders/profile/companyupdate",
-		data: "companyId="+user_company+"&phone="+phone,
-		success: function(msg) {
-			$('.message_required p').html('User Profile has completed.You Can start to create Workorders');
-			$('.message_required').css({display:'block'});
-		}
-	});
+		$.ajax({
+			type: "POST",
+			url: "/workorders/profile/companyupdate",
+			data: "companyId="+user_company+"&phone="+phone,
+			success: function(msg) {
+				$('.message_required p').html('Create Profile process has completed .Now you san start create Workorders');
+				$('#ok_button').attr("onclick","redirect_link();");
+				$('.message_required').css({display:'block'});
+			}
+		});
+		return true;
+	}
 
 
 
@@ -54,6 +58,13 @@ $('#profile_save').click(function(){
 
 //Code Ends
 });
+
+function redirect_link(){
+
+	window.location.href= "/workorders";
+
+
+}
 function changeImage()
 {
 

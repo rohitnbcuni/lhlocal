@@ -391,7 +391,19 @@ function getRequestorsInfo(userId) {
 			document.getElementById('requestor_name').value = msg;
 		}
 	});
+	$('#company_loader').css("display","block");
+	$('#company_loader_field').css("display","none");
 	
+	$.ajax({
+		type: "POST",
+		url: "/workorders/index/usercompany",
+		data:{userId:userId},
+		success: function(msg) {
+			$('#company_id').html(msg);
+			$('#company_loader').css("display","none");
+			$('#company_loader_field').css("display","block");
+		}
+	});
 	changeImage(userId);
 }
 function updateCcList() {
