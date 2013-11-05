@@ -67,7 +67,7 @@
 				<!--==| START: Bucket |==-->
 
 				<div class="title_med workorders_filter">
-					<label for="client_filter" id="client_filter_label">Client</label>
+					<label for="client_filter" id="client_filter_label">'.COMPANY_LABEL.'</label>
 					<select id="client_filter" onchange="changeCompany();">
 						<option value="-1">Show All</option>
 					'.WoDisplay::getUserCompany($client_id_cookie).'
@@ -485,6 +485,20 @@
 								</div>
 								</li>
 							<li>
+								<label for="company_id" id="company_id_label">'.COMPANY_LABEL.':</label>
+								<div id="company_loader" style="margin-left:186px;display:none;"><img  src="/_images/loading.gif" alt="loading.." /></div>
+								<div id="company_loader_field" style="display:block;">
+								<select "'.$closed_wo_style.'" class="field_medium" name="company_id" id="company_id">
+								<option value="">--Please Select--</option>';
+								if(isset($_REQUEST['wo_id'])) {
+									echo WoDisplay::getUserCompany($wo_data[0]['company_id']);
+								} else {
+									echo WoDisplay::getUserCompany();
+								}
+								echo '</select>
+								<div>
+							</li>
+							<li>
 								<label for="wo_request_type" id="wo_request_type_label">I\'d Like To:</label>';
 									if(isset($_REQUEST['wo_id'])) {
 											
@@ -666,18 +680,7 @@
 								echo WoDisplay::getcustomDropDown("SITE_NAME",$custom_feild_arr['SITE_NAME']);
 								echo '</select>
 							</li>
-							<li>
-								<label for="company_id" id="company_id_label">Company:</label>
-								<select "'.$closed_wo_style.'" class="field_medium" name="company_id" id="company_id">
-									<option value=""></option>	
-								';
-								if(isset($_REQUEST['wo_id'])) {
-									echo WoDisplay::getUserCompany($wo_data[0]['company_id']);
-								} else {
-									echo WoDisplay::getUserCompany();
-								}
-								echo '</select>
-							</li>
+							
 							<li><label for="wo_title" id="wo_title_label">Brief Description:</label><input "'.$closed_wo_style.'" name="wo_title" id="wo_title" class="field_large" type="text" value="' . htmlspecialchars(@$wo_data[0]['title']) .'" /></li>
 							<li><label for="wo_example_url" id="wo_example_url_label">Example URL:</label><input "'.$closed_wo_style.'" name="wo_example_url" id="wo_example_url" class="field_large" type="text" value="' . htmlspecialchars(@$wo_data[0]['example_url']) .'"/></li>
 <!--=========== Ticket# 16857  wrap description body by html_entity_decode ===========-->						
@@ -1626,11 +1629,11 @@
 				$pri_res = WoDisplay::getQuery($select_priority);
 				$pri_row = $pri_res[0];
 
-				$select_project = "SELECT * FROM `projects` WHERE `id`='" . $bc_id_row['project_id'] ."'";
+				/*$select_project = "SELECT * FROM `projects` WHERE `id`='" . $bc_id_row['project_id'] ."'";
 				$project_res = WoDisplay::getQuery($select_project);
-				$project_row = $project_res[0];
+				$project_row = $project_res[0];*/
 
-				$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
+				$select_company = "SELECT * FROM `companies` WHERE `id`='" . $bc_id_row['company_id'] . "'";
 				$company_res = WoDisplay::getQuery($select_company);
 				$company_row = $company_res[0];
 
@@ -1661,8 +1664,8 @@
 									$assignedTo = $user_row['email'];
 								}
 								$to = $email_addr_row['email'];
-								$msg =  "Company: " . $company_row['name'] . "\r\n"
-										."Project: " . $project_row['project_code'] ." - " . $project_row['project_name'] ."\r\n"
+								$msg =  COMPANY_LABEL.": " . $company_row['name'] . "\r\n"
+										//."Project: " . $project_row['project_code'] ." - " . $project_row['project_name'] ."\r\n"
 										."Link: " .BASE_URL ."/workorders/index/edit/?wo_id=" . $woid  ."\r\n\r\n"
 										."WO [#" . $woid . "] has been assigned to " . $assignedTo . "\r\n\r\n"
 										."\t-Priority: " . $pri_row['name'] ."-" . $pri_row['time'] ."\r\n"
@@ -1687,8 +1690,8 @@
 									$email_addr_res = WoDisplay::getQuery($select_email_addr);
 									$email_addr_row = $email_addr_res[0];
 									$to = $email_addr_row['email'];
-									$msg =  "Company: " . $company_row['name'] . "\r\n"
-											."Project: " . $project_row['project_code'] ." - " . $project_row['project_name'] ."\r\n"
+									$msg =  COMPANY_LABEL.": " . $company_row['name'] . "\r\n"
+											//."Project: " . $project_row['project_code'] ." - " . $project_row['project_name'] ."\r\n"
 											."Link: " .BASE_URL ."/workorders/index/edit/?wo_id=" . $woid  ."\r\n\r\n"
 											."WO [#" . $woid . "] has been " . $woStatusText . " by " . $_SESSION['first'] . " ". $_SESSION['last'] . "\r\n\r\n"
 											."\t-Priority: " . $pri_row['name'] ."-" . $pri_row['time'] ."\r\n"
@@ -1709,8 +1712,8 @@
 								
 								$to = $email_addr_row['email'];
 								
-								$msg = "Company: " . $company_row['name'] . "\r\n"
-										."Project: " .$project_row['project_code'] ." - " .$project_row['project_name'] ."\r\n"
+								$msg = COMPANY_LABEL.": " . $company_row['name'] . "\r\n"
+										//."Project: " .$project_row['project_code'] ." - " .$project_row['project_name'] ."\r\n"
 										."Link: " .BASE_URL ."/workorders/index/edit/?wo_id=" . $woid  ."\r\n\r\n"
 										.ucfirst($commenter_row['first_name']) ." " .ucfirst($commenter_row['last_name']) ." commented on work order [#" . $woid . "]\r\n\r\n"
 										."\t- Priority: " .$pri_row['name'] ."-" .$pri_row['time'] ."\r\n"
@@ -1769,7 +1772,7 @@
 				<!--==| START: Bucket |==-->
 
 				<div class="title_med workorders_filter">
-					<label for="client_filter" id="client_filter_label">Client</label>
+					<label for="client_filter" id="client_filter_label">'.COMPANY_LABEL.'</label>
 					<select id="client_filter" onchange="changeCompany();">
 						<option value="-1">Show All</option>
 					'.WoDisplay::getUserCompany().'
@@ -2109,6 +2112,17 @@
 		
 		}
 		
+		
+		function usercompanyAction(){
+			$userId = $this->_request->getParam('userId');
+			$wo = new WoDisplay();
+			$optionList = $wo->getRequestorCompany($userId);
+			$default_option = "<option>--Please Select--</option>";
+			echo $default_option.$optionList;
+			$this->_helper->viewRenderer->setNoRender();
+			$this->_helper->layout->disableLayout();
+		
+		}
 		
 		public function errorAction(){
 			
