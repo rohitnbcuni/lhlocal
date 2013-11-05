@@ -27,23 +27,23 @@
 				</li>
 				<li>
 					<label for="fname" id="fname_lbl">First Name:</label>
-					<input type="text"  id="fname" name="fname" readonly="readonly" class="field_large"  value="<?php echo $this->userInfo['first_name'] ?>"/>
+					<input type="text"  id="fname" name="fname" readonly="readonly" class="field_large readonly"  value="<?php echo $this->userInfo['first_name'] ?>"/>
 					<input type="hidden"  id="userId" name="userId"   value="<?php echo $this->userInfo['id'] ?>" class="requestor_photo" />
 				
 				</li>
 				<li>
 					<label for="lname" id="lname_lbl">Last Name:</label>
-					<input type="text"  id="lname" name="lname" readonly="readonly" class="field_large" value="<?php echo $this->userInfo['last_name'] ?>" />
+					<input type="text"  id="lname" name="lname" readonly="readonly" class="field_large readonly" value="<?php echo $this->userInfo['last_name'] ?>" />
 					
 				</li>
 				<li>
 					<label for="Email" id="email_lbl">Email:</label>
-					<input type="text"  id="email" name="email" readonly="readonly" class="field_large" value="<?php echo $this->userInfo['email'] ?>" />
+					<input type="text"  id="email" name="email" readonly="readonly" class="field_large readonly" value="<?php echo $this->userInfo['email'] ?>" />
 					
 				</li>
 				<li>
 					<label for="sso" id="sso_lbl">SSO:</label>
-					<input type="text"  id="sso" name="sso" readonly="readonly" class="field_large"  value="<?php echo $this->userInfo['sso'] ?>"/>
+					<input type="text"  id="sso" name="sso" readonly="readonly" class="field_large readonly"  value="<?php echo $this->userInfo['sso'] ?>"/>
 					
 				</li>
 				
@@ -54,7 +54,7 @@
 				</li>
 
 				<li>
-					<label for="company" id="company_lbl">Company:</label>
+					<label for="company" id="company_lbl"><?php echo COMPANY_LABEL ?>:</label>
 					<?php
 						$r = '';
 							if(empty($this->userInfo['company']) || $this->userInfo['company'] == '' || $this->userInfo['company'] == '-1'){ ?>
@@ -85,10 +85,12 @@
 					<div style="clear: both;"></div>
 					
 					<div class="duplicate_buttons">
-						<button onClick="$('.message_required').css({display:'none'}); $('#file_upload_dimmer').css({display:'none'});return false;"><span>OK</span></button>
+						<button id="ok_button" onClick="$('.message_required').css({display:'none'}); $('#file_upload_dimmer').css({display:'none'});return false;"><span>OK</span></button>
 						<div style="clear: both;"></div>
 					</div>
 				</div>
+				
+				
 </div>
 
 				
