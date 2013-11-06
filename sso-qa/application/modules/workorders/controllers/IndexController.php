@@ -8,11 +8,12 @@
 			$this->checkCompany();
 			$cnt = 5;
 			$client_id_cookie ='';
-			if($_SESSION['login_status'] == "client") {
+			/*if($_SESSION['login_status'] == "client") {
 				echo '<input type="hidden" name="client_login" id="client_login" value="client" />';
 			} else {
 				echo '<input type="hidden" name="client_login" id="client_login" value="employee" />';
-			}
+			}*/
+			echo '<input type="hidden" name="client_login" id="client_login" value="employee" />';
 			$status_active = ($_REQUEST['status'] == '1') ? 'selected' : '';
 			$status_archive = ($_REQUEST['status'] == '0') ? 'selected' : '';
 			$status_draft = ($_REQUEST['status'] == '-1') ? 'selected' : '';
@@ -262,7 +263,7 @@
 		}
 		public function createAction() {
 			$this->checkCompany();
-			if($_SESSION['login_status'] == "client") {
+			/*if($_SESSION['login_status'] == "client") {
 				$hideStyle = "display: none;";
 				if($_SESSION['company'] == NBCDOTCOM){
 					$readonly = false;
@@ -272,8 +273,9 @@
 			} else {
 				$hideStyle = "";
 				$readonly = false;
-			}
-			
+			}*/
+			$hideStyle = "";
+			$readonly = false;
 			$new_wo_id ="";
 			$wo_archive_status = "";
 			$wo_archive_text = "";
@@ -439,7 +441,7 @@
 				$pageLoadHide = 'style="display:block;"';
 			} else {
 				$wo_id = "";
-				$proj_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
+				$company_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
 				$pageLoadHide = 'style="display:none;"';
 				$li_INFRA_TYPE = 'style="display:none;"';
 				$li_CRITICAL = 'style="display:none;"';
@@ -490,9 +492,12 @@
 								<div id="company_loader_field" style="display:block;">
 								<select "'.$closed_wo_style.'" class="field_medium" name="company_id" id="company_id">
 								<option value="">--Please Select--</option>';
-								if(isset($_REQUEST['wo_id'])) {
+								$company_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
+								if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
 									echo WoDisplay::getUserCompany($wo_data[0]['company_id']);
-								} else {
+								}else if($company_select != ""){
+									echo WoDisplay::getUserCompany($company_select);
+								}else {
 									echo WoDisplay::getUserCompany();
 								}
 								echo '</select>
@@ -1741,11 +1746,12 @@
 	        $actionName = $this->getRequest()->getActionName();
 			echo '<input type="hidden" name="curControllerName" id ="curControllerName" value="'.$actionName.'">';
 			$cnt = 5;
-			if($_SESSION['login_status'] == "client") {
+			/*if($_SESSION['login_status'] == "client") {
 				echo '<input type="hidden" name="client_login" id="client_login" value="client" />';
 			} else {
 				echo '<input type="hidden" name="client_login" id="client_login" value="employee" />';
-			}
+			}*/
+			echo '<input type="hidden" name="client_login" id="client_login" value="employee" />';
 			$status_active = ($_REQUEST['status'] == '1') ? 'selected' : '';
 			$status_archive = ($_REQUEST['status'] == '0') ? 'selected' : '';
 			$status_draft = ($_REQUEST['status'] == '-1') ? 'selected' : '';
@@ -2115,8 +2121,15 @@
 		
 		function usercompanyAction(){
 			$userId = $this->_request->getParam('userId');
+			$company_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
 			$wo = new WoDisplay();
-			$optionList = $wo->getRequestorCompany($userId);
+			if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
+				$optionList = $wo->getRequestorCompany($userId);
+			}else if($company_select != ''){
+				$optionList = $wo->getRequestorCompany($userId,$company_select);
+			}else{
+				$optionList = $wo->getRequestorCompany($userId);
+			}
 			$default_option = "<option>--Please Select--</option>";
 			echo $default_option.$optionList;
 			$this->_helper->viewRenderer->setNoRender();
