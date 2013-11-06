@@ -833,7 +833,8 @@ function saveWorkOrder(from) {
 					
 					if(woId == "") {
 						Set_Cookie( "lighthouse_create_wo_data", company_id, "7", "/", "", "");
-						Set_Cookie( "lighthouse_wo_data", '-1~' + company_id + '~-1~-1', "7", "/", "", "");
+						Set_Cookie( "lighthouse_wo_data",  company_id + '~-1~-1', "7", "/", "", "");
+						//alert(getCookie("lighthouse_wo_data"));
 						window.location = '/workorders/?status='+redirect_status_val;
 					} else {
 						if(res_woAssignedList != ''){
