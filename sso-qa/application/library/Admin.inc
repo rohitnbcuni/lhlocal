@@ -876,6 +876,21 @@
 		
 		}
 		
+		public function adminAuditLog($dataArray){
+			$db = Zend_Registry::get('db');
+		 	return $db->insert("admin_audit_log", $dataArray);	
+		
+		
+		}
+		
+		public function getCompanyAudit($cid){
+		
+			$db = Zend_Registry::get('db');
+		 	$query = "SELECT aa.*, CONCAT_WS(' ', u.first_name,u.last_name) as full_name, c.name FROM admin_audit_log aa INNER JOIN users u ON (u.id = aa.uid) INNER JOIN companies c ON (c.id = aa.action_id) WHERE aa.action_id  = '$cid' AND aa.action_module = 'company'";
+	   		$result = $db->fetchAll($query);
+			return $result;	
+		
+		}
 		public function updateCompanyStr($cclist,$company_id){
 			$db = Zend_Registry::get('db');
 			$dataArray = array("cclist" => $cclist);
