@@ -1336,6 +1336,8 @@
 		
 		
 	function updatecompanyAction(){
+			$this->_helper->viewRenderer->setNoRender();
+			$this->_helper->layout->disableLayout();
 			$company_id = $this->_request->getParam('id');
 			if(!empty($company_id)){
 				$db = Zend_Registry::get('db');
@@ -1373,8 +1375,7 @@
 				
 			
 			}
-			$this->_helper->viewRenderer->setNoRender();
-			$this->_helper->layout->disableLayout();
+			
 			
 		
 		}
