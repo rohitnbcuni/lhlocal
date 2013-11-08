@@ -823,15 +823,15 @@ function buildWorkordersHTML() {
 		//alert(requestTypeFilter+"requestTypeFilter");
 	}
 	var assocReqTypeArray = [];
-	assocReqTypeArray["Outage"] = "Outage";
+	/*assocReqTypeArray["Outage"] = "Outage";
 	assocReqTypeArray["Problem"] = "Problem";
-	assocReqTypeArray["Change"] = "Change";
+	assocReqTypeArray["Change"] = "Change";*/
 	var req_txt = "";
 	if(requestTypeFilter != null && requestTypeFilter!='' ){
 		reqTypeFilter = requestTypeFilter.split(',');
 		if(reqTypeFilter.length > 1)
 		{
-			 assocReqTypeArray = [];
+			 //assocReqTypeArray = [];
 			for (var i = 0; i < reqTypeFilter.length; i++) {
 				if(reqTypeFilter[i]!=null && reqTypeFilter[i]!='')
 				{
