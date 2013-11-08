@@ -49,7 +49,8 @@
 				<input type="text" value="<?php echo $this->company_details['contact_person_name'] ?>" id="contact_person_name" name="contact_person_name" maxlength="100">
 	</div>
 	<div class="row">
-			<button  onclick="updateCompany();"><span>Update</span></button>
+			<button style="margin-left:122px;"  onclick="updateCompany();"><span>Update</span></button>
+			<button style="margin-left:122px;" id="audit_div" ><span>Audit Log</span></button>
 	</div>
 	
 </div>
@@ -98,6 +99,31 @@
 	<div style="clear: both;"></div>
 </div>					
 <div style="clear: both;"></div>
+</div>
+
+<div class="message_workorder_audit" style="margin-top:-150px;">
+	<h3>Company Audit Log</h3><br>
+		<?php if(count($this->company_audit) > 0) : ?>
+			<?php foreach($this->company_audit as $audit_keys => $audit_values) : ?>
+			<?php if($audit_values['action_name'] == 'created') : ?>
+				<p>	<?php echo ucwords($audit_values['name']); ?> has created by  <?php echo ucwords($audit_values['full_name']); ?> at  <?php echo date("g:i a \o\\n l jS F Y",strtotime($audit_values['dated'])); ?>	</p>
+			<?php endif; ?>
+			<?php if($audit_values['action_name'] == 'updated') : ?>
+				<p>	<?php echo ucwords($audit_values['name']); ?> has updated by  <?php echo ucwords($audit_values['full_name']); ?> at  <?php echo date("g:i a \o\\n l jS F Y",strtotime($audit_values['dated'])); ?>	</p>
+			<?php endif; ?>		
+		<?php endforeach; ?>
+		<?php else : ?>
+		
+		<p> No record found </p>
+		<?php endif; ?>
+		<div style="clear: both;"></div>
+				
+		<div class="duplicate_buttons">			
+			<button class="cancel" onClick="$('.message_workorder_audit').css({display:'none'}); return false;"><span>Close</span></button>
+			<div style="clear: both;"></div>
+		</div>
+			
+</div>
 
 
 
