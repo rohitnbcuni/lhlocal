@@ -1279,8 +1279,10 @@
 			
 			if($c_id != null){
 				$company_details = $adminDisplay->getCompanyDetails($c_id);
-				//print_r($company_details);
+				$company_audit = $adminDisplay->getCompanyAudit($c_id);
+
 				$this->view->assign('company_details',$company_details);
+				$this->view->assign('company_audit',$company_audit);
 			
 			}
 			$this->view->assign('companies',$companies);
