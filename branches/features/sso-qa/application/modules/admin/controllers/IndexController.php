@@ -1363,6 +1363,9 @@
 						$audit_log_array['action_name'] = "updated";
 						$audit_log_array['dated'] = date('Y-m-d H:i:s');
 						$adminDisplay->adminAuditLog($audit_log_array);
+						return true;
+					}else{
+						return false;
 					}
 				
 				
