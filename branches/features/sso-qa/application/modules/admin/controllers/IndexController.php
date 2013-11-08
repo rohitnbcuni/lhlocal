@@ -1355,13 +1355,15 @@
 					$comnpany_array['phone'] = $this->_request->getParam('phone');
 					$comnpany_array['contact_person_name'] = $this->_request->getParam('contact_person_name');
 					$where[] = 'id =  '.$company_id;
-					echo $result = $db->update("companies", $comnpany_array, $where);
-					$audit_log_array['uid'] = $_SESSION['user_id'];
-					$audit_log_array['action_module'] = "company";
-					$audit_log_array['action_id'] = $company_id;
-					$audit_log_array['action_name'] = "updated";
-					$audit_log_array['dated'] = date('Y-m-d H:i:s');
-					$adminDisplay->adminAuditLog($audit_log_array);
+					$result = $db->update("companies", $comnpany_array, $where);
+					if($result == true){
+						$audit_log_array['uid'] = $_SESSION['user_id'];
+						$audit_log_array['action_module'] = "company";
+						$audit_log_array['action_id'] = $company_id;
+						$audit_log_array['action_name'] = "updated";
+						$audit_log_array['dated'] = date('Y-m-d H:i:s');
+						$adminDisplay->adminAuditLog($audit_log_array);
+					}
 				
 				
 				}
@@ -1395,14 +1397,17 @@
 					
 					$getDetails = $db->insert("companies", $comnpany_array);
 					$lastInserId = $db->lastInsertId();
-					$audit_log_array = array();
-					$audit_log_array['uid'] = $_SESSION['user_id'];
-					$audit_log_array['action_module'] = "company";
-					$audit_log_array['action_id'] = $lastInserId;
-					$audit_log_array['action_name'] = "created";
-					$audit_log_array['dated'] = date('Y-m-d H:i:s');
-					$adminDisplay->adminAuditLog($audit_log_array);
-					echo "done";
+					if($lastInserId > 1){
+						$audit_log_array = array();
+						$audit_log_array['uid'] = $_SESSION['user_id'];
+						$audit_log_array['action_module'] = "company";
+						$audit_log_array['action_id'] = $lastInserId;
+						$audit_log_array['action_name'] = "created";
+						$audit_log_array['dated'] = date('Y-m-d H:i:s');
+						$adminDisplay->adminAuditLog($audit_log_array);
+						echo "done";
+					}
+					
 				}
 			}
 			$this->_helper->viewRenderer->setNoRender();
