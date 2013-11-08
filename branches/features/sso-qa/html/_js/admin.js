@@ -85,6 +85,11 @@ $(document).ready(function(){
 	
 	}
 	
+	$('#audit_div').click(function(){
+		
+		$('.message_workorder_audit').css("display","block");
+	
+	});
 	if($('#userAdminAccess')){
 		if($('#userAdminAccess').val() == 'employee'){
 				
