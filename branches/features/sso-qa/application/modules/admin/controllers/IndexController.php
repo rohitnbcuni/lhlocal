@@ -1336,8 +1336,7 @@
 		
 		
 	function updatecompanyAction(){
-			$this->_helper->viewRenderer->setNoRender();
-			$this->_helper->layout->disableLayout();
+			
 			$company_id = $this->_request->getParam('id');
 			if(!empty($company_id)){
 				$db = Zend_Registry::get('db');
@@ -1365,18 +1364,17 @@
 						$audit_log_array['action_name'] = "updated";
 						$audit_log_array['dated'] = date('Y-m-d H:i:s');
 						$adminDisplay->adminAuditLog($audit_log_array);
-						return true;
-					}else{
-						return false;
+						
 					}
-				
+					echo $result;
 				
 				}
 				
 			
 			}
 			
-			
+			$this->_helper->viewRenderer->setNoRender();
+			$this->_helper->layout->disableLayout();	
 		
 		}
 		function insertcompanyAction(){
