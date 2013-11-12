@@ -10,7 +10,7 @@
 	$update_wo = "UPDATE `workorders` SET `closed_date`=NOW(), `completed_date`=NOW(), `status`='1' WHERE `id`='$woId'";
 	@$mysql->sqlordie($update_wo);
 	
-	$select_wo = "SELECT `closed_date`, `assigned_to`, `requested_by`, `cclist`, `project_id`, `body`, `priority`, `title` FROM `workorders` WHERE `id`='$woId' LIMIT 1";
+	$select_wo = "SELECT `closed_date`, `assigned_to`, `requested_by`, `cclist`, `company_id`, `body`, `priority`, `title` FROM `workorders` WHERE `id`='$woId' LIMIT 1";
 	$result = @$mysql->sqlordie($select_wo);
 	$row = @$result->fetch_assoc();
 
