@@ -297,7 +297,7 @@
 								</div>
 								<div style="clear:both"></div>
 								<div style="width: 300px;float:left;*width:380px;" class="top_actions">	
-									<label>Company &nbsp;</label>
+									<label>'.COMPANY_LABEL.' &nbsp;</label>
 									<select class="company_list" style="*float: left;">
 										<option value="">All Companies</option>
 										'.RpDisplay::fullCompanyListHTML($savedCompany).'

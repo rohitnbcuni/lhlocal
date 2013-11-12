@@ -1,10 +1,10 @@
-<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Company List">  
+<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="<?php echo COMPANY_LABEL ?> List">  
 <input type="hidden" name="ccList" id="ccList" value="">  
 <div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
 	<div class="admindisplayUserInfo">
 		<br/><br/>
 		<div class="row">
-		<div class="label"><label>Company:</label></div>
+		<div class="label"><label><?php echo COMPANY_LABEL ?>:</label></div>
 			<select class="field_medium" name="admin_company_select" id="admin_company_select" onChange="loadCompany(this.value);" >
 			<?php echo $this->companies; ?>
 			</select>
@@ -21,9 +21,10 @@
 <?php if(isset($this->company_details['id']) && count($this->company_details) > 0 ) : ?>
 <div class="admindisplayUserInfo" id="admindisplayCompanyInfo" style="display:none;">
 	<div class="row">
-		<div class="label"><label>Company Name:</label></div>
+		<div class="label"><label><?php echo COMPANY_LABEL ?> Name:</label></div>
 				<input type="text" value="<?php echo $this->company_details['name'] ?>" id="company_name" name="company_name" >
 	</div>
+		<div style="display:none;">
 	<div class="row">
 		<div class="label"><label>Street Name:</label></div>
 				<input type="text" value="<?php echo $this->company_details['street_addr1'] ?>" id="street_addr1" name="street_addr1" >
@@ -48,6 +49,7 @@
 		<div class="label" style=" margin-left: -14px; padding-right: 5px; width: 130px;"><label style="padding-right:6px;">Contact Person Name:</label></div>
 				<input type="text" value="<?php echo $this->company_details['contact_person_name'] ?>" id="contact_person_name" name="contact_person_name" maxlength="100">
 	</div>
+	</div>
 	<div class="row">
 			<button style="margin-left:122px;"  onclick="updateCompany();"><span>Update</span></button>
 			<button style="margin-left:122px;" id="audit_div" ><span>Audit Log</span></button>
@@ -58,9 +60,10 @@
 	
 <div  class="admindisplayUserInfo" id="adminAddNewCompany" style="display:none;" >
 	<div class="row">
-		<div class="label"><label>Company Name:</label></div>
+		<div class="label"><label><?php echo COMPANY_LABEL ?> Name:</label></div>
 				<input type="text" value="" id="new_company_name" name="new_company_name" maxlength="100">
 	</div>
+	<div style="display:none;">
 	<div class="row">
 		<div class="label"><label>Street Name1:</label></div>
 				<input type="text"  id="new_street_addr1" name="new_street_addr1" maxlength="100">
@@ -84,6 +87,7 @@
 	<div class="row">
 		<div class="label" style=" margin-left: -14px; padding-right: 5px; width: 130px;"><label style="padding-right:6px;">Contact Person Name:</label></div>
 				<input type="text"  id="new_contact_person_name" name="new_contact_person_name" maxlength="100">
+	</div>
 	</div>
 	<div class="row">
 			<button  onclick="addNewCompany();"><span>Save</span></button>

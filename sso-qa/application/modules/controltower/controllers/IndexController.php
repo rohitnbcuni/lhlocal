@@ -46,7 +46,7 @@ echo '			<!--=========== START: COLUMNS ===========-->
 					<!--==| START: Bucket |==-->	
 						
 					<div class="title_med_ct">			
-				<label for="company_filter" style="">Company</label>
+				<label for="company_filter" style="">'.COMPANY_LABEL.'</label>
 				<select name="company_filter" id="company_filter" onchange="getProjects()" style="">	
 				<option value="-1" selected="selected">Select</option>'.CtDisplay::getCompanyHTML().'</select>	
 				<label for="producer_filter" style="' .$hideStyle .'">Lead</label>		
@@ -136,9 +136,9 @@ echo '			<!--=========== START: COLUMNS ===========-->
 				<ul>					
 				<input type="hidden" id="hidden_id" name="project_id"> 	
 				<li>				
-				<label for="project_client">Client</label>    
+				<label for="project_client">'.COMPANY_LABEL.'</label>    
 				<select class="pClient" onChange="ajaxFunction(\'\',1); return false;" name="project_client" id="create_company">    
-				<option value="">--Select Company--</option>'.$htmlCompany.'</select>			
+				<option value="">--Select '.COMPANY_LABEL.'--</option>'.$htmlCompany.'</select>			
 				</li>		
 				<li>		
 				<label for="project_code">Project Code</label>	
@@ -162,9 +162,9 @@ echo '			<!--=========== START: COLUMNS ===========-->
 				<ul>		
 				<input type="hidden" id="hidden_id" name="project_id"> 		
 				<li>		
-				<label for="project_client">Client</label>     
+				<label for="project_client">'.COMPANY_LABEL.'</label>     
 				<select class="pClient" onChange="ajaxFunction(\'\',2); return false;" name="project_client" id="create_company2">     
-				<option value="">--Select Company--</option>'.$htmlCompany.'</select>	
+				<option value="">--Select '.COMPANY_LABEL.'--</option>'.$htmlCompany.'</select>	
 				</li>
 				<li>
 				<label for="project_code2">Project Code</label>	
@@ -291,9 +291,9 @@ else
 echo "block";
 }			
 echo ';">	
-<label for="create_company">Select Client/Company</label>
+<label for="create_company">Select '.COMPANY_LABEL.'</label>
 	<select class="pClient" onChange="ajaxFunction(\'\',1); return false;" name="create_company" id="create_company">
-	<option value="">--Select Company--</option>'.CtDisplay::getCompanyBcHTML().'</select>	
+	<option value="">--Select '.COMPANY_LABEL.'--</option>'.CtDisplay::getCompanyBcHTML().'</select>	
 	</div>	
 	<div class="form_blocks" id="create_code" style="display: ';
 if(isset($_GET['project_id'])) 
@@ -1003,7 +1003,7 @@ if(@$appr_date[0] != '0000')
 							}		
 echo '<input type="hidden" name="phase" id="phase" value="client" />	
 <input type="hidden" name="preselect" id="preselect" value="' .$preSel .'" />
-	<div class="papprovals_phase"><label for="phase">Client</label></div>	
+	<div class="papprovals_phase"><label for="phase">'.COMPANY_LABEL.'</label></div>	
 	<div class="papprovals_name">	
 	<!--<input type="text" name="user_name" id="user_name" value="' .$appr_nbc_name .'" />&nbsp;-->
 	<select name="user_name" id="user_name">
@@ -1349,7 +1349,7 @@ for($u = 0; $u < sizeof($user_list); $u++) {
 								<!--==| START: Bucket |==-->	
 									
 								<div class="title_med_ct">			
-							<label for="company_filter" style="">Company</label>
+							<label for="company_filter" style="">'.COMPANY_LABEL.'</label>
 							<select name="company_filter" id="company_filter" onchange="getProjects()" style="">	
 							<option value="-1" selected="selected">Select</option>'.CtDisplay::getCompanyHTML().'</select>	
 							<label for="producer_filter" style="' .$hideStyle .'">Lead</label>		
