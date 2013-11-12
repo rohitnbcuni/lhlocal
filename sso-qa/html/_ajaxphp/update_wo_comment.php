@@ -67,7 +67,7 @@
 			$update_wo_comment = "UPDATE `workorder_comments`  SET `comment` = '$comment',`date`=NOW() WHERE id ='$comment_id'";
 			@$mysql->sqlordie($update_wo_comment);
 						
-			$bc_id_query = "SELECT  `bcid`, `project_id`, `title`, `priority`,`status`,`assigned_to`,`body` FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($woId) ."' LIMIT 1";
+			$bc_id_query = "SELECT  `bcid`, `company_id`, `title`, `priority`,`status`,`assigned_to`,`body` FROM `workorders` WHERE `id`='" .$mysql->real_escape_string($woId) ."' LIMIT 1";
 			$bc_id_result = $mysql->sqlordie($bc_id_query);
 			$bc_id_row = $bc_id_result->fetch_assoc();
 			
@@ -172,10 +172,10 @@
 				}
 			}
 			$user_keys = array_keys($users_email);
-			/*$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
+			$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
 			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$bc_id_row['project_id'] ."'";
 			$project_res = $mysql->sqlordie($select_project);
-			$project_row = $project_res->fetch_assoc();*/
+			$project_row = $project_res->fetch_assoc();
 
 			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $bc_id_row['company_id'] . "'";
 			$company_res = $mysql->sqlordie($select_company);
