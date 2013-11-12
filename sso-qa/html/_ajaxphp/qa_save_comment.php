@@ -121,7 +121,7 @@
 					    $latest_comment=(Util::escapewordquotes($_POST['comment']));
 						$latest_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($latest_comment,ENT_NOQUOTES,'UTF-8'));
 						$msg.= "<b>Latest Comment: </b>" .$latest_string ."<br><br>";
-						$msg.= "<b>Company: </b>" . $company_row['name'] . "<br><br>";
+						$msg.= "<b>".COMPANY_LABEL.": </b>" . $company_row['name'] . "<br><br>";
 						$msg.= "<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
                         $msg.= "<b>Summary: </b>" .htmlentities($title,ENT_NOQUOTES,'UTF-8') ."<br><br>";
 						$msg.= "<b>Description: </b>" .$desc_string ."<br>";

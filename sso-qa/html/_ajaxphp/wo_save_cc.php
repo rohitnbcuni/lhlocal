@@ -21,9 +21,9 @@
 			$wo_result = $mysql->sqlordie($wo_query);
 			$wo_row = $wo_result->fetch_assoc();
 			
-			$getProjectQuery = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."' LIMIT 1";
+			/*$getProjectQuery = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."' LIMIT 1";
 			$projResult = $mysql->sqlordie($getProjectQuery);
-			$projRow = $projResult->fetch_assoc();
+			$projRow = $projResult->fetch_assoc();*/
 			
 
 			
@@ -174,11 +174,11 @@
 			$result = @$mysql->sqlordie($select_cc);
 			$row = @$result->fetch_assoc();
 
-			$select_project = "SELECT * FROM `projects` WHERE `id`='" .$row['project_id'] ."'";
+			/*$select_project = "SELECT * FROM `projects` WHERE `id`='" .$row['project_id'] ."'";
 			$project_res = $mysql->sqlordie($select_project);
-			$project_row = $project_res->fetch_assoc();
+			$project_row = $project_res->fetch_assoc();*/
 
-			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
+			$select_company = "SELECT * FROM `companies` WHERE `id`='" . $row['company_id'] . "'";
 			$company_res = $mysql->sqlordie($select_company);
 			$company_row = $company_res->fetch_assoc();
 
@@ -227,8 +227,8 @@
 
 							$link = "<a href='".BASE_URL ."/workorders/index/edit/?wo_id=" .$woId."'>".$woId."</a>";
 							$msg =  "<b>Requestor: </b>" . $requestor_user_row['first_name'].' '. $requestor_user_row['last_name']. "<br><br>";
-							$msg .="<b>Company: </b>" . $company_row['name'] . "<br><br>";
-							$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
+							$msg .="<b>".COMPANY_LABEL.": </b>" . $company_row['name'] . "<br><br>";
+							//$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
 							$msg .="<b>Site: </b>" .$site_name_row['field_name'] ."<br><br>";				
 							$msg .="<b>WO [" . $link . "] </b> You have been added to the CC list of this ticket.<br><br>";
 							$msg .="<b>Request Type: </b>" .$request_type_arr[$req_type_row['field_name']] ."<br>";

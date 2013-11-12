@@ -73,7 +73,7 @@
 				
 					$link = "<a href='".BASE_URL ."/quality/index/edit/?defect_id=" .$defect_id."'>".$defect_id."</a>";					
 					$msg = "Defect [$link] has been assigned to you.<br>";
-					$msg.= "<b>Company: </b>" . $company_row['name'] . "<br>";
+					$msg.= "<b>".COMPANY_LABEL.": </b>" . $company_row['name'] . "<br>";
 					$msg.= "<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br>";
 					$msg.="<hr>";
 					$msg.= $desc_string ."<br><br>";

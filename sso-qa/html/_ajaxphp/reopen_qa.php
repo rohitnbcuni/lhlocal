@@ -40,7 +40,7 @@
 	$to = $user_row['email'];
 	$description=($wo_row['body']);
     $desc_string = preg_replace($pattern, "<a href=\"\\0\"?phpMyAdmin=uMSzDU7o3aUDmXyBqXX6JVQaIO3&phpMyAdmin=8d6c4cc61727t4d965138r21cd rel=\"nofollow\" target='_blank'>\\0</a>",htmlentities($description));
-		$msg =  "Company: " . $company_row['name'] . "\r\n"
+		$msg =  "".COMPANY_LABEL.": " . $company_row['name'] . "\r\n"
 				."Project: " . $project_row['project_code'] ." - " . $project_row['project_name'] ."\r\n"
 				."Link: " .BASE_URL ."/workorders/index/edit/?wo_id=" . $defectId  ."\r\n\r\n"
 				."WO [#" . $defectId . "] has been reopened by " . $_SESSION['first'] . " ". $_SESSION['last'] . "\r\n\r\n"

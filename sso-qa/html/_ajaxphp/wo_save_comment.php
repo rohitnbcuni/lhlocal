@@ -218,7 +218,7 @@
                 
 				$msg ="<b>Latest Comment:</b> " .$latest_string ."<br><br>";
 				$msg .=  "<b>Requestor: </b>" . $requestor_user_row['first_name'].' '. $requestor_user_row['last_name']. "<br><br>";
-				$msg .="<b>Company: </b>" . $company_row['name'] . "<br><br>";
+				$msg .="<b>".COMPANY_LABEL.": </b>" . $company_row['name'] . "<br><br>";
 				//$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
 				$msg .="<b>Site: </b>" .$site_name_row['field_name'] ."<br><br>";				
 				$msg .="<b>".ucfirst($commenter_row['first_name']) ." " .ucfirst($commenter_row['last_name']) ."</b> commented on work order "."<b>[" . $link . "]</b><br><br>";

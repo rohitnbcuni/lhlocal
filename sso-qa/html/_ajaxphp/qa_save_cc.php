@@ -113,7 +113,7 @@
 						
 							$to = $cc_user_row['email'];
 					
-							$msg =  "Company: " . $company_row['name'] . "\r\n"
+							$msg =  COMPANY_LABEL.": " . $company_row['name'] . "\r\n"
 										."Project: " . $project_row['project_code'] ." - " . $project_row['project_name'] ."\r\n"
 										."Link: " .BASE_URL ."/quality/index/edit/?defect_id=" . $defectId  ."\r\n\r\n"
 										."Defect <a href ='" .BASE_URL ."/quality/index/edit/?defect_id=" . $defectId  ."' target='_blank'>" . $defectId . "</a> </b> : You have been added to the CC list of this ticket.\r\n\r\n"
