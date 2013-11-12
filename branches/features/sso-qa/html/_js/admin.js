@@ -61,12 +61,12 @@ $(document).ready(function(){
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #searchLHProjects').addClass('active');
 	}
- else if(adminTitlemsg == 'Company List')
+ else if(adminTitlemsg == 'Business Units List')
 	{
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #createCompany').addClass('active');
 	}
-	else if(adminTitlemsg == 'WO Company Default CC List')
+	else if(adminTitlemsg == 'WO Business Units Default CC List')
 	{
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #companyDefaultCC').addClass('active');
