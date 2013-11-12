@@ -58,7 +58,7 @@ AND ppt.deleted = '0'
 ORDER BY p.project_code";
 
 $res = $mysql->sqlordie($sql);
-$html = "<table border=1><tr><td><b>Project Code</b></td><td><b>Project Name</b></td><td><b>Project Phase</b></td><td><b>Start</b></td><td><b>End</b></td><td><b>Hours Entered in Finance & Budget</b></td><td><b>Actual Hours in Resources</b></td><td><b>Variance</b></td><td><b>Project Manager</b></td><td><b>Program</b></td><td><b>Company</b></td><td><b>Status</b></tr>";
+$html = "<table border=1><tr><td><b>Project Code</b></td><td><b>Project Name</b></td><td><b>Project Phase</b></td><td><b>Start</b></td><td><b>End</b></td><td><b>Hours Entered in Finance & Budget</b></td><td><b>Actual Hours in Resources</b></td><td><b>Variance</b></td><td><b>Project Manager</b></td><td><b>Program</b></td><td><b>".COMPANY_LABEL."</b></td><td><b>Status</b></tr>";
 
 $i = 0;
 if($res->num_rows > 0) {

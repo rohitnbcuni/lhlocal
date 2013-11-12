@@ -28,12 +28,12 @@
 			$user_res = $mysql->sqlprepare($select_user, array($wo_row['assigned_to']));
 			$user_row = $user_res->fetch_assoc();
 
-			$select_project = "SELECT * FROM `projects` WHERE `id`= ?";
+			/*$select_project = "SELECT * FROM `projects` WHERE `id`= ?";
 			$project_res = $mysql->sqlprepare($select_project,array($wo_row['project_id']));
-			$project_row = $project_res->fetch_assoc();
+			$project_row = $project_res->fetch_assoc();*/
 
 			$select_company = "SELECT * FROM `companies` WHERE `id`= ?";
-			$company_res = $mysql->sqlprepare($select_company , array($project_row['company']));
+			$company_res = $mysql->sqlprepare($select_company , array($wo_row['company_id']));
 			$company_row = $company_res->fetch_assoc();
 			
 			$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
@@ -48,8 +48,8 @@
     
 			$to = $user_row['email'];
 			$link = "<a href='".BASE_URL ."/workorders/index/edit/?wo_id=" .$wo_id."'>".$wo_id."</a>";
-			$msg =  "<b>Company: </b>" . $company_row['name'] . "<br>"
-					."<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br>"
+			$msg =  "<b>".COMPANY_LABEL.": </b>" . $company_row['name'] . "<br>"
+					//."<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br>"
 					."<b>WO [" . $link . "] </b> has been unarchived and assigned to  <b>" . $user_row['email'] ."</b> by " . $_SESSION['first'] . " ". $_SESSION['last']."<br><br>"
 					."<b>Request Type: </b>" .$request_type_arr[$req_type_row['field_name']] ."<br>"
 					."<hr><b>Description: </b>" . $desc_string ."<br>"

@@ -60,12 +60,12 @@
 		$requestedId = $wo_row['requested_by'];
 		
 		$user_keys = array_keys($users_email);
-		$select_project = "SELECT * FROM `projects` WHERE `id`= ?";
+		/*$select_project = "SELECT * FROM `projects` WHERE `id`= ?";
 		$project_res = $mysql->sqlprepare($select_project, array($wo_old_row['project_id']));
-		$project_row = $project_res->fetch_assoc();
+		$project_row = $project_res->fetch_assoc();*/
 
 		$select_company = "SELECT * FROM `companies` WHERE `id`= ?";
-		$company_res = $mysql->sqlprepare($select_company, array($project_row['company']));
+		$company_res = $mysql->sqlprepare($select_company, array($wo_old_row['company_id']));
 		$company_row = $company_res->fetch_assoc();
 
 		
@@ -179,8 +179,8 @@
 				$link = "<a href='".BASE_URL ."/workorders/index/edit/?wo_id=" .$wo_id."'>".$wo_id."</a>";			
 
 				$msg =  "<b>Requestor: </b>" . $requestor_user_row['first_name'].' '. $requestor_user_row['last_name']. "<br><br>";
-				$msg .="<b>Company: </b>" . $company_row['name'] . "<br><br>";
-				$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
+				$msg .="<b>".COMPANY_LABEL.": </b>" . $company_row['name'] . "<br><br>";
+				//$msg .="<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br><br>";
 				$msg .="<b>Site: </b>" .$site_name_row['field_name'] ."<br><br>";				
 				$msg .="<b>WO [" . $link . "] </b>".$bodyTxt."<br><br>";										
 				$msg .="<b>Request Type: </b>" .$request_type_arr[$req_type_row['field_name']] ."<br>";

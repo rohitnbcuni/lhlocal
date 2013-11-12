@@ -217,7 +217,7 @@
 				if($user == $woAssignedTo){$msg = "Defect [$link] has been created and is assigned to you.<br>";}
  				else
 					{$msg = "Defect [$link] has been created and You have been assigned to the CC'd list.<br>";}
-					$msg.= "<b>Company: </b>" . $company_row['name'] . "<br>";
+					$msg.= "<b>".COMPANY_LABEL.": </b>" . $company_row['name'] . "<br>";
 					$msg.= "<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br>";
 					$msg.= "<b>Summary: </b>" .htmlentities($wo_row['title'],ENT_NOQUOTES,'UTF-8') ."<br>";
 					$msg.= "<b>Description: </b>" .$desc_string ."<br>";
@@ -244,7 +244,7 @@
 			//if($user == $woAssignedTo){
 					$msg = "Defect [$link] is assigned to you.<br>";
 			//}
-					$msg.= "<b>Company: </b>" . $company_row['name'] . "<br>";
+					$msg.= "<b>".COMPANY_LABEL.": </b>" . $company_row['name'] . "<br>";
 					$msg.= "<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br>";
 					$msg.= "<b>Summary: </b>" .htmlentities($wo_row['title'],ENT_NOQUOTES,'UTF-8') ."<br>";
 					$msg.= "<b>Description: </b>" .$desc_string ."<br>";
@@ -298,7 +298,7 @@
 				}
 				if(!empty($msg))
 				{
-					$msg.= "<b>Company: </b>" . $company_row['name'] . "<br>";
+					$msg.= "<b>".COMPANY_LABEL.": </b>" . $company_row['name'] . "<br>";
 					$msg.= "<b>Project: </b>" .$project_row['project_code'] ." - " .$project_row['project_name'] ."<br>";
                     $msg.= "<b>Summary: </b>" .htmlentities($wo_row['title'],ENT_NOQUOTES,'UTF-8') ."<br>";
                     $msg.= "<b>Description: </b>" .$desc_string ."<br>";
