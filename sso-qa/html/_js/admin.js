@@ -66,7 +66,7 @@ $(document).ready(function(){
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #createCompany').addClass('active');
 	}
-	else if(adminTitlemsg == 'WO Business Units Default CC List')
+	else if(adminTitlemsg == 'WO Business Default CC List')
 	{
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #companyDefaultCC').addClass('active');
