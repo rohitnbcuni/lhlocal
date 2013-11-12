@@ -888,7 +888,7 @@
 							echo'</select></div>
 
 						<div class="row">
-							<div class="label"><label>Company:</label></div>';
+							<div class="label"><label>'.COMPANY_LABEL.':</label></div>';
 							$r = '';
 							
 							//if(empty($users['company']) || $users['company'] == '' || $users['company'] == '-1'){

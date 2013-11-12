@@ -162,7 +162,7 @@ $search_text= str_replace("'", "",$search_text);
 				<!--==| START: Bucket |==-->
 
 				<div class="title_med workorders_filter">
-					<label for="client_filter" id="client_filter_label">Client</label>
+					<label for="client_filter" id="client_filter_label">'.COMPANY_LABEL.'</label>
 					<select id="client_filter" onchange="wo_changeCompany();">
 						<option value="-1">Show All</option>
 					'.WoDisplay::getUserCompany($client_id_cookie).'
@@ -273,7 +273,7 @@ $search_text= str_replace("'", "",$search_text);
 				<!--==| START: Bucket |==-->
 
 				<?php echo '<div class="title_med workorders_filter" >
-					<label for="client_filter" id="client_filter_label">Client</label>
+					<label for="client_filter" id="client_filter_label">'.COMPANY_LABEL.'</label>
 					<select id="qa_client_filter" style="width:100px;margin-right:10px;" onchange="changeCompany();" >
 						<option value="-1">Show All</option>
 					'.QaDisplay::getCompanyHTML().'

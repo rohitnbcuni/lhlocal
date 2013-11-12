@@ -1,9 +1,9 @@
-<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="WO Company Default CC List">  
+<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="WO <?php echo COMPANY_LABEL ?> Default CC List">  
 <input type="hidden" name="ccList" id="ccList" value="">  
 <div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
 	<div class="adminSelect">
 		<div >
-		<p>Company:</p>
+		<p><?php echo COMPANY_LABEL ?>:</p>
 			<select class="field_medium" name="admin_company_select" id="admin_company_select" onChange="companyDefaultCC(this.value);" >
 			<?php echo $this->companies; ?>
 			</select>
