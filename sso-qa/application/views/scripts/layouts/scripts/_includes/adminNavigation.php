@@ -14,7 +14,7 @@
 							<img src="/_images/yellow_status.gif">User Info
 							</li>
 							<li class="alt" id="createCompany" onClick="companyList();">
-								<img src="/_images/yellow_status.gif"><?php echo COMPANY_LABEL ?> List
+								<img src="/_images/yellow_status.gif">Business List
 							</li>
 							<li class="alt" id="fetchProjVersion" onClick="fetchProjVersion();">
 							<img src="/_images/yellow_status.gif">QA Project Versions
@@ -26,7 +26,7 @@
 								<img src="/_images/yellow_status.gif">QA Project Products
 							</li>							
 							<li class="alt" id="companyDefaultCC" onClick="companyDefaultCC();">
-							<img src="/_images/yellow_status.gif">WO <?php echo COMPANY_LABEL ?> Default CC
+							<img src="/_images/yellow_status.gif">WO Business Default CC
 							</li>	
 							<li class="alt" id="QCprojectDefaultCC" onClick="QCprojectDefaultCC();">
 							<img src="/_images/yellow_status.gif">Quality Project Default CC
