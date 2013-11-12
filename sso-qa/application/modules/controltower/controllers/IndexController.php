@@ -34,7 +34,7 @@ echo '			<!--=========== START: COLUMNS ===========-->
 <div class="main_actions" style="display">				
 <!--<button onClick="window.location = \'/controltower/index/create/\'"><span>create new project</span></button>-->	
 <button onClick="createProject();"><span>create new project</span></button><button style="float:right;" onclick="return generateallocationreport();"><span>Allocation Report</span></button>	
-	<p class="message">Select a company or lead to list the projects.</p>';  
+	<p class="message">Select a '.COMPANY_LABEL.' or lead to list the projects.</p>';  
 		/*				if($_SESSION['login_status'] == "admin") {					echo '<div class="right_actions">						<button onClick="cloneProject();"><span>CLONE PROJECTS</span></button>					</div>					<div class="clone_pop_up">								<div id="clone_project_pop_up" style="margin-left:30px;" >		</div>						<div style="clear: both;"></div>											<div class="duplicate_buttons" style="float:left;margin-left:100px;">							<button class="cancel" onClick="$(\'.clone_pop_up\').css({display:\'none\'}); return false;"><span>Cancel</span></button>							<div style="clear: both;"></div>						</div>														</div>';							} */
 					echo '				<!--<button><span>archive project</span></button>	
 					<div class="right_actions">					
@@ -1337,7 +1337,7 @@ for($u = 0; $u < sizeof($user_list); $u++) {
 			<div class="main_actions" style="display">				
 			<!--<button onClick="window.location = \'/controltower/index/create/\'"><span>create new project</span></button>-->	
 			<button onClick="createProject();"><span>create new project</span></button>	
-				<p class="message">Select a company or lead to list the projects.</p>';  
+				<p class="message">Select a '.COMPANY_LABEL.' or lead to list the projects.</p>';  
 					/*				if($_SESSION['login_status'] == "admin") {					echo '<div class="right_actions">						<button onClick="cloneProject();"><span>CLONE PROJECTS</span></button>					</div>					<div class="clone_pop_up">								<div id="clone_project_pop_up" style="margin-left:30px;" >		</div>						<div style="clear: both;"></div>											<div class="duplicate_buttons" style="float:left;margin-left:100px;">							<button class="cancel" onClick="$(\'.clone_pop_up\').css({display:\'none\'}); return false;"><span>Cancel</span></button>							<div style="clear: both;"></div>						</div>														</div>';							} */
 								echo '<!--<button><span>archive project</span></button>	
 								<div class="right_actions">					

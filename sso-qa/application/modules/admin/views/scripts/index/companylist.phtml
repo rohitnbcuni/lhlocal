@@ -1,10 +1,10 @@
-<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="<?php echo COMPANY_LABEL ?> List">  
+<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Business Units List">  
 <input type="hidden" name="ccList" id="ccList" value="">  
 <div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
 	<div class="admindisplayUserInfo">
 		<br/><br/>
 		<div class="row">
-		<div class="label"><label><?php echo COMPANY_LABEL ?>:</label></div>
+		<div class="label" style="text-align:left;"><label><?php echo COMPANY_LABEL ?>:</label></div>
 			<select class="field_medium" name="admin_company_select" id="admin_company_select" onChange="loadCompany(this.value);" >
 			<?php echo $this->companies; ?>
 			</select>
@@ -21,7 +21,7 @@
 <?php if(isset($this->company_details['id']) && count($this->company_details) > 0 ) : ?>
 <div class="admindisplayUserInfo" id="admindisplayCompanyInfo" style="display:none;">
 	<div class="row">
-		<div class="label"><label><?php echo COMPANY_LABEL ?> Name:</label></div>
+		<div class="label" style="text-align:left;"><label><?php echo COMPANY_LABEL ?> Name:</label></div>
 				<input type="text" value="<?php echo $this->company_details['name'] ?>" id="company_name" name="company_name" >
 	</div>
 		<div style="display:none;">
@@ -60,7 +60,7 @@
 	
 <div  class="admindisplayUserInfo" id="adminAddNewCompany" style="display:none;" >
 	<div class="row">
-		<div class="label"><label><?php echo COMPANY_LABEL ?> Name:</label></div>
+		<div class="label" style="text-align:left;"><label><?php echo COMPANY_LABEL ?> Name:</label></div>
 				<input type="text" value="" id="new_company_name" name="new_company_name" maxlength="100">
 	</div>
 	<div style="display:none;">
