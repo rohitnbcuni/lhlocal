@@ -493,15 +493,23 @@
 								<select "'.$closed_wo_style.'" class="field_medium" name="company_id" id="company_id">
 								<option value="">--Please Select--</option>';
 								$company_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
-								if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
+								if((isset($_REQUEST['wo_id']) &&(!empty($_REQUEST['wo_id']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
+
 									echo WoDisplay::getUserCompany($wo_data[0]['company_id']);
 								}else if($company_select != ""){
+
 									echo WoDisplay::getUserCompany($company_select);
 								}else {
 									echo WoDisplay::getUserCompany();
 								}
-								echo '</select>
-								<div>
+								echo '</select>';
+
+
+
+								$company_id_by_prev = (ISSET($wo_data[0]['company_id']))?$wo_data[0]['company_id']:'';
+								echo '<input type="hidden" name="company_id_by_prev" id="company_id_by_prev" value="'.$company_id_by_prev.'" />';
+
+								echo '<div>
 							</li>
 							<li>
 								<label for="wo_request_type" id="wo_request_type_label">I\'d Like To:</label>';
@@ -2001,7 +2009,7 @@
 			}
 
 		public function requestorselectAction(){
-			if(isset($_REQUEST['wid'])) {
+				if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
 					echo WoDisplay::getUserOptionEditHTML($_REQUEST['woRequestedByPrev']);
 				} else {
 					echo WoDisplay::getUserOptionHTML();
@@ -2121,10 +2129,13 @@
 		
 		function usercompanyAction(){
 			$userId = $this->_request->getParam('userId');
+			$company_id_by_prev = $this->_request->getParam('woCompanyPrev');
 			$company_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
 			$wo = new WoDisplay();
 			if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
-				$optionList = $wo->getRequestorCompany($userId);
+
+				
+				$optionList = $wo->getRequestorCompany($userId,$company_id_by_prev);
 			}else if($company_select != ''){
 				$optionList = $wo->getRequestorCompany($userId,$company_select);
 			}else{
