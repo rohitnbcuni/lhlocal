@@ -710,7 +710,7 @@
 				$cid = $result['company'];
 			}
 			$login_status = $result['login_status'];
-			if($login_status == 'admin'){
+			if($login_status == 'admin' || $result['company'] == '2'){
 				$allCompanies = $db->fetchAll("SELECT c.id, c.name FROM companies c  WHERE  c.active ='1' AND c.deleted='0' ORDER BY c.name ASC");
 			}else{
 				$allCompanies = $db->fetchAll("SELECT c.id, c.name FROM companies c INNER JOIN users_companies uc ON (uc.company_id = c.id) WHERE uc.user_id = ".$user_id." AND c.active ='1' AND c.deleted='0' ORDER BY c.name ASC");
