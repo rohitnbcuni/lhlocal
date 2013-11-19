@@ -698,15 +698,17 @@
 		
 		}
 		
-    function getRequestorCompany($user_id){
+    function getRequestorCompany($user_id, $cid = null){
 			$db = Zend_Registry::get('db');
 			$html = '';
 			
 			
 			$query = "SELECT company ,login_status from users WHERE id = $user_id";
 			$result = $db->fetchRow($query);
-			
-			$cid = $result['company'];
+			if($cid == null){
+
+				$cid = $result['company'];
+			}
 			$login_status = $result['login_status'];
 			if($login_status == 'admin'){
 				$allCompanies = $db->fetchAll("SELECT c.id, c.name FROM companies c  WHERE  c.active ='1' AND c.deleted='0' ORDER BY c.name ASC");
