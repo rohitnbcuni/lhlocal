@@ -784,7 +784,8 @@
 		
 		private function  __userExistingCompany($userID){
 			$db = Zend_Registry::get('db');
-			$query = "SELECT company_id from users_companies WHERE user_id=".$userID;
+			$query = "SELECT company_id from users_companies WHERE user_id=".$userID." 
+			UNION DISTINCT select company as company_id from users where id = ".$userID;
 			$comapny = $db->fetchAll($query);
 			//$affectedRows = $query->rowCount();
 			if(count($comapny) > 0){
