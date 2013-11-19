@@ -54,10 +54,11 @@ $(document).ready(function() {
 /*------ ------Lazy Load Rquestor and Project drop down------------*/
 	var workorder_id = $('#workorder_id').val();
 	var woRequestedByPrev = $('#woRequestedByPrev').val();
+	var copyWO = $('#copyWO').val();
 	$.ajax({
 	type: "POST",
 	url:"/workorders/index/requestorselect", 
-	data:{wid:workorder_id,woRequestedByPrev:woRequestedByPrev},
+	data:{wid:workorder_id,woRequestedByPrev:woRequestedByPrev,copyWO:copyWO},
 	success: function(data){
 		$('#requestor_loader').css('display','none');
 		$('#wo_requested_by').html(data);
@@ -69,7 +70,8 @@ $(document).ready(function() {
 		
 		}
 	});
-	var copyWO = $('#copyWO').val();
+
+
 	
 /*------ ------Lazy Load------------*/
 });
@@ -393,11 +395,14 @@ function getRequestorsInfo(userId) {
 	});
 	$('#company_loader').css("display","block");
 	$('#company_loader_field').css("display","none");
+	var woCompanyPrev = $('#company_id_by_prev').val();
+	var workorder_id = $('#workorder_id').val();
+	var copyWO = $('#copyWO').val();
 	
 	$.ajax({
 		type: "POST",
 		url: "/workorders/index/usercompany",
-		data:{userId:userId},
+		data:{userId:userId,woCompanyPrev:woCompanyPrev,wid:workorder_id,copyWO:copyWO},
 		success: function(msg) {
 			$('#company_id').html(msg);
 			$('#company_loader').css("display","none");
