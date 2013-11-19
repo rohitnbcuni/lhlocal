@@ -806,7 +806,7 @@
 			$existingCompany = self::__userExistingCompany($userId);
 			foreach($allCompanies as $company_key => $company_val){
 				$s = '';
-				if(in_array($company_val['id'],$existingCompany)){
+				if(@in_array($company_val['id'],$existingCompany)){
 					$s = "selected='selected'";
 					
 				
