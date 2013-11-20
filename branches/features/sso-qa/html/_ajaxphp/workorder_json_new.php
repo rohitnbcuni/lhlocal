@@ -450,7 +450,7 @@ if(isset($from_action) && $from_action){
 }else if($type == 'excel'){
 
    
-  $header = "Id\t Title\t  Company\t Request Type\t Severity\t Status\t Requested By\t Assigned To\t Open Date\t Assigned Date\t Completed Date\t Due Date\t Estimate Date\t Last Commented By\t Last Commented Date\n";
+  $header = "Id\t Title\t  ".COMPANY_LABEL."\t Request Type\t Severity\t Status\t Requested By\t Assigned To\t Open Date\t Assigned Date\t Completed Date\t Due Date\t Estimate Date\t Last Commented By\t Last Commented Date\n";
   $excel_body = '';
   $lhwoValue = $_COOKIE['lighthouse_wo_data'];
   $lhwoArray = explode('~',$lhwoValue);

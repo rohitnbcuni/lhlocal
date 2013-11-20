@@ -43,18 +43,18 @@ if($to_month==12)
 	if($to_month =='' &&  $to_year==''  && $to_assign =='' && $month!=''  && $year!=''){
 	//LH#27424
 	//$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' AND p.id=w.project_id";
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."' END AND p.id=w.project_id";
+	$qry_sla_report_per_month = "SELECT w.*,c.id as company_id,c.name as company_name FROM `workorders` w INNER JOIN companies c ON (w.company_id = c.id)  WHERE CASE WHEN w.draft_date = '0000-00-00 00:00:00' THEN w.`creation_date` >='".$startDate."' AND w.`creation_date` < '".$endDate."' ELSE w.`draft_date` >='".$startDate."' AND w.`draft_date` < '".$endDate."' END ";
 
 	}
 	elseif($to_month =='' &&  $to_year==''  && $to_assign!='' && $month!=''  && $year!=''){
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' and  assigned_to='".$to_assign."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."'  and  assigned_to='".$to_assign."' END AND p.id=w.project_id";
+	$qry_sla_report_per_month = "SELECT w.*,c.id as company,c.name as company_name FROM `workorders` w INNER JOIN companies c ON (w.company_id = c.id) WHERE CASE WHEN w.draft_date = '0000-00-00 00:00:00' THEN w.`creation_date` >='".$startDate."' AND w.`creation_date` < '".$endDate."' and  w.assigned_to='".$to_assign."' ELSE w.`draft_date` >='".$startDate."' AND w.`draft_date` < '".$endDate."'  and  w.assigned_to='".$to_assign."' END ";
 	}
 	elseif($to_month !='' &&  $to_year!=''  && $to_assign=='' && $month!=''  && $year!=''){
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' and `creation_date` < '".$to_endDate."'  ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' END AND p.id=w.project_id";
+	$qry_sla_report_per_month = "SELECT w.*,c.id as company,c.name as company_name FROM `workorders` w INNER JOIN companies c ON (w.company_id = c.id) WHERE CASE WHEN w.draft_date = '0000-00-00 00:00:00' THEN w.`creation_date` >='".$startDate."' and w.`creation_date` < '".$to_endDate."'  ELSE w.`draft_date` >='".$startDate."' AND w.`draft_date` < '".$to_endDate."' END ";
 	}
 	else{
 
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$to_endDate."'  and  assigned_to='".$to_assign."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' and assigned_to='".$to_assign."' END AND p.id=w.project_id";
+	$qry_sla_report_per_month = "SELECT w.*,c.id as company,c.name  as company_name FROM `workorders` w INNER JOIN companies c ON (w.company_id = c.id) WHERE CASE WHEN w.draft_date = '0000-00-00 00:00:00' THEN w.`creation_date` >='".$startDate."' AND w.`creation_date` < '".$to_endDate."'  and  w.assigned_to='".$to_assign."' ELSE w.`draft_date` >='".$startDate."' AND w.`draft_date` < '".$to_endDate."' and w.assigned_to='".$to_assign."' END ";
 	}
 	$sla_report_result = $mysql->sqlordie($qry_sla_report_per_month);
 
@@ -79,8 +79,8 @@ if($to_month==12)
 				<tr>
 					<td><b>Ticket No</b></td>
 					<td width=100px><b>Brief Description</b></td>
-					<td width=100px><b>Company</b></td>
-					<td width=100px><b>Project</b></td>
+					<td width=100px><b>".COMPANY_LABEL."</b></td>
+					
 					<td width=100px><b>Requested BY</b></td>
 					<td width=100px><b>Assigned TO</b></td>
 					<td width=100px><b>User Category</b></td>
@@ -109,8 +109,7 @@ if($to_month==12)
 		echo "<tr>
 		        <td>".$workorder['id']."</td>
 		    	<td>".$workorder['title']."</td>
-				<td>".getCompanyName($workorder['company'],$companyListArr,$mysql)."</td>
-				<td>".$workorder['project_code']." - ".$workorder['project_name']."</td>
+				<td>".$workorder['company_name']."</td>
 				<td>".getUserName($workorder['requested_by'],$wo_user_list,$mysql)."</td>
 				<td>".getUserName($workorder['assigned_to'],$wo_user_list,$mysql)."</td>
 				<td>".getUserTitle($workorder['assigned_to'],$mysql)."</td>
