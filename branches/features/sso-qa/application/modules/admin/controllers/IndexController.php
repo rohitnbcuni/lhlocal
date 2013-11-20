@@ -826,7 +826,7 @@
 		public function buildUserHTML($users)
 		{
 			
-			$employeeTypeCompany = array(2,136,141);
+			/*$employeeTypeCompany = array(2,136,141);
 			if(in_array($users['company'],$employeeTypeCompany) == TRUE){
 					$userStatus  = "employee";
 			}else{
@@ -839,12 +839,14 @@
 			
 			}else{
 				$userProjectListStr = '';
-			}
+			}*/
 			
+				
 				
 			$activeCheck = '';
 			$deletedCheck = '';
 			$adminCheck = '';
+			$profile_compmnay_name = AdminDisplay::getCompanyDetails($users['company']);
 			//echo AdminDisplay::getAllCompaniesProjectOptionEditHTML($users['id'], $userStatus,$users['company'], $userProjectList);
 				echo '<div class="admindisplayUserInfo">
 						 <div class="row">
@@ -863,6 +865,11 @@
 						<div class="row">
 							<div class="label"><label>Email:</label></div>
 									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$users['email'].'" >
+						</div>
+						<div class="row">
+							<div class="label" style="margin-left: -74px;width: 194px;"><label> Profile '.COMPANY_LABEL.':</label></div>
+									<input type="text" class="readonly" disabled="disabled" name="profile_company" id="profile_company" value="'.$profile_compmnay_name['name'].'" >
+									<input type="hidden" class="readonly"  name="profile_company_id" id="profile_company_id" value="'.$users['company'].'" >
 						</div>
 						<div class="row">
 							<div class="label"><label>User Title:</label></div><div id="admin_UserTitle_fade" class="admin_UserTitle_fade"></div>
@@ -887,12 +894,17 @@
 								echo AdminDisplay::getUserProgramsHTML($users['id']);
 							echo'</select></div>
 
+						<div style="padding-top:3px;" class="row">
+							<div class="label"><label>Program:</label></div>
+							<select class="field_medium" name="user_program" id="user_program" >';
+								echo AdminDisplay::getUserProgramsHTML($users['id']);
+							echo'</select></div>
 						<div class="row">
-							<div class="label"><label>'.COMPANY_LABEL.':</label></div>';
+							<div class="label" style="margin-left: -74px;width: 194px;"><label>'.COMPANY_LABEL.' Access:</label></div>';
 							$r = '';
 							
 							//if(empty($users['company']) || $users['company'] == '' || $users['company'] == '-1'){
-								echo '<div style="margin-left:-202px;float:left;">
+								echo '<div style="float: left; margin-left: -199px;">
 								<select id="user_company" name="user_company" class="field_medium"  multiple="multiple" style="width: 210px;margin:0px;">
 									'.AdminDisplay::getUserCompanyHTML($users['id']).'
 									</select>';
