@@ -1092,7 +1092,7 @@ function updateCompany(){
 		data: {id:admin_company_select,company_name:company_name,street_addr1:street_addr1,street_addr2:street_addr2,client_of:client_of,web_address:web_address,phone:phone,contact_person_name:contact_person_name},
 		success: function(data) {
 				if($.trim(data) == 'Exist'){
-					$('.message_required p').html('Company name is already used with some other Company.');
+					$('.message_required p').html('Busines name is already used with some other Business.');
 					$('.message_required').css({display:'block'});
 				}
 				if(data == 1){
@@ -1115,7 +1115,7 @@ function addNewCompany(){
 	var company_name = $.trim($('#new_company_name').val());
 	
 	if(company_name == ''){
-		$('.message_required p').html('Please Enter the Company Name.');
+		$('.message_required p').html('Please Enter the Busines Name.');
 		$('.message_required').css({display:'block'});
 		$('#new_company_name').val('');
 		$('#new_company_name').focus();
@@ -1152,7 +1152,7 @@ function addNewCompany(){
 		success: function(data) {
 				data = $.trim(data);
 				if(data == 'Exist'){
-					$('.message_required p').html('Company name is not available .');
+					$('.message_required p').html('Busines name is not available .');
 					$('.message_required').css({display:'block'});
 				}
 				if(data == 'done'){
