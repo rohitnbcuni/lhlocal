@@ -924,12 +924,18 @@
 						echo '<div class="row">
 							<div class="label"><label>Login Status:</label></div>
 								<select id="userAdminAccess" name="userAdminAccess" class="field_medium">';
-								if($users['login_status'] == ''){
+								if($users['login_status'] == '' || $users['login_status'] == 'client' || $users['login_status'] == 'employee'){
 										//@TODO: Need to change with Config variable
 										$users['login_status'] = 'employee';
 										
 										
 									}
+								/*if($users['login_status'] == 'client'){
+										//@TODO: Need to change with Config variable
+										$users['login_status'] = 'employee';
+										
+										
+									}*/
 								foreach($login_status as $status_key => $status_val){
 									$adminCheck = "";
 									if($status_key == $users['login_status']){
