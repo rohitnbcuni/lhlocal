@@ -805,14 +805,20 @@
 			$html = '';
 			$allCompanies = $db->fetchAll("SELECT id, name from companies WHERE  active ='1' AND deleted='0' ORDER BY name ASC");
 			$existingCompany = self::__userExistingCompany($userId);
+			$default_profile_company = $db->fetchOne("SELECT company from users WHERE  id =".$userId);
 			foreach($allCompanies as $company_key => $company_val){
 				$s = '';
+				$d = '';
 				if(@in_array($company_val['id'],$existingCompany)){
 					$s = "selected='selected'";
 					
 				
 				}
-				$html .= "<option ".$s." value=".$company_val['id'].">".$company_val['name']."</option>";
+				if($default_profile_company == $company_val['id']){
+					$d = "disabled='disabled'";
+				
+				}
+				$html .= "<option ".$s." ".$d." value=".$company_val['id'].">".$company_val['name']."</option>";
 				
 			}	
 			
