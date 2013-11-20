@@ -1061,7 +1061,7 @@ function updateCompany(){
 	if(admin_company_select != ''){
 		var company_name = $('#company_name').val();
 		if(company_name == ''){
-			$('.message_required p').html('Please Enter the Company Name.');
+			$('.message_required p').html('Please Enter the Busines Name.');
 			$('.message_required').css({display:'block'});
 			$('#company_name').val('');
 			$('#company_name').focus();
