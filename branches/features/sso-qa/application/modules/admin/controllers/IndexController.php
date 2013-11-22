@@ -894,11 +894,7 @@
 								echo AdminDisplay::getUserProgramsHTML($users['id']);
 							echo'</select></div>
 
-						<div style="padding-top:3px;" class="row">
-							<div class="label"><label>Program:</label></div>
-							<select class="field_medium" name="user_program" id="user_program" >';
-								echo AdminDisplay::getUserProgramsHTML($users['id']);
-							echo'</select></div>
+						
 						<div class="row">
 							<div class="label" style="margin-left: -74px;width: 194px;"><label>'.COMPANY_LABEL.' Access:</label></div>';
 							$r = '';
