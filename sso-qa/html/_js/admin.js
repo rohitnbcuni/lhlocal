@@ -109,7 +109,7 @@ $(document).ready(function(){
 				//$("#ADMIN_ACCESS").removeAttr('checked');
 				$("#ADMIN_ACCESS").removeAttr('checked');
 				$("#ADMIN_ACCESS").attr('disabled',"disabled");
-				$('.message_required p').html('Admin Tab can access only for Admin role.');
+				$('.message_required p').html('Admin Tab can be access only for Admin Login Status.');
 				$('.message_required').css({display:'block'});
 			}else{
 				//$("#ADMIN_ACCESS").removeAttr('checked');
