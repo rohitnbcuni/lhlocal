@@ -671,13 +671,14 @@
 			$db = Zend_Registry::get('db');
 			$html = '';
 			$user_id = $_SESSION['user_id'];
-			if($cid == ''){
-				$query = "SELECT company  from users WHERE id = $user_id";
-				$result = $db->fetchOne($query);
-				
-				$cid = $result;
+			
+			$query = "SELECT company  from users WHERE id = $user_id";
+			$result_company = $db->fetchOne($query);
+			if($cid == ''){	
+				$cid = $result_company;
 			}
-			if($_SESSION['login_status'] == 'admin' || $cid == '2'){
+			
+			if($_SESSION['login_status'] == 'admin' || $result_company == '2'){
 				$allCompanies = $db->fetchAll("SELECT c.id, c.name FROM companies c  WHERE  c.active ='1' AND c.deleted='0' ORDER BY c.name ASC");
 			}else{
 				$allCompanies = $db->fetchAll("SELECT c.id, c.name FROM companies c INNER JOIN users_companies uc ON (uc.company_id = c.id)   WHERE  c.active ='1' AND c.deleted='0' AND uc.user_id = ".$user_id." 
