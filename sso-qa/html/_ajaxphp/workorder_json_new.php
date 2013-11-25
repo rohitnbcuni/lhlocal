@@ -32,7 +32,7 @@ if(ISSET($_SESSION['user_id'])){
 	$user_id = $_SESSION['user_id'];
 	$user_company_sql = " WHERE 1 ";
 	if($_SESSION['login_status'] != 'admin'){
-		$companySql = "SELECT company_id FROM users_companies WHERE user_id = ".$user_id;
+		$companySql = "SELECT company_id FROM users_companies  WHERE user_id = ".$user_id." UNION DISTINCT (SELECT company as company_id from users WHERE id = ".$user_id.")";
 		$company_result = $mysql->sqlordie($companySql);
 		$company_row_array = array();
 		if($company_result->num_rows > 0){
@@ -168,10 +168,11 @@ if(ISSET($_SESSION['user_id'])){
 		}
 		$wo_distinct_values_assigned_to = array($assigned_to_user_id_array,$assigned_to_user_name_array);
 	}	
-	//print_r($wo_distinct_values_assigned_to);
-	//	echo "assign+".$distinct_assigned_to_sql;die();
+	
 
-	$distinct_requested_by_sql = "select distinct requested_by as requested_by from `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$requested_by_sort_sql.$req_type_sql.$status_sql.$where_clause. $archive_sql . $client_sql . $client_filter_sql .$req_filter_sql. $status_filter_sql . $date_range_filter_sql ; //  $project_filter_sql $assigned_to_filter_sql  $search_filter_sql
+	//$distinct_requested_by_sql = "select distinct requested_by as requested_by from `workorders` b".$pjt_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$requested_by_sort_sql.$req_type_sql.$status_sql.$where_clause. $archive_sql . $client_sql . $client_filter_sql .$req_filter_sql. $status_filter_sql . $date_range_filter_sql ; //  $project_filter_sql $assigned_to_filter_sql  $search_filter_sql
+	//echo $distinct_requested_by_sql = "select id,last_name,first_name from (".$distinct_requested_by_sql.") as assigned_table,users where users.id = requested_by order by last_name";
+	$distinct_requested_by_sql = "select distinct requested_by as requested_by from `workorders` b".$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_company_sql. $archive_sql . $client_sql . $client_filter_sql .$req_filter_sql. $status_filter_sql . $date_range_filter_sql ; //  $project_filter_sql $assigned_to_filter_sql  $search_filter_sql
 	$distinct_requested_by_sql = "select id,last_name,first_name from (".$distinct_requested_by_sql.") as assigned_table,users where users.id = requested_by order by last_name";
 	$distinct_requested_by_sql_result = $mysql->sqlordie($distinct_requested_by_sql);
 	if($distinct_requested_by_sql_result->num_rows > 0){
@@ -182,7 +183,8 @@ if(ISSET($_SESSION['user_id'])){
 		
 		$wo_distinct_values_requested_by = array($requested_by_user_id_array,$requested_by_user_name_array);
 	}
-	//print_r($wo_distinct_values_requested_by);
+	//die;
+	//print_r($wo_distinct_values_requested_by); die;
 		///////////////////////////////////
 	if('0' == $_GET['status']){ 
 		$workorder_list_query = "SELECT b.*, c.name as company_name FROM workorders b INNER JOIN companies c ON (c.id=b.company_id)   ".$workorder_custom_sql.$user_company_sql.$requested_by_sort_table_sql.$req_type_sql.$status_sql.$where_clause. $archive_sql . $client_filter_sql .$req_filter_sql .  $status_filter_sql . $assigned_to_filter_sql . $requestedby_filter_sql .$search_filter_sql.$date_range_filter_sql."   ORDER BY b.`company_id`,  b.`title` ASC ".$page_number_filter_sql;
@@ -192,6 +194,7 @@ if(ISSET($_SESSION['user_id'])){
 		//$workorder_list_query = "SELECT w.*, c.name as company_name FROM workorders w INNER JOIN companies c ON (c.id=w.company_id) WHERE ". $user_company_sql.$workorder_custom_sql.$requested_by_sort_table_sql.$search_filter_table_sql.$assigned_to_sort_sql.$req_type_sql.$status_sql.$user_pjt_sql.$where_clause. $archive_sql . $client_sql . $client_filter_sql .$req_filter_sql. $status_filter_sql . $date_range_filter_sql;
 		//." ORDER BY w.`company_id`,  w.`title` ASC";
 	}
+	//echo $workorder_list_query; die;
 	$workorder_result = $mysql->sqlordie($workorder_list_query) ;
 	$i=-1;
 
