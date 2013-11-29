@@ -83,6 +83,7 @@ if($to_month==12)
 					<td width=100px><b>Project</b></td>
 					<td width=100px><b>Requested BY</b></td>
 					<td width=100px><b>Assigned TO</b></td>
+					<td width=100px><b>Request Completed By</b></td>
 					<td width=100px><b>User Category</b></td>
 					<td width=100px><b>REQUEST TYPE</b></td>
 					<td width=100px><b>Status</b></td>					
@@ -113,7 +114,9 @@ if($to_month==12)
 				<td>".$workorder['project_code']." - ".$workorder['project_name']."</td>
 				<td>".getUserName($workorder['requested_by'],$wo_user_list,$mysql)."</td>
 				<td>".getUserName($workorder['assigned_to'],$wo_user_list,$mysql)."</td>
+				<td>".getUserName($workorder['completed_by'],$wo_user_list,$mysql)."</td>
 				<td>".getUserTitle($workorder['assigned_to'],$mysql)."</td>
+				
 				<td>".$request_type_arr[$req_type]."</td>
 				<td>".$wo_status_array[$workorder['status']]."</td>
 				<td>".getCustomTypeName($workorder_id,'SITE_NAME',$mysql)."</td>
