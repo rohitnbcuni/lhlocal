@@ -743,18 +743,39 @@
 									{
 											echo '<li style="display:none;">';
 									}
-
+									$requested_by_dl = explode(",",REQUESTED_BY_COMPANIES);
+									//IF status is Fixed and Assigned to are OTS DL's
+									if((isset($_REQUEST['wo_id'])) && ($wo_data[0]['status'] == '3')&&(in_array($wo_data[0]['assigned_to'],$requested_by_dl))){
+										$request_by_css = "display:block;";
+									
+									
+									}else{
+										$request_by_css = "display:none;";
+									
+									}
 										echo '
 											<label for="wo_assigned_user">Assigned To:</label>
 
 											<select "'.$closed_wo_style.'" class="field_small" name="wo_assigned_user" id="wo_assigned_user" >';
 												if(isset($_REQUEST['wo_id'])) {
-													echo WoDisplay::getUserAssignOptionEditHTML($wo_data[0]['assigned_to'], $readonly);
+													echo WoDisplay::getUserAssignOptionEditHTML($wo_data[0]['assigned_to'],$readonly);
 												} else {
 													echo WoDisplay::getUserAssignOptionHTML($readonly);
 												}
 											echo '</select>
-										</li>';  
+										</li><li id ="li_completed_by" style="'.$request_by_css.'">'; 
+										echo '<input type="hidden" id="wo_requested_by_co" name="wo_requested_by_co" value="' . REQUESTED_BY_COMPANIES . '">';
+										echo '
+											<label for="completed_by">Request Completed By:</label>
+
+											<select "'.$closed_wo_style.'" class="field_small" name="completed_by" id="completed_by" >';
+												if(isset($_REQUEST['wo_id'])) {
+													echo WoDisplay::getUserAssignOptionEditHTML($wo_data[0]['completed_by'], $readonly);
+												} else {
+													echo WoDisplay::getUserAssignOptionHTML($readonly);
+												}
+											echo '</select>
+										</li>'; 		
 
 										echo '<li id="li_INFRA_TYPE" '.$li_INFRA_TYPE.'>
 											<label for="wo_infra_type" id="wo_infra_type_label">Infrastructure Request Type:</label>
@@ -1259,8 +1280,13 @@
 						
 						}
 						
-					}			
-					//echo "- "."Work order ".$row['name']." to ".$audit_status[$row['status']]." by ".$audit_user_list[$row['log_user_id']]." on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
+					}else if($row['audit_id']=='11'){
+						echo $audit_user_list[$row['log_user_id']]. " has added Request completed by ".$audit_user_list[$row['assign_user_id']]."<br/>";
+						//echo "- "."Work order ".$row['name']." to ".$audit_status[$row['status']]." by ".$audit_user_list[$row['log_user_id']]." on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
+					}else if($row['audit_id']=='12'){
+						echo $audit_user_list[$row['log_user_id']]. " has updated Request completed by from ".$audit_user_list[previous_user($row['id'],$row['workorder_id'])]." to ".$audit_user_list[$row['assign_user_id']]."<br/>";
+						//echo "- "."Work order ".$row['name']." to ".$audit_status[$row['status']]." by ".$audit_user_list[$row['log_user_id']]." on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
+					}
 					}
 					if($row['Request_type'] != '')
 					{	
