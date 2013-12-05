@@ -665,7 +665,7 @@ function saveWorkOrder(from) {
 		
 	    wo_requested_by_array = wo_requested_by_co.split(",");
 		
-		if((wo_requested_by_array.indexOf(assigned_user) != '-1') && ($('#completed_by').val() == '')){
+		if(($.inArray(assigned_user,wo_requested_by_array) != '-1') && ($('#completed_by').val() == '')){
 			//$('#li_completed_by').slideDown('slow');
 			valid = false;
 			
@@ -908,8 +908,8 @@ function changeAssignedToUser(){
 		var wo_requested_by_co = $('#wo_requested_by_co').val();
 		
 	    wo_requested_by_array = wo_requested_by_co.split(",");
-		
-		if(wo_requested_by_array.indexOf(assigned_user) != '-1'){
+		if($.inArray(assigned_user,wo_requested_by_array) != '-1'){
+		//if(wo_requested_by_array.indexOf(assigned_user) != '-1'){
 			$('#li_completed_by').slideDown('slow');
 		}else{
 			$('#completed_by').val('')
@@ -932,7 +932,7 @@ $(document).ready(function() {
 		
 	    wo_requested_by_array = wo_requested_by_co.split(",");
 		
-		if(wo_requested_by_array.indexOf(assigned_user) != '-1'){
+		if($.inArray(assigned_user,wo_requested_by_array) != '-1'){
 			$('#li_completed_by').slideDown('slow');
 		}else{
 			$('#completed_by').val('')
