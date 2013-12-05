@@ -659,7 +659,7 @@ function saveWorkOrder(from) {
 		}
 	}
 	
-	if($('#wo_status').val() == '3'){
+	if($('#wo_status').val() == '3' || $('#wo_status').val() == '1'){
 		var assigned_user = $("#wo_assigned_user").val();
 		var wo_requested_by_co = $('#wo_requested_by_co').val();
 		
@@ -904,7 +904,7 @@ function changeAssignedToUser(){
 	}
 	var assigned_user = $("#wo_assigned_user").val();
 	//For fixed
-	if($('#wo_status').val() == '3'){
+	if($('#wo_status').val() == '3' || $('#wo_status').val() == '1'){
 		var wo_requested_by_co = $('#wo_requested_by_co').val();
 		
 	    wo_requested_by_array = wo_requested_by_co.split(",");
@@ -927,7 +927,7 @@ $(document).ready(function() {
 	$('#wo_assigned_user').change(function(){
 	
 	var assigned_user = $("#wo_assigned_user").val();
-	if($('#wo_status').val() == '3'){
+	if($('#wo_status').val() == '3' || $('#wo_status').val() == '1'){
 		var wo_requested_by_co = $('#wo_requested_by_co').val();
 		
 	    wo_requested_by_array = wo_requested_by_co.split(",");
