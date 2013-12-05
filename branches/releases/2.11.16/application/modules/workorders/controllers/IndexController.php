@@ -745,7 +745,7 @@
 									}
 									$requested_by_dl = explode(",",REQUESTED_BY_COMPANIES);
 									//IF status is Fixed and Assigned to are OTS DL's
-									if((isset($_REQUEST['wo_id'])) && ($wo_data[0]['status'] == '3')&&(in_array($wo_data[0]['assigned_to'],$requested_by_dl))){
+									if((isset($_REQUEST['wo_id'])) && ($wo_data[0]['status'] == '3' || $wo_data[0]['status'] == '1')&&(in_array($wo_data[0]['assigned_to'],$requested_by_dl))){
 										$request_by_css = "display:block;";
 									
 									
