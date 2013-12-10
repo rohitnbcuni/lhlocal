@@ -87,6 +87,8 @@ $(document).ready(function() {
 		}
 	});
 /*------ ------Lazy Load------------*/
+
+	
 });
 
 function showHideTime() {
@@ -538,6 +540,8 @@ function saveWorkOrder(from) {
 	var woCCList = document.getElementById('cclist').value;
 	var woStatusIdHidden = document.getElementById('woStatusIdHidden').value;
 	
+	var completed_by = $('#completed_by').val();
+	
 	/*################COnfirm box if requestor change##################*/
 	if($('#woRequestedByPrev').val() != ''){
 		if($('#woRequestedByPrev').val() != $('#wo_requested_by').val()){
@@ -652,6 +656,24 @@ function saveWorkOrder(from) {
 		}else{
 			valid = false;
 			$("#wo_rally_type_label").css({color:"#FF0000"});
+		}
+	}
+	
+	if($('#wo_status').val() == '3' || $('#wo_status').val() == '1'){
+		var assigned_user = $("#wo_assigned_user").val();
+		var wo_requested_by_co = $('#wo_requested_by_co').val();
+		
+	    wo_requested_by_array = wo_requested_by_co.split(",");
+		
+		if(($.inArray(assigned_user,wo_requested_by_array) != '-1') && ($('#completed_by').val() == '')){
+			//$('#li_completed_by').slideDown('slow');
+			valid = false;
+			
+			//document.getElementById('wo_site_name_label').style.color = "#FF0000";
+			$("label[for='completed_by']").css({'color':'#FF0000'});
+		}else{
+		$("label[for='completed_by']").css({'color':'#34556C'});
+		
 		}
 	}
 
@@ -789,7 +811,7 @@ function saveWorkOrder(from) {
 	
 		
 	if(valid) {
-		data = {woId:woId,dirName:dirName,requestedId:requestedId,projectId:projectId,woTypeId:woTypeId,priorityId:priorityId,timeSens:timeSens,timeSensDate:timeSensDate,timeSensTime:timeSensTime,ampm:ampm,wo_draft:wo_draft,timeSensDate_draft:timeSensDate_draft,timeSensTime_draft:timeSensTime_draft,ampm_draft:ampm_draft,woTitle:woTitle,woExampleURL:woExampleURL,woDesc:woDesc,woStatus:woStatus,woAssignedTo:woAssignedTo,woStartDate:woStartDate,woEstDate:woEstDate,rallyType:rallyType,rallyProject:rallyProject,rallyFlag:rallyFlag,woREQ_TYPE:woREQ_TYPE,woSEVERITY:woSEVERITY,woSITE_NAME:woSITE_NAME,woINFRA_TYPE:woINFRA_TYPE,woCRITICAL:woCRITICAL,woCCList:woCCList,launchDate:launchDate,currmin:currmin,draftDate:draftDate,commentSubmit:from,woStatusIdHidden:woStatusIdHidden};
+		data = {woId:woId,dirName:dirName,requestedId:requestedId,projectId:projectId,woTypeId:woTypeId,priorityId:priorityId,timeSens:timeSens,timeSensDate:timeSensDate,timeSensTime:timeSensTime,ampm:ampm,wo_draft:wo_draft,timeSensDate_draft:timeSensDate_draft,timeSensTime_draft:timeSensTime_draft,ampm_draft:ampm_draft,woTitle:woTitle,woExampleURL:woExampleURL,woDesc:woDesc,woStatus:woStatus,woAssignedTo:woAssignedTo,woStartDate:woStartDate,woEstDate:woEstDate,rallyType:rallyType,rallyProject:rallyProject,rallyFlag:rallyFlag,woREQ_TYPE:woREQ_TYPE,woSEVERITY:woSEVERITY,woSITE_NAME:woSITE_NAME,woINFRA_TYPE:woINFRA_TYPE,woCRITICAL:woCRITICAL,woCCList:woCCList,launchDate:launchDate,currmin:currmin,draftDate:draftDate,commentSubmit:from,woStatusIdHidden:woStatusIdHidden,completed_by:completed_by};
 		//LH34096 if request type is request then estimate time will same launch date
 		if(woREQ_TYPE == '3'){
 			$('#estimated_completion_date').val(timeSensDate+" "+timeSensTime);
@@ -880,7 +902,58 @@ function changeAssignedToUser(){
 		//default the assigned to User for Feedback status
 		$("#wo_assigned_user").val('');
 	}
+	var assigned_user = $("#wo_assigned_user").val();
+	//For fixed
+	if($('#wo_status').val() == '3' || $('#wo_status').val() == '1'){
+		var wo_requested_by_co = $('#wo_requested_by_co').val();
+		
+	    wo_requested_by_array = wo_requested_by_co.split(",");
+		if($.inArray(assigned_user,wo_requested_by_array) != '-1'){
+		//if(wo_requested_by_array.indexOf(assigned_user) != '-1'){
+			$('#li_completed_by').slideDown('slow');
+		}else{
+			$('#completed_by').val('')
+			$('#li_completed_by').slideUp('slow');
+		
+		}
+			
+	}else{
+		$('#completed_by').val('')
+		$('#li_completed_by').slideUp('slow');
+	}
 }
+//On change of assigned to field
+$(document).ready(function() {
+	$('#wo_assigned_user').change(function(){
+	
+	var assigned_user = $("#wo_assigned_user").val();
+	if($('#wo_status').val() == '3' || $('#wo_status').val() == '1'){
+		var wo_requested_by_co = $('#wo_requested_by_co').val();
+		
+	    wo_requested_by_array = wo_requested_by_co.split(",");
+		
+		if($.inArray(assigned_user,wo_requested_by_array) != '-1'){
+			$('#li_completed_by').slideDown('slow');
+		}else{
+			$('#completed_by').val('')
+			$('#li_completed_by').slideUp('slow');
+			
+		
+		}
+		
+	}else{
+	
+		$('#completed_by').val('')
+		$('#li_completed_by').slideUp('slow');
+	
+	}
+	
+	
+	});
+	});
+
+
+
 
 function updateStatusList(woId,woStatus)
 {
