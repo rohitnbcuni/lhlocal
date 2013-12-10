@@ -1,0 +1,61 @@
+<?php 
+$encountered_letters=array();
+$resource_types=$this->items['resource_types'];
+$rt='phone-number-fax';
+foreach ($this->items["users"] as $user)
+{
+	$first_name = "first-name";
+	if(!in_array(strtolower($user[$first_name][0]),$encountered_letters))
+	{
+		$encountered_letters[]=strtolower($user[$first_name][0]);
+	}
+	sort($encountered_letters);
+}
+sort($resource_types);
+?>
+<div class="title"></div>
+<div class="key"></div>
+<div id="close-x"><a href="javascript:togglenav();">Close</a></div>
+<div id="navigation">
+	<div id="controls">
+		<div id="load">
+			<h3>Displaying <span id="resource_type_display">All</span> Resources for <span id="week_start"></span> - <span id="week_end"></span></h3>
+			<ul>
+				<li id="w_load"></li>
+				<li id="q_load"></li>
+				<li id="y_load"></li>
+			</ul>
+		</div>
+		<form id="resource_type_form">
+			<label for="resource_types">Show Resource Types:</label>
+			<select id="resource_types" name="rt" onChange="displayTypes()">
+				<option value="">All</option>
+				<?php
+				foreach($resource_types as $r)
+				{
+					?><option value="<?=$r ?>"><?=$r ?></option><?php
+				}
+				?>
+				<option value="Uncategorized">Uncategorized</option>
+			</select>
+		</form>
+		<div id="pie"></div>
+		<div id="load_lines"></div>
+		<ul id="letter-nav">
+			<li class="first">Jump To:</li>
+			<?php 
+			foreach($encountered_letters as $l)
+			{
+				?><li><a href="javascript:goLetter('<?=$l?>');"><?=strtoupper($l)?></a></li><?php
+			}
+			?>
+		</ul>
+
+		<form onSubmit="return jumpTo(this)" id="date_jump_form">
+			<label for="jump_to">Jump To Date:</label><input type="text" name="jump_to" value="" id="jump_to">
+			<button type="submit">Go</button>
+		</form>
+		<button id="convert_to_active" onClick="convertToActive()">Convert hours to Billable</button>
+	</div>
+	<div id="cal1Container"></div>
+</div>
