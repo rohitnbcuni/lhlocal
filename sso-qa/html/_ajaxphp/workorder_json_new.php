@@ -477,7 +477,7 @@ if(isset($from_action) && $from_action){
 		  }
 	  }
   }
-
+	
 
 	if($statusId=='99')
 	{
@@ -502,7 +502,7 @@ if(isset($from_action) && $from_action){
     if(($clientId < 0 || $clientId == $project['client'])){
 	
       foreach($project['workorders'] as $wo){
-		if((($statusActiveArray[$statusId] < 0 || $statusActiveArray[$wo['status']] == $wo['status']) || ($statusId =='over_due' && $wo['overdue_flag'] =='1' ) ) && ($assignedTo < 0 || $assignedTo == $wo['assigned_to_id']) && ($requested_by < 0 || $requested_by == $wo['requested_by']) && ($req_Type_Arr[$wo['req_type']]==$wo['req_type'])){
+		if((($statusActiveArray[$statusId] < 0 || $statusActiveArray[$wo['status']] == $wo['status']) || ($statusId =='over_due' && $wo['overdue_flag'] =='1' ) ) && ($assignedTo < 0 || $assignedTo == $wo['assigned_to_id']) && ($requested_by < 0 || $requested_by == $wo['requested_by_id']) && ($req_Type_Arr[$wo['req_type']]==$wo['req_type'])){
 		  if($wo['req_type'] == 'Problem'){
 			$severity = $wo['severity'];
 		  } else {
