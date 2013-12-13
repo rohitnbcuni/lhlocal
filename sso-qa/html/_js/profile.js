@@ -29,6 +29,7 @@ $('#profile_save').click(function(){
 	var phone = $('#phone').val();
 	var user_company = $('#user_company').val();
 	if(user_company == '-1'){
+		$('#company_lbl').css("color","#FF0000");
 		$('.message_required p').html('Please select a company.');
 		$('.message_required').css({display:'block'});
 		return false;
