@@ -7,12 +7,13 @@
 
 
 		<div class="workorder_content_col1">
-
+		<div class="profile_message profile_confirmation_box">Confirmation message lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
 <?php //p($this->userInfo); ?>
 			<ul>
 				<li>
 				
 					<label for="image_upload" id="image_lbl">Image:<br/>(Upto 2MB file size. <br/>Allowed Extension: .png,.gif)</label>
+
 					<div class="wo_dimmer" id="file_upload_dimmer" style="display: none;"></div>
 					<div style="margin-left:134px;margin-top:10px;" id="thumb_img">
 							
@@ -54,7 +55,7 @@
 				</li>
 
 				<li>
-					<label for="company" id="company_lbl"><?php echo COMPANY_LABEL ?>:</label>
+					<label for="company" id="company_lbl"><?php echo COMPANY_LABEL ?>:*</label>
 					<?php
 						$r = '';
 							if(empty($this->userInfo['company']) || $this->userInfo['company'] == '' || $this->userInfo['company'] == '-1'){ ?>
