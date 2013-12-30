@@ -6,13 +6,20 @@
 	<div class="content">
 
 
+	<?php if(empty($this->userInfo['company']) || $this->userInfo['company'] == '' || $this->userInfo['company'] == '-1') : ?>
+			<div class="profile_message profile_alert_box">Alert message lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+	<?php elseif(!empty($this->userInfo['company']) || $this->userInfo['company'] != '' || $this->userInfo['company'] != '-1') : ?>
+	
+			<div class="profile_message profile_confirmation_box">Confirmation message lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+	<?php endif; ?>
 		<div class="workorder_content_col1">
-		<div class="profile_message profile_confirmation_box">Confirmation message lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+
+	
 <?php //p($this->userInfo); ?>
 			<ul>
 				<li>
 				
-					<label for="image_upload" id="image_lbl">Image:<br/>(Upto 2MB file size. <br/>Allowed Extension: .png,.gif)</label>
+					<label for="image_upload" id="image_lbl">Image:<br/>(Upto 2MB file size. GIF,PNG extension only Allowed)</label>
 
 					<div class="wo_dimmer" id="file_upload_dimmer" style="display: none;"></div>
 					<div style="margin-left:134px;margin-top:10px;" id="thumb_img">
