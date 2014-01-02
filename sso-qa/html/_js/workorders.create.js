@@ -656,7 +656,23 @@ function saveWorkOrder(from) {
 			$("#wo_rally_type_label").css({color:"#FF0000"});
 		}
 	}
-
+	f($('#wo_status').val() == '3' || $('#wo_status').val() == '1'){
+		var assigned_user = $("#wo_assigned_user").val();
+		var wo_requested_by_co = $('#wo_requested_by_co').val();
+		
+	    wo_requested_by_array = wo_requested_by_co.split(",");
+		
+		if(($.inArray(assigned_user,wo_requested_by_array) != '-1') && ($('#completed_by').val() == '')){
+			//$('#li_completed_by').slideDown('slow');
+			valid = false;
+			
+			//document.getElementById('wo_site_name_label').style.color = "#FF0000";
+			$("label[for='completed_by']").css({'color':'#FF0000'});
+		}else{
+		$("label[for='completed_by']").css({'color':'#34556C'});
+		
+		}
+	}
 	  if(timeSensDate == "") {
 
 			valid = false;
@@ -791,7 +807,7 @@ function saveWorkOrder(from) {
 	
 		
 	if(valid) {
-		data = {woId:woId,dirName:dirName,requestedId:requestedId,woTypeId:woTypeId,company_id:company_id,priorityId:priorityId,timeSens:timeSens,timeSensDate:timeSensDate,timeSensTime:timeSensTime,ampm:ampm,wo_draft:wo_draft,timeSensDate_draft:timeSensDate_draft,timeSensTime_draft:timeSensTime_draft,ampm_draft:ampm_draft,woTitle:woTitle,woExampleURL:woExampleURL,woDesc:woDesc,woStatus:woStatus,woAssignedTo:woAssignedTo,woStartDate:woStartDate,woEstDate:woEstDate,rallyType:rallyType,rallyProject:rallyProject,rallyFlag:rallyFlag,woREQ_TYPE:woREQ_TYPE,woSEVERITY:woSEVERITY,woSITE_NAME:woSITE_NAME,woINFRA_TYPE:woINFRA_TYPE,woCRITICAL:woCRITICAL,woCCList:woCCList,launchDate:launchDate,currmin:currmin,draftDate:draftDate,commentSubmit:from,woStatusIdHidden:woStatusIdHidden};
+		data = {woId:woId,dirName:dirName,requestedId:requestedId,woTypeId:woTypeId,company_id:company_id,priorityId:priorityId,timeSens:timeSens,timeSensDate:timeSensDate,timeSensTime:timeSensTime,ampm:ampm,wo_draft:wo_draft,timeSensDate_draft:timeSensDate_draft,timeSensTime_draft:timeSensTime_draft,ampm_draft:ampm_draft,woTitle:woTitle,woExampleURL:woExampleURL,woDesc:woDesc,woStatus:woStatus,woAssignedTo:woAssignedTo,woStartDate:woStartDate,woEstDate:woEstDate,rallyType:rallyType,rallyProject:rallyProject,rallyFlag:rallyFlag,woREQ_TYPE:woREQ_TYPE,woSEVERITY:woSEVERITY,woSITE_NAME:woSITE_NAME,woINFRA_TYPE:woINFRA_TYPE,woCRITICAL:woCRITICAL,woCCList:woCCList,launchDate:launchDate,currmin:currmin,draftDate:draftDate,commentSubmit:from,woStatusIdHidden:woStatusIdHidden,completed_by:completed_by};
 		//LH34096 if request type is request then estimate time will same launch date
 		if(woREQ_TYPE == '3'){
 			$('#estimated_completion_date').val(timeSensDate+" "+timeSensTime);
