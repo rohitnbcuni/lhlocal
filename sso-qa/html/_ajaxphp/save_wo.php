@@ -32,6 +32,7 @@
 		$woTitle = $mysql->real_escape_string(Util::escapewordquotes(@$_POST['woTitle']));
 		$woExampleURL = $mysql->real_escape_string(Util::escapewordquotes(@$_POST['woExampleURL']));
 		$woDesc = $mysql->real_escape_string(Util::escapewordquotes(@$_POST['woDesc']));
+		$completed_by = $mysql->real_escape_string(@$_POST['completed_by']);
                /**
 		 * Ticket #16857
 		 * change escapewordquotes func
@@ -312,6 +313,7 @@
 				."`example_url`='$woExampleURL', "
 				."`body`='$woDesc', "
 				."`requested_by`='$requestedId', "
+				."`completed_by`='$completed_by', "
 				."`launch_date`='$sql_date', "
 				."`rally_type`='$rallyType', "
 				."`rally_project_id`='$rallyProject', "
@@ -390,6 +392,27 @@
 			$assigned_option_html = '';
 		}
 		
+		if($wo_row['launch_date'] != $wo_old_row['launch_date'] && ($wo_old_row['launch_date']) != ''){
+				//echo $wo_row['launch_date'];
+			if(($wo_old_row['launch_date'] != '0000-00-00 00:00:00') || ( $wo_old_row['launch_date'] != '') || ($wo_row['launch_date'] != '0000-00-00 00:00:00')||( $wo_old_row['launch_date'] != '')){
+				insertWorkorderAudit($mysql,$getWoId, '10', $_SESSION['user_id'],$wo_row['assigned_to'],$woStatus);
+				$last_audit_id = $mysql->insert_id;
+				$mysql->sqlordie("INSERT INTO `workorder_date_log` SET previous_launch_date = '".$wo_old_row['launch_date']."' , audit_id = '".$last_audit_id."',  new_launch_date = '".$wo_row['launch_date']."' , user_id ='".$_SESSION['user_id']."' , wid ='".$getWoId."'");
+			}
+		}
+		if(($wo_row['completed_by'] != $wo_old_row['completed_by']) && ($woStatus == '3')){
+			if(empty($wo_old_row['completed_by'])){
+			
+				insertWorkorderAudit($mysql,$getWoId, '11', $_SESSION['user_id'],$wo_row['completed_by'],$woStatus);
+			}else{
+				insertWorkorderAudit($mysql,$getWoId, '12', $_SESSION['user_id'],$wo_row['completed_by'],$woStatus);
+			
+			}
+		
+		
+		
+		}
+		//echo $wo_row['completed_by']." ".$wo_old_row['completed_by'];
 		if($wo_row['launch_date'] != $wo_old_row['launch_date'] && ($wo_old_row['launch_date']) != ''){
 				//echo $wo_row['launch_date'];
 			if(($wo_old_row['launch_date'] != '0000-00-00 00:00:00') || ( $wo_old_row['launch_date'] != '') || ($wo_row['launch_date'] != '0000-00-00 00:00:00')||( $wo_old_row['launch_date'] != '')){
@@ -552,10 +575,21 @@
 						$msg .="<b>Request Type: </b>" .$request_type_arr[$wo_req_type_row['field_name']] ."<br>";
 
 
+						//If ticket is critical then set header as Higher Priority
+						$select_req_type_qry_critical = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a INNER JOIN `lnk_custom_fields_value` b  ON (a.field_id = b.field_id) WHERE `workorder_id`='$getWoId' and a.field_key='CRITICAL' ";
+						$req_type_res_cri = $mysql->sqlordie($select_req_type_qry_critical);
+						$req_type_row_critical = $req_type_res_cri->fetch_assoc();
 
-
-
-
+						
+						if($req_type_row_critical['field_id']== '13'){
+							$headers .= "\r\n";
+							$headers .= "X-Priority: 1 (Highest)";
+							$headers .= "\r\n";
+							$headers .= "X-MSMail-Priority: High";
+							$headers .= "\r\n";
+							$headers .= "Importance: High";
+						}
+						///////////////////END
 //code for lh 18306 
 							
 					    $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorder_custom_fields cu where ln.field_id = cu.field_id and ln.field_key = 'SEVERITY' and cu.field_key = 'SEVERITY' and cu.workorder_id = '$getWoId'";
