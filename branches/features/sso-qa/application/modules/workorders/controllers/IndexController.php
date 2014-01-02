@@ -1342,15 +1342,15 @@
 
 						//echo "- "."Work order ".$row['name']." to ".$audit_status[$row['status']]." by ".$audit_user_list[$row['log_user_id']]." on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
 					}
-					}			
+					//}			
 					//echo "- "."Work order ".$row['name']." to ".$audit_status[$row['status']]." by ".$audit_user_list[$row['log_user_id']]." on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
 					}
 					if($row['Request_type'] != '')
 					{	
 						if($row['audit_id']=='6' && $prev_req != ''){
 							if(previous_user($row['id'],$row['workorder_id'])!= $row['assign_user_id'] && $audit_status[$row['status']]!= $previous_status){
-						echo "- "."Work order ".$row['name']." ".$audit_user_list[$row['assign_user_id']]." by ".$audit_user_list[$row['log_user_id']]." and Status change from  ".$previous_status." to ".$audit_status[$row['status']]." status on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
-					}else {echo "- "."Work order ".$row['name']." ".$audit_user_list[$row['assign_user_id']]." by ".$audit_user_list[$row['log_user_id']]." and  ".$audit_status[$row['status']]." status on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
+							echo "- "."Work order ".$row['name']." ".$audit_user_list[$row['assign_user_id']]." by ".$audit_user_list[$row['log_user_id']]." and Status change from  ".$previous_status." to ".$audit_status[$row['status']]." status on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
+						}else {echo "- "."Work order ".$row['name']." ".$audit_user_list[$row['assign_user_id']]." by ".$audit_user_list[$row['log_user_id']]." and  ".$audit_status[$row['status']]." status on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
 					}
 				
 							//echo "- "."Work order ".$row['name']." from ".$request_types_array[$prev_req]."  to ".$request_types_array[$row['Request_type']]." by ".$audit_user_list[$row['log_user_id']]." on ".Date('Y-m-d h:i:s A', $str_date)."<br>";
