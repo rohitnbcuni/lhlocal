@@ -539,7 +539,7 @@ function saveWorkOrder(from) {
 	var woINFRA_TYPE = document.getElementById('INFRA_TYPE').value;
 	var woCCList = document.getElementById('cclist').value;
 	var woStatusIdHidden = document.getElementById('woStatusIdHidden').value;
-	
+	var completed_by = $('#completed_by').val();
 	/*################COnfirm box if requestor change##################*/
 	if($('#woRequestedByPrev').val() != ''){
 		if($('#woRequestedByPrev').val() != $('#wo_requested_by').val()){
@@ -656,7 +656,7 @@ function saveWorkOrder(from) {
 			$("#wo_rally_type_label").css({color:"#FF0000"});
 		}
 	}
-	f($('#wo_status').val() == '3' || $('#wo_status').val() == '1'){
+	if($('#wo_status').val() == '3' || $('#wo_status').val() == '1'){
 		var assigned_user = $("#wo_assigned_user").val();
 		var wo_requested_by_co = $('#wo_requested_by_co').val();
 		
@@ -899,8 +899,55 @@ function changeAssignedToUser(){
 		//default the assigned to User for Feedback status
 		$("#wo_assigned_user").val('');
 	}
+	var assigned_user = $("#wo_assigned_user").val();
+	//For fixed
+	if($('#wo_status').val() == '3' || $('#wo_status').val() == '1'){
+		var wo_requested_by_co = $('#wo_requested_by_co').val();
+		
+	    wo_requested_by_array = wo_requested_by_co.split(",");
+		if($.inArray(assigned_user,wo_requested_by_array) != '-1'){
+		//if(wo_requested_by_array.indexOf(assigned_user) != '-1'){
+			$('#li_completed_by').slideDown('slow');
+		}else{
+			$('#completed_by').val('')
+			$('#li_completed_by').slideUp('slow');
+		
+		}
+			
+	}else{
+		$('#completed_by').val('')
+		$('#li_completed_by').slideUp('slow');
+	}
 }
-
+//On change of assigned to field
+$(document).ready(function() {
+	$('#wo_assigned_user').change(function(){
+	
+	var assigned_user = $("#wo_assigned_user").val();
+	if($('#wo_status').val() == '3' || $('#wo_status').val() == '1'){
+		var wo_requested_by_co = $('#wo_requested_by_co').val();
+		
+	    wo_requested_by_array = wo_requested_by_co.split(",");
+		
+		if($.inArray(assigned_user,wo_requested_by_array) != '-1'){
+			$('#li_completed_by').slideDown('slow');
+		}else{
+			$('#completed_by').val('')
+			$('#li_completed_by').slideUp('slow');
+			
+		
+		}
+		
+	}else{
+	
+		$('#completed_by').val('')
+		$('#li_completed_by').slideUp('slow');
+	
+	}
+	
+	
+	});
+	});
 function updateStatusList(woId,woStatus)
 {
 	qString = '?status_id='+woStatus+'&responseType=json';
