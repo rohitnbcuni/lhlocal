@@ -33,6 +33,7 @@
 			$insert_perm = "INSERT INTO `user_project_permissions` (`user_id`,`project_id`) VALUES "
 			."('" . $user ."','" . $project ."')";
 			$mysql->sqlordie($insert_perm);
+			//echo "/n";
 	}
 	function writeLog($mysql, $sql='', $rootPath=''){
 		$a = fopen($rootPath . "/html/crons/cron_15.log", "a");
@@ -55,7 +56,7 @@
 			while($projRow = $projResult->fetch_assoc()) {
 				$read = '';
 				$usrCount = 0;
-				$getUsers = "SELECT id FROM `users` WHERE id NOT IN (SELECT user_id FROM `user_project_permissions` WHERE project_id='" . $projRow['id'] . "')  AND `company`='" . $projRow['company'] . "'";
+				$getUsers = "SELECT id FROM `users` WHERE id NOT IN (SELECT user_id FROM `user_project_permissions` WHERE project_id='" . $projRow['id'] . "')  AND `company`='" . $projRow['company'] . "' AND  active='1' AND deleted='0' ";
 				$userResult = $mysql->sqlordie($getUsers);
 				if ($mysql->error) {
 						writeLog($mysql, $getUsers, $rootPath);
@@ -71,7 +72,7 @@
 				if($projRow['company'] != '2')
 				{
 					$read = 'for company 2';
-					$getUsers = "SELECT id FROM `users` WHERE id NOT IN (SELECT user_id FROM `user_project_permissions` WHERE project_id='" . $projRow['id'] . "')  AND `company`='2'";
+					$getUsers = "SELECT id FROM `users` WHERE id NOT IN (SELECT user_id FROM `user_project_permissions` WHERE project_id='" . $projRow['id'] . "')  AND `company`='2' AND active='1' AND deleted='0'  ";
 					$userResult = $mysql->sqlordie($getUsers);
 					if ($mysql->error) {
 						writeLog($mysql, $getUsers, $rootPath);
