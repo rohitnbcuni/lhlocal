@@ -7,10 +7,10 @@
 
 
 	<?php if(empty($this->userInfo['company']) || $this->userInfo['company'] == '' || $this->userInfo['company'] == '-1') : ?>
-			<div class="profile_message profile_alert_box">Alert message lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+			<div class="profile_message profile_alert_box">Welcome to the Profile Page. You must select the main NBCU Business Unit you would like your profile to be associated with and can provide phone number and image on this page as well. Click the Update button to save and be redirected to the Work Orders screen..</div>
 	<?php elseif(!empty($this->userInfo['company']) || $this->userInfo['company'] != '' || $this->userInfo['company'] != '-1') : ?>
 	
-			<div class="profile_message profile_confirmation_box">Confirmation message lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+			<div class="profile_message profile_confirmation_box">Welcome to the Profile Page. Users can change their phone number or upload a new image. Click the Update button to save and be redirected to the Work Orders screen..</div>
 	<?php endif; ?>
 		<div class="workorder_content_col1">
 
