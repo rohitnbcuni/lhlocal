@@ -45,7 +45,7 @@ $('#profile_save').click(function(){
 			url: "/workorders/profile/companyupdate",
 			data: "companyId="+user_company+"&phone="+phone,
 			success: function(msg) {
-				$('.message_required p').html('Create Profile process has completed .Now you san start create Workorders');
+				$('.message_required p').html('Your Profile has been saved. You will now be redirected to the Work Orders screen');
 				$('#ok_button').attr("onclick","redirect_link();");
 				$('.message_required').css({display:'block'});
 			}
@@ -102,7 +102,7 @@ function ajaxUploadFile(fileForm){
 			{
 				if(data.search("success")>='0'){
 					
-					$('.message_required p').html('File uploaded successfully.');
+					$('.message_required p').html('Your new Picture has been saved.');
 					$('.message_required').css({display:'block'});
 				}
 				else if(data.search("You")>='0'){
