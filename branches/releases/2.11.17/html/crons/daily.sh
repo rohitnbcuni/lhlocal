@@ -8,6 +8,14 @@ if [ $? != 0 ]; then
 else
 echo "cron.updatewo.php exit status good" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/daily.log
 fi
+
+php /var/www/lighthouse-uxd/lighthouse/current/html/crons/cron.perms.php
+if [ $? != 0 ]; then
+/bin/mail -s "15 Min Cron Failed - cron.perms.php" ots-tools-support@nbcuni.com
+else
+echo "cron.perms.php exit status good" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/daily.log
+fi
+
 etime=$(date +%c)
 echo $etime "Daily Cron Completed ..." >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/daily.log
 echo "###########################" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/daily.log
