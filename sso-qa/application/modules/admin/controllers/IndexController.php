@@ -849,6 +849,7 @@
 			$profile_compmnay_name = AdminDisplay::getCompanyDetails($users['company']);
 			//echo AdminDisplay::getAllCompaniesProjectOptionEditHTML($users['id'], $userStatus,$users['company'], $userProjectList);
 				echo '<div class="admindisplayUserInfo">
+						
 						 <div class="row">
 								<div class="label"><label>User ID:</label></div>
 									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$users['id'].'" >
@@ -870,6 +871,8 @@
 							<div class="label" style="margin-left: -74px;width: 194px;"><label> Profile '.COMPANY_LABEL.':</label></div>
 									<input type="text" class="readonly" disabled="disabled" name="profile_company" id="profile_company" value="'.$profile_compmnay_name['name'].'" >
 									<input type="hidden" class="readonly"  name="profile_company_id" id="profile_company_id" value="'.$users['company'].'" >
+						</div>
+						<div class="message_workorder_audit" id="user_audit_log" style="margin-top:-150px;">
 						</div>
 						<div class="row">
 							<div class="label"><label>User Title:</label></div><div id="admin_UserTitle_fade" class="admin_UserTitle_fade"></div>
@@ -997,9 +1000,24 @@
 						echo $html;
 						 echo '<div class="row" id="updateButton">
 							<button onclick="updateUser(USER_ACCESS);"><span >Update</span></button>
+							
+							<button style="margin-left:122px;" id="user_audit_div" ><span>Audit Log</span></button>
+							
 						</div>
-				</div>';			
+				</div>
+					
+				';			
 
+		}
+		
+		function userinfoauditAction(){
+			$userID = $this->_request->getParam('userid');
+			$userAudit = AdminDisplay::getUserAudit($userID);
+			$this->view->assign('unserinfo_audit',$userAudit);
+			$this->_helper->layout->disableLayout();
+			
+			
+		
 		}
 
 		public function customfieldnameAction(){
