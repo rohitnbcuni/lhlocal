@@ -90,6 +90,21 @@ $(document).ready(function(){
 		$('.message_workorder_audit').css("display","block");
 	
 	});
+	$('#user_audit_div').click(function(){
+		
+		var userID = $('#userID').val();
+		$.ajax({
+			type: "GET",
+			url: "/admin/index/userinfoaudit",
+			data: "userid="+userID,
+			success: function(msg) {
+				$('#user_audit_log').html(msg);
+				$('.message_workorder_audit').css("display","block");
+				
+			}
+		});
+	
+	});
 	if($('#userAdminAccess')){
 		if($('#userAdminAccess').val() == 'employee'){
 				
