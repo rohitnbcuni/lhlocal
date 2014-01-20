@@ -17,10 +17,30 @@
 		$userCompany = $company;
 
 	}*/
-	//$userTitles = $_REQUEST['userTitle'];
+	$admin_id = $_SESSION['user_id'];
+	$userTitles = $_REQUEST['userTitle'];
 	$userTitlesArray = explode(",",$userTitles);
 	if(!empty($userID))
 	{
+		/*$sql_users = "SELECT login_status from users id = '".$userID ."'";
+		$user_status = $users$mysql->sqlordie($sql_users);
+		 
+		if($user_status->num_rows > 0){
+			$row_user_status = $user_status->fetch_assoc());
+			$pre_user_status = $user_status['login_status'];
+			
+			if($pre_user_status != $userAdminAccess){
+				$admin_audit_log = "INSERT INTO `admin_audit_log` SET `uid` =".$admin_id."
+				, `action_module` = 'userinfo', `action_id` ='$userID', 
+				`action_name` = 'updated', dated ='".date('Y-m-d H:i:s')."' ";
+				$mysql->sqlordie($admin_audit_log);
+			
+			
+			}
+		
+		}*/		
+		
+		
 		$update_role = "UPDATE `users` SET  `user_title`='".$userTitle."',`role`='" . $userRole."',
 		`agency`='". $userVendorName ."',`program`='".$userProgram."',`active`='". $userActiveStatus."',
 		`deleted`='". $userDeletedStatus."',`login_status`='". $userAdminAccess."',`user_access`='".$user_access_bit."' 
@@ -33,6 +53,7 @@
 		$insertQuery = "INSERT INTO `user_roles` (`user_id`, `category_subcategory_id`, `flag`, `creation_date`, `active`, `deleted`) VALUES ";
 		for($i=0;$i<count($userTitlesArray);$i++){ 
 			$pos = strpos($userTitlesArray[$i], "subcat_");
+			
 			if($pos === false){
 				$insertQuery .= "('{$userID}', ".str_replace("subcat_","",$userTitlesArray[$i]).", 'category','".date("Y-m-d H:i:s")."', '1', '0')"; 
 			}else{
@@ -42,24 +63,32 @@
 				$insertQuery .= ","; 
 			}   
 		}
+		
 		$mysql->sqlordie($insertQuery );
 	}
 	$usersExistingCompany = array();
 	$usersExistingCompany = getUserExistingCompanies($userID);
 	$company = explode(",",$company);
+	
+	
+	$user_info_audit_log = array();
 	if(count($usersExistingCompany) > 0){
 		//Check the differnce
-		if(count($company) >0){
+		if(count($company) >1){
 			foreach($company as $company_key => $new_company_id){
 				if(!in_array($new_company_id,$usersExistingCompany)){
 					$insertCompanyQuery = "INSERT INTO `users_companies` SET `user_id` =".$userID."
 					, `company_id` = ".$new_company_id.", `deleted` ='0', 
 					`modify_date` = '".date('Y-m-d H:i:s')."' ";
+					
+					$user_info_audit_log[] = addslashes($insertCompanyQuery);
 					$mysql->sqlordie($insertCompanyQuery );
-				
+					
+					
 				}
 			
 			}
+			
 		
 		}
 	
@@ -69,6 +98,7 @@
 				$insertCompanyQuery = "INSERT INTO `users_companies` SET `user_id` =".$userID."
 				, `company_id` = ".$new_company_id.", `deleted` ='0', 
 				`modify_date` = '".date('Y-m-d H:i:s')."' ";
+				$user_info_audit_log[] = addslashes($insertCompanyQuery);
 				$mysql->sqlordie($insertCompanyQuery );
 			}
 		
@@ -85,6 +115,7 @@
 					$mysql->sqlordie($uCompanyQuery );*/
 					$uCompanyQuery = "DELETE FROM `users_companies`  WHERE  `user_id` =".$userID."
 					AND `company_id` = ".$new_company_id;
+					$user_info_audit_log[] = addslashes($uCompanyQuery);
 					$mysql->sqlordie($uCompanyQuery );
 					
 				}		
@@ -94,6 +125,13 @@
 	
 		}
 	
+	}
+	if(count($user_info_audit_log) > 0){
+		$serializeSyncQueries = serialize($user_info_audit_log);
+		$admin_audit_log = "INSERT INTO `admin_audit_log` SET `uid` =".$admin_id."
+						, `action_module` = 'userinfo', `action_id` ='$userID', 
+						`action_name` = 'updated', dated ='".date('Y-m-d H:i:s')."', info1 = '$serializeSyncQueries' ";
+						$mysql->sqlordie($admin_audit_log);
 	}
 	
 	function getUserExistingCompanies($userID){
