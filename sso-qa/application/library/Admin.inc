@@ -898,6 +898,15 @@
 			return $result;	
 		
 		}
+		public function getUserAudit($uid){
+		
+			$db = Zend_Registry::get('db');
+			$query = "SELECT aa.dated, CONCAT_WS(' ', u.first_name,u.last_name) as admin_name, CONCAT_WS(' ', c.first_name,c.last_name) as full_name FROM admin_audit_log aa INNER JOIN users u ON (u.id = aa.uid) INNER JOIN users c ON (c.id = aa.action_id) WHERE aa.action_id = '$uid' AND aa.action_module = 'userinfo'";
+		 	//echo $query = "SELECT aa.*, CONCAT_WS(' ', u.first_name,u.last_name) as full_name, c.name FROM admin_audit_log aa INNER JOIN users u ON (u.id = aa.uid) INNER JOIN companies c ON (c.id = aa.action_id) WHERE aa.action_id  = '$uid' AND aa.action_module = 'userinfo'";
+	   		$result = $db->fetchAll($query);
+			return $result;	
+		
+		}
 		public function updateCompanyStr($cclist,$company_id){
 			$db = Zend_Registry::get('db');
 			$dataArray = array("cclist" => $cclist);
