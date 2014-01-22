@@ -152,7 +152,7 @@ $distinct_assigned_to_sql_result = $mysql->sqlordie($distinct_assigned_to_sql);
 	if($distinct_assigned_to_sql_result->num_rows > 0){
 		while($assigned_to_row = $distinct_assigned_to_sql_result->fetch_assoc()){
 			$assigned_to_user_id_array[] = $assigned_to_row['id'];
-			$assigned_to_user_name_array[] = $assigned_to_row['last_name'].",".$assigned_to_row['first_name'];
+			$assigned_to_user_name_array[] = ($assigned_to_row['last_name'] != '')?$assigned_to_row['last_name'].",".$assigned_to_row['first_name']:$assigned_to_row['first_name'];
 		}
 		$wo_distinct_values_assigned_to = array($assigned_to_user_id_array,$assigned_to_user_name_array);
 		}	
@@ -164,7 +164,7 @@ $distinct_requested_by_sql_result = $mysql->sqlordie($distinct_requested_by_sql)
 	if($distinct_requested_by_sql_result->num_rows > 0){
 		while($requested_by_row = $distinct_requested_by_sql_result->fetch_assoc()){
 			$requested_by_user_id_array[] = $requested_by_row['id'];
-			$requested_by_user_name_array[] = $requested_by_row['last_name'].",".$requested_by_row['first_name'];
+			$requested_by_user_name_array[] = ($requested_by_row['last_name'] != '')?$requested_by_row['last_name'].",".$requested_by_row['first_name']:$requested_by_row['first_name'];
 		}
 		
 		$wo_distinct_values_requested_by = array($requested_by_user_id_array,$requested_by_user_name_array);

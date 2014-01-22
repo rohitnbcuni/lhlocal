@@ -516,7 +516,7 @@ function loadAssignedList(assignedToId) {
 	projectId = document.getElementById("project_filter").value;
 
   html = '<option value="-1">Show All</option>';
-	if(clientId == '-1' && projectId == '-1'){
+	if(clientId == '-1' && projectId == '-1' && ($('#project_status_filter').val() != '0')){
 		html = allAssignedList;
 	} else if($('#project_status_filter').val() == '0'){
      if(assignedToList != null){
@@ -605,7 +605,7 @@ function loadRequestedbyList(requestedbyId) {
 	projectId = document.getElementById("project_filter").value;
 	assignedTo=document.getElementById("assigned_filter").value;
   html = '<option value="-1">Show All</option>';
-	if(clientId == '-1' && projectId == '-1'  && assignedTo == '-1'){
+	if(clientId == '-1' && projectId == '-1'  && assignedTo == '-1' && $('#project_status_filter').val() != '0'){
 		html = allRequestedbyList;
 	} else if($('#project_status_filter').val() == '0'){
      if(requestedbyList != null){
