@@ -32,12 +32,12 @@ else
 echo "cron.projects.php exit status good" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
 fi
 
-php /var/www/lighthouse-uxd/lighthouse/current/html/crons/cron.perms.php
-if [ $? != 0 ]; then
-/bin/mail -s "15 Min Cron Failed - cron.perms.php" ots-tools-support@nbcuni.com
-else
-echo "cron.perms.php exit status good" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
-fi
+#php /var/www/lighthouse-uxd/lighthouse/current/html/crons/cron.perms.php
+#if [ $? != 0 ]; then
+#/bin/mail -s "15 Min Cron Failed - cron.perms.php" ots-tools-support@nbcuni.com
+#else
+#echo "cron.perms.php exit status good" >> /var/www/lighthouse-uxd/lighthouse/current/html/crons/fifteen_minutes.log
+#fi
 
 
 php /var/www/lighthouse-uxd/lighthouse/current/html/crons/cron_wo_alerts.php
