@@ -1,7 +1,4 @@
 <?PHP
-	/*
-		Control Tower classes parent and child
-	*/
 	class Admin {
 		protected static $configuration;
 		
@@ -773,5 +770,27 @@
 			return $affectedRows = $result->rowCount();
 		
 		}
+	static public function getLastLoggedInTime($userId){
+			$db = Zend_Registry::get('db');
+			$date_logged_time = '';
+			$result = $db->query("SELECT  last_logged_date  FROM users_login_log WHERE user_id = $userId");
+			if($result->rowCount() > 0){
+				//echo "SELECT  DATE_FORMAT(last_logged_date , '%b %d %Y %I:%i:%p') as logged_time  FROM users_login_log WHERE user_id = $userId";
+				$date_logged_time = $db->fetchAll("SELECT  DATE_FORMAT(last_logged_date , '%b %d %Y at %I:%i %p') as logged_time  FROM users_login_log WHERE user_id = $userId");
+				return $date_logged_time[0]['logged_time'];
+				
+			}
+			
+		
+		}
+		
+		
+	public function getUserLastLoginTime(){
+			$db = Zend_Registry::get('db');
+			$result = $db->fetchAll("SELECT  u.*,ll.last_logged_date  FROM users u
+			LEFT JOIN users_login_log ll ON (ll.user_id = u.id) order by u.first_name ");
+			return $result;
+		}
+		
 	}
 ?>
