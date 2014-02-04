@@ -251,6 +251,10 @@ class Basecamp{
 				$this->_session->loggedin = true;
 				$_SESSION['loggedin'] = true;
 				$user_session['loggedin'] = true;
+				$c_time = date("Y-m-d H:i:s");
+				//Update the last logged date time of user
+				$update_user_logged_time = "REPLACE INTO users_login_log set last_logged_date = '$c_time' , user_id = ".$_SESSION['user_id'];  
+				$mysql->query($update_user_logged_time) or die($mysql->error());
 				$this->set_session($user_session, "lh_user");
 				if(@$_POST['remember'] == "on") {
 					setcookie("lighthouse_id", $row['id'], time()+220752000, '/');
