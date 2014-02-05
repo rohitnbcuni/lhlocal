@@ -787,7 +787,7 @@
 		
 	public function getUserLastLoginTime(){
 			$db = Zend_Registry::get('db');
-			$result = $db->fetchAll("SELECT  u.*,ll.last_logged_date  FROM users u
+			$result = $db->fetchAll("SELECT  u.*,DATE_FORMAT(ll.last_logged_date , '%b %d %Y at %I:%i %p') as logged_time  FROM users u
 			LEFT JOIN users_login_log ll ON (ll.user_id = u.id) order by u.first_name ");
 			return $result;
 		}
