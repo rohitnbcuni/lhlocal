@@ -8,7 +8,7 @@ class Admin_IndexController extends LighthouseController {
 			<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';				
 					echo '<div class="adminSelect">
 								   <div class="row" style="float:right;">
-										<button id="adminReportbtn" onclick="generateUsers();"><span>Generate Report</span></button>
+										<button id="adminReportbtn" onclick="generateUsers();"><span>View All Users</span></button>
 									</div>
 									<div >
 								   
@@ -689,7 +689,7 @@ class Admin_IndexController extends LighthouseController {
 			<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';				
 				echo '<div class="adminSelect">
 								<div class="row" style="float:right;">
-												<button id="adminReportbtn" onclick="generateUsers();"><span>Generate Report</span></button>
+												<button id="adminReportbtn" onclick="generateUsers();"><span>View All Users</span></button>
 											</div>
 							   <div >
 								<p>Seach Users:</p>
@@ -1224,38 +1224,29 @@ class Admin_IndexController extends LighthouseController {
 		function exportusersAction(){
 			$adminModel = new AdminDisplay();
 			$resultUsers = $adminModel->getUserLastLoginTime();
-			$response = $this->getResponse();
+			//$response = $this->getResponse();
 			//$header = '';
-			$header = "Id\t Email\t First Name\t Last Name\t Company\t Login Status\t Active\t Deleted \t User Access \t Last Logged In\n";
- 			$excelUsers = '';
+			$i = 0;
+ 			$excelUsers = array();
 			foreach($resultUsers as $k => $v){
 				$active = ($resultUsers[$k]['active'] == '1')?'Active':'unActive';
- 				$d = ($resultUsers[$k]['deleted'] == '1')?"Deleted":'Not Deleted';
- 				$excelUsers .= $resultUsers[$k]['id']."\t".
- 				$resultUsers[$k]['email']."\t".
- 				$resultUsers[$k]['first_name']."\t".
- 				$resultUsers[$k]['last_name']."\t".
- 				$adminModel->getUserCompany($resultUsers[$k]['company'])."\t".
- 				$resultUsers[$k]['login_status']."\t".
- 				$active."\t".$d."\t".
- 				$resultUsers[$k]['user_access']."\t".
- 				$resultUsers[$k]['last_logged_date']."\n";
+ 				$d = ($resultUsers[$k]['deleted'] == '1')?"Deleted":'Active';
+ 				$excelUsers[$i]['id'] = $resultUsers[$k]['id'];
+ 				$excelUsers[$i]['email'] = $resultUsers[$k]['email'];
+ 				$excelUsers[$i]['first_name'] = $resultUsers[$k]['first_name'];
+ 				$excelUsers[$i]['last_name'] = $resultUsers[$k]['last_name'];
+ 				$excelUsers[$i]['company'] = $adminModel->getUserCompany($resultUsers[$k]['company']);
+ 				$excelUsers[$i]['login_status'] = $resultUsers[$k]['login_status'];
+ 				$excelUsers[$i]['active'] = $active;
+				$excelUsers[$i]['delete'] = $d;
+ 				$excelUsers[$i]['user_access'] = $resultUsers[$k]['user_access'];
+ 				$excelUsers[$i]['last_logged_date'] = $resultUsers[$k]['logged_time'];
+				
+				$i++;
  							
  			}
  		
-			$response->setHeader('Content-type', 'application/octet-stream');
-			$response->setHeader("Pragma"," public");
-		    $response->setHeader("Expires"," 0");
-		    $response->setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
-		    $response->setHeader("Content-Type","application/force-download");
-		    $response->setHeader("Content-Type","application/octet-stream");
-		    $response->setHeader("Content-Type","application/download");
-		    $response->setHeader("Content-Disposition","attachment;filename= \"users_report.xls\""); 
-		    $response->setHeader("Content-Transfer-Encoding", "binary ");
-			echo $header;
-		    echo $excelUsers;
-			$this->_helper->layout->disableLayout();
-			$this->_helper->viewRenderer->setNoRender();
+			$this->view->assign('excelUsers',$excelUsers);
 		
 			
 			
