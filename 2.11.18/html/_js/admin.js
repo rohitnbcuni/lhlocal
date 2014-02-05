@@ -935,3 +935,9 @@ function generateUsers(){
 	
 	
 }
+function createExportUsersLog(){
+	window.open('/_ajaxphp/exportUsers.php');
+	//window.location.href = "/admin/index/exportusers";
+
+
+}
