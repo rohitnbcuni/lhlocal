@@ -927,3 +927,17 @@ function deleteRallyProject(id){
 
 
 }
+
+function generateUsers(){
+	
+	window.location.href = "/admin/index/exportusers";
+	
+	
+	
+}
+function createExportUsersLog(){
+	window.open('/_ajaxphp/exportUsers.php');
+	//window.location.href = "/admin/index/exportusers";
+
+
+}
