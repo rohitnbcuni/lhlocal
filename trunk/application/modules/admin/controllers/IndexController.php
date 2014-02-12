@@ -1,36 +1,40 @@
 <?PHP
-	include('Admin.inc');
-	require_once('../html/_inc/config.inc');
-	class Admin_IndexController extends LighthouseController { 
+include('Admin.inc');
+require_once('../html/_inc/config.inc');
+class Admin_IndexController extends LighthouseController { 
 		public function indexAction() {
+	echo '<!--=========== START: COLUMNS ===========-->		
+		<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="User Info">  					
+			<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';				
+					echo '<div class="adminSelect">
+								   <div class="row" style="float:right;">
+										<button id="adminReportbtn" onclick="generateUsers();"><span>View All Users</span></button>
+									</div>
+									<div >
+								   
+									<p>Seach Users:</p>
+									<select class="field_medium" name="admin_user_select" id="admin_user_select" onChange="fetchUser(this.value);" >';
+									echo AdminDisplay::getUserOptionHTML();
+									echo '</select> (*Choose DPS Users from the list, others search by name)
+								</div>
+								
+								   <div class="row">
+										<p>First Name:</p>
+										<input type="text" name="firstName" id="firstName" >
+									</div>
+									 <div class="row" >
+										<p>Last Name:</p>
+										<input type="text" name="lastName" id="lastName" >
+									</div>
+									 <div class="row2" >
+										 <p>
+										<button style="_margin-left:-280px;*margin-left:-280px" onclick="fetchUser();"><span>Search</span></button>
+										</p>
+									</div>
+					</div>';
+			echo '</div>					
+			<div style="clear: both;"></div>';
 
-			echo '<!--=========== START: COLUMNS ===========-->		
-				<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="User Info">  					
-					<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';				
-							echo '<div class="adminSelect">
-										   <div >
-											<p>Seach Users:</p>
-											<select class="field_medium" name="admin_user_select" id="admin_user_select" onChange="fetchUser(this.value);" >';
-											echo AdminDisplay::getUserOptionHTML();
-											echo '</select> (*Choose DPS Users from the list, others search by name)
-										</div>
-										   <div class="row">
-												<p>First Name:</p>
-												<input type="text" name="firstName" id="firstName" >
-											</div>
-											 <div class="row" >
-												<p>Last Name:</p>
-												<input type="text" name="lastName" id="lastName" >
-											</div>
-											 <div class="row2" >
-												 <p>
-												<button style="_margin-left:-280px;*margin-left:-280px" onclick="fetchUser();"><span>Search</span></button>
-												</p>
-											</div>
-							</div>';
-					echo '</div>					
-					<div style="clear: both;"></div>';
-	
 
 
 		}
@@ -684,6 +688,9 @@
 			<div class="message_required" style="width:3000px;height:1024px;position:fixed;background-color:#ffffff;z-index:1;margin-top:-500px;margin-left:-630px;opacity: 0.3; filter: alpha(opacity = 30); zoom:1;"></div>
 			<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';				
 				echo '<div class="adminSelect">
+								<div class="row" style="float:right;">
+												<button id="adminReportbtn" onclick="generateUsers();"><span>View All Users</span></button>
+											</div>
 							   <div >
 								<p>Seach Users:</p>
 								<select class="field_medium" name="admin_user_select" id="admin_user_select" onChange="fetchUser(this.value);" >';
@@ -892,7 +899,11 @@
 									<input type="text" class="readonly" readonly name="userID" id="userID" value="'. AdminDisplay::getUserCompany($users['company']).'" >
 									<input type="hidden" id="user_company" value="'.$users['company'].'">
 						</div>					
-							
+						<div class="row">
+							<div class="label"><label>Last Login Date:</label></div>
+									<input type="text" class="readonly" readonly name="user_last_logged_time" id="user_last_logged_time" value="'. AdminDisplay::getLastLoggedInTime($users['id']).'" >
+									
+						</div>		
 						
 						<div class="row">
 							<div class="label"><label>Basecamp ID:</label></div>
@@ -1207,6 +1218,38 @@
 			$uniqueUsers = AdminDisplay::getUniqueUsers();
 			$this->view->assign('uniqueUsers',$uniqueUsers);
 		
+		}
+		
+		
+		function exportusersAction(){
+			$adminModel = new AdminDisplay();
+			$resultUsers = $adminModel->getUserLastLoginTime();
+			//$response = $this->getResponse();
+			//$header = '';
+			$i = 0;
+ 			$excelUsers = array();
+			foreach($resultUsers as $k => $v){
+				$active = ($resultUsers[$k]['active'] == '1')?'Active':'unActive';
+ 				$d = ($resultUsers[$k]['deleted'] == '1')?"Deleted":'Active';
+ 				$excelUsers[$i]['id'] = $resultUsers[$k]['id'];
+ 				$excelUsers[$i]['email'] = $resultUsers[$k]['email'];
+ 				$excelUsers[$i]['first_name'] = $resultUsers[$k]['first_name'];
+ 				$excelUsers[$i]['last_name'] = $resultUsers[$k]['last_name'];
+ 				$excelUsers[$i]['company'] = $adminModel->getUserCompany($resultUsers[$k]['company']);
+ 				$excelUsers[$i]['login_status'] = $resultUsers[$k]['login_status'];
+ 				$excelUsers[$i]['active'] = $active;
+				$excelUsers[$i]['delete'] = $d;
+ 				$excelUsers[$i]['user_access'] = $resultUsers[$k]['user_access'];
+ 				$excelUsers[$i]['last_logged_date'] = $resultUsers[$k]['logged_time'];
+				
+				$i++;
+ 							
+ 			}
+ 		
+			$this->view->assign('excelUsers',$excelUsers);
+		
+			
+			
 		}
 		
 		
