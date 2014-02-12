@@ -1,0 +1,35 @@
+<form enctype="multipart/form-data" name="workorders" action="<?= $this->escape($this->form->getAction()) ?>" method="<?= $this->escape($this->form->getMethod()) ?>" >
+<fieldset>
+    <legend>New Work Order Information</legend>
+    <?= $this->form->id ?>
+    <?= $this->form->bcid ?>
+    <?= $this->form->category_id ?>
+    <?= $this->form->requested_by ?>
+    <?= $this->form->project_id ?>
+    <?= $this->form->type ?>
+    <?= $this->form->priority ?>
+    <?= $this->form->title ?>
+    <?= $this->form->body ?> 
+    <?= $this->form->file ?>        
+</fieldset>
+
+<br>
+<fieldset <?= $_SESSION['basecamp']['isClient'] ? 'class="hide"' : '' ?> >
+	<legend>Requester</legend>
+    <?= $this->form->requested_by ?>
+</fieldset>
+<br>
+<fieldset <?= $_SESSION['basecamp']['isClient'] ? 'class="hide"' : '' ?> >
+    <legend>Project Management</legend>
+    <?= $this->form->assigned_to ?>
+    <?= $this->form->extra_resources ?>
+    <?= $this->form->status ?>
+    <?= $this->form->start_date ?>
+    <?= $this->form->est_due_date ?>
+    <?= $this->form->closed_date ?>
+</fieldset>
+<fieldset>
+	<div class = "column span-7"><?= $this->form->submit ?></div>
+	<div class = "column span-7 last"><?= $this->form->reset ?></div>
+</fieldset>
+</form>
