@@ -115,7 +115,7 @@ class Basecamp{
 			$_SESSION['user_access_bits'] = $get_user_row['user_access'];
 
 			$user_session['lh_username'] = $get_user_row['email'];
-			//$user_session['lh_password'] = base64_decode($_COOKIE["lighthouse_xp"]);
+			$user_session['lh_password'] = base64_decode($_COOKIE["lighthouse_xp"]);
 			$user_session['user_id'] = $get_user_row['id'];
 			$user_session['first'] = $get_user_row['first_name'];
 			$user_session['last'] = $get_user_row['last_name'];
@@ -184,7 +184,7 @@ class Basecamp{
 				$_SESSION['user_access_bits'] = $row['user_access'];
 
 				$user_session['lh_username'] = $row['user_name'];
-				//$user_session['lh_password'] = $_POST['lh_password'];
+				$user_session['lh_password'] = $_POST['lh_password'];
 				$user_session['user_id'] = $row['id'];
 				$user_session['first'] = $row['first_name'];
 				$user_session['last'] = $row['last_name'];
@@ -261,7 +261,7 @@ class Basecamp{
 				$this->set_session($user_session, "lh_user");
 				if(@$_POST['remember'] == "on") {
 					setcookie("lighthouse_id", $row['id'], time()+220752000, '/',isset($_SERVER["HTTPS"]),true);
-					//setcookie("lighthouse_xp", base64_encode($_POST['lh_password']), time()+220752000, '/',isset($_SERVER["HTTPS"]),true);
+					setcookie("lighthouse_xp", base64_encode($_POST['lh_password']), time()+220752000, '/',isset($_SERVER["HTTPS"]),true);
 				}
 				return true;
 			} else {
