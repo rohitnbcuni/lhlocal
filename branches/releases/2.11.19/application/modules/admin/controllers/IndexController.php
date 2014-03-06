@@ -45,8 +45,8 @@ class Admin_IndexController extends LighthouseController {
 
 		public function  projectdefaultccAction()
 		{
-			$proj_id = $_REQUEST['proj_id'];
-			$ccList = $_REQUEST['ccList'];
+			$proj_id = (int)$this->_request->getParam('proj_id');
+			$ccList = strip_tags($this->_request->getParam('ccList'));
 			if(!empty($proj_id))
 			{
 				$fetchProjectCCList = AdminDisplay::fetchProjectCCList($proj_id);
@@ -155,8 +155,8 @@ class Admin_IndexController extends LighthouseController {
 ////////////////18474///////////////////
 		public function  qcprojectdefaultccAction()
 				{
-					$proj_id = $_REQUEST['proj_id'];
-					$ccList = $_REQUEST['ccList'];
+					$proj_id = (int)$this->_request->getParam('proj_id');
+					$ccList = strip_tags($this->_request->getParam('ccList'));
 					
 					if(!empty($proj_id))
 					{
@@ -266,8 +266,8 @@ class Admin_IndexController extends LighthouseController {
 //////////////////////////////////
 		public function projectversionsAction(){
 
-			$proj_id = $_REQUEST['proj_id'];
-			$version_id = $_REQUEST['version_id'];
+			$proj_id = (int)$this->_request->getParam('proj_id');
+			$version_id = (int)$this->_request->getParam('version_id');
 			if(!empty($proj_id))
 			{
 				$proj_version_list = AdminDisplay::fetchProjectVersions($proj_id,$version_id);
@@ -335,8 +335,8 @@ class Admin_IndexController extends LighthouseController {
 		//LH#28522
 		public function projectproductAction(){
 
-			$proj_id = $_REQUEST['proj_id'];
-			$version_id = $_REQUEST['version_id'];
+			$proj_id = (int)$this->_request->getParam('proj_id');
+			$version_id = (int)$this->_request->getParam('version_id');
 			if(!empty($proj_id))
 			{
 				$proj_version_list = AdminDisplay::fetchProjectProduct($proj_id,$version_id);
@@ -402,8 +402,8 @@ class Admin_IndexController extends LighthouseController {
 
 		}
 		public function projectiterationAction(){
-			$proj_id = $_REQUEST['proj_id'];
-			$version_id = $_REQUEST['version_id'];
+			$proj_id = (int)$this->_request->getParam('proj_id');
+			$version_id = (int)$this->_request->getParam('version_id');
 			if(!empty($proj_id))
 			{
 				$proj_version_list = AdminDisplay::fetchProjectIteration($proj_id,$version_id);
@@ -673,9 +673,9 @@ class Admin_IndexController extends LighthouseController {
 
 		public function fetchuserAction() {  
 
-			$selectedUserID = $_REQUEST['selectedUserID'];
-			$userFirstName = trim($_REQUEST['userFirstName']);
-			$userLastName = trim($_REQUEST['userLastName']);
+			$selectedUserID = (int)$this->_request->getParam('selectedUserID');
+			$userFirstName = trim(strip_tags($this->_request->getParam('userFirstName')));
+			$userLastName = trim(strip_tags($this->_request->getParam('userLastName')));
 
 			if(!empty($selectedUserID))
 			{
@@ -751,7 +751,7 @@ class Admin_IndexController extends LighthouseController {
 
 		public function workorderslaAction() {
 
-			$sla_report_month = $_REQUEST['sla_report_month'];
+			$sla_report_month = strip_tags($this->_request->getParam('sla_report_month'));
             $sla_report_year = date('Y');
 			if(empty($sla_report_month))
 			{
@@ -984,8 +984,8 @@ class Admin_IndexController extends LighthouseController {
 		}
 
 		public function customfieldnameAction(){
-			$custom_name = $_REQUEST['custom_name'];
-			$field_id = $_REQUEST['field_id'];
+			$custom_name = $this->_request->getParam('custom_name');
+			$field_id = $this->_request->getParam('field_id');
 
 			$field_list = AdminDisplay::fetchFieldList($custom_name);
 			$field_names = array("REQ_TYPE" => "Required Type",
@@ -1164,8 +1164,8 @@ class Admin_IndexController extends LighthouseController {
 					//}
 			}
 			$this->view->assign('rallyArray',$rallyArray);
-			
-			$proj_id=0;
+			define("PROJECT_ID",0);
+			$proj_id = PROJECT_ID;
 			//All LH project
 			$this->view->assign('LHProjectHtml',AdminDisplay::getLHProjectOption()); 
 			//All Mapped projects
@@ -1198,7 +1198,7 @@ class Admin_IndexController extends LighthouseController {
 		
 		function deletemaprojectlistingAction(){
 			$affectedId = 0;
-			$id = $this->_request->getParam('id');
+			$id = (int) $this->_request->getParam('id');
 			
 			if(!empty($id)){
 				$affectedId = AdminDisplay::deleteMaapingLhRallyProject($id);
