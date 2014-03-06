@@ -3,12 +3,12 @@
 	include("sessionHandler.php");
 	global $mysql;
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-	$insertSql = ' test ';
+	
 	$title = $mysql->real_escape_string($_POST['title']);
 	$desc = $mysql->real_escape_string($_POST['desc']);
-	$assigned = $_POST['assignedTo'];
+	$assigned = $mysql->real_escape_string($_POST['assignedTo']);
 	$createdBy = $mysql->real_escape_string($_POST['createdBy']);
-	$projectId = $_POST['projectId'];
+	$projectId = (int)$mysql->real_escape_string($_POST['projectId']);
 	
 	if($assigned != '-1'){
 		$insertSql = "INSERT INTO project_risks (project_id, assigned_to_user_id, created_by_user_id, title, description) VALUES ('$projectId', '$assigned', '$createdBy', '$title', '$desc')";

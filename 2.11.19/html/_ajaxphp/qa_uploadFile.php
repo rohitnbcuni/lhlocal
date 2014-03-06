@@ -40,8 +40,8 @@
 			$dirName = $defectIdClean ."/";
 		}
 
-		$select_file = "SELECT * FROM `qa_files` WHERE `directory`='" .str_replace("/", "", $dirName) ."' AND `file_name`='" .$cleaned_filename ."' LIMIT 1";
-		$result = $mysql->sqlordie($select_file);	
+		$select_file = "SELECT * FROM `qa_files` WHERE `directory`=  ? AND `file_name`= ? LIMIT 1";
+		$result = $mysql->sqlprepare($select_file, array(str_replace("/", "", $dirName), $cleaned_filename ));	
 
 		if (!copy($_FILES['upload_file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] .'/qafiles/' .$dirName .$cleaned_filename)) {
 			echo "fail";

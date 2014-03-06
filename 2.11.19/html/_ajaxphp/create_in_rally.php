@@ -47,7 +47,8 @@
 		$rallyXML.="<LighthouseID>".$woId."</LighthouseID>";
 		$rallyXML.="<LighthouseProject>" . $ProjectName . "</LighthouseProject>";
 		$rallyXML.="</Defect>";
-		if (strlen($rallyXML) == 0)
+		//LH
+		/*if (strlen($rallyXML) == 0)
 		{
 			fwrite($err, "Error convertiing issue: " . $woId . " to XML. \n");
 			fclose($err);
@@ -69,7 +70,7 @@
 			$errMsg = 'Error with reading or writing to tmp file for issue: ' . $woId . "\n";
 			fwrite($err, $errMsg);
 			fclose($err);
-		}
+		}*/
 		
 	}
 	if($rallyType == 'enhancement') //if category is enhancement then create a user story in rally application
@@ -84,7 +85,7 @@
 		$rallyXML.="<Owner>aaron.goldsmid@nbcuni.com</Owner>";
 		$rallyXML.="</HierarchicalRequirement>";
 		
-		if (strlen($rallyXML) == 0)
+		/*if (strlen($rallyXML) == 0)
 		{
 			fwrite($err, "Error convertiing issue: " . $woId . " to XML. \n");
 			fclose($err);
@@ -106,7 +107,7 @@
 			$errMsg = 'Error with reading or writing to tmp file for issue: ' . $woId . "\n";
 			fwrite($err, $errMsg);
 			fclose($err);
-		}
+		}*/
 		
 	}
 	$curlResultString = implode("",$curlResult);

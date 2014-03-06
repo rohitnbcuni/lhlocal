@@ -5,14 +5,14 @@
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
-	$defectId = @$_GET['defectId'];
+	$defectId = $mysql->real_escape_string($_GET['defectId']);
 	
-	$update_wo = "UPDATE `qa_defects` SET `closed_date`=NULL, `status`='2' WHERE `id`='$defectId'";
-	@$mysql->sqlordie($update_wo);
+	$update_wo = "UPDATE `qa_defects` SET `closed_date`=NULL, `status`='2' WHERE `id`= ? ";
+	@$mysql->sqlprepare($update_wo, array($defectId));
 	
 
-	$select_wo = "SELECT * FROM `qa_defects` WHERE `id`='" .$defectId ."'";
-	$wo_res = $mysql->sqlordie($select_wo);
+	$select_wo = "SELECT * FROM `qa_defects` WHERE `id`= ? ";
+	$wo_res = $mysql->sqlprepare($select_wo, array($defectId));
 	$wo_row = $wo_res->fetch_assoc();
 
 	$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";

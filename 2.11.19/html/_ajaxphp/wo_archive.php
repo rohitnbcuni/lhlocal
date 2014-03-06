@@ -1,10 +1,10 @@
 <?PHP
 	session_start();
 	include('../_inc/config.inc');
-	
+	include("sessionHandler.php");
 	if(isset($_SESSION['user_id'])) {
 
-		$workorderList =explode(",", @$_GET['id']);
+		$workorderList =explode(",", $mysql->real_escape_string($_GET['id']));
 		$woStr = '';
 		$flag = 0;
 		foreach($workorderList as $wo)
