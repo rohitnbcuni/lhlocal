@@ -39,9 +39,9 @@
 		 * function wrapper of fetch ALL
 		 * @param string $query
 		 */
-		public function getQuery($query) {
+		public function getQuery($query,$arr=null) {
 			$db = Zend_Registry::get('db');
-			$data = $db->fetchAll($query);
+			$data = $db->fetchAll($query,$arr);
 			
 			return $data;
 		}
@@ -52,11 +52,11 @@
 		 * @param string $query
 		 */
 
-		public function executeQuery($query) {
+		public function executeQuery($query,$arr=null) {
 			
 			$db = Zend_Registry::get('db');
 			
-			$data = $db->query($query);
+			$data = $db->query($query,$arr);
 			
 			return $data;
 		}
@@ -112,7 +112,7 @@
 		}
 		
 		public function getCCList($wo_id) {
-			$cclist = self::getQuery("SELECT `cclist` FROM `workorders` WHERE `id`='$wo_id'");
+			$cclist = self::getQuery("SELECT `cclist` FROM `workorders` WHERE `id`= ?",array($wo_id));
 			
 			return '<input type="hidden" name="cclist" id="cclist" value="' .$cclist[0]['cclist'] .'" />';
 		}
@@ -405,8 +405,8 @@
 		}
 		
 		public function getRequestorInfo($userid){
-			$query = "SELECT id, user_name, email, CONCAT_WS(' ',last_name,first_name) as full_name,  user_img, phone_office FROM  `users` WHERE `id` = '" .$userid."'";
-			$rs = self::getQuery($query);
+			$query = "SELECT id, user_name, email, CONCAT_WS(' ',last_name,first_name) as full_name,  user_img, phone_office FROM  `users` WHERE `id` = ?";
+			$rs = self::getQuery($query,array($userid));
 			return $rs;
 		}
 		
@@ -456,16 +456,16 @@
 		public function getEventInfo( $eid, $data){
 			$eid = (int) $eid;
 			//$eid = (int) $eid;
-			$sql = "SELECT $data FROM  events WHERE id= $eid AND active='1' AND archived = '0' AND deleted = '0' LIMIT 1"; 
-			$result = self::getQuery($sql);
+			$sql = "SELECT $data FROM  events WHERE id= ? AND active='1' AND archived = '0' AND deleted = '0' LIMIT 1"; 
+			$result = self::getQuery($sql,array($eid));
 			return $result;
 		}
 		
 	public function getActiveEvent($eid){
 			//$eid = (int) $eid;
 			$db = Zend_Registry::get('db');
-			$sql = "SELECT count(*) as count FROM  events WHERE id= $eid AND active='1' AND archived = '0' AND deleted = '0' LIMIT 1"; 
-			$result =$db->fetchOne($sql);
+			$sql = "SELECT count(*) as count FROM  events WHERE id= ? AND active='1' AND archived = '0' AND deleted = '0' LIMIT 1"; 
+			$result =$db->fetchOne($sql,array($eid));
 			return $result;
 		}
 		
@@ -473,14 +473,14 @@
 			
 			//$eid = (int) $eid;
 			$db = Zend_Registry::get('db');
-			$sql = "SELECT $data FROM  event_audit WHERE event_id = $eid ORDER BY `log_date` DESC LIMIT 1"; 
-			$result =$db->fetchOne($sql);
+			$sql = "SELECT $data FROM  event_audit WHERE event_id = ? ORDER BY `log_date` DESC LIMIT 1"; 
+			$result =$db->fetchOne($sql,array($eid));
 			return $result;
 		}
 		
 		public function updateEventCcList($eid, $cclist){
-			$sql  = "UPDATE events set cclist ='$cclist' WHERE id= $eid";
-			$result = self::executeQuery($sql);
+			$sql  = "UPDATE events set cclist = ? WHERE id= ?";
+			$result = self::executeQuery($sql,array($cclist,$eid));
 		}
 		
 		public function insertEvent($dataArray){
@@ -488,13 +488,13 @@
 			try{
 				$db->insert("events", $dataArray);
 			}catch(Exception $e){
-				echo "add_event".$e->getMessage();
+				//echo "add_event".$e->getMessage();
 				
 			}
 			$evenTrial = array();
 			$evenTrial2 = array();
 			 //Last Insert Id of event table
-                        $evenTrial['event_id'] = $db->lastInsertId();
+             $evenTrial['event_id'] = $db->lastInsertId();
 			$sql = "SELECT id, name FROM lnk_event_audit_trial_types WHERE active ='1' AND deleted = '0' AND name = 'New'"; 
 			$trialStatusId = $db->fetchOne($sql);
 			
@@ -520,7 +520,7 @@
 				$db->insert("event_audit", $evenTrial2);
 			}catch(Exception $e){
 				
-				echo "update_event_audit".$e->getMessage();
+				//echo "update_event_audit".$e->getMessage();
 			}
 			
 			// $status;
@@ -534,11 +534,11 @@
 			$db = Zend_Registry::get('db');
 			$userId = $_SESSION['user_id'];
 			try{
-				
+				$eid = (int) $eid;
 				$where[] = 'id =  '.$eid;
 				$db->update("events", $dataArray, $where);
 			}catch(Exception $e){
-				echo "update_event".$e->getMessage();
+				//echo "update_event".$e->getMessage();
 				
 			}
 			if($preEvent  != $dataArray['status']){
@@ -555,7 +555,7 @@
 					$db->insert("event_audit", $evenTrial);
 				}catch(Exception $e){
 					
-					echo "event_audit_status".$e->getMessage();
+					//echo "event_audit_status".$e->getMessage();
 				}
 			}
 			if($prevAssigned  != $dataArray['assigned_to']){
@@ -572,7 +572,7 @@
 					$db->insert("event_audit", $evenTrial);
 				}catch(Exception $e){
 					
-					echo "event_audit_assinged_to".$e->getMessage();
+					//echo "event_audit_assinged_to".$e->getMessage();
 				}
 			}
 			// $status;
@@ -582,11 +582,11 @@
 		public function updateAffectedBrand($dataArray, $eid){
 			$db = Zend_Registry::get('db');
 			try{
-				
+				$eid = (int) $eid;
 				$where[] = 'id =  '.$eid;
 				$db->update("events", $dataArray, $where);
 			}catch(Exception $e){
-				echo "affected_brand_event".$e->getMessage();
+				//echo "affected_brand_event".$e->getMessage();
 				
 			}
 		}
@@ -594,12 +594,12 @@
 		public function deleteEvent($dataArray,$eid){
 			$db = Zend_Registry::get('db');
 			try{
-				
+				$eid = (int) $eid;
 				$where[] = 'id =  '.$eid;
 				$db->update("events", $dataArray, $where);
 				
 			}catch(Exception $e){
-				echo "event_delete".$e->getMessage();
+				//echo "event_delete".$e->getMessage();
 				
 			}
 		}
@@ -619,7 +619,7 @@
 					$db->insert("event_audit", $evenTrial);
 				}catch(Exception $e){
 					
-					echo "event_audit_delete".$e->getMessage();
+					//echo "event_audit_delete".$e->getMessage();
 				}
 		}
 		
@@ -631,7 +631,7 @@
 				$db->insert("event_comments", $data);
 				
 			}catch(Exception $e){
-				echo "event_comment".$e->getMessage();
+				//echo "event_comment".$e->getMessage();
 				
 			}
 			return $db->lastInsertId();
@@ -652,17 +652,17 @@
 					$db->insert("event_audit", $evenTrial);
 				}catch(Exception $e){
 					
-					echo "event_comment_audit".$e->getMessage();
+					//echo "event_comment_audit".$e->getMessage();
 				}
 		}
 		
 		public function getComments($eid, $data){
 			$db = Zend_Registry::get('db');
-			$sql = "SELECT $data  FROM event_comments WHERE active ='1' AND deleted = '0' AND event_id  = '$eid' order by date"; 
+			$sql = "SELECT $data  FROM event_comments WHERE active ='1' AND deleted = '0' AND event_id  = ? order by date"; 
 			try{
-				$rs = $db->fetchAll($sql);
+				$rs = $db->fetchAll($sql,array($eid));
 			}catch(Exception $e){
-				echo "Fetch_comment".$e->getMessage();	
+				//echo "Fetch_comment".$e->getMessage();	
 			}
 			return $rs;
 		}
@@ -673,7 +673,7 @@
 			try{
 				$rs = $db->fetchRow($sql);
 			}catch(Exception $e){
-				echo "Fetch_data".$e->getMessage()." ".$sql;	
+				//echo "Fetch_data".$e->getMessage()." ".$sql;	
 			}
 			return $rs;
 		}
@@ -1357,8 +1357,8 @@
 	   	function calenderviewajax($id){
 		   	$html;
 		   	$db = Zend_Registry::get('db');
-		   	$sql="select * from events where id='$id'";
-		   	$html = $db->fetchRow($sql);
+		   	$sql="select * from events where id=?";
+		   	$html = $db->fetchRow($sql,array($id));
 		   	return $html;
 	   		}
 	   
