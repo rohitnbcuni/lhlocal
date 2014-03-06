@@ -23,7 +23,7 @@
 		*/
 	}
 	class WoDisplay extends WorkOrders {
-		public function getQuery($query) {
+		public function getQuery($query,$arr=null) {
 			/*WorkOrders::setIniFile();
 			
 			$config = WorkOrders::getIniFile();
@@ -38,12 +38,12 @@
 			$db->getConnection();*/
 			//get DB connection from registry LH#20736
 			$db = Zend_Registry::get('db');
-			$data = $db->fetchAll($query);
+			$data = $db->fetchAll($query,$arr);
 			
 			return $data;
 		}
 
-		public function executeQuery($query) {
+		public function executeQuery($query,$arr=null) {
 			/*WorkOrders::setIniFile();
 			
 			$config = WorkOrders::getIniFile();
@@ -59,7 +59,7 @@
 			//get DB connection from registry LH#20736
 			$db = Zend_Registry::get('db');
 			
-			$data = $db->query($query);
+			$data = $db->query($query,$arr);
 			
 			return $data;
 		}
@@ -403,7 +403,7 @@
 				
 			return $html;
 		}
-		public function getStatusOptionEditHTML($itemId, $client=false,$projectId,$isActive,$isArchived) {
+		public function getStatusOptionEditHTML($itemId, $client=false,$projectId,$isActive='',$isArchived='') {
 			$types = self::getQuery(QRY_WO_STATUS_ASC);
 
 			$displayStatusArray = array();
