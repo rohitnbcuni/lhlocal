@@ -23,8 +23,8 @@
 				if(!empty($search_text)){
 					SearchDisplay::insertSearchLog($search_array);
 				}
-				@setcookie("search_text", $search_text, time()+3600);
-				@setcookie("search_par", $search_par, time()+3600);
+				@setcookie("search_text", $search_text, time()+3600,isset($_SERVER["HTTPS"]),true);
+				@setcookie("search_par", $search_par, time()+3600,isset($_SERVER["HTTPS"]),true);
 				$this->view->assign("searchResult",$searchResult);
 				$this->view->assign("didyoumean",$dym);
 				$this->view->assign("search_text",$search_text);
@@ -84,8 +84,8 @@
 			if(!empty($search_text)){
 				SearchDisplay::insertSearchLog($search_array);
 			}
-			@setcookie("search_text", $search_text, time()+3600);
-			@setcookie("search_par", $search_par, time()+3600);
+			@setcookie("search_text", $search_text, time()+3600,isset($_SERVER["HTTPS"]),true);
+			@setcookie("search_par", $search_par, time()+3600,isset($_SERVER["HTTPS"]),true);
 			$this->view->assign("searchResult",$searchResult);
 			$this->view->assign("search_text",$search_text);
 			$this->view->assign("search_par",$search_par);
