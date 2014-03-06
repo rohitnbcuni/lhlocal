@@ -1,5 +1,6 @@
                     <?php 
-                    $result=EventDisplay::calenderviewajax($_GET['event_id']);
+					$eventId = (int)$_GET['event_id'];
+                    $result=EventDisplay::calenderviewajax($eventId);
                     if (count($result)>0){
                     ?>
                     
