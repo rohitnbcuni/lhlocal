@@ -46,7 +46,7 @@ ob_start();
 			$this->view->assign('ev_dimmer',"block");
 			
 			if(isset($_GET['eId'])) {
-				$eId = $_GET['eId'];   
+				$eId = (int)$_GET['eId'];   
 				$eventInfo = EventDisplay::getEventInfo($eId, '*');
 				$this->view->assign("saveButton","Save Changes");
 				
@@ -98,14 +98,14 @@ ob_start();
 		}
 		
 		public function userrequesterAction(){
-			$this->view->assign('user_id',$this->_request->getParam('user_id'));
+			$this->view->assign('user_id',(int)$this->_request->getParam('user_id'));
 			
 			$this->_helper->layout->disableLayout();
 			
 			
 		}
 		public function addccuserAction(){
-			$eventId = $this->_request->getParam('eId');
+			$eventId = (int)$this->_request->getParam('eId');
 			$cc = $this->_request->getParam('cc');
 			$addcc = $this->_request->getParam('addcc');
 			$ccArray = array();
@@ -171,27 +171,27 @@ ob_start();
 		
 		public function addeventAction(){
 			
-			
+			//$this->_request->getParam('user_id')
 			$userId = $_SESSION['user_id'];
 			$startdate = Util::dateTimeToSql($_POST['ev_start_date'],$_POST['ev_start_hr'],$_POST['ev_ampm'],$_POST['ev_start_min']);
 			$enddate = Util::dateTimeToSql($_POST['ev_end_date'],$_POST['ev_end_hr'],$_POST['ev_end_ampm'],$_POST['ev_end_min']);
 		    $title = Util::escapewordquotes(strip_tags($_POST['ev_title']));
 		    EventDisplay::changeTimeZone($startdate,$_POST['ev_start_time_zone']);
 			$data = array(
-				"company_id" => $_POST['ev_brand_name'],
-				'assigned_to' => $_POST['ev_assigned_to'],
-				'status' => $_POST['ev_eventStatus'],
+				"company_id" => $this->_request->getParam('ev_brand_name'),
+				'assigned_to' => $this->_request->getParam('ev_assigned_to'),
+				'status' => $this->_request->getParam('ev_eventStatus'),
 				'archived' => 0,
 				'title' => $title,
-				'example_url' => strip_tags($_POST['ev_url']),
-				'anticipated_traffic' => $_POST['ev_traffic'],
-				'load_test_status' => $_POST['ev_loadTest'],
-				'body' => Util::escapewordquotes($_POST['ev_desc']),
-				'requested_by' => $_POST['ev_requested_by'],
-				'cclist' => $_POST['cclist'],
+				'example_url' => strip_tags($this->_request->getParam('ev_url')),
+				'anticipated_traffic' => $this->_request->getParam('ev_traffic'),
+				'load_test_status' => $this->_request->getParam('ev_loadTest'),
+				'body' => Util::escapewordquotes($this->_request->getParam('ev_desc')),
+				'requested_by' => $this->_request->getParam('ev_requested_by'),
+				'cclist' => $this->_request->getParam('cclist'),
 				'start_date' => $startdate,
 				'completed_date'  =>$enddate,
-				'time_zone'  => $_POST['start_time_zone'],
+				'time_zone'  => $this->_request->getParam('start_time_zone'),
 				'est_start_datetime' => EventDisplay::changeTimeZone($startdate,$_POST['start_time_zone']),
 				'est_end_datetime' => EventDisplay::changeTimeZone($enddate, $_POST['start_time_zone']),
 				'creation_date' => date("Y-m-d H:i:s"),
@@ -199,7 +199,7 @@ ob_start();
 				'deleted'  => 0
 			);
 			if(!empty($_REQUEST['event_id'])){
-				$eid = $_POST['event_id'];
+				$eid = (int)$_POST['event_id'];
 				$eventChangeFilter = '';
 				//case for changing event status
 				/*a.	WHEN user updates the following information
@@ -208,11 +208,11 @@ ob_start();
 				•	Date Change
 				•	URL Change
 				•	Anticipated Traffic increase*/
-				$preStartDate = $_POST['pre_start_date'];
-				$preEndDate = $_POST['pre_end_date'];
-				$preUrl = $_POST['pre_url'];
-				$preTraffic = $_POST['pre_traffic'];
-				$prevBrandId = $_POST['prev_brand_name'];
+				$preStartDate = $this->_request->getParam('pre_start_date');
+				$preEndDate = $this->_request->getParam('pre_end_date');
+				$preUrl = $this->_request->getParam('pre_url');
+				$preTraffic = $this->_request->getParam('pre_traffic');
+				$prevBrandId = $this->_request->getParam('prev_brand_name');
 				if($preStartDate != strtotime($startdate)){
 					$eventChangeFilter = 'A';
 				}
@@ -230,38 +230,38 @@ ob_start();
 					$eventS = EventDisplay::getTableData('lnk_event_status_types', "id", "name='Pending'");
 					$eventStatus = $eventS['id'];
 				}else{
-					$eventStatus = $_POST['ev_eventStatus'];
+					$eventStatus = $this->_request->getParam('ev_eventStatus');
 				}
 				
 				$data1 = array(
-					"company_id" => $_POST['ev_brand_name'],
-					'assigned_to' => $_POST['ev_assigned_to'],
+					"company_id" => $this->_request->getParam('ev_brand_name'),
+					'assigned_to' => $this->_request->getParam('ev_assigned_to'),
 					'status' => $eventStatus,
 					'title' => $title,
-					'example_url' => strip_tags($_POST['ev_url']),
-					'anticipated_traffic' => $_POST['ev_traffic'],
-					'load_test_status' => $_POST['ev_loadTest'],
-					'body' => Util::escapewordquotes($_POST['ev_desc']),
-					'requested_by' => $_POST['ev_requested_by'],
-					'cclist' => $_POST['cclist'],
+					'example_url' => strip_tags($this->_request->getParam('ev_url')),
+					'anticipated_traffic' => $this->_request->getParam('ev_traffic'),
+					'load_test_status' => $this->_request->getParam('ev_loadTest'),
+					'body' => Util::escapewordquotes($this->_request->getParam('ev_desc')),
+					'requested_by' => $this->_request->getParam('ev_requested_by'),
+					'cclist' => $this->_request->getParam('cclist'),
 					'start_date' => $startdate,
 					'completed_date'  =>$enddate,
-					'time_zone'  => $_POST['start_time_zone'],
+					'time_zone'  => $this->_request->getParam('start_time_zone'),
 					'est_start_datetime' => EventDisplay::changeTimeZone($startdate,$_POST['start_time_zone']),
 					'est_end_datetime' => EventDisplay::changeTimeZone($enddate, $_POST['start_time_zone'])
 				
 				);
 				
 				//echo $eventChangeFilter;
-				$prevStatus = $_POST['prevStatus'];
-				$prevAssigned = $_POST['prevAssigned'];
+				$prevStatus = $this->_request->getParam('prevStatus');
+				$prevAssigned = $this->_request->getParam('prevAssigned');
 				$preEventInfo = EventDisplay::getTableData("events","*","id = $eid");
 				$eventId = EventDisplay::updateEvent($data1,$eid, $prevStatus,$prevAssigned);
 				$userId = $_SESSION['user_id'];
 				$userComapny = $_SESSION['company'];
 				if(in_array($userComapny,self::$opsComapny)){
 					if(ISSET($_POST['brandContainer'])){
-						$arrayBrand = array('affected_company_list' => $_POST['brandContainer']);
+						$arrayBrand = array('affected_company_list' => $this->_request->getParam('brandContainer'));
 						EventDisplay::updateAffectedBrand($arrayBrand, $eid);
 					}
 				}
@@ -471,7 +471,7 @@ ob_start();
 					}
 					//$this->_redirect("events/index/calendarview/?edate=".date("Y-m-d",strtotime($startdate))."#event_date");
 				}catch(Exception $e){
-					echo $e->getMessage();
+					//echo $e->getMessage();
 				}
 			}
 			$this->_helper->layout->disableLayout();
@@ -682,7 +682,7 @@ ob_start();
 		}
 		
 		public function listdataAction(){
-			$month = $_GET['month'];
+			$month = $_GET['month']; 
 			$this->view->assign('company_id', $_GET['company']);
 			$status_id = $_GET['status'];
 			$monthnameHtml = EventDisplay::getMonthHTML($month);
@@ -691,7 +691,7 @@ ob_start();
 			
 			$eventStatus = EventDisplay::getEventStatusList($status_id);
 			$this->view->assign("eventStatus", $eventStatus);
-			echo $year =  $_GET['year'];
+			$year =  (int)$_GET['year'];
 			
 			$yearList = EventDisplay::getyearHTML($year);
 			$this->view->assign("yearList", $yearList);
@@ -705,8 +705,8 @@ ob_start();
 			endif;
 			
 			if((isset($_GET['year']) && $_GET['year']!="All")):
-			 	$query .=" AND (YEAR(est_start_datetime)= ".$_GET['year'];
-			 	$query .=" OR YEAR(est_end_datetime)= ".$_GET['year'].")";
+			 	$query .=" AND (YEAR(est_start_datetime)= ".$year;
+			 	$query .=" OR YEAR(est_end_datetime)= ".$year.")";
 			 	$flag=false;
 			endif;
 			
@@ -993,13 +993,13 @@ ob_start();
 			    $this->_helper->layout->disableLayout();
 			}
 		public function eventauditAction(){
-			$eId = $_GET['eId']; 
+			$eId = (int)$_GET['eId']; 
 			$db = Zend_Registry::get('db');
-			$sql = "SELECT *  FROM event_audit WHERE  event_id  = '$eId' order by log_date"; 
-			$rs = $db->fetchAll($sql);
-			print "<pre>";
-			print_r($rs);
-			print"</pre>";
+			$sql = "SELECT *  FROM event_audit WHERE  event_id  = ? order by log_date"; 
+			$rs = $db->fetchAll($sql,array($eId));
+			//print "<pre>";
+			//print_r($rs);
+			//print"</pre>";
 			//die;
 			
 		}
