@@ -36,17 +36,20 @@ if('1' == $_GET['status']){
 }
 
 if(ISSET($_GET['clientId']) && $_GET['clientId'] != '-1'){
-	$CLIENT_SQL = " AND a.company = '".$_GET['clientId']."'";
+	$company_id = $mysql->real_escape_string($_GET['clientId']);
+	$CLIENT_SQL = " AND a.company = '".$company_id."'";
 }
 
 
 $WHERE = array();
 $WHERE_SQL = '';
 if(ISSET($_GET['assignedTo']) && $_GET['assignedTo'] != '-1'){
-	$WHERE[] = " assigned_to = ".$_GET['assignedTo'];
+	$assigned_to = $mysql->real_escape_string($_GET['assignedTo']);
+	$WHERE[] = " assigned_to = ".$assigned_to;
 }
 if(ISSET($_GET['statusId']) && $_GET['statusId'] != '-1' && $_GET['statusId'] != '99' ){
-	$status = getQualityStatus($_GET['statusId'],$mysql);
+	$statusId = $mysql->real_escape_string($_GET['statusId']);
+	$status = getQualityStatus($statusId,$mysql);
 	$WHERE[] = " status = ".$status;
 }
 if($_GET['statusId'] == '99'){
@@ -58,10 +61,12 @@ if($_GET['statusId'] == '-1'){
 	$WHERE[] = "  status IN ('1','2','3','4','5','6','7','8','10')";
 }
 if(ISSET($_GET['projectId']) && $_GET['projectId'] != '-1'){
-	$WHERE[] = " project_id = ".$_GET['projectId'];
+	$projectId = $mysql->real_escape_string($_GET['projectId']); 
+	$WHERE[] = " project_id = ".$projectId;
 }
 if(ISSET($_GET['severityID']) && $_GET['severityID'] != '-1'){
-	$WHERE[] = " severity = ".$_GET['severityID'];
+	$severityID = $mysql->real_escape_string($_GET['severityID']);
+	$WHERE[] = " severity = ".$severityID;
 }
 /*if($_GET['assignedTo'] != '-1'){
 	$WHERE[] = " assigned_to = ".$_GET['assignedTo'];
@@ -74,7 +79,8 @@ if(count($WHERE) > 0){
 }
 $type = '';
 if(array_key_exists("report", $_GET)){
-  $type = $_GET['report'];
+  $report = $mysql->real_escape_string($_GET['report']);
+  $type = $report;
 }
 
 

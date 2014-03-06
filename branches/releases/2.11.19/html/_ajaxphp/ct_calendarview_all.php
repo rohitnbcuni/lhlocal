@@ -4,8 +4,8 @@
 	include("sessionHandler.php");
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
-	$userid = $_POST['userid'];
-	$postDate = $_POST['date'];
+	$userid = (int)$mysql->real_escape_string($_POST['userid']);
+	$postDate = (int)$mysql->real_escape_string($_POST['date']);
 	$postDatePart = explode("/", $postDate);
 	define("NUMBER_OF_CELL",3);
 	define("PAGINATION",10);
@@ -322,7 +322,7 @@
 			
 			}
 		}catch(Exception $e){
-			echo $e->getMessage();			
+			//echo $e->getMessage();			
 		}
 		$final_array[0] = $count_per_date;
 		$final_array[1] = $row;	

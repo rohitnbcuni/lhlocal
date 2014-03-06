@@ -3,7 +3,7 @@
 	include('../_inc/config.inc');
 	
 	ini_set("display_errors",1);
-	
+	exit;
 	
 	//include("sessionHandler.php");
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, 'lhdev_live2' , DB_PORT);	

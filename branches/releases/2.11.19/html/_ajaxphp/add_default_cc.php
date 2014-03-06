@@ -26,11 +26,11 @@
    				 $arrayData .= $listKeys[$z] .",";
 			}
 			
-			$update_cc = "UPDATE `projects` SET `cclist`='$arrayData' WHERE `id`='$projectId'";
-			@$mysql->sqlordie($update_cc);
+			$update_cc = "UPDATE `projects` SET `cclist`= ? WHERE `id`= ?";
+			@$mysql->sqlprepare($update_cc, array($arrayData,$projectId));
 
-                     $select_cc = "SELECT `cclist` FROM `projects` WHERE `id`='$projectId' LIMIT 1";
-			$result = @$mysql->sqlordie($select_cc);
+            $select_cc = "SELECT `cclist` FROM `projects` WHERE `id`= ? LIMIT 1";
+			$result = @$mysql->sqlordie($select_cc, array($projectId));
 			$row = @$result->fetch_assoc();
 
 			if($result->num_rows > 0) {
@@ -39,8 +39,8 @@
 				
 				for($x = 0; $x < sizeof($new_list); $x++) {
 					if(!empty($new_list[$x])) {
-						$select_cc_user = "SELECT * FROM `users` WHERE `id`='" .$new_list[$x] ."' LIMIT 1";
-						$cc_user_result = @$mysql->sqlordie($select_cc_user);
+						$select_cc_user = "SELECT * FROM `users` WHERE `id`= ? LIMIT 1";
+						$cc_user_result = @$mysql->sqlprepare($select_cc_user, array($new_list[$x]));
 						$cc_user_row = @$cc_user_result->fetch_assoc();
 						
 						$list .= '<li class="admincc_listli">'

@@ -83,7 +83,7 @@
 	}else{
 		if(isset($_GET['date'])) {
 			/*    month/day/year      */
-			$date_part = explode("/", $_GET['date']);
+			$date_part = explode("/", $mysql->real_escape_string($_GET['date']));
 			$add = $date_part[1];
 			
 			$day = date("D", mktime(0, 0, 0, $date_part[0], $date_part[1], $date_part[2]));

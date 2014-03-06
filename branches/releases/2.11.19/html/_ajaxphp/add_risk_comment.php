@@ -3,7 +3,7 @@
 	include("sessionHandler.php");
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 
-	$riskId = $_POST['riskId'];
+	$riskId = (int)$mysql->real_escape_string($_POST['riskId']);
 	$userId = $mysql->real_escape_string($_POST['userId']);
 	$commentText = $mysql->real_escape_string($_POST['comment']);
 
