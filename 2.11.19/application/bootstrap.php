@@ -81,12 +81,12 @@ class LighthouseApp {
 			$this->view->mobileuser = mobile_device_detect();
 
 			if(isset($_GET['signout'])) {
-				setcookie("lighthouse_id", '', time() - 3600, '/');
-				setcookie("lighthouse_xp", '', time() - 3600, '/');
-				setcookie("lh_user", '', time() - 3600, '/');
-				setcookie("lighthouse_rp_data", '', time() - 3600, '/resourceplanner');
-				setcookie("lighthouse_ct_data", '', time() - 3600, '/controltower');
-				setcookie("lighthouse_create_wo_data", '', time() - 3600, '/workorders');
+				setcookie("lighthouse_id", '', time() - 3600, '/',isset($_SERVER["HTTPS"]),true);
+				setcookie("lighthouse_xp", '', time() - 3600, '/',isset($_SERVER["HTTPS"]),true);
+				setcookie("lh_user", '', time() - 3600, '/',isset($_SERVER["HTTPS"]),true);
+				setcookie("lighthouse_rp_data", '', time() - 3600, '/resourceplanner',isset($_SERVER["HTTPS"]));
+				setcookie("lighthouse_ct_data", '', time() - 3600, '/controltower',isset($_SERVER["HTTPS"]));
+				setcookie("lighthouse_create_wo_data", '', time() - 3600, '/workorders',isset($_SERVER["HTTPS"]));
 				setcookie("lighthouse_wo_data", '', time() - 3600, '/');
 				unset($_COOKIE);
 				unset($_session->loggedin);
@@ -155,7 +155,7 @@ class LighthouseApp {
 							if(!empty($redirect_url))
 							{
 								$redirect = $redirect_url;
-								setcookie("lighthouse_ru", '', time() - 3600, '/');	
+								setcookie("lighthouse_ru", '', time() - 3600, '/',isset($_SERVER["HTTPS"]),true);	
 							}
 							session_write_close();
 							header('Location: ' . $redirect);							
