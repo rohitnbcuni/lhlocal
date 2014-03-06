@@ -15,7 +15,7 @@
 	}
 	class AdminDisplay extends Admin {
 	
-		public function getQuery($query) {
+		public function getQuery($query, $arr = null) {
 		
 			/*Admin::setIniFile();
 			
@@ -31,12 +31,12 @@
 			$db->getConnection();*/
 			//get DB connection from registry LH#20736
 			$db = Zend_Registry::get('db');
-			$data = $db->fetchAll($query);
+			$data = $db->fetchAll($query, $arr);
 			
 			return $data;
 		}
 
-		public function executeQuery($query) {
+		public function executeQuery($query, $arr = null) {
 			/*Admin::setIniFile();
 			
 			$config = Admin::getIniFile();
@@ -51,7 +51,7 @@
 			$db->getConnection();*/
 			//get DB connection from registry LH#20736
 			$db = Zend_Registry::get('db');
-			$data = $db->query($query);
+			$data = $db->query($query,$arr);
 			
 			return $data;
 		}
@@ -625,12 +625,12 @@
  		public function upDateProjectQAPermission($projectIdArray){
  			$result = '';
  			$pid = explode(",",$projectIdArray);
- 			$sql  = "UPDATE projects set qa_permission ='0' ";
+ 			$sql  = "UPDATE projects set qa_permission = '0' ";
 			$result = self::executeQuery($sql);
  			foreach($pid as $id){
 	 			try{
-	 				$sql  = "UPDATE projects set qa_permission ='1' WHERE id = $id";
-					$result = self::executeQuery($sql);
+	 				$sql  = "UPDATE projects set qa_permission ='1' WHERE id = ? ";
+					$result = self::executeQuery($sql,array($id));
 					$result ='ok';
 	 			}catch(Exception $e){
 	 				$result = "fail";
@@ -752,7 +752,7 @@
 		public static function deleteMaapingLhRallyProject($id){
 			$db = Zend_Registry::get('db');
 			
-			$result = $db->query("DELETE FROM rally_lh_project_mapping WHERE id = ".$id." LIMIT 1");
+			$result = $db->query("DELETE FROM rally_lh_project_mapping WHERE id = ? LIMIT 1", array($id));
 			return $affectedRows = $result->rowCount();
 			//return $db->lastInsertId();
 		
