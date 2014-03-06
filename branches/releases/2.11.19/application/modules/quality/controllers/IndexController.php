@@ -155,16 +155,17 @@
 			$os_cookie = "";
 			$browser_cookie = "";
 			$version_cookie = "";
-
+			$request_param = $this->getRequest();
 			if(isset($_GET['defect_id'])) {
-				$defect_id = ($_GET['defect_id']);
+				$defect_id = (int)$request_param->getQuery('defect_id'); 
 				/* LH fixes
 				 * LH#21355
 				 */
 				if(!is_numeric($defect_id )){
 					$this->_redirect("quality/index/");
 				}
-				$wo_data = QaDisplay::getQuery("SELECT * FROM `qa_defects` WHERE `id`='$defect_id' LIMIT 1");			
+				//$wo_data = QaDisplay::getQuery("SELECT * FROM `qa_defects` WHERE `id`='$defect_id' LIMIT 1");
+				$wo_data = QaDisplay::getQuery("SELECT * FROM `qa_defects` WHERE `id`=? LIMIT 1",array($defect_id));				
 				/* LH fixes
 				 * LH#21355
 				 */
@@ -194,11 +195,11 @@
 				$pageLoadHide = 'style="display:block;"';
                 } else {
 				$defect_id = "";
-				$proj_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
+				$proj_select = isset($_COOKIE["lighthouse_create_wo_data"])? $request_param->getCookie('lighthouse_create_wo_data') : "";
 				$pageLoadHide = 'style="display:none;"';
 				$li_INFRA_TYPE = 'style="display:none;"';
 				$li_CRITICAL = 'style="display:none;"';
-				$qa_cookie_values = isset($_COOKIE["lighthouse_quality_create_defect"])? $_COOKIE["lighthouse_quality_create_defect"] : "";
+				$qa_cookie_values = isset($_COOKIE["lighthouse_quality_create_defect"])?$request_param->getCookie("lighthouse_quality_create_defect"): "";
 				$qa_cookie_values = @$qa_cookie_values;
 				
 				if(!empty($qa_cookie_values))
@@ -219,22 +220,23 @@
 					$product_cookie = strtok(@$qa_cookie_part[9], "PR:");
 					$version_cookie = strtok(@$qa_cookie_part[10], "V:");
 				}
-				$qa_proj_cookie_values = isset($_COOKIE["lh_qa_project_cookie"])? $_COOKIE["lh_qa_project_cookie"] : "";
+				$qa_proj_cookie_values = isset($_COOKIE["lh_qa_project_cookie"])?  $request_param->getCookie("lh_qa_project_cookie") : "";
 				if(!empty($qa_proj_cookie_values))
 				{
 					$pj_cookie = $qa_proj_cookie_values;
 				}
 			}
-			$qa_selected_sort_cookie = isset($_COOKIE["selectedSortOption"])? $_COOKIE["selectedSortOption"] : "";
+			$qa_selected_sort_cookie = isset($_COOKIE["selectedSortOption"])? $request_param->getCookie("selectedSortOption") : "";
 			if(!empty($qa_selected_sort_cookie)){
 				$sort_option = explode(":",$qa_selected_sort_cookie);
 			}		
       		
-			$qa_data_cookie_values = isset($_COOKIE["lighthouse_qa_data"])? $_COOKIE["lighthouse_qa_data"] : "";
+			$qa_data_cookie_values = isset($_COOKIE["lighthouse_qa_data"])?$request_param->getCookie("lighthouse_qa_data") : "";
 			if(!empty($qa_data_cookie_values)){
 				$qa_list = explode("~",$qa_data_cookie_values);
 				if(isset($_POST['stringId'])){
-					$qa_navigation_values = $_POST['stringId'];
+					//$qa_navigation_values = $_POST['stringId'];
+					$qa_navigation_values = $request_param->getParams('stringId');
 					$qa_id_array = explode(",",$qa_navigation_values);
 				} else {
 					$qa_id_list_result = QaDisplay::getQAIDs($qa_list[0],$qa_list[1],$qa_list[2],$qa_list[3],$qa_list[4],$sort_option[0],$sort_option[1],$wo_data[0]['archived']);
@@ -307,7 +309,7 @@
 						if(isset($_GET['defect_id'])) {
 							echo '<li style="width:300px">
 								<label for="defect_ID" id="wo_project_label">Defect ID:</label>
-								<input type="text" value="'.$_GET['defect_id'].'" readonly="readonly" class="readonly" maxlength="6" size="6">
+								<input type="text" value="'.$defect_id.'" readonly="readonly" class="readonly" maxlength="6" size="6">
 							</li>';
 						}
 						if(!isset($_GET['defect_id'])) {										
@@ -702,7 +704,8 @@
 									<label for="QA_DETECTED_BY" id="QA_DETECTED_BY_label">Detected By:</label>';
 
 									if(isset($_GET['defect_id'])) {
-										echo '<input name="QA_DETECTED_BY" id="QA_DETECTED_BY" style="width:194px;" value="'.QaDisplay::fetchUserName($wo_data[0]['detected_by']).'" readonly="readonly" class="readonly" type="text">';
+										$detected_by =  (int)QaDisplay::fetchUserName($wo_data[0]['detected_by']);
+										echo '<input name="QA_DETECTED_BY" id="QA_DETECTED_BY" style="width:194px;" value="'.$detected_by.'" readonly="readonly" class="readonly" type="text">';
 									} else {
 										echo '<select class="field_medium" name="QA_DETECTED_BY" id="QA_DETECTED_BY" >';
 										echo QaDisplay::getUserOptionHTML();
@@ -711,7 +714,7 @@
 								echo '</li>';
 							if(isset($_GET['defect_id'])) {
 								echo '<li >';
-								$submittedBy = QaDisplay::fetchUserName($wo_data[0]['requested_by']);
+								$submittedBy = (int)QaDisplay::fetchUserName($wo_data[0]['requested_by']);
 							}else
 							{
 								echo '<li style="display:none;">'; 
@@ -991,16 +994,22 @@
 		public function mobileeditAction(){
 			$readonly = false;
 			$vars = array();
-			$defect_id = ($_GET['defect_id']);
+			$request_param = $this->getRequest();
+			$defect_id = (int)$request_param->getQuery('defect_id');
+			/*if(!is_numeric($defect_id )){
+				$this->_redirect("quality/index/");
+			}*/
+			
 			$user_id = $_SESSION["user_id"];
 			$save = "";
 			if(array_key_exists("save_type", $_POST)){
-				$save = $_POST["save_type"];
+				//$save = $_POST["save_type"];
+				$save = $request_param->getParams("save_type");
 			}
 			switch($save){
 				case "save_wo":
-						$new_status = $_POST["wo_status"];
-						$new_assigned = $_POST["wo_assigned_user"];
+						$new_status = $request_param->getParams("wo_status");
+						$new_assigned = $request_param->getParams("wo_assigned_user");
 
 						$old_wo_data = QaDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`='$defect_id' LIMIT 1");
 						$assigned_date = "";
@@ -1027,7 +1036,7 @@
 						$this->sendEmail("status_change", $defect_id, $user_id);
 						break;
 				case "comment_wo":
-						$new_comment = $_POST["comment"];
+						$new_comment = $request_param->getParams("comment");
 						$insert_wo_comment = "INSERT INTO `workorder_comments` (`workorder_id`,`user_id`,`comment`,`date`) VALUES ('$defect_id','$user_id','$new_comment',NOW())";
 						$sql = $insert_wo_comment;
 						QaDisplay::executeQuery($insert_wo_comment);
@@ -1038,11 +1047,12 @@
 						break;
 			}
 
-			$wo_data = QaDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`='$defect_id' LIMIT 1");
+			$wo_data = QaDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`=? LIMIT 1",array($defect_id));
 			
-			$requestors_data = QaDisplay::getQuery("SELECT * FROM `users` WHERE `id`='" . $wo_data[0]['requested_by'] ."' LIMIT 1");
-			$project_data = QaDisplay::getQuery("SELECT CONCAT(`project_code`, ' - ', `project_name`) AS name FROM `projects` WHERE `id`='" . $wo_data[0]['project_id'] . "' LIMIT 1");
-			$priority_data = QaDisplay::getQuery("SELECT CONCAT(`name`, ' - ', `time`) AS priority FROM `lnk_workorder_priority_types` WHERE `id`='" . $wo_data[0]['priority'] . "' LIMIT 1");
+			$requestors_data = QaDisplay::getQuery("SELECT * FROM `users` WHERE `id`= ? LIMIT 1",array($wo_data[0]['requested_by']));
+			$project_data = QaDisplay::getQuery("SELECT CONCAT(`project_code`, ' - ', `project_name`) AS name FROM `projects` WHERE `id`= ? LIMIT 1",array($wo_data[0]['project_id']));
+			
+			$priority_data = QaDisplay::getQuery("SELECT CONCAT(`name`, ' - ', `time`) AS priority FROM `lnk_workorder_priority_types` WHERE `id`= ? LIMIT 1",array($wo_data[0]['priority']));
 
 			if(@$wo_data[0]['creation_date'] != "") {
 				$start_date_time_part = explode(" ", @$wo_data[0]['creation_date']);
@@ -1082,13 +1092,13 @@
 			$vars['closed_date'] = $close_date;
 			$vars['readonly'] = $readonly;
 
-			$comment_data = QaDisplay::getQuery("SELECT * FROM `qa_comments` WHERE `defect_id`='" . $defect_id ."' order by date");
+			$comment_data = QaDisplay::getQuery("SELECT * FROM `qa_comments` WHERE `defect_id`=? order by date",array($defect_id));
 										
 			for($cx = 0; $cx < sizeof($comment_data); $cx++) {
 				$comment_date_time_part = explode(" ", $comment_data[$cx]['date']);
 				$comment_date_part = explode("-", $comment_date_time_part[0]);
 				$comment_time_part = explode(":", $comment_date_time_part[1]);											
-				$comment_user_data = QaDisplay::getQuery("SELECT * FROM `users` WHERE `id`='" .$comment_data[$cx]['user_id'] ."' LIMIT 1");
+				$comment_user_data = QaDisplay::getQuery("SELECT * FROM `users` WHERE `id`= ? LIMIT 1",array($comment_data[$cx]['user_id']));
 
 				$comment[$cx]['name'] = ucfirst($comment_user_data[0]['first_name']) .' ' .ucfirst($comment_user_data[0]['last_name']);
 				$comment[$cx]['timestamp'] = @date("D M j \a\\t g:i a", mktime(@$comment_time_part[0],@$comment_time_part[1],@$comment_time_part[2],@$comment_date_part[1],@$comment_date_part[2],@$comment_date_part[0]));
@@ -1105,11 +1115,11 @@
 
 		public function sendEmail($type, $defect_id, $userId, $comment_text=''){
 
-			$select_email_users = "SELECT * FROM `workorders` WHERE `id`='$defect_id' LIMIT 1";
-			$email_res = QaDisplay::getQuery($select_email_users);
+			$select_email_users = "SELECT * FROM `workorders` WHERE `id`=? LIMIT 1";
+			$email_res = QaDisplay::getQuery($select_email_users,array($defect_id));
 			if(sizeOf($email_res) > 0) {
-				$new_commenter = "SELECT * FROM `users` WHERE `id`='$userId' LIMIT 1";
-				$commenter_res = QaDisplay::getQuery($new_commenter);
+				$new_commenter = "SELECT * FROM `users` WHERE `id`=? LIMIT 1";
+				$commenter_res = QaDisplay::getQuery($new_commenter,array($userId));
 				$commenter_row = $commenter_res[0];
 			
 				$email_row = $email_res[0];
@@ -1129,20 +1139,20 @@
 				}
 				$user_keys = array_keys($users_email);
 
-				$bc_id_query = "SELECT  `bcid`, `project_id`, `title`, `priority` FROM `workorders` WHERE `id`='" . $defect_id ."' LIMIT 1";
-				$bc_id_result = QaDisplay::getQuery($bc_id_query);
+				$bc_id_query = "SELECT  `bcid`, `project_id`, `title`, `priority` FROM `workorders` WHERE `id`= ? LIMIT 1";
+				$bc_id_result = QaDisplay::getQuery($bc_id_query,array($defect_id));
 				$bc_id_row = $bc_id_result[0];
 				
-				$select_priority = "SELECT * FROM `lnk_workorder_priority_types` WHERE `id`='" . $bc_id_row['priority'] ."'";
-				$pri_res = QaDisplay::getQuery($select_priority);
+				$select_priority = "SELECT * FROM `lnk_workorder_priority_types` WHERE `id`=?";
+				$pri_res = QaDisplay::getQuery($select_priority,array($bc_id_row['priority']));
 				$pri_row = $pri_res[0];
 
-				$select_project = "SELECT * FROM `projects` WHERE `id`='" . $bc_id_row['project_id'] ."'";
-				$project_res = QaDisplay::getQuery($select_project);
+				$select_project = "SELECT * FROM `projects` WHERE `id`= ?";
+				$project_res = QaDisplay::getQuery($select_project,array($bc_id_row['project_id']));
 				$project_row = $project_res[0];
 
-				$select_company = "SELECT * FROM `companies` WHERE `id`='" . $project_row['company'] . "'";
-				$company_res = QaDisplay::getQuery($select_company);
+				$select_company = "SELECT * FROM `companies` WHERE `id`= ?";
+				$company_res = QaDisplay::getQuery($select_company,array($project_row['company']));
 				$company_row = $company_res[0];
 
 				$subject = "WO: " . $bc_id_row['title'] . " - Lighthouse Work Order Message";
@@ -1152,8 +1162,8 @@
 					case 'assigned':
 							$sendList = array($email_row['assigned_to'], $email_row['requested_by']);
 							$file_list = "";
-							$select_file = "SELECT * FROM `workorder_files` WHERE workorder_id='" . $defect_id . "' order by upload_date desc";
-							$file_res = QaDisplay::getQuery($select_file);
+							$select_file = "SELECT * FROM `workorder_files` WHERE workorder_id= ? order by upload_date desc";
+							$file_res = QaDisplay::getQuery($select_file,array($defect_id));
 							if(sizeOf($file_res) > 0) {
 								$file_list = "\t-Attachment:\r\n";
 								$fileCount = 1;
