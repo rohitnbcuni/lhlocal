@@ -11,7 +11,9 @@
 			$currweek = DATE("W");
 			$year = DATE("Y");
 			$intCurrMonth = DATE("m");
-			$userID = @$_REQUEST["userid"];
+			$request_param = $this->getRequest();
+			$userID = (int)$request_param->getQuery('userid');
+			//$userID = @$_REQUEST["userid"];
 			
 			
 
@@ -206,7 +208,7 @@
 						<button onClick="$(\'.message_lock_confirm\').css({display:\'none\'});"><span>Ok</span></button>
 					</div>
 				</div>
-				<input type="hidden" name="userid" value="'.@$_GET['userid'].'" id="userid" />
+				<input type="hidden" name="userid" value="'.$userID.'" id="userid" />
 				<input type="hidden" name="user_type" value="'.@$_SESSION['login_status'].'" id="user_type" />
 				<input type="hidden" name="user_session_id" value="'.@$_SESSION['user_id'].'" id="user_session_id" />';
 			} else {
@@ -240,7 +242,7 @@
 					$is_filter_selected = '';	
 					$hiddenChar = 'a';
 				  }
-				  setcookie("lighthouse_rp_data", urlencode($savedData[0] . '~' . $savedData[1] . '~' . $savedData[2] . '~' . $savedData[3] . '~' . ''. '~' . '' . '~' . $savedData[6]), time()+220752000, '/');
+				  setcookie("lighthouse_rp_data", urlencode($savedData[0] . '~' . $savedData[1] . '~' . $savedData[2] . '~' . $savedData[3] . '~' . ''. '~' . '' . '~' . $savedData[6]), time()+220752000, '/', isset($_SERVER["HTTPS"]));
 				  
 				} else {
 					$savedRole = '';
