@@ -30,7 +30,7 @@
 			@$mysql->sqlprepare($update_cc, array($arrayData,$projectId));
 
             $select_cc = "SELECT `cclist` FROM `projects` WHERE `id`= ? LIMIT 1";
-			$result = @$mysql->sqlordie($select_cc, array($projectId));
+			$result = @$mysql->sqlprepare($select_cc, array($projectId));
 			$row = @$result->fetch_assoc();
 
 			if($result->num_rows > 0) {
