@@ -666,5 +666,54 @@
 			
 			return $html;
 		}
+		
+	function safeSql($var){
+			$db = Zend_Registry::get('db');
+			
+			$replaceValiable = '';
+			//$var = trim($var);
+			if(!empty($var)){
+				$db->quote($var);
+				return strip_tags($var);
+				//return str_replace($sqlInjectionValiable,'',strip_tags($var));
+			}else{
+				return '';
+			
+			}
+			
+		
+	
+		}
+	public  function escapewordquotes($text){
+		$pre = chr(226).chr(128);
+		$badwordchars=array('�','�','�','apos;',"#039;","�","�",'&#233;','&#8216;','&#8217;',
+		'&#8230;',
+		'&#8217;',
+		'&#8220;',
+		'&#8221;',
+		'&#8212;',
+		'#8212;',
+		'#&8211;',
+		'#8211;',
+		'amp;',
+		'&#160;',
+		'#160;'
+			
+		);
+		$fixedwordchars = array('','"','"',"'","'",",","'", "e","'","'",'~','~','','','_','-','-','-','','');
+	    $text = str_replace($badwordchars,$fixedwordchars,$text);                         
+		$text=str_replace('�',"'",$text); 
+	    $text=str_replace('�',"'",$text); 
+	    $text=str_replace('&amp;rsquo;',"'",$text); 
+//    $text = preg_replace('/[^(\x20-\x7F)]*/','', $text );  
+		$text = str_replace("&#8216;","",$text);
+		//LH#    20679
+		$text = str_replace(array("“","’","”"),array('"',"'",'"'),$text);
+//		$text = str_replace("&","",$text);
+//		$text = preg_replace('/[^\x00-\x7f]/','',$text);
+		return $text;
+
+
+	}
 	}
 ?>
