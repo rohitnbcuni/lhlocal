@@ -54,7 +54,7 @@ class Admin_IndexController extends LighthouseController {
 			
 			echo '<!--=========== START: COLUMNS ===========-->		
 			<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="WO Default CC List">  
-			<input type="hidden" name="ccList" id="ccList" value="'.$ccList.'">  
+			<input type="hidden" name="ccList" id="ccList" value="'.$this->view->escape($ccList).'">  
 			<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';				
 				echo '<div class="adminSelect">
 						   <div >
@@ -165,7 +165,7 @@ class Admin_IndexController extends LighthouseController {
 					
 					echo '<!--=========== START: COLUMNS ===========-->		
 					<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Quality Default CC List">  
-					<input type="hidden" name="qcccList" id="qcccList" value="'.$ccList.'">  
+					<input type="hidden" name="qcccList" id="qcccList" value="'.$this->view->escape($ccList).'">  
 					<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';
 						echo '<div class="adminSelect">
 								   <div >
@@ -699,11 +699,11 @@ class Admin_IndexController extends LighthouseController {
 							</div>
 							   <div class="row">
 									<p>First Name:</p>
-									<input type="text" name="firstName" id="firstName" value="'.$userFirstName.'" >
+									<input type="text" name="firstName" id="firstName" value="'.$this->view->escape($userFirstName).'" >
 								</div>
 								 <div class="row" >
 									<p>Last Name:</p>
-									<input type="text" name="lastName" id="lastName" value="'.$userLastName.'" >
+									<input type="text" name="lastName" id="lastName" value="'.$this->view->escape($userLastName).'" >
 								</div>
 								<div class="row2" >
 									 <div>
@@ -856,20 +856,20 @@ class Admin_IndexController extends LighthouseController {
 				echo '<div class="admindisplayUserInfo">
 						 <div class="row">
 								<div class="label"><label>User ID:</label></div>
-									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$users['id'].'" >
+									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$this->view->escape($users['id']).'" >
 						</div>
 						<div class="row">
 							<div class="label"><label>First Name:</label></div>
-									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$users['first_name'].'" >
+									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$this->view->escape($users['first_name']).'" >
 						</div>
 						<div class="row">
 							<div class="label"><label>Last Name:</label></div>
-									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$users['last_name'].'" >
+									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$this->view->escape($users['last_name']).'" >
 						</div>
 
 						<div class="row">
 							<div class="label"><label>Email:</label></div>
-									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$users['email'].'" >
+									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$this->view->escape($users['email']).'" >
 						</div>
 						<div class="row">
 							<div class="label"><label>User Title:</label></div><div id="admin_UserTitle_fade" class="admin_UserTitle_fade"></div>
@@ -897,7 +897,7 @@ class Admin_IndexController extends LighthouseController {
 						<div class="row">
 							<div class="label"><label>Company:</label></div>
 									<input type="text" class="readonly" readonly name="userID" id="userID" value="'. AdminDisplay::getUserCompany($users['company']).'" >
-									<input type="hidden" id="user_company" value="'.$users['company'].'">
+									<input type="hidden" id="user_company" value="'.$this->view->escape($users['company']).'">
 						</div>					
 						<div class="row">
 							<div class="label"><label>Last Login Date:</label></div>
@@ -907,7 +907,7 @@ class Admin_IndexController extends LighthouseController {
 						
 						<div class="row">
 							<div class="label"><label>Basecamp ID:</label></div>
-								<input type="text" class="readonly" readonly name="userID" id="userID" value="'. $users['bc_id'].'" >
+								<input type="text" class="readonly" readonly name="userID" id="userID" value="'. $this->view->escape($users['bc_id']).'" >
 						</div>';
 
 						if($users['login_status']=='admin')
@@ -938,7 +938,7 @@ class Admin_IndexController extends LighthouseController {
 						<div class="row" >
 							<div class="label2"><label><u>User Project Permission:</u></label></div>
 							
-							<input type="hidden" name="userStatus" id="userStatus" value="'.$userStatus.'">
+							<input type="hidden" name="userStatus" id="userStatus" value="'.$this->view->escape($userStatus).'">
 							<div style="margin-left:-73px;">
 							<select class="field_medium" name="userProjectArray" id="userProjectArray" multiple="multiple">';
 								echo AdminDisplay::getAllCompaniesProjectOptionEditHTML($users['id'], $userStatus,$users['company'],$userProjectListArray);
@@ -1012,7 +1012,7 @@ class Admin_IndexController extends LighthouseController {
 			echo '
   				<!--=========== START: CUSTOM FIELD NAMES ===========-->
 				<div class="message_required" style="width:3000px;height:1024px;position:fixed;background-color:#ffffff;z-index:1;margin-top:-500px;margin-left:-630px;opacity: 0.3; filter: alpha(opacity = 30); zoom:1;"></div>
-  				<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="' . $screen_name. '">
+  				<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="' . $this->view->escape($screen_name). '">
 					<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
 						<div class="label" style="min-height:20px;"></div>
 						<div id="customEditOrAdd">
@@ -1090,23 +1090,23 @@ class Admin_IndexController extends LighthouseController {
 				$editType = 'Update';
 			}
 			echo '
-						<div id="fieldnameInfo" class="admindisplayUserInfo"  style="'.$editstatus.'">
+						<div id="fieldnameInfo" class="admindisplayUserInfo"  style="'.$this->view->escape($editstatus).'">
 						<div class="row">
-								<div class="label"><label>'.$screen_name.'*:</label></div>
-								<input type="text" class="" name="fieldname" id="fieldname" value="'.$siteName.'" >
-								<input type="hidden" class="" name="fieldid" id="fieldid" value="'.$siteId.'" >
+								<div class="label"><label>'.$this->view->escape($screen_name).'*:</label></div>
+								<input type="text" class="" name="fieldname" id="fieldname" value="'.$this->view->escape($siteName).'" >
+								<input type="hidden" class="" name="fieldid" id="fieldid" value="'.$this->view->escape($siteId).'" >
 							</div>
 												
 							<div class="row">
 								<div class="label"><label>Active:</label></div>
-								<input type="checkBox" style="width:10px;" name="fieldActiveStatus" id="fieldActiveStatus" value="" '.$activeCheck.'>
+								<input type="checkBox" style="width:10px;" name="fieldActiveStatus" id="fieldActiveStatus" value="" '.$this->view->escape($activeCheck).'>
 							</div>
 							<div class="row">
 								<div class="label"><label>Deleted:</label></div>
-								<input type="checkBox" style="width:10px;" name="fieldDeleteStatus" id="fieldDeleteStatus" value="" '.$deleteCheck.'>
+								<input type="checkBox" style="width:10px;" name="fieldDeleteStatus" id="fieldDeleteStatus" value="" '.$this->view->escape($deleteCheck).'>
 							</div>
 							<div class="row" id="submitBTN">
-								<button onclick="updateFieldValue(\''.strtoupper($editType).'\');"><span >'.$editType.'</span></button>
+								<button onclick="updateFieldValue(\''.strtoupper($this->view->escape($editType)).'\');"><span >'.$this->view->escape($editType).'</span></button>
 							</div>
 						</div>
 			';
@@ -1116,7 +1116,7 @@ class Admin_IndexController extends LighthouseController {
 			echo '
 						<div class="admindisplayUserInfo">
 							<div class="row">
-								<div class="label" style="width:235px;"><label>List of '.$screen_name.' :</label></div>
+								<div class="label" style="width:235px;"><label>List of '.$this->view->escape($screen_name).' :</label></div>
 							</div>
 			';
 
@@ -1175,8 +1175,8 @@ class Admin_IndexController extends LighthouseController {
 		
 		function maprojectlistingAction(){
 			$lastInsertId = 0;
-			$lh_project = $this->_request->getParam('lh');
-			$rally_project = $this->_request->getParam('rally');
+			$lh_project = AdminDisplay::safeSql($this->_request->getParam('lh'));
+			$rally_project = AdminDisplay::safeSql($this->_request->getParam('rally'));
 			if(!empty($lh_project) && (!empty($rally_project))){
 				$mappedArray = array();
 				$mappedArray = array(
