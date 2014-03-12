@@ -10,7 +10,7 @@
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, 'lhdev_live2' , DB_PORT);	
 	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	//global $mysql;
-	$project_all = "SELECT * FROM `projects` WHERE  id = '18259' ";
+/*	$project_all = "SELECT * FROM `projects` WHERE  id = '18259' ";
 	$project_list = $mysql->query($project_all) or writeLog($mysql,$project_all);
 	
 	$current_year = '2013';//'2010';//date("Y");
@@ -205,6 +205,6 @@
 	//End qa_project_iteration
 	//End qa_project_product
 	$qa_project_product = "UPDATE `qa_project_product` SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' ";
-	$mysql->query($qa_project_product) or writeLog($mysql,$qa_project_product);
+	$mysql->query($qa_project_product) or writeLog($mysql,$qa_project_product);*/
 ?>
 
