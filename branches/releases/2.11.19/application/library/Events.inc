@@ -256,8 +256,8 @@
 		}
 		public function getEventStatusType($event_status){
 			$db = Zend_Registry::get('db');
-			$sql = "SELECT name FROM lnk_event_status_types WHERE active ='1' AND deleted = '0' AND id = '$event_status'"; 
-			$status = $db->fetchOne($sql);
+			$sql = "SELECT name FROM lnk_event_status_types WHERE active ='1' AND deleted = '0' AND id = ?"; 
+			$status = $db->fetchOne($sql,array($event_status));
 			return $status;
 						
 		}
@@ -428,8 +428,8 @@
 		}
 	public function getCompanyName($id) {
 	$db = Zend_Registry::get('db');
-	$sql = "SELECT name FROM `companies` WHERE id='$id'"; 
-	$companyName = $db->fetchOne($sql);
+	$sql = "SELECT name FROM `companies` WHERE id= ?"; 
+	$companyName = $db->fetchOne($sql,array($id));
 
 	return $companyName;
 	}
@@ -488,7 +488,7 @@
 			try{
 				$db->insert("events", $dataArray);
 			}catch(Exception $e){
-				//echo "add_event".$e->getMessage();
+				echo "add_event".$e->getMessage();
 				
 			}
 			$evenTrial = array();
@@ -667,11 +667,12 @@
 			return $rs;
 		}
 		
-		public function getTableData($tableName, $data, $where ='1'){
+		public function getTableData($tableName, $data, $where ='1',$arr = null){
 			$db = Zend_Registry::get('db');
+			$tableName = $db->quoteIdentifier($tableName);
 			$sql = "SELECT $data  FROM $tableName WHERE $where"; 
 			try{
-				$rs = $db->fetchRow($sql);
+				$rs = $db->fetchRow($sql,$arr);
 			}catch(Exception $e){
 				//echo "Fetch_data".$e->getMessage()." ".$sql;	
 			}
@@ -1390,6 +1391,26 @@
 		 	$query = "SELECT GROUP_CONCAT(name SEPARATOR ', ') as name from companies WHERE ID IN ($company)";
 	   		$result = $db->fetchOne($query);
 			return $result;	   	
-   	  		}	
+   	  		}
+	function safeSql($var){
+			$db = Zend_Registry::get('db');
+			
+			$replaceValiable = '';
+			//$var = trim($var);
+			if(!empty($var)){
+				$db->quote($var);
+				return strip_tags($var);
+				//return str_replace($sqlInjectionValiable,'',strip_tags($var));
+			}else{
+				return '';
+			
 			}
+			
+		
+	
+		}
+
+   	  		
+   	  		
+}
 ?>
