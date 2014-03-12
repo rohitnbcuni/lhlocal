@@ -4,10 +4,10 @@
 	include 'reader.php';
 	global $mysql;
     //$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);	
-
+	exit;
 
     // initialize reader object
-    $excel = new Spreadsheet_Excel_Reader();
+   /* $excel = new Spreadsheet_Excel_Reader();
     
     // read spreadsheet data
     $excel->read('LH_ProjectList_Programs.xls');    
@@ -21,5 +21,5 @@
 
    $mysql->sqlordie($sql);
    }
-   echo "<br><br>end of script";
+   echo "<br><br>end of script";*/
 ?>    

@@ -10,18 +10,18 @@
 		$ccArray = array();
 		$list = explode(",", $cc);
 
-		$select_company = "SELECT `company` FROM `projects` WHERE `id`='$projectId' LIMIT 1";
-		$company_result = @$mysql->sqlordie($select_company);
+		$select_company = "SELECT `company` FROM `projects` WHERE `id`= ? LIMIT 1";
+		$company_result = $mysql->sqlprepare($select_company,array($projectId));
 		$company_row = @$company_result->fetch_assoc();
 		$company = $company_row['company']; 
 
 		if(!empty($company))
 		{
 			$select_company_qry = "SELECT * FROM `companies` WHERE `id`='$company'";
-			$select_company_result = @$mysql->sqlordie($select_company_qry);
+			$select_company_result = $mysql->sqlordie($select_company_qry);
 			 if($select_company_result->num_rows > 0)
 			 {
-			 	$select_company_row = @$select_company_result->fetch_assoc();
+			 	$select_company_row = $select_company_result->fetch_assoc();
 				$company_cc_list = explode(",",$select_company_row['cclist']);
 				// Load all the existing default CC users of the projects into the list
 				/*for($i = 0; $i < sizeof($company_cc_list); $i++) {
@@ -45,7 +45,7 @@
 				}
 				
 				$update_cc = "UPDATE `companies` SET `qccclist`='$arrayData' WHERE `id`='$company'";
-				@$mysql->sqlordie($update_cc);
+				$mysql->sqlordie($update_cc);
 			 }
 		}		 
 	}

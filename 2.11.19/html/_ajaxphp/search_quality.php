@@ -26,7 +26,7 @@ if($_SESSION['login_status'] == "client") {
   }
 }
 
-$id_quality = $_POST['id_quality'];
+$id_quality = $mysql->real_escape_string($_POST['id_quality']);
 
 $archive_sql = " AND `archived`='0'";
 $project_archive = " AND b.`archived`='0'";
@@ -39,17 +39,17 @@ if('1' == $_POST['status']){
 }
 
 if(ISSET($_POST['clientId']) && $_POST['clientId'] != '-1'){
-	$CLIENT_SQL = " AND a.company = '".$_POST['clientId']."'";
+	$CLIENT_SQL = " AND a.company = '".$mysql->real_escape_string($_POST['clientId'])."'";
 }
 
 
 $WHERE = array();
 $WHERE_SQL = '';
 if(ISSET($_POST['assignedTo']) && $_POST['assignedTo'] != '-1'){
-	$WHERE[] = " assigned_to = ".$_POST['assignedTo'];
+	$WHERE[] = " assigned_to = ".$mysql->real_escape_string($_POST['assignedTo']);
 }
 if(ISSET($_POST['statusId']) && $_POST['statusId'] != '-1' && $_POST['statusId'] != '99' ){
-	$status = getQualityStatus($_POST['statusId'],$mysql);
+	$status = getQualityStatus($mysql->real_escape_string($_POST['statusId']),$mysql);
 	$WHERE[] = " status = ".$status;
 }
 if($_POST['statusId'] == '99'){
@@ -61,10 +61,10 @@ if($_POST['statusId'] == '-1'){
 	$WHERE[] = "  status IN ('1','2','3','4','5','6','7','8','10')";
 }
 if(ISSET($_POST['projectId']) && $_POST['projectId'] != '-1'){
-	$WHERE[] = " project_id = ".$_POST['projectId'];
+	$WHERE[] = " project_id = ".$mysql->real_escape_string($_POST['projectId']);
 }
 if(ISSET($_POST['severityID']) && $_POST['severityID'] != '-1'){
-	$WHERE[] = " severity = ".$_POST['severityID'];
+	$WHERE[] = " severity = ".$mysql->real_escape_string($_POST['severityID']);
 }
 /*if($_POST['assignedTo'] != '-1'){
 	$WHERE[] = " assigned_to = ".$_POST['assignedTo'];
@@ -77,7 +77,7 @@ if(count($WHERE) > 0){
 }
 $type = '';
 if(array_key_exists("report", $_POST)){
-  $type = $_POST['report'];
+  $type = $mysql->real_escape_string($_POST['report']);
 }
 
 

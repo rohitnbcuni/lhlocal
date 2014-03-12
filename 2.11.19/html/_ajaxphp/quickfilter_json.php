@@ -5,26 +5,26 @@ session_start();
 	global $mysql;
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	$perms = array();
-	
+	$company_id = $mysql->real_escape_string($_GET['id']);
 	if($_SESSION['login_status'] == "client") {
 		$client_sql = " AND `company`='".$_SESSION['company']."'";
 	}else if($_GET['id'] && $_GET['id'] > 0){
-		$client_sql = " AND `company`='".$_GET['id']."'";
-		$companyID = $_GET['id'];
+		$client_sql = " AND `company`='".$company_id."'";
+		$companyID = $company_id;
 	}else {
 		$client_sql = "";
 		$companyID = 0;
 	}
 
 	if(array_key_exists('quarterID', $_GET)){
-		$quarterID = $_GET['quarterID'];
+		$quarterID = $mysql->real_escape_string($_GET['quarterID']);
 	}else{
 		$quarterID = 0;
 	}
 	//to default to get all projects
 	$producerID = -1;
 	if(array_key_exists('producerId', $_GET)){
-		$lead_split = @explode("_",$_GET['producerId']);
+		$lead_split = @explode("_",$mysql->real_escape_string($_GET['producerId']));
 		// to confirm a resource_type is selected
 		if(count($lead_split) == 2)
 		$producerID = $lead_split[1];
@@ -33,13 +33,13 @@ session_start();
 	}
 
 	if(array_key_exists('statusID', $_GET)){
-		$statusID = $_GET['statusID'];
+		$statusID = $mysql->real_escape_string($_GET['statusID']);
 	}else{
 		$statusID = 0;
 	}
 
 	if(isset($_REQUEST['ProgramID'])){
-		$ProgramID = $_REQUEST['ProgramID'];
+		$ProgramID = $mysql->real_escape_string($_REQUEST['ProgramID']);
 	}else{
 		$ProgramID = 0;
 	}

@@ -10,7 +10,7 @@
 	
 	//$_POST = $_GET;
 	$companyPerms = $mysql->real_escape_string($_POST['companyPerms']);
-	$users = $_POST['control_3'];
+	$users = $mysql->real_escape_string($_POST['control_3']);
 	$projectId = $mysql->real_escape_string($_POST['projectId']);
 	if(isset($_POST['edit_0'])) {
 	$delete_query = "DELETE FROM `user_project_permissions` WHERE `project_id`='$projectId'";
@@ -65,14 +65,14 @@
 	$bcComp = $mysql->sqlordie($companyBc);
 	$bcCompRow = $bcComp->fetch_assoc();
 	
-	$LOGINURL = BASECAMP_HOST."/login/authenticate";
+	/*$LOGINURL = BASECAMP_HOST."/login/authenticate";
 	echo $GETURL   = BASECAMP_HOST."/projects/" .$bcRow['bc_id'] ."/involvements";
 	$LOGINFIELDS = "user_name=resourceplanner@nbcuxd.com&password=r3s0urc3";
 	echo $POSTFIELDS = "company[id]=" .$bcCompRow['bc_id'] 
 	."&company[grant_access_to_all_employees]=1&return_to=/projects/" 
 	.$bcRow['bc_id'] ."/participants&commit=Add company";
 	
-	$RETURNEDURL = "";
+	$RETURNEDURL = "";*/
 	
 	function AUTH_SITE_COOKIE_STORE($LOGINURL,$LOGINFIELDS)
 	{
@@ -111,8 +111,8 @@
 	    return $result;
 	}
 	
-	$cookieFile = AUTH_SITE_COOKIE_STORE($LOGINURL,$LOGINFIELDS);
-	$url = SUBMIT_FORM($GETURL,$cookieFile,$POSTFIELDS);
+	//$cookieFile = AUTH_SITE_COOKIE_STORE($LOGINURL,$LOGINFIELDS);
+	//$url = SUBMIT_FORM($GETURL,$cookieFile,$POSTFIELDS);
 	
-	$mysql->close();
+	//$mysql->close();
 ?>
