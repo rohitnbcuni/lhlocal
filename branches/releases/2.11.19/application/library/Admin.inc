@@ -187,8 +187,8 @@
 		}
 
 		public function fetchUserbyID($selectedUserID) {
-			$users = self::getQuery("SELECT * FROM `users` WHERE `id` = '".$selectedUserID."'");			
-			$titlesArray = self::getQuery("SELECT * FROM `user_roles` WHERE `user_id` = '".$selectedUserID."'");
+			$users = self::getQuery("SELECT * FROM `users` WHERE `id` = ?",array($selectedUserID));			
+			$titlesArray = self::getQuery("SELECT * FROM `user_roles` WHERE `user_id` = ?",array($selectedUserID));
 			for($i=0;$i<count($titlesArray);$i++){
 				if($titlesArray[$i]['flag']=="subcategory"){
 					$titles[]="subcat_".$titlesArray[$i]['category_subcategory_id'];
@@ -206,13 +206,13 @@
 		}
 		
 		public function fetchProjectCCList($proj_id) {
-			$fetchProjectCCList = self::getQuery("SELECT * FROM `projects` WHERE `id` = '".$proj_id."'");			
+			$fetchProjectCCList = self::getQuery("SELECT * FROM `projects` WHERE `id` = ?",array($proj_id));			
 			return $fetchProjectCCList;
 		}
 
  //////18474//////
 			public function fetchQCProjectCCList($proj_id) {
-			$fetchProjectCCList = self::getQuery("SELECT * FROM `projects` WHERE `id` = '".$proj_id."'");			
+			$fetchProjectCCList = self::getQuery("SELECT * FROM `projects` WHERE `id` = ? ",array($proj_id));			
 			return $fetchProjectCCList;
 		}
 		////////////
@@ -713,7 +713,7 @@
 		
 			$db = Zend_Registry::get('db');
 			//check if LH or RALLY project not exist in Mapped table
-			$result = $db->query("SELECT id FROM rally_lh_project_mapping WHERE (lh_project_id = ".$mappedData['lh_project_id']." OR rally_project_id = ".$mappedData['rally_project_id'].") LIMIT 1");
+			$result = $db->query("SELECT id FROM rally_lh_project_mapping WHERE (lh_project_id = ? OR rally_project_id =  ? ) LIMIT 1", array($mappedData['lh_project_id'],$mappedData['rally_project_id']));
 			$affectedLHRows = $result->rowCount();
 			if($affectedLHRows == 0){
 				$db->insert("rally_lh_project_mapping", $mappedData);
@@ -790,6 +790,22 @@
 			$result = $db->fetchAll("SELECT  u.*,DATE_FORMAT(ll.last_logged_date , '%b %d %Y at %I:%i %p') as logged_time  FROM users u
 			LEFT JOIN users_login_log ll ON (ll.user_id = u.id) order by u.first_name ");
 			return $result;
+		}
+		
+	function safeSql($var){
+			$db = Zend_Registry::get('db');
+			
+			$replaceValiable = '';
+			//$var = trim($var);
+			if(!empty($var)){
+				$db->quote($var);
+				return strip_tags($var);
+				//return str_replace($sqlInjectionValiable,'',strip_tags($var));
+			}else{
+				return '';
+			
+			}
+		
 		}
 		
 	}
