@@ -1,6 +1,7 @@
 <?PHP
 	include('WorkOrders.inc');
 	define('NBCDOTCOM' , 8);
+	include('_ajaxphp/util.php');
 	class Workorders_IndexController extends LighthouseController { 
 		public function indexAction() {
 		$cnt = 5;
@@ -274,19 +275,18 @@
 			$option_INFRA_TYPE ='_blank';
 			$closed_wo_style = '';
 			if((isset($_REQUEST['wo_id']) && !empty($_REQUEST['wo_id'])) || isset($_REQUEST['copyWO']) ) {
-				 $wo_id = ($_REQUEST['wo_id']);
+				 $wo_id = (int)$_REQUEST['wo_id'];
 				/* LH fixes
 				 * LH#21355
 				 */
-				/*if(!is_numeric($wo_id )){
-					$this->_redirect("workorders/index/");
-				}*/
+				
 				if( isset($_REQUEST['copyWO']))
 				{
-					$new_wo_id = $_REQUEST['copyWO'];
+					$new_wo_id = (int)$_REQUEST['copyWO'];
 				}else
 				{
-					$new_wo_id = ($_REQUEST['wo_id']);
+					$new_wo_id = (int)($_REQUEST['wo_id']);
+					
 				}
 				/* LH fixes
 				 * LH#21355
@@ -294,7 +294,7 @@
 				if(!is_numeric($new_wo_id )){
 					$this->_redirect("workorders/index/");
 				}
-				$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`='$new_wo_id' LIMIT 1");
+				$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`=? LIMIT 1",array($new_wo_id));
 				/* LH fixes
 				 * LH#21355
 				 */
@@ -429,7 +429,7 @@
 					<h4>Work Order Information</h4>';
 					if(isset($_REQUEST['wo_id'])) {
 
-						echo '<div style="float:right;margin:6px 7px 0 -5px;"><button onClick="copyRequest(\''.$_REQUEST['wo_id'].'\');"><span>Copy Request</span></button></div>';
+						echo '<div style="float:right;margin:6px 7px 0 -5px;"><button onClick="copyRequest(\''.$wo_id.'\');"><span>Copy Request</span></button></div>';
 					}
 					
 				echo'</div>
@@ -561,7 +561,7 @@
 								 if(isset($_REQUEST['wo_id'])) 
 								 {
 								 
-								 echo '<input type="hidden" name="woesd" id="woesd" value="'.$_REQUEST['wo_id'].'" >';
+								 echo '<input type="hidden" name="woesd" id="woesd" value="'.$wo_id.'" >';
 								 echo '<select "'.$closed_wo_style.'" class="field_medium" name="SEVERITY" id="SEVERITY" onchange="severityChange(this.value)">';}
 								 else
 								 {echo '<select "'.$closed_wo_style.'" class="field_medium" name="SEVERITY" id="SEVERITY" onchange="severityChange(this.value)">';
@@ -656,9 +656,9 @@
 								<div class="no_label_side">
 									<div class="wo_dimmer" id="file_upload_dimmer" style="display: none;"></div>
 									<form id="file_upload_form" name="file_upload_form" accept-charset="utf-8" method="post" action="" enctype="multipart/form-data">
-									<input type="hidden" name="workorder_id" id="workorder_id" value="' .@$wo_id .'" />
-									<input type="hidden" name="copyWO" id="copyWO" value="' .@$_REQUEST['copyWO'] .'" />
-									<input type="hidden" name="dirName" id="dirName" value="' .@$wo_id .'" />
+									<input type="hidden" name="workorder_id" id="workorder_id" value="' .$wo_id .'" />
+									<input type="hidden" name="copyWO" id="copyWO" value="' .$new_wo_id .'" />
+									<input type="hidden" name="dirName" id="dirName" value="' .$wo_id .'" />
 									
 									<label id="upload_file_label">Attach files (each file should be under 10MB)
 									<img onmouseover="showWOTooltip();" onmouseout="hideWOTooltip();" align="absmiddle" src="/_images/tool-tip-lighthouse-v2.png" style="cursor:help;">
@@ -1476,28 +1476,32 @@
 			$this->view->wo_details = $postingList;
 		}
 		public function mobileeditAction(){
+			$db = Zend_Registry::get('db');
 			$readonly = false;
 			$vars = array();
-			$wo_id = ($_REQUEST['wo_id']);
+			if(ISSET($_REQUEST['wo_id'])){
+				$wo_id = (int)WoDisplay::safeSql($_REQUEST['wo_id']);
+			}
+			
 			$user_id = $_SESSION["user_id"];
 			$save = "";
 			if(array_key_exists("save_type", $_POST)){
-				$save = $_POST["save_type"];
+				$save = strip_tags($_POST["save_type"]);
 			}
 			switch($save){
 				case "save_wo":
-						$new_status = $_POST["wo_status"];
-						$new_assigned = $_POST["wo_assigned_user"];
+						$new_status = WoDisplay::safeSql($_POST["wo_status"]);
+						$new_assigned = WoDisplay::safeSql($_POST["wo_assigned_user"]);
 
-						$old_wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`='$wo_id' LIMIT 1");
+						$old_wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`= ? LIMIT 1",array($wo_id));
 						$assigned_date = "";
 						if($old_wo_data[0]['assigned_to'] != $new_assigned){
 							$assigned_date = ", `assigned_date`=NOW() ";
 							$new_status = "2";
 						}
-						$update_wo_sql = "UPDATE `workorders` SET `assigned_to`='$new_assigned', `status`='$new_status' $assigned_date WHERE `id`='$wo_id'";
+						$update_wo_sql = "UPDATE `workorders` SET `assigned_to`= ?, `status`= ? $assigned_date WHERE `id`= ?";
 						$sql = $update_wo_sql;
-						WoDisplay::executeQuery($update_wo_sql);
+						WoDisplay::executeQuery($update_wo_sql, array($new_assigned,$new_status,$wo_id));
 						
 						if($new_status == "2"){
 							// When a wo is assigned to a new person.
@@ -1508,16 +1512,16 @@
 						}
 						break;
 				case "close_wo":
-						$close_wo_sql = "UPDATE `workorders` SET `closed_date`=NOW(), `status`='1' WHERE `id`='$wo_id'";
+						$close_wo_sql = "UPDATE `workorders` SET `closed_date`=NOW(), `status`='1' WHERE `id`= ?";
 						$sql = $close_wo_sql;
-						WoDisplay::executeQuery($close_wo_sql);
+						WoDisplay::executeQuery($close_wo_sql, array($wo_id));
 						$this->sendEmail("status_change", $wo_id, $user_id);
 						break;
 				case "comment_wo":
-						$new_comment = $_POST["comment"];
-						$insert_wo_comment = "INSERT INTO `workorder_comments` (`workorder_id`,`user_id`,`comment`,`date`) VALUES ('$wo_id','$user_id','$new_comment',NOW())";
+						$new_comment = Util::escapewordquotes($_POST["comment"]);
+						$insert_wo_comment = "INSERT INTO `workorder_comments` (`workorder_id`,`user_id`,`comment`,`date`) VALUES (?,?,?,NOW())";
 						$sql = $insert_wo_comment;
-						WoDisplay::executeQuery($insert_wo_comment);
+						WoDisplay::executeQuery($insert_wo_comment,array($wo_id,$user_id,$new_comment));
 						$this->sendEmail("comment", $wo_id, $user_id, $new_comment);
 						break;
 				case "":
@@ -1525,11 +1529,11 @@
 						break;
 			}
 
-			$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`='$wo_id' LIMIT 1");
+			$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`=? LIMIT 1", array($wo_id));
 			
-			$requestors_data = WoDisplay::getQuery("SELECT * FROM `users` WHERE `id`='" . $wo_data[0]['requested_by'] ."' LIMIT 1");
-			$project_data = WoDisplay::getQuery("SELECT CONCAT(`project_code`, ' - ', `project_name`) AS name FROM `projects` WHERE `id`='" . $wo_data[0]['project_id'] . "' LIMIT 1");
-			$priority_data = WoDisplay::getQuery("SELECT CONCAT(`name`, ' - ', `time`) AS priority FROM `lnk_workorder_priority_types` WHERE `id`='" . $wo_data[0]['priority'] . "' LIMIT 1");
+			$requestors_data = WoDisplay::getQuery("SELECT * FROM `users` WHERE `id`= ? LIMIT 1",array($wo_data[0]['requested_by']));
+			$project_data = WoDisplay::getQuery("SELECT CONCAT(`project_code`, ' - ', `project_name`) AS name FROM `projects` WHERE `id`= ? LIMIT 1",array($wo_data[0]['project_id']));
+			$priority_data = WoDisplay::getQuery("SELECT CONCAT(`name`, ' - ', `time`) AS priority FROM `lnk_workorder_priority_types` WHERE `id`= ?  LIMIT 1",array($wo_data[0]['priority']));
 
 			if(@$wo_data[0]['creation_date'] != "") {
 				$start_date_time_part = explode(" ", @$wo_data[0]['creation_date']);
@@ -1552,7 +1556,7 @@
 			} else {
 				$close_date = '';
 			}
-
+			
 			$vars['project_name'] = $project_data[0]['name'];
 			$vars['priority'] = $priority_data[0]['priority'];
 			$vars['title'] = $wo_data[0]['title'];
@@ -1569,7 +1573,7 @@
 			$vars['closed_date'] = $close_date;
 			$vars['readonly'] = $readonly;
 
-			$comment_data = WoDisplay::getQuery("SELECT * FROM `workorder_comments` WHERE `workorder_id`='" . $wo_id ."' order by date");
+			$comment_data = WoDisplay::getQuery("SELECT * FROM `workorder_comments` WHERE `workorder_id`= ? order by date",array($wo_id));
 										
 			for($cx = 0; $cx < sizeof($comment_data); $cx++) {
 				$comment_date_time_part = explode(" ", $comment_data[$cx]['date']);
@@ -1592,11 +1596,11 @@
 
 		public function sendEmail($type, $woid, $userId, $comment_text=''){
 
-			$select_email_users = "SELECT * FROM `workorders` WHERE `id`='$woid' LIMIT 1";
-			$email_res = WoDisplay::getQuery($select_email_users);
+			$select_email_users = "SELECT * FROM `workorders` WHERE `id`= ? LIMIT 1";
+			$email_res = WoDisplay::getQuery($select_email_users,array($woid));
 			if(sizeOf($email_res) > 0) {
-				$new_commenter = "SELECT * FROM `users` WHERE `id`='$userId' LIMIT 1";
-				$commenter_res = WoDisplay::getQuery($new_commenter);
+				$new_commenter = "SELECT * FROM `users` WHERE `id`= ? LIMIT 1";
+				$commenter_res = WoDisplay::getQuery($new_commenter,array($userId));
 				$commenter_row = $commenter_res[0];
 			
 				$email_row = $email_res[0];
@@ -2005,12 +2009,13 @@
 		public function projectselectAction(){
 			$proj_select = isset($_COOKIE["lighthouse_create_wo_data"])? $_COOKIE["lighthouse_create_wo_data"] : "";
 			if((isset($_REQUEST['wid']) &&(!empty($_REQUEST['wid']))) || (isset($_REQUEST['copyWO']) && (!empty($_REQUEST['copyWO'])))) {
-			//if(isset($_REQUEST['wid']) || isset($_REQUEST['copyWO'])) {
-				echo WoDisplay::getProjectOptionHTML($_REQUEST['project_id']);
+			//if(isset($_REQUEST['wid']) || isset($_REQUEST['copyWO'])) 
+				$pj = (int) $_REQUEST['project_id'];
+				echo WoDisplay::getProjectOptionHTML($pj);
 			} else if($proj_select != ""){
 				echo WoDisplay::getProjectOptionHTML($proj_select);
 			}else {  
-				$pj = @$_REQUEST['project'];
+				$pj = (int)$_REQUEST['project'];
 				echo WoDisplay::getProjectOptionHTML($pj);
 			}
 		$this->_helper->layout->disableLayout();
@@ -2019,16 +2024,16 @@
 		
 		public function wostatusAction(){
 		
-			$wid = $_REQUEST['woId'];
-			$wo_status = $_REQUEST['woStatus'];
-			$wo_data = WoDisplay::getQuery("SELECT status FROM `workorders` WHERE `id`='$wid' LIMIT 1");
+			$wid = (int)$_REQUEST['woId'];
+			$wo_status = strip_tags($_REQUEST['woStatus']);
+			$wo_data = WoDisplay::getQuery("SELECT status FROM `workorders` WHERE `id`= ? LIMIT 1",array($wid));
 			//print_r($wo_data);
 			if($wo_status !=  $wo_data[0]['status']){ 
 				$new_status = $wo_data[0]['status'];
 				//$workorder_audit = WoDisplay::getQuery("SELECT wa.*,at.name  FROM `workorder_audit` wa,`lnk_audit_trial_types` at where workorder_id = '$wid' and at.id = wa.audit_id order by `log_date`");
 				//$audit_status = $workorder_audit[0]['status'] ;
 				//echo "SELECT * FROM `lnk_workorder_status_types` WHERE `id`='" .$new_status ."' LIMIT 1";
-				$audit_status_dataold = WoDisplay::getQuery("SELECT * FROM `lnk_workorder_status_types` WHERE `id`='" .$new_status ."' LIMIT 1");
+				$audit_status_dataold = WoDisplay::getQuery("SELECT * FROM `lnk_workorder_status_types` WHERE `id`= ? LIMIT 1", array($new_status));
 				//$audit_statusold[$row['status']] = $audit_status_dataold[0]['name'] ;
 				echo "Your Comment has been saved with status ".$audit_status_dataold[0]['name'] ;
 			}
@@ -2039,9 +2044,9 @@
 		
 		public function wostatusupdateAction(){
 		
-			$wid = $_REQUEST['woId'];
-			$wo_status = $_REQUEST['woStatus'];
-			$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`='$wid' LIMIT 1");
+			$wid = (int)$_REQUEST['woId'];
+			$wo_status = strip_tags($_REQUEST['woStatus']);
+			$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`= ? LIMIT 1",array($wid));
 			//print_r($wo_data);
 			if($wo_status !=  $wo_data[0]['status']){ 
 				echo $new_status = $wo_data[0]['status']."~".$wo_data[0]['assigned_to'];
