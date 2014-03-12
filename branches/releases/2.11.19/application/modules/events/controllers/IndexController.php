@@ -23,6 +23,8 @@ ob_start();
 		public function createAction(){
 			
 			$userId = $_SESSION['user_id'];
+			//print_r(EventDisplay::getTableData("users","concat_ws(',',last_name,first_name) as fullname,email","id=$userId"));
+			
 			$userComapny = $_SESSION['company'];
 			
 			if(in_array($userComapny,self::$opsComapny)){
@@ -105,9 +107,9 @@ ob_start();
 			
 		}
 		public function addccuserAction(){
-			$eventId = (int)$this->_request->getParam('eId');
-			$cc = $this->_request->getParam('cc');
-			$addcc = $this->_request->getParam('addcc');
+			$eventId = (int)EventDisplay::safeSql($this->_request->getParam('eId'));
+			$cc = EventDisplay::safeSql($this->_request->getParam('cc'));
+			$addcc = EventDisplay::safeSql($this->_request->getParam('addcc'));
 			$ccArray = array();
 			$list = explode(",", $cc);
 			for($i = 0; $i < sizeof($list); $i++) {
@@ -131,8 +133,8 @@ ob_start();
 			}
 			if(!empty($eventId)){
 				if(!empty($addcc)){
-					$addccuserInfo = EventDisplay::getTableData("users","concat_ws(',',last_name,first_name) as fullname,email","id=$addcc");
-					$eventInfo = EventDisplay::getTableData("events","*","id = $eventId");
+					$addccuserInfo = EventDisplay::getTableData("users","concat_ws(',',last_name,first_name) as fullname,email","id= ?",array($addcc));
+					$eventInfo = EventDisplay::getTableData("events","*","id = ?",array($eventId));
 					$requestedByuser = $eventInfo['requested_by'];
 					$createoruserInfo = EventDisplay::getTableData("users","concat_ws(',',last_name,first_name) as fullname,email","id=$requestedByuser");
 					$brandName = EventDisplay::getTableData('companies', "name", "id=".$eventInfo['company_id']);
@@ -172,26 +174,27 @@ ob_start();
 		public function addeventAction(){
 			
 			//$this->_request->getParam('user_id')
+			
 			$userId = $_SESSION['user_id'];
 			$startdate = Util::dateTimeToSql($_POST['ev_start_date'],$_POST['ev_start_hr'],$_POST['ev_ampm'],$_POST['ev_start_min']);
 			$enddate = Util::dateTimeToSql($_POST['ev_end_date'],$_POST['ev_end_hr'],$_POST['ev_end_ampm'],$_POST['ev_end_min']);
 		    $title = Util::escapewordquotes(strip_tags($_POST['ev_title']));
 		    EventDisplay::changeTimeZone($startdate,$_POST['ev_start_time_zone']);
 			$data = array(
-				"company_id" => $this->_request->getParam('ev_brand_name'),
-				'assigned_to' => $this->_request->getParam('ev_assigned_to'),
-				'status' => $this->_request->getParam('ev_eventStatus'),
+				"company_id" => EventDisplay::safeSql($this->_request->getParam('ev_brand_name')),
+				'assigned_to' => EventDisplay::safeSql($this->_request->getParam('ev_assigned_to')),
+				'status' => EventDisplay::safeSql($this->_request->getParam('ev_eventStatus')),
 				'archived' => 0,
 				'title' => $title,
 				'example_url' => strip_tags($this->_request->getParam('ev_url')),
-				'anticipated_traffic' => $this->_request->getParam('ev_traffic'),
-				'load_test_status' => $this->_request->getParam('ev_loadTest'),
+				'anticipated_traffic' => EventDisplay::safeSql($this->_request->getParam('ev_traffic')),
+				'load_test_status' => EventDisplay::safeSql($this->_request->getParam('ev_loadTest')),
 				'body' => Util::escapewordquotes($this->_request->getParam('ev_desc')),
-				'requested_by' => $this->_request->getParam('ev_requested_by'),
-				'cclist' => $this->_request->getParam('cclist'),
+				'requested_by' => EventDisplay::safeSql($this->_request->getParam('ev_requested_by')),
+				'cclist' => EventDisplay::safeSql($this->_request->getParam('cclist')),
 				'start_date' => $startdate,
 				'completed_date'  =>$enddate,
-				'time_zone'  => $this->_request->getParam('start_time_zone'),
+				'time_zone'  => EventDisplay::safeSql($this->_request->getParam('start_time_zone')),
 				'est_start_datetime' => EventDisplay::changeTimeZone($startdate,$_POST['start_time_zone']),
 				'est_end_datetime' => EventDisplay::changeTimeZone($enddate, $_POST['start_time_zone']),
 				'creation_date' => date("Y-m-d H:i:s"),
@@ -208,11 +211,11 @@ ob_start();
 				•	Date Change
 				•	URL Change
 				•	Anticipated Traffic increase*/
-				$preStartDate = $this->_request->getParam('pre_start_date');
-				$preEndDate = $this->_request->getParam('pre_end_date');
-				$preUrl = $this->_request->getParam('pre_url');
-				$preTraffic = $this->_request->getParam('pre_traffic');
-				$prevBrandId = $this->_request->getParam('prev_brand_name');
+				$preStartDate = EventDisplay::safeSql($this->_request->getParam('pre_start_date'));
+				$preEndDate = EventDisplay::safeSql($this->_request->getParam('pre_end_date'));
+				$preUrl = EventDisplay::safeSql($this->_request->getParam('pre_url'));
+				$preTraffic = EventDisplay::safeSql($this->_request->getParam('pre_traffic'));
+				$prevBrandId = EventDisplay::safeSql($this->_request->getParam('prev_brand_name'));
 				if($preStartDate != strtotime($startdate)){
 					$eventChangeFilter = 'A';
 				}
@@ -234,19 +237,19 @@ ob_start();
 				}
 				
 				$data1 = array(
-					"company_id" => $this->_request->getParam('ev_brand_name'),
-					'assigned_to' => $this->_request->getParam('ev_assigned_to'),
+					"company_id" => EventDisplay::safeSql($this->_request->getParam('ev_brand_name')),
+					'assigned_to' => EventDisplay::safeSql($this->_request->getParam('ev_assigned_to')),
 					'status' => $eventStatus,
 					'title' => $title,
 					'example_url' => strip_tags($this->_request->getParam('ev_url')),
-					'anticipated_traffic' => $this->_request->getParam('ev_traffic'),
-					'load_test_status' => $this->_request->getParam('ev_loadTest'),
+					'anticipated_traffic' => EventDisplay::safeSql($this->_request->getParam('ev_traffic')),
+					'load_test_status' => EventDisplay::safeSql($this->_request->getParam('ev_loadTest')),
 					'body' => Util::escapewordquotes($this->_request->getParam('ev_desc')),
-					'requested_by' => $this->_request->getParam('ev_requested_by'),
-					'cclist' => $this->_request->getParam('cclist'),
+					'requested_by' => EventDisplay::safeSql($this->_request->getParam('ev_requested_by')),
+					'cclist' => EventDisplay::safeSql($this->_request->getParam('cclist')),
 					'start_date' => $startdate,
 					'completed_date'  =>$enddate,
-					'time_zone'  => $this->_request->getParam('start_time_zone'),
+					'time_zone'  => EventDisplay::safeSql($this->_request->getParam('start_time_zone')),
 					'est_start_datetime' => EventDisplay::changeTimeZone($startdate,$_POST['start_time_zone']),
 					'est_end_datetime' => EventDisplay::changeTimeZone($enddate, $_POST['start_time_zone'])
 				
@@ -422,7 +425,7 @@ ob_start();
 				$eventId = EventDisplay::insertEvent($data);
 				try{
 					
-					$brandName = EventDisplay::getTableData('companies', "name", "id=".$data['company_id']);
+					$brandName = EventDisplay::getTableData('companies', "name", "id= ?",array($data['company_id']));
 					$html = new Zend_View();
 					$html->setScriptPath(APPLICATION_PATH."/modules/email/views/");	
 					$requestedByuser = $data['requested_by'];
@@ -543,9 +546,9 @@ ob_start();
 		
 		public function addcommentAction(){
 			$comment = $_POST['comment'];
-			$ev_assigned_to = $_POST['ev_assigned_to'];
-			$ev_eventStatus = $_POST['ev_eventStatus'];
-			$event_id = $_POST['event_id'];
+			$ev_assigned_to = EventDisplay::safeSql($_POST['ev_assigned_to']);
+			$ev_eventStatus = EventDisplay::safeSql($_POST['ev_eventStatus']);
+			$event_id = (int)EventDisplay::safeSql($_POST['event_id']);
 			$userId = $_SESSION['user_id'];
 			$commanrArray = array(
 				"event_id" =>$event_id,
@@ -563,7 +566,7 @@ ob_start();
 				$aduitId = 'Comment Added';
 				EventDisplay::addCommentAudit($event_id,$aduitId, $userId,$ev_assigned_to,$ev_eventStatus);
 				 //send mail to all cc user and requested by and assigned to users 
-				 $eventInfo = EventDisplay::getTableData("events","*","id=$event_id");
+				 $eventInfo = EventDisplay::getTableData("events","*","id= ?",array($event_id));
 				 $requestorInfo = EventDisplay::getTableData("users","concat_ws(', ',last_name,first_name) as fullname,email","id=".$eventInfo['requested_by']);
 				 $brandName = EventDisplay::getTableData('companies', "name", "id=".$eventInfo['company_id']);
 				 $comment_body = array();
@@ -598,7 +601,9 @@ ob_start();
 				
 				 foreach($emailusers as $emailUserId){
 				 	if($emailUserId != ''){
-					 	$userInfo = EventDisplay::getTableData("users","concat_ws(', ',last_name,first_name) as fullname,email","id=$emailUserId");
+				 		
+					 	$userInfo = EventDisplay::getTableData("users","concat_ws(', ',last_name,first_name) as fullname,email","id=$emailUserId"); 
+					 	
 						$mail = new Zend_Mail('utf-8');
 						$mail->addTo($userInfo['email'],$userInfo['fullname']);
 						$subject = "Event ".$event_id.": Comment - ". html_entity_decode($eventInfo['title'],ENT_NOQUOTES,'UTF-8') . "";
@@ -647,7 +652,7 @@ ob_start();
 			$this->view->assign('ev_dimmer',"block");
 			
 			if(isset($_GET['eId'])) {
-				$eId = $_GET['eId'];   
+				$eId = (int)EventDisplay::safeSql($_GET['eId']);   
 				$eventInfo = EventDisplay::getEventInfo($eId, '*');
 				
 				
@@ -682,16 +687,16 @@ ob_start();
 		}
 		
 		public function listdataAction(){
-			$month = $_GET['month']; 
+			$month = EventDisplay::safeSql($_GET['month']); 
 			$this->view->assign('company_id', $_GET['company']);
-			$status_id = $_GET['status'];
+			$status_id = EventDisplay::safeSql($_GET['status']);
 			$monthnameHtml = EventDisplay::getMonthHTML($month);
 			
 			$this->view->assign("monthnameHtml", $monthnameHtml);
 			
 			$eventStatus = EventDisplay::getEventStatusList($status_id);
 			$this->view->assign("eventStatus", $eventStatus);
-			$year =  (int)$_GET['year'];
+			$year =  EventDisplay::safeSql($_GET['year']);
 			
 			$yearList = EventDisplay::getyearHTML($year);
 			$this->view->assign("yearList", $yearList);
@@ -700,8 +705,8 @@ ob_start();
 			
 			
 			if(isset($_GET['month']) && $_GET['month']!="All"):
-			 	$query .=" AND (MONTH(est_start_datetime)= ".$_GET['month'];
-			 	$query .=" OR MONTH(est_end_datetime)= ".$_GET['month'].")";
+			 	$query .=" AND (MONTH(est_start_datetime)= ".EventDisplay::safeSql($_GET['month']);
+			 	$query .=" OR MONTH(est_end_datetime)= ".EventDisplay::safeSql($_GET['month']).")";
 			endif;
 			
 			if((isset($_GET['year']) && $_GET['year']!="All")):
@@ -711,16 +716,16 @@ ob_start();
 			endif;
 			
 			if((isset($_GET['company']) && $_GET['company']!="-1")):
-				$query .=" AND (FIND_IN_SET( ".$_GET['company'].", affected_company_list ) !=0";
-				$query .=" OR company_id =".$_GET['company'].")";
+				$query .=" AND (FIND_IN_SET( ".EventDisplay::safeSql($_GET['company']).", affected_company_list ) !=0";
+				$query .=" OR company_id =".EventDisplay::safeSql($_GET['company']).")";
 			endif;
 			
 			if((isset($_GET['status']) && $_GET['status']!="0")):
-				$query .=" AND status = ".$_GET['status'];
+				$query .=" AND status = ".EventDisplay::safeSql($_GET['status']);
 			endif;
 			
 			if(isset($_GET['pagenum'])):
-				$pagenum = $_GET['pagenum'];
+				$pagenum = EventDisplay::safeSql($_GET['pagenum']);
 			endif;
 			
 			$totalResult = EventDisplay::getQuery($query);
@@ -799,25 +804,25 @@ ob_start();
 				
 				if(isset($_GET['month']) && $_GET['month']!="All"):
 				 	$query .=" AND (MONTH(est_start_datetime)= ".$_GET['month'];
-				 	$query .=" OR MONTH(est_end_datetime)= ".$_GET['month'].")";
+				 	$query .=" OR MONTH(est_end_datetime)= ".EventDisplay::safeSql($_GET['month']).")";
 				endif;
 				
 				if((isset($_GET['year']) && $_GET['year']!="All")):
-				 	$query .=" AND (YEAR(est_start_datetime)= ".$_GET['year'];
-				 	$query .=" OR YEAR(est_end_datetime)= ".$_GET['year'].")";
+				 	$query .=" AND (YEAR(est_start_datetime)= ".EventDisplay::safeSql($_GET['year']);
+				 	$query .=" OR YEAR(est_end_datetime)= ".EventDisplay::safeSql($_GET['year']).")";
 				endif;
 				
 				if((isset($_GET['company']) && $_GET['company']!="-1")):
-					$query .=" AND (FIND_IN_SET( ".$_GET['company'].", affected_company_list ) !=0";
-					$query .=" OR company_id =".$_GET['company'].")";
+					$query .=" AND (FIND_IN_SET( ".EventDisplay::safeSql($_GET['company']).", affected_company_list ) !=0";
+					$query .=" OR company_id =".EventDisplay::safeSql($_GET['company']).")";
 				endif;
 				
 				if((isset($_GET['status']) && $_GET['status']!="0")):
-					$query .=" AND status = ".$_GET['status'];
+					$query .=" AND status = ".EventDisplay::safeSql($_GET['status']);
 				endif;
 				
 				if(isset($_GET['pagenum'])):
-					$pagenum = $_GET['pagenum'];
+					$pagenum = EventDisplay::safeSql($_GET['pagenum']);
 				endif;
 				
 				$totalResult = EventDisplay::getQuery($query);
