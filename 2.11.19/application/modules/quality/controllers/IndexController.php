@@ -789,7 +789,7 @@
 							<div class="side_bucket_title">CC List</div>
 							<div class="side_bucket_content">';
 								if(isset($_GET['defect_id'])) {
-									echo QaDisplay::getCCList($_GET['defect_id']);
+									echo QaDisplay::getCCList($defect_id);
 								} else {
 									echo '<input type="hidden" name="cclist" id="cclist" value="" />';
 								}
@@ -994,11 +994,24 @@
 		public function mobileeditAction(){
 			$readonly = false;
 			$vars = array();
-			$request_param = $this->getRequest();
+			//Mobile Edit not in use
+			if(isset($_GET['defect_id'])) {
+				$defect_id = $this->_request->getQuery('defect_id'); 
+				
+				if(!is_numeric($defect_id )){
+					$this->_redirect("quality/index/");
+				}else{
+					$this->_redirect("quality/index/edit/?defect_id=".$defect_id);
+					
+				}
+			}else{
+				$this->_redirect("quality/index/create");
+			}	
+				
+			$this->_helper->layout->disableLayout();
+			/*$request_param = $this->getRequest();
 			$defect_id = (int)$request_param->getQuery('defect_id');
-			/*if(!is_numeric($defect_id )){
-				$this->_redirect("quality/index/");
-			}*/
+			
 			
 			$user_id = $_SESSION["user_id"];
 			$save = "";
@@ -1109,7 +1122,7 @@
 			$this->view->defect_id = $defect_id;
 			$this->view->vars = $vars;
 			$this->view->status = QaDisplay::getStatusOptionEditHTML($vars['status'], $vars['project_id']);
-			$this->view->assigned = QaDisplay::getUserAssignOptionEditHTML($vars['assigned_user']);
+			$this->view->assigned = QaDisplay::getUserAssignOptionEditHTML($vars['assigned_user']);*/
 //			$this->render("edit");
 		}
 
