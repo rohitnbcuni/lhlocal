@@ -12,7 +12,7 @@
 			$year = DATE("Y");
 			$intCurrMonth = DATE("m");
 			$request_param = $this->getRequest();
-			$userID = (int)$request_param->getQuery('userid');
+			$userID = $request_param->getQuery('userid');
 			//$userID = @$_REQUEST["userid"];
 			
 			
@@ -32,7 +32,7 @@
 					$this->_redirect("noaccess");
 				}
 				$user_data = RpDisplay::getUserInfo($userID);
-				$user_data = trim($user_data);
+				$user_data = trim($user_data); 
 				if(empty($user_data)){
 					$this->_redirect("noaccess");
 				}
@@ -214,7 +214,9 @@
 			} else {
 
 				if(isset($_COOKIE["lighthouse_rp_data"])) {
-						$savedData = explode('~', urldecode($_COOKIE["lighthouse_rp_data"]));
+						
+						
+						$savedData = explode('~', RpDisplay::safeSql(urldecode($_COOKIE["lighthouse_rp_data"])));
 						$savedRole = $savedData[0];
 
 						$savedDate = date("m-d-Y", mktime(1, 0, 0, date('m'), date('d')-date('w')+1, date('Y'),0));
@@ -242,7 +244,7 @@
 					$is_filter_selected = '';	
 					$hiddenChar = 'a';
 				  }
-				  setcookie("lighthouse_rp_data", urlencode($savedData[0] . '~' . $savedData[1] . '~' . $savedData[2] . '~' . $savedData[3] . '~' . ''. '~' . '' . '~' . $savedData[6]), time()+220752000, '/', isset($_SERVER["HTTPS"]));
+				  setcookie("lighthouse_rp_data", urlencode(RpDisplay::safeSql($savedData[0] . '~' . $savedData[1] . '~' . $savedData[2] . '~' . $savedData[3] . '~' . ''. '~' . '' . '~' . $savedData[6])), time()+220752000, '/', isset($_SERVER["HTTPS"]),true);
 				  
 				} else {
 					$savedRole = '';
