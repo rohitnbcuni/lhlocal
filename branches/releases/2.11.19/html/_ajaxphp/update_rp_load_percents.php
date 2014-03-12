@@ -18,7 +18,7 @@
 	} else {
 		$part='';
 	}
-	$character = $_GET['showUser'];
+	$character = $mysql->real_escape_string($_GET['showUser']);
 	$role = $mysql->real_escape_string($_GET['role']);
 
 	if(!empty($_REQUEST['role']) || !empty($_REQUEST['program_type'] )){

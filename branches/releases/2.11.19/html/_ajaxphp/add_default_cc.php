@@ -27,26 +27,29 @@
 			}
 			
 			$update_cc = "UPDATE `projects` SET `cclist`= ? WHERE `id`= ?";
-			@$mysql->sqlprepare($update_cc, array($arrayData,$projectId));
+			$mysql->sqlprepare($update_cc, array($arrayData,$projectId));
 
             $select_cc = "SELECT `cclist` FROM `projects` WHERE `id`= ? LIMIT 1";
-			$result = @$mysql->sqlprepare($select_cc, array($projectId));
-			$row = @$result->fetch_assoc();
+			$result = $mysql->sqlprepare($select_cc, array($projectId));
+			
 
 			if($result->num_rows > 0) {
+				$row = $result->fetch_assoc();
 				$new_list = explode(",", $row['cclist']);
 				$list = "";
 				
 				for($x = 0; $x < sizeof($new_list); $x++) {
 					if(!empty($new_list[$x])) {
 						$select_cc_user = "SELECT * FROM `users` WHERE `id`= ? LIMIT 1";
-						$cc_user_result = @$mysql->sqlprepare($select_cc_user, array($new_list[$x]));
-						$cc_user_row = @$cc_user_result->fetch_assoc();
+						$cc_user_result = $mysql->sqlprepare($select_cc_user, array($new_list[$x]));
+						if($cc_user_result->num_rows > 0) {
+							$cc_user_row = $cc_user_result->fetch_assoc();
 						
-						$list .= '<li class="admincc_listli">'
+							$list .= '<li class="admincc_listli">'
                                          ."<div class=\"admincclist_name\">" .ucfirst($cc_user_row['first_name']) ." " .ucfirst($cc_user_row['last_name']) ."</div>"
                                                	."<button class=\"status admincclist_remover\" onClick=\"removeCcUser(" .$new_list[$x] .",'".$projectId."'); return false;\"><span>remove</span></button>"
 								."</li>";
+						}
 					}
 				}				
 				echo $list;				

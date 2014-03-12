@@ -105,7 +105,7 @@ $date_range_filter_sql = " AND b.`closed_date` >= '".date('Y-m-d',strtotime($mys
 	}
   if(isset($_REQUEST['search']) && !empty($_REQUEST['search'])){
     $search_filter_table_sql = " LEFT JOIN workorder_comments wc ON wc.workorder_id = b.id";
-    $search_filter_sql = " AND (`title` like '%".$mysql->real_escape_string($_REQUEST['search'])."%' OR `body` like '%".$mysql->real_escape_string($_REQUEST['search'])."%' OR `example_url` like '%".$mysql->real_escape_string($_REQUEST['search'])."%' OR `comment` like '%".$_REQUEST['search']."%')";
+    $search_filter_sql = " AND (`title` like '%".$mysql->real_escape_string($_REQUEST['search'])."%' OR `body` like '%".$mysql->real_escape_string($_REQUEST['search'])."%' OR `example_url` like '%".$mysql->real_escape_string($_REQUEST['search'])."%' OR `comment` like '%".$mysql->real_escape_string($_REQUEST['search'])."%')";
   }
   if(isset($_REQUEST['page_num'])){
     $page_num = intval($_REQUEST['page_num']);

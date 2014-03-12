@@ -5,12 +5,13 @@
 	
 		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 		global $mysql;
-		$woIdClean = $mysql->real_escape_string(@$_POST['workorder_id']);
+		$woIdClean = $mysql->real_escape_string($_POST['workorder_id']);
 		$woId = "'" .$woIdClean ."'";
-		$dirName = $mysql->real_escape_string(@$_POST['dirName']);
+		$dirName = $mysql->real_escape_string($_POST['dirName']);
 		
-		$cleaned_filename = str_replace(" ", "_", $_FILES['upload_file']['name']);
-		$cleaned_filename = str_replace("'", "_", $_FILES['upload_file']['name']);
+		$cleaned_filename = str_replace(" ", "_", ($_FILES['upload_file']['name']));
+		$cleaned_filename = str_replace("'", "_", $cleaned_filename);
+		$cleaned_filename = str_replace('"', "_",$cleaned_filename);
 		
 		//$ext = array('.jpg','.jpeg','.png','.gif','.tiff','.bmp','.html','.txt','.xml','.xls','.xlsx','.pdf','.doc','.docx','.zip','.tar','.flv','.mp4','.JPG','.JPEG','.PNG','.TIFF','.BMP','.HTML','.TXT','.XML','.XLS','.XLSX','.PDF','.DOC','.DOCX');
 		$ext = unserialize(ALLOWED_FILE_EXTENSION);
@@ -22,11 +23,19 @@
 		
 		die("Exdeed");
 		*/
+		$mimitype_extension = ".".pathinfo($_FILES['upload_file']['name'], PATHINFO_EXTENSION);
+		if(!in_array($mimitype_extension,$ext)){
+			$cleaned_filename = '';
+			die ("You cannot upload in that format"); 
+				
+		}
 		if(!in_array(strrchr($cleaned_filename,'.'),$ext)){
+			$cleaned_filename = '';
 			die ("You cannot upload in that format"); 
 		}	
 		
 		if ($_FILES['upload_file']['size']> MAX_UPLOAD_FILE_SIZE){
+			$cleaned_filename = '';
 		
 			die("The file size of the attachment is more than uploading limit");
 		
@@ -36,7 +45,8 @@
 		} else {
 			$dirName = $woIdClean ."/";
 		}
-
+		
+		if(!empty($cleaned_filename)){
 		$select_file = "SELECT * FROM `workorder_files` WHERE `directory`='" .str_replace("/", "", $dirName) ."' AND `file_name`='" .$cleaned_filename ."' LIMIT 1";
 		$result = $mysql->sqlordie($select_file);
 		
@@ -65,6 +75,7 @@
 			/*$update_image = "UPDATE `workorder_files` SET `deleted`='0' WHERE `id`='$entryId'";
 			$mysql->query($update_image);
 			$mysql->error;*/
+		}
 		}
 	}
 	

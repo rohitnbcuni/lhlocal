@@ -13,7 +13,7 @@
 	$count = 0;
 	$commentResult = $mysql->sqlordie("SELECT count(1) AS comment_count FROM risk_comments WHERE risk_id='$riskId' AND deleted='0' AND archived='0'");
 
-	if($commentResult){
+	if($commentResult->num_rows > 0) {
 		$comment = $commentResult->fetch_assoc();
 		$count = $comment['comment_count'];
 	}

@@ -12,7 +12,7 @@
 	//defetc#3778
     //error_reporting(E_ALL);
 	
-    $user = BASECAMP_USERNAME;
+    /*$user = BASECAMP_USERNAME;
     $password = BASECAMP_PASSWORD;
 	$cookieFile = BASECAMP_COOKIE;
 	
@@ -22,7 +22,7 @@
 	$GETURL   = BASECAMP_HOST."/projects";
 	$POSTFIELDS = "user_name=$user&password=$password";
 	
-	$RETURNEDURL = "";
+	$RETURNEDURL = "";*/
 	
 	function AUTH_SITE_COOKIE_STORE($LOGINURL,$POSTFIELDS)
 	{
@@ -79,8 +79,8 @@
 	
 //	$cookieFile = AUTH_SITE_COOKIE_STORE($LOGINURL,$POSTFIELDS);
     //Defect#3778
-	$url = @explode("/projects/", SUBMIT_FORM($GETURL, $cookieFile, $data));
-	$num = @explode("\"",$url[1]);
+	//$url = @explode("/projects/", SUBMIT_FORM($GETURL, $cookieFile, $data));
+	//$num = @explode("\"",$url[1]);
 	//echo $num[0];
 	//AUTH_SITE_GET($GETURL,$cookieFile);
 	//Get bc id and category id for project from base camp
