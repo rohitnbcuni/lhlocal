@@ -3,7 +3,7 @@
 /*
 $Id:$
 */
-
+/*
 class Basecamp_Project extends Basecamp{
 
     var $fields = array(
@@ -51,6 +51,6 @@ class Basecamp_Project extends Basecamp{
 		return $return;
 	}
 
-}
+}*/
 
 ?>
