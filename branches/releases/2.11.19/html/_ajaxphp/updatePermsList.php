@@ -71,6 +71,6 @@
 		}
 	}
 
-	$mysql->close();
+	//$mysql->close();
 	echo $html;
 ?>
