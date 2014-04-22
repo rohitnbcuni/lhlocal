@@ -10,7 +10,7 @@
 	
 	//$_POST = $_GET;
 	$companyPerms = $mysql->real_escape_string($_POST['companyPerms']);
-	$users = $mysql->real_escape_string($_POST['control_3']);
+	$users = ($_POST['control_3']);
 	$projectId = $mysql->real_escape_string($_POST['projectId']);
 	if(isset($_POST['edit_0'])) {
 	$delete_query = "DELETE FROM `user_project_permissions` WHERE `project_id`='$projectId'";
