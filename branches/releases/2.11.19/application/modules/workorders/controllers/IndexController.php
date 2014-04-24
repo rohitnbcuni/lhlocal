@@ -275,17 +275,17 @@
 			$option_INFRA_TYPE ='_blank';
 			$closed_wo_style = '';
 			if((isset($_REQUEST['wo_id']) && !empty($_REQUEST['wo_id'])) || isset($_REQUEST['copyWO']) ) {
-				 $wo_id = (int)$_REQUEST['wo_id'];
+				 $wo_id = $_REQUEST['wo_id'];
 				/* LH fixes
 				 * LH#21355
 				 */
 				
 				if( isset($_REQUEST['copyWO']))
 				{
-					$new_wo_id = (int)$_REQUEST['copyWO'];
+					$new_wo_id = $_REQUEST['copyWO'];
 				}else
 				{
-					$new_wo_id = (int)($_REQUEST['wo_id']);
+					$new_wo_id = ($_REQUEST['wo_id']);
 					
 				}
 				/* LH fixes
