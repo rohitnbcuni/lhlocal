@@ -715,5 +715,30 @@
 
 
 	}
+	
+	
+	static function getRelatedIssue($wid){
+		$all = array();
+		$i = 0;
+		$db = Zend_Registry::get('db');
+		$wo_related = $db->fetchAll("SELECT * FROM `workorder_related_issues` WHERE `wid`=? ",array($wid));
+		if(count($wo_related) > 0){
+			foreach($wo_related as $r_list){
+				if($r_list['issue_type'] == 'WO'){
+					$all[] = $db->fetchAll("SELECT id,title, 'WO' As type FROM `workorders` WHERE `id`= ?",array($r_list['related_id']));
+					
+					}else{
+					$all[] = $db->fetchAll("SELECT id,title, 'DF' As type  FROM `qa_defects` WHERE `id`= ?",array($r_list['related_id']));
+					
+				}
+				//$i++;
+						
+			}
+		
+		}
+		return $all;
+	
+	}
+	
 	}
 ?>
