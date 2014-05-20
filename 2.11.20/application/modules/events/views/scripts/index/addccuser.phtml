@@ -1,8 +1,0 @@
-<?php if(count($this->cc_user_row) > 0) : ?>
-<?php foreach($this->cc_user_row as $userKey => $userInfo) : ?>
-	<li>
-	<div class='cclist_name'><?php echo ucfirst($userInfo[0]['full_name']) ?></div>
-	<button class="status cclist_remover" onClick="removeCcUser(<?php echo $userInfo[0]['id']?>); return false;"><span>remove</span></button>
-	</li>
-<?php endforeach; ?>
-<?php endif; ?>
