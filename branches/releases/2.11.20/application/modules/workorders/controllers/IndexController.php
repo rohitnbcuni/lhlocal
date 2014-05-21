@@ -889,13 +889,37 @@
 									<div style="float:left;width:80px;padding-left:10px;"><input type="radio" class="secondary" name="issuse_types" checked="checked" value="WO">Workorder</div>
 									<div style="float:left;width:70px;padding-left:10px;"><input type="radio" class="secondary" name="issuse_types" value="DF">Defect</div>
 									<div class="clearer"></div>
-								</div>
-								<input type="hidden" name="wo_related_ids" id="wo_related_ids"><input type="hidden" name="df_related_ids" id="df_related_ids">';
+								</div>';
+								$wo_related_issue = array();
+								$df_related_issue = array();
+								if (isset($_REQUEST['wo_id']) || ISSET($_REQUEST['copyWO'])){
+									$related_issue = WoDisplay::getRelatedIssue($wo_data[0]['id']);
+									
+									if(count($related_issue) > 0){
+										foreach($related_issue as $related_issue_val){
+											if($related_issue_val[0]['type'] == 'WO'){
+												$wo_related_issue[] = $related_issue_val[0]['id'];
+											
+											
+											}else if($related_issue_val[0]['type'] == 'DF'){
+												$df_related_issue[] = $related_issue_val[0]['id'];
+											
+											}
+										
+										
+										}
+									
+									}
+								
+								}
+								echo '<input type="hidden" name="wo_related_ids" id="wo_related_ids" value='.implode(",",$wo_related_issue).'><input type="hidden" value='.implode(",",$df_related_issue).' name="df_related_ids" id="df_related_ids">';
 								echo '<ul id="related_list">';
-								if (isset($_REQUEST['wo_id'])){
+								if (isset($_REQUEST['wo_id']) || ISSET($_REQUEST['copyWO'])){
+																	
+									//print_r($related_issue);
 									
 									$related_issue = WoDisplay::getRelatedIssue($wo_data[0]['id']);
-									//print_r($related_issue);
+									
 									if(count($related_issue) > 0){
 										foreach($related_issue as $related_issue_value){
 											if($related_issue_value[0]['type'] == 'WO'){
