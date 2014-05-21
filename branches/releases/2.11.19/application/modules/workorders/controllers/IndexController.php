@@ -295,6 +295,7 @@
 					$this->_redirect("workorders/index/");
 				}
 				$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`=? LIMIT 1",array($new_wo_id));
+				
 				/* LH fixes
 				 * LH#21355
 				 */
@@ -714,7 +715,7 @@
 								<div class="clearer"></div>
 							</div>
 						</div>
-						<div class="side_bucket_container bucket_container_last">
+						<div class="side_bucket_container ">
 							<div class="side_bucket_title">Project Management</div>
 							<div class="side_bucket_content">'
 								.WoDisplay::assignDateHTML(@$wo_data[0]['id'])
@@ -879,6 +880,60 @@
 								<div class="clearer"></div>
 							</div>
 						</div>
+						
+						<!--Side bucket-2-->
+						<div class="side_bucket_container bucket_container_last" >
+							<div class="side_bucket_title">Related Issues</div>
+							<div class="side_bucket_content" style="padding-left:0px;">
+								<div class="issue_type">
+									<div style="float:left;width:80px;padding-left:10px;"><input type="radio" class="secondary" name="issuse_types" checked="checked" value="WO">Workorder</div>
+									<div style="float:left;width:70px;padding-left:10px;"><input type="radio" class="secondary" name="issuse_types" value="DF">Defect</div>
+									<div class="clearer"></div>
+								</div>
+								<input type="hidden" name="wo_related_ids" id="wo_related_ids"><input type="hidden" name="df_related_ids" id="df_related_ids">';
+								echo '<ul id="related_list">';
+								if (isset($_REQUEST['wo_id']) || ISSET($_REQUEST['copyWO'])){
+									
+									$related_issue = WoDisplay::getRelatedIssue($wo_data[0]['id']);
+									//print_r($related_issue);
+									if(count($related_issue) > 0){
+										foreach($related_issue as $related_issue_value){
+											if($related_issue_value[0]['type'] == 'WO'){
+												$link = "<a target='_blank' href='".BASE_URL ."/workorders/index/edit/?wo_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']."</a>";
+												echo '<li id="'."WO-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link." - ".substr($related_issue_value[0]['title'],0,40).'</div><button class="status cclist_remover" onClick="removeWoRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+											}else{
+												$link = "<a target='_blank' href='".BASE_URL ."/quality/index/edit/?defect_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']."</a>";
+												echo '<li id="'."DF-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link." - ".substr($related_issue_value[0]['title'],0,40).'</div><button class="status cclist_remover" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+											
+											}
+										
+										}
+									
+									}
+								}
+								echo '</ul>
+								<div class="cclist_actions"  id="add_related" >
+									<button class="secondary" onclick="$(\'#add_related\').css({display:\'none\'});$(\'#select_related\').css({display:\'block\'}); return false;"><span>+ Add Relared Isssue </span></button>
+								</div>
+								
+								<div class="cclist_actions" id="select_related" style="display: none;float:left;padding-left:13px;">
+									<label for="related_issues_txt">Related Issues Id:</label>
+									<input type="text" name="related_issues_txt" id="related_issues_txt" class="field_large" autocomplete="off"  maxlength="10" style="float:left;">
+									
+									<div id="issues_error" style="color:#FF0000;padding-left:10px;"></div>';
+										
+									echo '<div id="issue_link" style="padding-top:35px;display:none;">
+									<button class="secondary" style="clear:left; margin-left:10px;" onclick="addReleatedIssue(); $(\'#select_related\').css({display:\'none\'});$(\'#add_related\').css({display:\'block\'}); return false;"><span>Add</span></button>
+									<button class="cancel" onclick="$(\'#add_related\').css({display:\'block\'}); $(\'#select_related\').css({display:\'none\'}); return false;"><span>Cancel</span></button>
+									</div>
+								</div>
+								
+								<div class="clearer"></div>
+							</div>
+						</div>
+						<!--End Bucket-->
+						
+						
 					</div>
 					<!--=========== COLUMN BREAK ===========-->
 					<div class="workorder_content_actions">';
@@ -2055,6 +2110,92 @@
 			$this->_helper->layout->disableLayout();
 		
 		
+		}
+		
+		public function issuecheckerAction(){
+			$db = Zend_Registry::get('db');
+			$issue_type = $this->_request->getParam('issue_type');
+			$related_issues_id = trim($this->_request->getParam('related_issues_id'));
+			if($issue_type == 'WO'){
+				$r = $db->fetchOne("SELECT count(1) as counter FROM `workorders` WHERE `id`= ? LIMIT 1",array($related_issues_id));
+				
+			
+			}else{
+				$r = $db->fetchOne("SELECT count(1) as counter FROM `qa_defects` WHERE `id`= ? LIMIT 1",array($related_issues_id ));
+				
+			}
+		
+			echo $r;
+			$this->_helper->layout->disableLayout();
+			$this->_helper->viewRenderer->setNoRender();
+		
+		}
+		
+		public function addreleatedissuesAction(){
+			$db = Zend_Registry::get('db');
+			$issue_type = $this->_request->getParam('issue_type');
+			$related_issues_id = trim($this->_request->getParam('related_issues_id'));
+			$wid = trim($this->_request->getParam('wid'));
+			if($issue_type == 'WO'){
+				$r = $db->fetchOne("SELECT count(1) as counter FROM `workorders` WHERE `id`= ? LIMIT 1",array($related_issues_id));
+				
+			
+			}else{
+				$r = $db->fetchOne("SELECT count(1) as counter FROM `qa_defects` WHERE `id`= ? LIMIT 1",array($related_issues_id ));
+				
+			}
+		
+			if(($r == 1)){
+				$insert_row = array(
+				"wid" => $wid,
+				"issue_type" => $issue_type,
+				"related_id" => $related_issues_id
+				);
+				//if Exist WO
+				if($wid != ''){
+					$db->insert('workorder_related_issues',$insert_row);
+				}
+				if($issue_type == 'WO'){
+					$related_issue_value = $db->fetchAll("SELECT id,title,'WO' as type FROM `workorders` WHERE `id`= ? LIMIT 1",array($related_issues_id));
+				
+			
+				}else{
+					$related_issue_value = $db->fetchAll("SELECT id,title,'DF' as type FROM `qa_defects` WHERE `id`= ? LIMIT 1",array($related_issues_id ));
+					
+				}
+
+				if($related_issue_value[0]['type'] == 'WO'){
+					$link = "<a target='_blank' href='".BASE_URL ."/workorders/index/edit/?wo_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']."</a>";
+					echo '<li id="'."WO-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link." - ".substr($related_issue_value[0]['title'],0,40).'</div><button class="status cclist_remover" onClick="removeWoRelatedIds('.$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+				}else{
+					$link = "<a target='_blank' href='".BASE_URL ."/quality/index/edit/?defect_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']."</a>";
+					echo '<li id="'."DF-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link." - ".substr($related_issue_value[0]['title'],0,40).'</div><button class="status cclist_remover" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+				
+				}
+			
+			
+			}
+			$this->_helper->layout->disableLayout();
+			$this->_helper->viewRenderer->setNoRender();
+		
+		
+		
+		}
+		
+		function deletereleatedissuesAction(){
+			$db = Zend_Registry::get('db');
+			$issue_type = $this->_request->getParam('issue_type');
+			$related_issues_id = trim($this->_request->getParam('related_issues_id'));
+			$wid = trim($this->_request->getParam('wid'));
+			if($wid != ''){
+						
+				$db->query("DELETE FROM workorder_related_issues WHERE wid = $wid AND issue_type = '$issue_type' AND related_id = '$related_issues_id'");
+				
+			}
+			
+		
+			$this->_helper->layout->disableLayout();
+			$this->_helper->viewRenderer->setNoRender();
 		}
 		
 		
