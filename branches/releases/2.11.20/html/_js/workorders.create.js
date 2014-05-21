@@ -106,7 +106,11 @@ $(document).ready(function() {
 				var v = $.trim(val);
 				
 				if(val == '0'){
-					$('#issues_error').html(issue_type+" Id Not found"); 
+					if(issue_type == 'WO'){
+					$('#issues_error').html("Workorder id not found");
+					}else if(issue_type == 'DF'){
+					$('#issues_error').html("Defect id not found");
+					} 
 					$('#issue_link').css("display","none");
 					}else{
 					$('#issues_error').html('');
