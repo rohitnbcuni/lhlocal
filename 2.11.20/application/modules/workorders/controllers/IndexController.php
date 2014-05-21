@@ -944,7 +944,7 @@
 									<label for="related_issues_txt">Related Issue Id:</label>
 									<input type="text" name="related_issues_txt" id="related_issues_txt" class="field_large" autocomplete="off"  maxlength="10" style="float:left;">
 									
-									<div id="issues_error" style="color:#FF0000;padding-left:10px;"></div>';
+									<div id="issues_error" style="color:#FF0000;padding-left:10px;float:right;"></div>';
 										
 									echo '<div id="issue_link" style="padding-top:35px;display:none;">
 									<button class="secondary" style="clear:left; margin-left:10px;" onclick="addReleatedIssue(); $(\'#select_related\').css({display:\'none\'});$(\'#add_related\').css({display:\'block\'}); return false;"><span>Add</span></button>
