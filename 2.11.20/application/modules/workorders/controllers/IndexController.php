@@ -899,11 +899,11 @@
 									if(count($related_issue) > 0){
 										foreach($related_issue as $related_issue_value){
 											if($related_issue_value[0]['type'] == 'WO'){
-												$link = "<a target='_blank' href='".BASE_URL ."/workorders/index/edit/?wo_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']."</a>";
-												echo '<li id="'."WO-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link." - ".substr($related_issue_value[0]['title'],0,40).'</div><button class="status cclist_remover" onClick="removeWoRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+												$link = "<a target='_blank' href='".BASE_URL ."/workorders/index/edit/?wo_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
+												echo '<li id="'."WO-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover" onClick="removeWoRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
 											}else{
-												$link = "<a target='_blank' href='".BASE_URL ."/quality/index/edit/?defect_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']."</a>";
-												echo '<li id="'."DF-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link." - ".substr($related_issue_value[0]['title'],0,40).'</div><button class="status cclist_remover" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+												$link = "<a target='_blank' href='".BASE_URL ."/quality/index/edit/?defect_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
+												echo '<li id="'."DF-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
 											
 											}
 										
@@ -913,11 +913,11 @@
 								}
 								echo '</ul>
 								<div class="cclist_actions"  id="add_related" >
-									<button class="secondary" onclick="$(\'#add_related\').css({display:\'none\'});$(\'#select_related\').css({display:\'block\'}); return false;"><span>+ Add Relared Isssue </span></button>
+									<button class="secondary" onclick="$(\'#add_related\').css({display:\'none\'});$(\'#select_related\').css({display:\'block\'}); return false;"><span>+ Add Related Isssue </span></button>
 								</div>
 								
 								<div class="cclist_actions" id="select_related" style="display: none;float:left;padding-left:13px;">
-									<label for="related_issues_txt">Related Issues Id:</label>
+									<label for="related_issues_txt">Related Issue Id:</label>
 									<input type="text" name="related_issues_txt" id="related_issues_txt" class="field_large" autocomplete="off"  maxlength="10" style="float:left;">
 									
 									<div id="issues_error" style="color:#FF0000;padding-left:10px;"></div>';
@@ -2165,11 +2165,11 @@
 				}
 
 				if($related_issue_value[0]['type'] == 'WO'){
-					$link = "<a target='_blank' href='".BASE_URL ."/workorders/index/edit/?wo_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']."</a>";
+					$link = "<a target='_blank' href='".BASE_URL ."/workorders/index/edit/?wo_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
 					echo '<li id="'."WO-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link." - ".substr($related_issue_value[0]['title'],0,40).'</div><button class="status cclist_remover" onClick="removeWoRelatedIds('.$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
 				}else{
-					$link = "<a target='_blank' href='".BASE_URL ."/quality/index/edit/?defect_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']."</a>";
-					echo '<li id="'."DF-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link." - ".substr($related_issue_value[0]['title'],0,40).'</div><button class="status cclist_remover" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+					$link = "<a target='_blank' href='".BASE_URL ."/quality/index/edit/?defect_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
+					echo '<li id="'."DF-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
 				
 				}
 			
