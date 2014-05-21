@@ -2166,7 +2166,7 @@
 
 				if($related_issue_value[0]['type'] == 'WO'){
 					$link = "<a target='_blank' href='".BASE_URL ."/workorders/index/edit/?wo_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
-					echo '<li id="'."WO-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link." - ".substr($related_issue_value[0]['title'],0,40).'</div><button class="status cclist_remover" onClick="removeWoRelatedIds('.$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+					echo '<li id="'."WO-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover" onClick="removeWoRelatedIds('.$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
 				}else{
 					$link = "<a target='_blank' href='".BASE_URL ."/quality/index/edit/?defect_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
 					echo '<li id="'."DF-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
