@@ -107,9 +107,9 @@ $(document).ready(function() {
 				
 				if(val == '0'){
 					if(issue_type == 'WO'){
-					$('#issues_error').html("Workorder id not found");
+					$('#issues_error').html("Workorder ID not found");
 					}else if(issue_type == 'DF'){
-					$('#issues_error').html("Defect id not found");
+					$('#issues_error').html("Defect ID not found");
 					} 
 					$('#issue_link').css("display","none");
 					}else{
