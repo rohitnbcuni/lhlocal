@@ -90,6 +90,10 @@ $(document).ready(function(){
 		$("#userProjectArray").multiselect({create: function(){ $(this).next().width(200); }}).multiselectfilter();
 	
 	}
+	if($("#admin_requested_select")){
+		$("#admin_requested_select").multiselect({create: function(){ $(this).next().width(200); }}).multiselectfilter();
+	
+	}
 	
 		
 	});
