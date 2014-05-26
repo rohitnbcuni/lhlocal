@@ -176,7 +176,7 @@ if($to_month==12)
 					<td width=100px><b>Closed</b></td>
 					<td width=100px><b>Archived</b></td>
 				</tr>";
-	  echo "<tr><td colspan='20'>No Record Found</td></tr>";
+	  echo "<tr><td colspan='20' align='center'>No Record Found</td></tr>";
 	  exit;
 }
 
