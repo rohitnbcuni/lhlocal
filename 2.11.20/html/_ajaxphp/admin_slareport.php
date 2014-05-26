@@ -167,7 +167,7 @@ if($to_month==12)
 					<td width=100px><b>Closed</b></td>
 					<td width=100px><b>Archived</b></td>
 				</tr>";
-	echo "<tr><td rowspan='20'>No Record Found</td></tr>";
+	
 	  header("Pragma: public");
 	  header("Expires: 0");
 	  header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -175,6 +175,7 @@ if($to_month==12)
 	  header("Content-Type: application/octet-stream");
 	  header("Content-Disposition: attachment;filename=SLA_Report.xls"); 
 	  header("Content-Transfer-Encoding: binary");
+	  echo "<tr><td rowspan='20'>No Record Found</td></tr>";
 }
 
  function getUserName($user_id,$wo_user_list,$mysql)
