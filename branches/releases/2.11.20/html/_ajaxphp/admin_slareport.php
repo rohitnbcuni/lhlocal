@@ -144,7 +144,30 @@ if($to_month==12)
 	   }
 	   echo "</table>";
  }else{
-	echo "NO Record Found";
+	echo "<table border='1'>
+				<tr>
+					<td><b>Ticket No</b></td>
+					<td width=100px><b>Brief Description</b></td>
+					<td width=100px><b>Company</b></td>
+					<td width=100px><b>Project</b></td>
+					<td width=100px><b>Requested BY</b></td>
+					<td width=100px><b>Assigned TO</b></td>
+					<td width=100px><b>Request Completed By</b></td>
+					<td width=100px><b>User Category</b></td>
+					<td width=100px><b>REQUEST TYPE</b></td>
+					<td width=100px><b>Status</b></td>					
+					<td width=100px><b>SITE NAME</b></td>
+					<td width=100px><b>INFRASTRUCTURE TYPE</b></td>
+					<td width=100px><b>SEVERITY</b></td>
+					<td width=100px><b>CRITICAL</b></td>					
+					<td width=100px><b>Opened</b></td>
+					<td width=100px><b>Estimated Completion Date</b></td>					
+					<td width=100px><b>Acknowledgement Time</b></td>
+					<td width=100px><b>Fixed</b></td>					
+					<td width=100px><b>Closed</b></td>
+					<td width=100px><b>Archived</b></td>
+				</tr>";
+	echo "<tr><td rowspan='20'>No Record Found</td></tr>";
 	  header("Pragma: public");
 	  header("Expires: 0");
 	  header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
