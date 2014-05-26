@@ -786,19 +786,32 @@ class Admin_IndexController extends LighthouseController {
 									echo AdminDisplay::to_getYears($sla_report_year);
 									echo '</select>
 								</div>
-								 <div style="position: absolute; top: 30px; right: 15px;">
+	
+								
+								 <div class="row2" style="float:left;">
+
 									<p> Assigned To:</p>';			
 									echo '<select class="field_medium" name="admin_assign_select" id="admin_assign_select" >';
 									echo AdminDisplay::getUserOptionHTML();
 									echo '</select>
 								</div>
+								
+								 <div class="row2" style="position: absolute; right: 196px; top: 64px;">
+									<p style="padding-left:68px;"> Requested By:</p>';			
+									echo '<select class="field_medium" name="admin_requested_select" id="admin_requested_select" multiple = "multiple" >';
+									echo AdminDisplay::getUserOptionHTML();
+									echo '</select>
+								</div>
+								
+								
 								<div class="row2" >
-									 <p>
+									 <p style="margin-top: 71px; margin-left: 109px;">
+
 									<button id="adminReportbtn" onclick="generateReport();"><span>Generate Report</span></button>
 									</p>
 								</div>
 							</div>';
-					echo '</div>					
+					echo '</div>						
 					<div style="clear: both;"></div>';
 			
 		}
