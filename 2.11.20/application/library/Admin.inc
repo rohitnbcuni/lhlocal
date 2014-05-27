@@ -82,6 +82,31 @@
 			}			
 			return $html;
 		}
+		public function getAllUserOptionHTML($userid='') {
+			$users = self::getQuery("SELECT * FROM `users` WHERE `active`='1' AND `deleted`='0'  ORDER BY `last_name` ASC");
+			$html = '';			
+			$selected = '';
+			for($i = 0; $i < sizeof($users); $i++) {
+				$userName = '';
+				if(!empty($users[$i]['last_name']))
+				{
+					$userName = $users[$i]['last_name'].', '.$users[$i]['first_name'];
+				}else{
+					$userName = $users[$i]['first_name'];
+				}
+
+				if($users[$i]['id'] == $userid) {
+						$selected = " selected='selected'";
+				}
+				else
+				{
+							$selected = "";
+				}
+				$html .= '<option value="' .$users[$i]['id'] .'"' .$selected .'>' 
+					.$userName.'</option>';
+			}			
+			return $html;
+		}
             
              public function getUserOptionEditHTML($itemId='', $client=false) {
 			$users = self::getQuery(QRY_USERS_LAST_ASC);
