@@ -1,4 +1,5 @@
-<?
+<?php
+
 include('../_inc/config.inc');
 include("sessionHandler.php");
 //$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
