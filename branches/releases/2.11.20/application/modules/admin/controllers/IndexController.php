@@ -799,7 +799,7 @@ class Admin_IndexController extends LighthouseController {
 								 <div class="row2" style="position: absolute; right: 196px; top: 64px;">
 									<p style="padding-left:68px;"> Requested By:</p>';			
 									echo '<select class="field_medium" name="admin_requested_select" id="admin_requested_select" multiple = "multiple" >';
-									echo AdminDisplay::getUserOptionHTML();
+									echo AdminDisplay::getAllUserOptionHTML();
 									echo '</select>
 								</div>
 								

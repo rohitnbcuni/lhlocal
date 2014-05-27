@@ -44,7 +44,7 @@ if($to_month==12)
 	$to_endDate = date("$to_year-m-d",$dtendDate);
 }
 	$admin_requested_select_sql = '';
-	if($admin_requested_select != '' || $admin_requested_select != NULL){
+	if((!empty($admin_requested_select))&&($admin_requested_select != 'null')){
 		$admin_requested_select_sql = " AND w.requested_by IN (".$admin_requested_select.")";
 	
 	
