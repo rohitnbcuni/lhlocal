@@ -91,7 +91,7 @@ $(document).ready(function(){
 	
 	}
 	if($("#admin_requested_select")){
-		$("#admin_requested_select").multiselect({create: function(){ $(this).next().width(200); }}).multiselectfilter();
+		$("#admin_requested_select").multiselect({selectedText:"# Selected Users"},{create: function(){ $(this).next().width(200); }}).multiselectfilter();
 	
 	}
 	
