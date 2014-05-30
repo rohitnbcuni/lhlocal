@@ -885,7 +885,7 @@
 						<div class="side_bucket_container bucket_container_last" >
 							<div class="side_bucket_title">Related Issues</div>
 							<div class="side_bucket_content" style="padding-left:0px;">
-								<div class="issue_type">
+								<div class="issue_type'. $wo_archive_status . '">
 									<div style="float:left;width:80px;padding-left:10px;"><input type="radio" class="secondary" name="issuse_types" checked="checked" value="WO">Workorder</div>
 									<div style="float:left;width:70px;padding-left:10px;"><input type="radio" class="secondary" name="issuse_types" value="DF">Defect</div>
 									<div class="clearer"></div>
@@ -924,10 +924,10 @@
 										foreach($related_issue as $related_issue_value){
 											if($related_issue_value[0]['type'] == 'WO'){
 												$link = "<a target='_blank' href='".BASE_URL ."/workorders/index/edit/?wo_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
-												echo '<li id="'."WO-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover" onClick="removeWoRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+												echo '<li id="'."WO-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover' . $wo_archive_status . '" onClick="removeWoRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
 											}else{
 												$link = "<a target='_blank' href='".BASE_URL ."/quality/index/edit/?defect_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
-												echo '<li id="'."DF-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+												echo '<li id="'."DF-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover' . $wo_archive_status . '" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
 											
 											}
 										
@@ -936,7 +936,7 @@
 									}
 								}
 								echo '</ul>
-								<div class="cclist_actions"  id="add_related" >
+								<div class="cclist_actions' . $wo_archive_status . '"  id="add_related" >
 									<button class="secondary" onclick="$(\'#add_related\').css({display:\'none\'});$(\'#select_related\').css({display:\'block\'}); return false;"><span>+ Add Related Isssue </span></button>
 								</div>
 								
@@ -946,7 +946,7 @@
 									
 									<div id="issues_error" style="color:#FF0000;padding-left:10px;float:right;"></div>';
 										
-									echo '<div id="issue_link" style="padding-top:35px;display:none;">
+									echo '<div id="issue_link" class="' . $wo_archive_status . '" style="padding-top:35px;display:none;">
 									<button class="secondary" style="clear:left; margin-left:10px;" onclick="addReleatedIssue(); $(\'#select_related\').css({display:\'none\'});$(\'#add_related\').css({display:\'block\'}); return false;"><span>Add</span></button>
 									<button class="cancel" onclick="$(\'#add_related\').css({display:\'block\'}); $(\'#select_related\').css({display:\'none\'}); return false;"><span>Cancel</span></button>
 									</div>
