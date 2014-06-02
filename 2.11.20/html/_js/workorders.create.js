@@ -1717,7 +1717,7 @@ function addReleatedIssue(){
 		
 			if(duplicate_id == '-1'){
 			//var issue_type = $('input[name=issuse_types]:checked').val();
-			if(total_count <= 3){
+			if(total_count <= 2){
 				if(issue_type != '' && related_issues_txt != ''  ){
 					$.ajax({
 					type: "POST",
@@ -1739,7 +1739,7 @@ function addReleatedIssue(){
 			
 			}else{
 			
-				$('.message_required p').html('You can add only 3 related ticket');
+				$('.message_required p').html('You can add only 3 Related Issues ID');
 				$('.message_required').css({display:'block'});
 			
 			}
