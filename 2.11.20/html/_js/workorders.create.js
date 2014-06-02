@@ -1739,7 +1739,7 @@ function addReleatedIssue(){
 			
 			}else{
 			
-				$('.message_required p').html('You can add only 3 Related Issues ID');
+				$('.message_required p').html('You can add only Four Related Issues ID');
 				$('.message_required').css({display:'block'});
 			
 			}
