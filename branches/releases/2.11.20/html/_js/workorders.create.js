@@ -1676,7 +1676,7 @@ function showWOTooltip(){
 	}
 	
 	
-	function addReleatedIssue(){
+function addReleatedIssue(){
 		var issue_type = $('input[name=issuse_types]:checked').val();
 		var related_issues_txt = $('#related_issues_txt').val();
 		var workorder_id = $('#workorder_id').val();
@@ -1686,18 +1686,18 @@ function showWOTooltip(){
 		var count_df = [];
 		var total_count  = 0;
 		var duplicate_id = '-1';
+		count_wo = wo_related_ids.split(',');
+		count_df = df_related_ids.split(',');
 		if(issue_type == 'WO'){
 			
 			
 			if(wo_related_ids == ''){
 				var new_wo_rlated_ids = related_issues_txt;
-
 				
 			}else{ 
 				duplicate_id = $.inArray(related_issues_txt,wo_related_ids.split(','));
 				var new_wo_rlated_ids = wo_related_ids+","+related_issues_txt;
-				count_wo = new_wo_rlated_ids.split(',');
-				
+					
 				
 			}
 			
@@ -1707,14 +1707,14 @@ function showWOTooltip(){
 			}else{
 				 duplicate_id = $.inArray(related_issues_txt,df_related_ids.split(','));
 				var new_df_rlated_ids = df_related_ids+","+related_issues_txt;
-				count_df = new_df_rlated_ids.split(',');
+				
 				
 				
 			}
 		}
 		
 		total_count = (count_wo.length)+(count_df.length);
-		//alert(total_count+"count_wo.length"+count_wo.length+"count_df.length"+count_df.length);
+		
 			if(duplicate_id == '-1'){
 			//var issue_type = $('input[name=issuse_types]:checked').val();
 			if(total_count <= 3){
@@ -1733,13 +1733,9 @@ function showWOTooltip(){
 							$('#df_related_ids').val(new_df_rlated_ids.replace(",,",","));
 						}
 				
-
-
-
 					}
 					});
 				}
-
 			
 			}else{
 			
@@ -1747,7 +1743,6 @@ function showWOTooltip(){
 				$('.message_required').css({display:'block'});
 			
 			}
-
 		}else{
 			$('.message_required p').html('Related Issue ID alreadt exist');
 			$('.message_required').css({display:'block'});
@@ -1767,20 +1762,8 @@ function showWOTooltip(){
 			if(woRelatedId!=null)
 			{
 				var col_array= woRelatedId.split(',');
-
 				
 				finalWoList = jQuery.grep(col_array, function(value) {
-
-
-
-
-
-
-
-
-
-
-
 				  return value != issueid;
 				});
 			}
@@ -1818,29 +1801,15 @@ function showWOTooltip(){
 	
 	var woId = $('#workorder_id').val();
 		if(woId != ''){
-
 			var woRelatedId = $('#df_related_ids').val();
 			if(woRelatedId!=null)
 			{
 				var col_array= woRelatedId.split(',');
-
 				
 				finalWoList = jQuery.grep(col_array, function(value) {
-
-
-
-
-
-
-
-
-
-
-
 				  return value != issueid;
 				});
 			}
-
 			$('#df_related_ids').val(finalWoList);
 			
 		}else{
