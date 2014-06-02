@@ -1717,7 +1717,7 @@ function addReleatedIssue(){
 		
 			if(duplicate_id == '-1'){
 			//var issue_type = $('input[name=issuse_types]:checked').val();
-			if(total_count <= 2){
+			if(total_count <= 3){
 				if(issue_type != '' && related_issues_txt != ''  ){
 					$.ajax({
 					type: "POST",
