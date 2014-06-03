@@ -912,22 +912,23 @@
 									}
 								
 								}
-								echo '<input type="hidden" name="wo_related_ids" id="wo_related_ids" value='.implode(",",$wo_related_issue).'><input type="hidden" value='.implode(",",$df_related_issue).' name="df_related_ids" id="df_related_ids">';
+								echo '<input type="hidden" name="wo_related_ids" id="wo_related_ids" value="'.implode(",",$wo_related_issue).'"><input type="hidden" value="'.implode(",",$df_related_issue).'" name="df_related_ids" id="df_related_ids">';
 								echo '<ul id="related_list">';
 								if (isset($_REQUEST['wo_id']) || ISSET($_REQUEST['copyWO'])){
 																	
 									//print_r($related_issue);
 									
-									$related_issue = WoDisplay::getRelatedIssue($wo_data[0]['id']);
+									//$related_issue = WoDisplay::getRelatedIssue($wo_data[0]['id']);
 									
+
 									if(count($related_issue) > 0){
 										foreach($related_issue as $related_issue_value){
 											if($related_issue_value[0]['type'] == 'WO'){
 												$link = "<a target='_blank' href='".BASE_URL ."/workorders/index/edit/?wo_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
-												echo '<li id="'."WO-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover' . $wo_archive_status . '" onClick="removeWoRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+												echo '<li class="'."WO-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover' . $wo_archive_status . '" onClick="removeWoRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
 											}else{
 												$link = "<a target='_blank' href='".BASE_URL ."/quality/index/edit/?defect_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
-												echo '<li id="'."DF-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover' . $wo_archive_status . '" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+												echo '<li class="'."DF-".$related_issue_value[0]['id'].'" ><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover' . $wo_archive_status . '" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
 											
 											}
 										
@@ -2160,6 +2161,7 @@
 			$issue_type = $this->_request->getParam('issue_type');
 			$related_issues_id = trim($this->_request->getParam('related_issues_id'));
 			$wid = trim($this->_request->getParam('wid'));
+			$count_number = 0;
 			if($issue_type == 'WO'){
 				$r = $db->fetchOne("SELECT count(1) as counter FROM `workorders` WHERE `id`= ? LIMIT 1",array($related_issues_id));
 				
@@ -2168,35 +2170,58 @@
 				$r = $db->fetchOne("SELECT count(1) as counter FROM `qa_defects` WHERE `id`= ? LIMIT 1",array($related_issues_id ));
 				
 			}
-		
-			if(($r == 1)){
-				$insert_row = array(
-				"wid" => $wid,
-				"issue_type" => $issue_type,
-				"related_id" => $related_issues_id
-				);
-				//if Exist WO
-				if($wid != ''){
-					$db->insert('workorder_related_issues',$insert_row);
-				}
-				if($issue_type == 'WO'){
-					$related_issue_value = $db->fetchAll("SELECT id,title,'WO' as type FROM `workorders` WHERE `id`= ? LIMIT 1",array($related_issues_id));
-				
-			
-				}else{
-					$related_issue_value = $db->fetchAll("SELECT id,title,'DF' as type FROM `qa_defects` WHERE `id`= ? LIMIT 1",array($related_issues_id ));
-					
-				}
+			if($wid != ''){
+				$count_number = $db->fetchOne("SELECT count(1) as counter FROM `workorder_related_issues` WHERE `wid`= ? LIMIT 1",array($wid));
+			}
+			if($count_number <=3){		
+				if(($r == 1)){
+					$insert_row = array(
+					"wid" => $wid,
+					"issue_type" => $issue_type,
+					"related_id" => $related_issues_id
 
-				if($related_issue_value[0]['type'] == 'WO'){
-					$link = "<a target='_blank' href='".BASE_URL ."/workorders/index/edit/?wo_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
-					echo '<li id="'."WO-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover" onClick="removeWoRelatedIds('.$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
-				}else{
-					$link = "<a target='_blank' href='".BASE_URL ."/quality/index/edit/?defect_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
-					echo '<li id="'."DF-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+					);
+					//if Exist WO
+					if($wid != ''){
+						$db->insert('workorder_related_issues',$insert_row);
+
+					}
+					if($issue_type == 'WO'){
+						$related_issue_value = $db->fetchAll("SELECT id,title,'WO' as type FROM `workorders` WHERE `id`= ? LIMIT 1",array($related_issues_id));
+
+					
 				
-				}
+					}else{
+						$related_issue_value = $db->fetchAll("SELECT id,title,'DF' as type FROM `qa_defects` WHERE `id`= ? LIMIT 1",array($related_issues_id ));
+
+
+
+
+
+
+
+
+
+						
+
+					}
+
+
+					if($related_issue_value[0]['type'] == 'WO'){
+						$link = "<a target='_blank' href='".BASE_URL ."/workorders/index/edit/?wo_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
+						echo '<li class="'."WO-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover" onClick="removeWoRelatedIds('.$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+					}else{
+						$link = "<a target='_blank' href='".BASE_URL ."/quality/index/edit/?defect_id=".$related_issue_value[0]['id']."'>".$related_issue_value[0]['id']." - ".substr($related_issue_value[0]['title'],0,40)."</a>";
+						echo '<li class="'."DF-".$related_issue_value[0]['id'].'"><div class="cclist_name" title="'.$related_issue_value[0]['title'].'">'.$link.'</div><button class="status cclist_remover" onClick="removeDfRelatedIds(' .$related_issue_value[0]['id'] .'); return false;"><span>remove</span></button></li>';
+					
+					}
+				}else{
+				echo "Exceed Limit";
 			
+			}
+			
+
+
 			
 			}
 			$this->_helper->layout->disableLayout();
@@ -2211,7 +2236,8 @@
 			$issue_type = $this->_request->getParam('issue_type');
 			$related_issues_id = trim($this->_request->getParam('related_issues_id'));
 			$wid = trim($this->_request->getParam('wid'));
-			if($wid != ''){
+			if($wid != '' && $related_issues_id != ''){
+
 						
 				$db->query("DELETE FROM workorder_related_issues WHERE wid = $wid AND issue_type = '$issue_type' AND related_id = '$related_issues_id'");
 				
