@@ -1684,6 +1684,9 @@ function addReleatedIssue(){
 		var df_related_ids = $('#df_related_ids').val();
 		var count_wo = [];
 		var count_df = [];
+		var counter_wo  = 0;
+		
+		var counter_df = 0;
 		var total_count  = 0;
 		var duplicate_id = '-1';
 		count_wo = wo_related_ids.split(',');
@@ -1713,7 +1716,19 @@ function addReleatedIssue(){
 			}
 		}
 		
-		total_count = (count_wo.length)+(count_df.length);
+		if(wo_related_ids == ''){
+			counter_wo = 0;
+		}else{
+			counter_wo = count_wo.length;
+		}
+		
+		if(df_related_ids == ''){
+			counter_df = 0;
+		}else{
+			counter_df = count_df.length;
+		}
+			
+		total_count = (counter_df)+(counter_wo);
 		
 			if(duplicate_id == '-1'){
 			//var issue_type = $('input[name=issuse_types]:checked').val();
@@ -1739,7 +1754,7 @@ function addReleatedIssue(){
 			
 			}else{
 			
-				$('.message_required p').html('You can add only Four Related Issues ID');
+				$('.message_required p').html('You can add only Four related ticket');
 				$('.message_required').css({display:'block'});
 			
 			}
@@ -1757,6 +1772,7 @@ function addReleatedIssue(){
 	
 	function removeWoRelatedIds(issueid){
 		var woId = $('#workorder_id').val();
+		
 		if(woId == ''){
 			var woRelatedId = $('#wo_related_ids').val();
 			if(woRelatedId!=null)
@@ -1771,22 +1787,22 @@ function addReleatedIssue(){
 			
 		}else{
 			var woRelatedId = $('#wo_related_ids').val();
-			if(woRelatedId!=null)
-			{
-				var col_array= woRelatedId.split(',');
-				
-				finalWoList = jQuery.grep(col_array, function(value) {
-				  return value != issueid;
-				});
-			}
-			$('#wo_related_ids').val(finalWoList);
+			
 		//alert('add cc: '+woId+":"+cc);
 			$.ajax({
 			type: "POST",
 			url:"/workorders/index/deletereleatedissues", 
 			data:{issue_type:'WO',related_issues_id:issueid,wid:woId},
 			success: function(val){
-				
+				if(woRelatedId!=null)
+				{
+					var col_array= woRelatedId.split(',');
+					
+					finalWoList = jQuery.grep(col_array, function(value) {
+					  return value != issueid;
+					});
+				}
+			$('#wo_related_ids').val(finalWoList);
 		
 			}
 			});
@@ -1800,7 +1816,8 @@ function addReleatedIssue(){
 	function removeDfRelatedIds(issueid){
 	
 	var woId = $('#workorder_id').val();
-		if(woId != ''){
+	
+		if(woId == ''){
 			var woRelatedId = $('#df_related_ids').val();
 			if(woRelatedId!=null)
 			{
@@ -1814,6 +1831,14 @@ function addReleatedIssue(){
 			
 		}else{
 			var woRelatedId = $('#df_related_ids').val();
+			
+		//alert('add cc: '+woId+":"+cc);
+			$.ajax({
+			type: "POST",
+			url:"/workorders/index/deletereleatedissues", 
+			data:{issue_type:'DF',related_issues_id:issueid,wid:woId},
+			success: function(val){
+			
 			if(woRelatedId!=null)
 			{
 				var col_array= woRelatedId.split(',');
@@ -1823,14 +1848,6 @@ function addReleatedIssue(){
 				});
 			}
 			$('#df_related_ids').val(finalWoList);
-		//alert('add cc: '+woId+":"+cc);
-			$.ajax({
-			type: "POST",
-			url:"/workorders/index/deletereleatedissues", 
-			data:{issue_type:'DF',related_issues_id:issueid,wid:woId},
-			success: function(val){
-			
-			
 				
 		
 			}
