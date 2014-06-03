@@ -56,7 +56,10 @@
 		$woCRITICAL = $mysql->real_escape_string(@$_POST['woCRITICAL']);
 		$woCCList = $mysql->real_escape_string(@$_POST['woCCList']);
 		$woStatusIdHidden = $mysql->real_escape_string(@$_POST['woStatusIdHidden']);
-		
+		//Related Issue Ids
+		$woRelatedIds = $mysql->real_escape_string(@$_POST['wo_related_ids']);
+		$dfRelatedIds = $mysql->real_escape_string(@$_POST['df_related_ids']);
+		//end
 
 		$updatesql_draft_date = '';
 		$insertsql_draft_date = '';
@@ -248,6 +251,62 @@
 						insertCustomFeild($mysql,"CRITICAL",$critical_feild_arr['FALSE'],$getWoId);	
 					}
 				}
+				
+				//Related Issues WO and Defect
+				if(!empty($woRelatedIds)){
+					$woRelatedIdsArray = explode(",",$woRelatedIds);
+					if(count($woRelatedIdsArray) > 0){
+						foreach($woRelatedIdsArray as $woRelatedValues){
+						
+							if(!empty($woRelatedValues)){
+								//check if Woid is valid
+								$select_wo_related= "SELECT id FROM `workorders` WHERE `id`= ? LIMIT 1";
+								$select_wo_related_res = $mysql->sqlprepare($select_wo_related, array($woRelatedValues));
+								if($select_wo_related_res->num_rows > 0 ){
+									$insert_wo_related_issue = "INSERT INTO workorder_related_issues SET wid ='".$getWoId."', issue_type = 'WO', related_id = '".$woRelatedValues."'"; 
+									$mysql->sqlordie($insert_wo_related_issue);
+									
+									}
+									
+									
+								
+								}
+							
+							}
+						
+						
+						}
+					
+					}
+					
+					//Related Issue Defect
+					if(!empty($dfRelatedIds)){
+					$dfRelatedIdsArray = explode(",",$dfRelatedIds);
+					if(count($dfRelatedIdsArray) > 0){
+						foreach($dfRelatedIdsArray as $dfRelatedValues){
+						
+							if(!empty($dfRelatedValues)){
+								//check if Woid is valid
+								$select_df_related= "SELECT id FROM `qa_defects` WHERE `id`= ? LIMIT 1";
+								$select_df_related_res = $mysql->sqlprepare($select_df_related, array($dfRelatedValues));
+								if($select_df_related_res->num_rows > 0 ){
+									$insert_df_related_issue = "INSERT INTO workorder_related_issues SET wid ='".$getWoId."', issue_type = 'DF', related_id = '".$dfRelatedValues."'"; 
+									$mysql->sqlordie($insert_df_related_issue);
+									
+									}
+									
+									
+								
+								}
+							
+							}
+						
+						
+						}
+					
+					}
+					
+					
 
 			}
 			insertWorkorderAudit_req_type($mysql,$getWoId,'6',$_SESSION['user_id'],$woAssignedTo,$woStatus,$woREQ_TYPE);
