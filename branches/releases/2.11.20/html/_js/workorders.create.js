@@ -1807,7 +1807,7 @@ function addReleatedIssue(){
 			}
 			});
 		}
-		$('#WO-'+issueid).css('display','none');
+		$('.WO-'+issueid).css('display','none');
 		return false;
 	
 	
@@ -1853,7 +1853,7 @@ function addReleatedIssue(){
 			}
 			});
 		}
-		$('#DF-'+issueid).css('display','none');
+		$('.DF-'+issueid).css('display','none');
 		return false;
 	
 	
