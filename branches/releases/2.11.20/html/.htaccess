@@ -26,3 +26,6 @@ RewriteRule ^.*$ /index.php [NC,L]
   Deny from all
 </FilesMatch>
 php_value upload_max_filesize 15M
+php_value post_max_size 10M
+
+
