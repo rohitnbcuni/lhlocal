@@ -888,8 +888,12 @@
 								<div class="issue_type'. $wo_archive_status . '">
 									<div style="float:left;width:90px;padding-left:10px;">
 										<input type="radio" class="secondary" name="issuse_types" checked="checked" value="WO">
-										<span style="margin-bottom:-5px;margin-left:5px;">Workorder</span></div>
-									<div style="float:left;width:70px;padding-left:10px;"><input type="radio" class="secondary" name="issuse_types" value="DF">Defect</div>
+										<span style="margin-bottom:-5px;margin-left:5px;">Workorder</span>
+									</div>
+									<div style="float:left;width:70px;padding-left:10px;">
+										<input type="radio" class="secondary" name="issuse_types" value="DF">
+										<span style="margin-bottom:-5px;margin-left:5px;">Defect</span>
+									</div>
 									<div class="clearer"></div>
 								</div>';
 								$wo_related_issue = array();
