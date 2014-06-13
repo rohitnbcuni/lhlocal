@@ -23,7 +23,7 @@
 		*/
 	}
 	class QaDisplay extends Quality {
-		public function getQuery($query) {
+		public function getQuery($query,$arr =null) {
 			/*Quality::setIniFile();
 			
 			$config = Quality::getIniFile();
@@ -39,12 +39,12 @@
 			//get DB connection from registry LH#20736
 			$db = Zend_Registry::get('db');
 			
-			$data = $db->fetchAll($query);
+			$data = $db->fetchAll($query,$arr);
 			
 			return $data;
 		}
 
-		public function executeQuery($query) {
+		public function executeQuery($query,$arr =null) {
 			/*Quality::setIniFile();
 			
 			$config = Quality::getIniFile();
@@ -60,7 +60,7 @@
 			//get DB connection from registry LH#20736
 			$db = Zend_Registry::get('db');
 			
-			$data = $db->query($query);
+			$data = $db->query($query,$arr);
 			
 			return $data;
 		}

@@ -36,17 +36,20 @@ if('1' == $_GET['status']){
 }
 
 if(ISSET($_GET['clientId']) && $_GET['clientId'] != '-1'){
-	$CLIENT_SQL = " AND a.company = '".$_GET['clientId']."'";
+	$company_id = $mysql->real_escape_string($_GET['clientId']);
+	$CLIENT_SQL = " AND a.company = '".$company_id."'";
 }
 
 
 $WHERE = array();
 $WHERE_SQL = '';
 if(ISSET($_GET['assignedTo']) && $_GET['assignedTo'] != '-1'){
-	$WHERE[] = " assigned_to = ".$_GET['assignedTo'];
+	$assigned_to = $mysql->real_escape_string($_GET['assignedTo']);
+	$WHERE[] = " assigned_to = ".$assigned_to;
 }
 if(ISSET($_GET['statusId']) && $_GET['statusId'] != '-1' && $_GET['statusId'] != '99' ){
-	$status = getQualityStatus($_GET['statusId'],$mysql);
+	$statusId = $mysql->real_escape_string($_GET['statusId']);
+	$status = getQualityStatus($statusId,$mysql);
 	$WHERE[] = " status = ".$status;
 }
 if($_GET['statusId'] == '99'){
@@ -58,10 +61,12 @@ if($_GET['statusId'] == '-1'){
 	$WHERE[] = "  status IN ('1','2','3','4','5','6','7','8','10')";
 }
 if(ISSET($_GET['projectId']) && $_GET['projectId'] != '-1'){
-	$WHERE[] = " project_id = ".$_GET['projectId'];
+	$projectId = $mysql->real_escape_string($_GET['projectId']); 
+	$WHERE[] = " project_id = ".$projectId;
 }
 if(ISSET($_GET['severityID']) && $_GET['severityID'] != '-1'){
-	$WHERE[] = " severity = ".$_GET['severityID'];
+	$severityID = $mysql->real_escape_string($_GET['severityID']);
+	$WHERE[] = " severity = ".$severityID;
 }
 /*if($_GET['assignedTo'] != '-1'){
 	$WHERE[] = " assigned_to = ".$_GET['assignedTo'];
@@ -74,7 +79,8 @@ if(count($WHERE) > 0){
 }
 $type = '';
 if(array_key_exists("report", $_GET)){
-  $type = $_GET['report'];
+  $report = $mysql->real_escape_string($_GET['report']);
+  $type = $report;
 }
 
 
@@ -389,18 +395,19 @@ if(isset($from_action) && $from_action){
   $header = "Id\t Project\t Company\t Title\t  Category\t Example Url\t Description\t Status\t Severity\t Version\t Browser\t OS\t Origin\t Iteration\t Product\t  Requested By\t Detected By\t Assigned To\t Open Date\t Assigned Date\t Completed Date\t Closed Date\t Last Action\t Active\t Deleted\t Archived\n";
   $excel_body = '';
 
-  $clientId = $_GET['rp_client_filter'];
-  $projectId = $_GET['rp_project_filter'];
-  $statusId = $_GET['rp_status_filter'];
-  $assignedTo = $_GET['rp_assigned_filter'];
-  $rp_severity_filter = $_GET['rp_severity_filter'];
+  $clientId = $mysql->real_escape_string($_GET['clientId']);
+  $projectId = $mysql->real_escape_string($_GET['projectId']);
+  $statusId = $mysql->real_escape_string($_GET['statusId']);
+  $assignedTo = $mysql->real_escape_string($_GET['assignedTo']);
+  $rp_severity_filter = $mysql->real_escape_string($_GET['severityID']);
   if($rp_severity_filter == 'Show All'){
     $rp_severity_filter = -1;
   }
   foreach($postingList as $project){
-    //if(($clientId < 0 || $clientId == $project['client']) && ($projectId < 0 || $projectId == $project['project_id'])){
+	
+    if(($clientId < 0 || $clientId == $project['client']) && ($projectId < 0 || $projectId == $project['project_id'])){
       foreach($project['quality'] as $wo){
-        // if(($statusId < 0 || ($statusId == 99 && $wo['status'] != 'Closed') || $statusId == $wo['status']) && ($assignedTo < 0 || $assignedTo == $wo['assigned_to_id']) && ($rp_severity_filter < 0 || $rp_severity_filter == $wo['severity'])){
+         if(($statusId < 0 || ($statusId == 99 && $wo['status'] != 'Closed') || $statusId == $wo['status']) && ($assignedTo < 0 || $assignedTo == $wo['assigned_to_id']) && ($rp_severity_filter < 0 || $rp_severity_filter == $wo['severity_id'])){
 		
          $excel_body .=  $wo['id'] . "\t " .
           $project['project_code'] . " : " . $project['project_name'] . "\t " .
@@ -428,8 +435,8 @@ if(isset($from_action) && $from_action){
           $wo['active'] . "\t" .
           $wo['deleted'] . "\t" .
           $wo['archived'] . "\n";
-        //}
-      //}
+        }
+      }
     }
   }
 

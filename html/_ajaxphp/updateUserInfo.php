@@ -3,12 +3,12 @@
 	include("sessionHandler.php");
 	global $mysql;
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);  
-	$userID = $mysql->real_escape_string(@$_REQUEST['user_id']);
-	$userTitles = $_REQUEST['userTitle'];
+	$userID = (int)$mysql->real_escape_string(@$_REQUEST['user_id']);
+	$userTitles = $mysql->real_escape_string($_REQUEST['userTitle']);
 	$userTitlesArray = explode(",",$userTitles);
 	if(!empty($userID))
 	{
-		$update_role = "UPDATE `users` SET `user_title`='".$_REQUEST['userTitle']."',`role`='" . $_REQUEST['userRole']."',`agency`='". $_REQUEST['userVendorName'] ."',`program`='".$_REQUEST['userProgram']."',`active`='". $_REQUEST['userActiveStatus']."',`deleted`='". $_REQUEST['userDeletedStatus']."',`login_status`='". $_REQUEST['userAdminAccess']."',`user_access`='".$_REQUEST['user_access_bit']."' where `id`='" . $userID ."'";
+		$update_role = "UPDATE `users` SET `user_title`='".$mysql->real_escape_string($_REQUEST['userTitle'])."',`role`='" . $mysql->real_escape_string($_REQUEST['userRole'])."',`agency`='". $mysql->real_escape_string($_REQUEST['userVendorName']) ."',`program`='".$mysql->real_escape_string($_REQUEST['userProgram'])."',`active`='". $mysql->real_escape_string($_REQUEST['userActiveStatus'])."',`deleted`='". $mysql->real_escape_string($_REQUEST['userDeletedStatus'])."',`login_status`='". $mysql->real_escape_string($_REQUEST['userAdminAccess'])."',`user_access`='".$mysql->real_escape_string($_REQUEST['user_access_bit'])."' where `id`='" . $userID ."'";
 		$mysql->sqlordie($update_role);
 	}
 	if($_REQUEST['isUserTitleChanged']=='Y'){
@@ -51,7 +51,7 @@
 		}else{
 			$countOldProjectArray = 0;
 		}
-		$userProjectArray = $_REQUEST['userProjectArray'];
+		$userProjectArray = $mysql->real_escape_string($_REQUEST['userProjectArray']);
 		$newUserProjectArray = @explode(",",$userProjectArray);
 		if($newUserProjectArray[0] == ''){
 			$countOldProjectArray = 0;

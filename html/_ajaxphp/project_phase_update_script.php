@@ -6,7 +6,7 @@
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	//print('<pre>');
 	exit;
-	$sub_phase_list = "'Project Manager', 'Engagement Lead', 'PSX'";
+	/*$sub_phase_list = "'Project Manager', 'Engagement Lead', 'PSX'";
 
 	$new_phase_sql = "SELECT p.`id` AS 'phase_id', sp.`id` AS 'sub_phase_id' FROM `lnk_project_phase_types` p, `lnk_project_sub_phase_types` sp WHERE  sp.phase_id=p.id and sp.name in (".$sub_phase_list.")";
 	$new_phase_result = $mysql->sqlordie($new_phase_sql);
@@ -107,6 +107,6 @@
 			print("<br>UPDATE *=> " . $sql);
 			$mysql->sqlordie($sql);
 		}
-	}
+	}*/
 
 ?>

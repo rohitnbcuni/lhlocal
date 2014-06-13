@@ -23,7 +23,7 @@ class ResourcePlanner {
 
 class RpDisplay extends ResourcePlanner {
 
-	public function getQuery($query) {
+	public function getQuery($query, $arr = null) {
 		/*ResourcePlanner::setIniFile();
 
 		$config = ResourcePlanner::getIniFile();
@@ -38,7 +38,7 @@ class RpDisplay extends ResourcePlanner {
 		$db->getConnection();*/
 		//get DB connection from registry LH#20736
         $db = Zend_Registry::get('db'); 
-		$data = $db->fetchAll($query);
+		$data = $db->fetchAll($query, $arr);
 
 		return $data;
 	}
@@ -54,8 +54,8 @@ class RpDisplay extends ResourcePlanner {
 	}
 
 	public function getUserInfo($userID) {
-		$select_resources = "SELECT * FROM `users` WHERE id='$userID' AND `deleted`='0'";
-		$resc = self::getQuery($select_resources);
+		$select_resources = "SELECT * FROM `users` WHERE id= ? AND `deleted`='0'";
+		$resc = self::getQuery($select_resources, array($userID));
 		return $resc[0]['first_name']." ".$resc[0]['last_name'];
 
 	}
@@ -771,5 +771,15 @@ exit;*/
 			}
 		}
 		return $html;
+	}
+	
+	function safeSql($var){
+		$sqlInjectionValiable = array('#','"',"'");
+		$replaceValiable = '';
+		if(!empty($var)){
+			return str_replace($sqlInjectionValiable,'',strip_tags($var));
+		}else{
+			return '';
+		}
 	}
 }

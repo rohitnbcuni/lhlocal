@@ -60,6 +60,7 @@ class Basecamp{
 		}
 	}
 	public function bcLogin() {
+		$db = Zend_Registry::get('db');
 		//Login using blanck unfound url - optimizes basecamp connection
 		$this->config = new Zend_Config_Ini(
 			APPPATH . '/config/app.ini', 
@@ -79,11 +80,12 @@ class Basecamp{
 				$this->config->database->params->dbname,
 				$this->config->database->params->dbport);
 			
-			$get_user = "SELECT * FROM `users` WHERE `id`='" . $mysql->real_escape_string($_COOKIE["lighthouse_id"]) ."' AND `active` = '1'  AND `deleted` = '0' LIMIT 1";
-			$get_user_res = $mysql->query($get_user);
-			$get_user_row = $get_user_res->fetch_assoc();
-			
-			if($get_user_res->num_rows > 0) {
+			$get_user = "SELECT * FROM `users` WHERE `id`= ? AND `active` = '1'  AND `deleted` = '0' LIMIT 1";
+			$get_user_res = $db->query($get_user, array($mysql->real_escape_string($_COOKIE["lighthouse_id"])));
+			//$get_user_row = $get_user_res->fetch_assoc();
+			$get_user_row = $get_user_res->fetch();
+			//if($get_user_res->num_rows > 0) {
+			if($get_user_res->rowCount() > 0) {
 				if($get_user_row['delete'] != 1) {     
 					$is_in_db = true;
 				}
@@ -93,8 +95,8 @@ class Basecamp{
 			
 			$this->_session->lh_username = $get_user_row['email'];
 			$_SESSION['lh_username'] = $get_user_row['email'];
-			$this->_session->lh_password = base64_decode($_COOKIE["lighthouse_xp"]);
-			$_SESSION['lh_password'] = base64_decode($_COOKIE["lighthouse_xp"]);
+			//$this->_session->lh_password = base64_decode($_COOKIE["lighthouse_xp"]);
+			//$_SESSION['lh_password'] = base64_decode($_COOKIE["lighthouse_xp"]);
 			$this->_session->user_id = $get_user_row['id'];
 			$_SESSION['user_id'] = $get_user_row['id'];
 			$this->_session->first = $get_user_row['first_name'];
@@ -147,11 +149,12 @@ class Basecamp{
 				$this->config->database->params->dbname,
 				$this->config->database->params->dbport);
 				
-				$get_user = "SELECT * FROM `users` WHERE `user_name`='" .$mysql->real_escape_string($_POST['lh_username']) ."' AND `active` = '1'  AND `deleted` = '0' LIMIT 1";
-				$result = @$mysql->query($get_user);
-				$row = @$result->fetch_assoc();
+				$get_user = "SELECT * FROM `users` WHERE `user_name`= ? AND `active` = '1'  AND `deleted` = '0' LIMIT 1";
+				$result = $db->query($get_user, array($mysql->real_escape_string($_POST['lh_username'])));
+				$row = $result->fetch();
 				
-				if($result->num_rows > 0) {
+				
+				if($result->rowCount() > 0) {
 					if($row['delete'] != 1) {
 						$is_in_db = true;
 					}
@@ -161,8 +164,8 @@ class Basecamp{
 				
 				$this->_session->lh_username = $row['user_name'];
 				$_SESSION['lh_username'] = $row['user_name'];
-				$this->_session->lh_password = $_POST['lh_password'];
-				$_SESSION['lh_password'] = $_POST['lh_password'];
+				//$this->_session->lh_password = $_POST['lh_password'];
+				//$_SESSION['lh_password'] = $_POST['lh_password'];
 				$this->_session->user_id = $row['id'];
 				$_SESSION['user_id'] = $row['id'];
 				$this->_session->first = $row['first_name'];
@@ -253,12 +256,12 @@ class Basecamp{
 				$user_session['loggedin'] = true;
 				$c_time = date("Y-m-d H:i:s");
 				//Update the last logged date time of user
-				$update_user_logged_time = "REPLACE INTO users_login_log set last_logged_date = '$c_time' , user_id = ".$_SESSION['user_id'];  
-				$mysql->query($update_user_logged_time);
+				$update_user_logged_time = "REPLACE INTO users_login_log set last_logged_date = ? , user_id = ?";  
+				$db->query($update_user_logged_time,array($c_time,$_SESSION['user_id']));
 				$this->set_session($user_session, "lh_user");
 				if(@$_POST['remember'] == "on") {
-					setcookie("lighthouse_id", $row['id'], time()+220752000, '/');
-					setcookie("lighthouse_xp", base64_encode($_POST['lh_password']), time()+220752000, '/');
+					setcookie("lighthouse_id", $row['id'], time()+220752000, '/',isset($_SERVER["HTTPS"]),true);
+					setcookie("lighthouse_xp", base64_encode($_POST['lh_password']), time()+220752000, '/',isset($_SERVER["HTTPS"]),true);
 				}
 				return true;
 			} else {
@@ -271,7 +274,7 @@ class Basecamp{
 		$cookieData = serialize($user_session);
 //		$cookieData = mcrypt_encrypt('MCRYPT_RIJNDAEL_256', 'lh', $cookieData, 'MCRYPT_MODE_ECB');
 		$cookieData = base64_encode($cookieData);
-		setcookie($key, $cookieData, 0, '/');
+		setcookie($key, $cookieData, 0, '/',isset($_SERVER["HTTPS"]),true);
 	}
 
 	public function get_session($key){
@@ -345,7 +348,7 @@ class Basecamp{
 	{
 		return $this->mysql->query($string);
 	}
-	function get_person_extra_list($extra)
+	/*function get_person_extra_list($extra)
 	{
 		$e=array();
 		$r=$this->query("SELECT DISTINCT $extra FROM person_extras");
@@ -423,7 +426,7 @@ class Basecamp{
 			return true;
 		}
 		return false;
-	}
+	}*/
 	private function _start_running()
 	{
 		/*$this->mysql->query('LOCK TABLES 
@@ -435,7 +438,7 @@ class Basecamp{
 							project_basecamp AS prread READ
 							');*/
 	}
-	private function _end_running()
+	/*private function _end_running()
 	{
 		$this->mysql->query('UNLOCK TABLES');
 	}
@@ -578,9 +581,9 @@ class Basecamp{
 		$xml=$this->api('/project/list');
 		$stmt=$this->mysql->prepare('INSERT INTO project_basecamp (bc_id, company_id, status, name, announcement, uxd_code, subname) VALUES(?,?,?,?,?,?,?)');
 		foreach($xml as $p)
-		{
-			$codes=preg_split('/\s*-\s*/',$p->name);
-			$uxd_code=$codes[0];
+		{*/
+			//$codes=preg_split('/\s*-\s*/',$p->name);
+			/*$uxd_code=$codes[0];
 			$uxd_code=trim($uxd_code);
 			$uxd_code=preg_replace('/\s+.*$/','',$uxd_code);
 			$stmt->bind_param('ddsssss',
@@ -667,6 +670,6 @@ class Basecamp{
 		{
 			return false;
 		}
-	}
+	}*/
 }
 ?>

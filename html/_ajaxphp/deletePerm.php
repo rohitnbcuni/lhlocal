@@ -29,7 +29,7 @@
 	$bcCompRow = $bcComp->fetch_assoc();
 	
 	$LOGINURL = BASECAMP_HOST."/login/authenticate";
-	echo $GETURL   = BASECAMP_HOST."/projects/" .$bcRow['bc_id'] ."/involvements/" .$bcCompRow['bc_id']
+	$GETURL   = BASECAMP_HOST."/projects/" .$bcRow['bc_id'] ."/involvements/" .$bcCompRow['bc_id']
 		."?return_to=/projects/" .$bcRow['bc_id'] ."/participants";
 	$LOGINFIELDS = "user_name=resourceplanner@nbcuxd.com&password=r3s0urc3";
 	$POSTFIELDS = "_method=delete";
@@ -49,7 +49,7 @@
 	    curl_setopt($ch, CURLOPT_POSTFIELDS, "$LOGINFIELDS");
 
 	    ob_start();
-	   echo curl_exec ($ch);
+	    curl_exec ($ch);
 	    ob_end_clean();
 
 	    curl_close ($ch);
@@ -75,8 +75,8 @@
 	    return $result;
 	}
 	
-	$cookieFile = AUTH_SITE_COOKIE_STORE($LOGINURL,$LOGINFIELDS);
-	echo $url = SUBMIT_FORM($GETURL,$cookieFile,$POSTFIELDS);
+	//$cookieFile = AUTH_SITE_COOKIE_STORE($LOGINURL,$LOGINFIELDS);
+	//echo $url = SUBMIT_FORM($GETURL,$cookieFile,$POSTFIELDS);
 	
-	$mysql->close();
+	//$mysql->close();
 ?>

@@ -3,7 +3,7 @@
 /*
 $Id:$
 */
-
+/*
 class Basecamp_User extends Basecamp{
 
     var $fields = array(
@@ -44,6 +44,6 @@ class Basecamp_User extends Basecamp{
 	}
 
 
-}
+}*/
 
 ?>

@@ -1,5 +1,5 @@
 <?PHP
-	include('/var/www/lighthouse-uxd/lighthouse/html/_inc/config.inc');
+	/*include('/var/www/lighthouse-uxd/lighthouse/html/_inc/config.inc');
 	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 
 	$selectSql = 'SELECT id, IFNULL(project_status, "0") AS Status FROM projects where archived="0"';
@@ -26,5 +26,5 @@
 				$mysql->query($insertSql);
 			}
 		}
-	}
+	}*/
 ?>

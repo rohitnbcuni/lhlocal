@@ -11,10 +11,10 @@
 	$html = '';
 
 	if($action == 'add'){
-		$sql = "SELECT * FROM lnk_project_sub_phase_types WHERE active='1' AND phase_id='$phase' AND id='$subPhase'";
-		$result = $mysql->sqlordie($sql);
+		$sql = "SELECT * FROM lnk_project_sub_phase_types WHERE active='1' AND phase_id=? AND id= ?";
+		$result = $mysql->sqlprepare($sql, array($phase,$subPhase));
 		if(@$result->num_rows > 0){
-			$subPhaseResult = @$result->fetch_assoc();
+			$subPhaseResult = $result->fetch_assoc();
 			$subPhaseName = $subPhaseResult['name'];
 			$subPhaseId = $subPhaseResult['id'];
 		}else{
