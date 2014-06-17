@@ -1,5 +1,21 @@
 
 $(document).ready(function(){
+	jQuery.download = function(url, data, method){
+	//url and data options required
+	if( url && data ){ 
+		//data can be string of parameters or array/object
+		data = typeof data == 'string' ? data : jQuery.param(data);
+		//split params into form inputs
+		var inputs = '';
+		jQuery.each(data.split('&'), function(){ 
+			var pair = this.split('=');
+			inputs+='<input type="hidden" name="'+ pair[0] +'" value="'+ pair[1] +'" />'; 
+		});
+		//send request
+		jQuery('<form action="'+ url +'" method="'+ (method||'post') +'">'+inputs+'</form>')
+		.appendTo('body').submit().remove();
+	};
+};
 	
 	var adminTitlemsg = $('#adminTitlemsg').val();
 	
@@ -72,6 +88,10 @@ $(document).ready(function(){
 	//$(".ui-multiselect").removeClass('button');
 	if($("#userProjectArray")){
 		$("#userProjectArray").multiselect({create: function(){ $(this).next().width(200); }}).multiselectfilter();
+	
+	}
+	if($("#admin_requested_select")){
+		$("#admin_requested_select").multiselect({selectedText:"# Selected Users"},{create: function(){ $(this).next().width(200); }}).multiselectfilter();
 	
 	}
 	
@@ -600,6 +620,7 @@ function generateReport(){
 	var admin_to_select = $('#admin_to_select').val();
     var admin_to_year_select = $('#admin_to_year_select').val();
 	var admin_assign_select = $('#admin_assign_select').val();
+	var admin_requested_select = $('#admin_requested_select').val();
 	
 	var from_date = new Date(admin_year_select,admin_user_select);
 	var to_date = new Date(admin_to_year_select,admin_to_select);
@@ -607,22 +628,27 @@ function generateReport(){
 	var weeks = Math.floor(Math.abs(diff) / (1000 * 7 * 24 * 60 * 60));
 	
 	if(admin_to_select!='' && admin_to_year_select!=''){
-	if(parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) < parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) == parseInt(admin_to_year_select)|| parseInt(admin_user_select) == parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select))
-	{ 	
-		alert('From Date should not be greater than to date'); return false;
+		if(parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) < parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) == parseInt(admin_to_year_select)|| parseInt(admin_user_select) == parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select))
+		{ 	
 
+			alert('From Date should not be greater than to date'); return false;
+
+		}
+		
+
+		if(weeks>17)
+		{
+			alert('Difference-in-Months exceeded the Max Limit of 5'); return false;
+		}
+		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select;
+	}else{
+		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select;
+			//window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select);
 	}
 	
-
-	if(weeks>17)
-	{
-	alert('Difference-in-Months exceeded the Max Limit of 5'); return false;
-	}
-	window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select );
-	}else{
-	window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select );
-	//window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select);
-}}
+	
+	jQuery.download('/_ajaxphp/admin_slareport.php',d);
+}
 
 function fetchProjVersion(proj_id,version_id)
 {

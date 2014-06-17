@@ -14,7 +14,7 @@
 
              for($i = 0; $i < sizeof($list); $i++) {
 				if(!empty($list[$i]) && !isset($ccArray[$list[$i]])) {
-					if($list[$i] != @$_GET['remove'])
+					if($list[$i] != $mysql->real_escape_string($_GET['remove']))
 					$ccArray[$list[$i]]=true;
 				}
 			}
@@ -23,15 +23,17 @@
 			$arrayData = "";
 			
 			for($z = 0; $z < sizeof($listKeys); $z++) {
+				if(!empty($listKeys[$z])){
    				 $arrayData .= $listKeys[$z] .",";
+				}
 			}
 			
-			$update_cc = "UPDATE `projects` SET `qccclist`='$arrayData' WHERE `id`='$projectId'";
-			@$mysql->sqlordie($update_cc);
+			$update_cc = "UPDATE `projects` SET `qccclist`= ? WHERE `id`= ?";
+			$mysql->sqlprepare($update_cc,array($arrayData,$projectId));
 
-                     $select_cc = "SELECT `qccclist` FROM `projects` WHERE `id`='$projectId' LIMIT 1";
-			 $result = @$mysql->sqlordie($select_cc);
-			$row = @$result->fetch_assoc();
+            $select_cc = "SELECT `qccclist` FROM `projects` WHERE `id`= ? LIMIT 1";
+			$result = $mysql->sqlprepare($select_cc,array($projectId));
+			$row = $result->fetch_assoc();
 
 			if($result->num_rows > 0) {
 				$new_list = explode(",", $row['qccclist']);
@@ -40,8 +42,8 @@
 				for($x = 0; $x < sizeof($new_list); $x++) {
 					if(!empty($new_list[$x])) {
 						$select_cc_user = "SELECT * FROM `users` WHERE `id`='" .$new_list[$x] ."' LIMIT 1";
-						$cc_user_result = @$mysql->sqlordie($select_cc_user);
-						$cc_user_row = @$cc_user_result->fetch_assoc();
+						$cc_user_result = $mysql->sqlordie($select_cc_user);
+						$cc_user_row = $cc_user_result->fetch_assoc();
 						
 						$list .= '<li class="admincc_listli">'
                                          ."<div class=\"admincclist_name\">" .ucfirst($cc_user_row['first_name']) ." " .ucfirst($cc_user_row['last_name']) ."</div>"

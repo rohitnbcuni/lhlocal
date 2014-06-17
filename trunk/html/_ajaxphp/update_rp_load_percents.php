@@ -4,22 +4,22 @@
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
 	if(isset($_GET['date'])) {
-		$date=@$_GET['date'];
+		$date = $mysql->real_escape_string($_GET['date']);
 	} else {
 		$date='';
 	}
 	if(isset($_REQUEST['program_type']) && !empty($_REQUEST['program_type'])){
-		$program_filter = " program = '".$_REQUEST['program_type']."' AND ";
+		$program_filter = " program = '".$mysql->real_escape_string($_REQUEST['program_type'])."' AND ";
 	} else {
 		$program_filter = '';
 	}
 	if(isset($_GET['part'])) {
-		$part=@$_GET['part'];
+		$part= $mysql->real_escape_string($_GET['part']);
 	} else {
 		$part='';
 	}
-	$character = $_GET['showUser'];
-	$role = $_GET['role'];
+	$character = $mysql->real_escape_string($_GET['showUser']);
+	$role = $mysql->real_escape_string($_GET['role']);
 
 	if(!empty($_REQUEST['role']) || !empty($_REQUEST['program_type'] )){
 		$character = 'all';

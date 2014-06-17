@@ -23,7 +23,7 @@
 		*/
 	}
 	class WoDisplay extends WorkOrders {
-		public function getQuery($query) {
+		public function getQuery($query,$arr=null) {
 			/*WorkOrders::setIniFile();
 			
 			$config = WorkOrders::getIniFile();
@@ -38,12 +38,12 @@
 			$db->getConnection();*/
 			//get DB connection from registry LH#20736
 			$db = Zend_Registry::get('db');
-			$data = $db->fetchAll($query);
+			$data = $db->fetchAll($query,$arr);
 			
 			return $data;
 		}
 
-		public function executeQuery($query) {
+		public function executeQuery($query,$arr=null) {
 			/*WorkOrders::setIniFile();
 			
 			$config = WorkOrders::getIniFile();
@@ -59,7 +59,7 @@
 			//get DB connection from registry LH#20736
 			$db = Zend_Registry::get('db');
 			
-			$data = $db->query($query);
+			$data = $db->query($query,$arr);
 			
 			return $data;
 		}
@@ -403,7 +403,7 @@
 				
 			return $html;
 		}
-		public function getStatusOptionEditHTML($itemId, $client=false,$projectId,$isActive,$isArchived) {
+		public function getStatusOptionEditHTML($itemId, $client=false,$projectId,$isActive='',$isArchived='') {
 			$types = self::getQuery(QRY_WO_STATUS_ASC);
 
 			$displayStatusArray = array();
@@ -666,5 +666,79 @@
 			
 			return $html;
 		}
+		
+	function safeSql($var){
+			$db = Zend_Registry::get('db');
+			
+			$replaceValiable = '';
+			//$var = trim($var);
+			if(!empty($var)){
+				$db->quote($var);
+				return strip_tags($var);
+				//return str_replace($sqlInjectionValiable,'',strip_tags($var));
+			}else{
+				return '';
+			
+			}
+			
+		
+	
+		}
+	public  function escapewordquotes($text){
+		$pre = chr(226).chr(128);
+		$badwordchars=array('�','�','�','apos;',"#039;","�","�",'&#233;','&#8216;','&#8217;',
+		'&#8230;',
+		'&#8217;',
+		'&#8220;',
+		'&#8221;',
+		'&#8212;',
+		'#8212;',
+		'#&8211;',
+		'#8211;',
+		'amp;',
+		'&#160;',
+		'#160;'
+			
+		);
+		$fixedwordchars = array('','"','"',"'","'",",","'", "e","'","'",'~','~','','','_','-','-','-','','');
+	    $text = str_replace($badwordchars,$fixedwordchars,$text);                         
+		$text=str_replace('�',"'",$text); 
+	    $text=str_replace('�',"'",$text); 
+	    $text=str_replace('&amp;rsquo;',"'",$text); 
+//    $text = preg_replace('/[^(\x20-\x7F)]*/','', $text );  
+		$text = str_replace("&#8216;","",$text);
+		//LH#    20679
+		$text = str_replace(array("“","’","”"),array('"',"'",'"'),$text);
+//		$text = str_replace("&","",$text);
+//		$text = preg_replace('/[^\x00-\x7f]/','',$text);
+		return $text;
+
+
+	}
+	
+	
+	static function getRelatedIssue($wid){
+		$all = array();
+		$i = 0;
+		$db = Zend_Registry::get('db');
+		$wo_related = $db->fetchAll("SELECT * FROM `workorder_related_issues` WHERE `wid`=? ",array($wid));
+		if(count($wo_related) > 0){
+			foreach($wo_related as $r_list){
+				if($r_list['issue_type'] == 'WO'){
+					$all[] = $db->fetchAll("SELECT id,title, 'WO' As type FROM `workorders` WHERE `id`= ?",array($r_list['related_id']));
+					
+					}else{
+					$all[] = $db->fetchAll("SELECT id,title, 'DF' As type  FROM `qa_defects` WHERE `id`= ?",array($r_list['related_id']));
+					
+				}
+				//$i++;
+						
+			}
+		
+		}
+		return $all;
+	
+	}
+	
 	}
 ?>

@@ -1840,3 +1840,30 @@ background: none repeat scroll 0 0 #FFFFFF;
 width:343px;
 
 }
+
+.issue_type{
+padding-bottom: 10px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 10px;
+    width: auto;
+	 border-bottom-color: #CFCFCF;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+#related_list  li{
+border-bottom-color: #CFCFCF;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    display: block;
+    padding-bottom: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0;
+    position: relative;
+    width: 340px;
+
+
+}
+#related_list li:hover { font-weight: bold; background: #e4f5fd; cursor: default; }

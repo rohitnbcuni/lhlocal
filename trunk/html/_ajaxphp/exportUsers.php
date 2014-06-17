@@ -5,22 +5,22 @@ include("sessionHandler.php");
 
 //$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 global $mysql;
-$result = $mysql->sqlordie("SELECT  u.*,ll.last_logged_date  FROM users u INNER JOIN companies c on (u.company = c.id) LEFT JOIN users_login_log  ll ON (ll.user_id = u.id) order by u.first_name ");
+$result = $mysql->sqlordie("SELECT  u.*,ll.last_logged_date  FROM users u LEFT JOIN companies c on (u.company = c.id) LEFT JOIN users_login_log  ll ON (ll.user_id = u.id) order by u.first_name ");
 			
 $OUTPUT .= "User ID, Email,First Name,Last Name,Company,Login Status,Deleted,User Access,Last Logged In \n";
 while($row = $result->fetch_assoc()){
 	$active = ($row['active'] == '1')?'Active':'unActive';
  	$d = ($row['deleted'] == '1')?"Deleted":'Active';
-	$OUTPUT .= $row['id'].",";
-	$OUTPUT .= $row['email'].",";
-	$OUTPUT .= $row['first_name'].",";
-	$OUTPUT .= $row['last_name'].",";
-	$OUTPUT .= $row['company'].",";
-	$OUTPUT .= $row['login_status'].",";
+	$OUTPUT .= trim($row['id']).",";
+	$OUTPUT .= trim($row['email']).",";
+	$OUTPUT .= trim($row['first_name']).",";
+	$OUTPUT .= trim($row['last_name']).",";
+	$OUTPUT .= trim($row['company']).",";
+	$OUTPUT .= trim($row['login_status']).",";
 	
-	$OUTPUT .= $d.",";
-	$OUTPUT .= $row['user_access'].",";
-	$OUTPUT .= $row['last_logged_date'].",";
+	$OUTPUT .= trim($d).",";
+	$OUTPUT .= trim($row['user_access']).",";
+	$OUTPUT .= trim($row['last_logged_date']).",";
 	
 	$OUTPUT .= "\n";
 

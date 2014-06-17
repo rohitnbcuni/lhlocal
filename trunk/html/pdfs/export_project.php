@@ -9,17 +9,17 @@
 	require_once('fpdf.inc');
 	
 	//$mysql = new mysqli('localhost', 'generic', 'generic', 'nbc_lighthouse');
-	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-	
+	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+	global $mysql;
 	$sections = array();
 	$secKeys = array();
 	//print_r($_POST);
-	$project_id = $mysql->real_escape_string(@$_POST['project_id']);
+	$project_id = (int)$mysql->real_escape_string(@$_POST['project_id']);
 	$sections = @$_POST['section'];
 	$secKeys = array_keys($sections);
 	
-	$project_query = "SELECT * FROM `projects` WHERE `id`='$project_id' LIMIT 1";
-	$project_res = @$mysql->query($project_query);
+	$project_query = "SELECT * FROM `projects` WHERE `id`= ? LIMIT 1";
+	$project_res = $mysql->sqlprepare($project_query,array($project_id));
 	$project_row = $project_res->fetch_assoc();
 	
 	$pdf=new PDF();	
@@ -65,8 +65,8 @@
 				for($x = 0; $x < sizeof($section_keys); $x++) {
 					$select_user = "SELECT * FROM `users` WHERE `id`='" .$mysql->real_escape_string($section[$section_keys[$x]]['user']) ."' LIMIT 1";
 					$select_rt = "SELECT * FROM `resource_types` WHERE `id`='" .$mysql->real_escape_string($section[$section_keys[$x]]['resource_type']) ."' LIMIT 1";
-					$user_res = @$mysql->query($select_user);
-					$rt_res = @$mysql->query($select_rt);
+					$user_res = @$mysql->sqlordie($select_user);
+					$rt_res = @$mysql->sqlordie($select_rt);
 					$user_row = @$user_res->fetch_assoc();
 					$rt_row = @$rt_res->fetch_assoc();
 					
@@ -96,7 +96,7 @@
 				
 				for($x = 0; $x < sizeof($section_keys); $x++) {
 					$select_phase = "SELECT * FROM `lnk_project_phase_types` WHERE `id`='" .$mysql->real_escape_string($section[$section_keys[$x]]['phase']) ."' LIMIT 1";
-					$phase_res = @$mysql->query($select_phase);
+					$phase_res = @$mysql->sqlordie($select_phase);
 					$phase_row = $phase_res->fetch_assoc();
 					
 					if(!empty($section[$section_keys[$x]]['start_date']) || !empty($section[$section_keys[$x]]['projected_date'])) {
@@ -140,7 +140,7 @@
 				
 				for($x = 0; $x < sizeof($section_keys); $x++) {
 					$select_phase = "SELECT * FROM `lnk_project_phase_types` WHERE `id`='" .$mysql->real_escape_string($section[$section_keys[$x]]['phase']) ."' LIMIT 1";
-					$phase_res = @$mysql->query($select_phase);
+					$phase_res = @$mysql->sqlordie($select_phase);
 					$phase_row = $phase_res->fetch_assoc();
 					
 					if(!empty($section[$section_keys[$x]]['hours']) || !empty($section[$section_keys[$x]]['rate'])) {
@@ -199,7 +199,7 @@
 					if(!empty($section[$section_keys[$x]]['user_name'])) {
 						if(is_numeric($section[$section_keys[$x]]['phase'])) {
 							$select_phase = "SELECT * FROM `lnk_project_phase_types` WHERE `id`='" .$mysql->real_escape_string($section[$section_keys[$x]]['phase']) ."' LIMIT 1";
-							$phase_res = @$mysql->query($select_phase);
+							$phase_res = @$mysql->sqlordie($select_phase);
 							$phase_row = $phase_res->fetch_assoc();
 							
 							$html .= "Phase: " .$phase_row['name'] ."<br />";
@@ -208,7 +208,7 @@
 						}
 						
 						$select_appr_user = "SELECT * FROM `users` WHERE `id`='" .$mysql->real_escape_string($section[$section_keys[$x]]['user_name']) ."' LIMIT 1";
-						$appr_user_res = @$mysql->query($select_appr_user);
+						$appr_user_res = @$mysql->sqlordie($select_appr_user);
 						$user_row = $appr_user_res->fetch_assoc();
 						//$section[$section_keys[$x]]['user_name']
 						

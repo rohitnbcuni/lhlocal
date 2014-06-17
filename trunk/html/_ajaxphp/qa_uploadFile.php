@@ -7,12 +7,15 @@
 		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 		//Defining Global mysql connection values
 	    global $mysql;
-		$defectIdClean = $mysql->real_escape_string(@$_POST['defect_id']);
+		$defectIdClean = $mysql->real_escape_string($_POST['defect_id']);
 		$defectId = "'" .$defectIdClean ."'";
-		$dirName = $mysql->real_escape_string(@$_POST['dirName']);
+		$dirName = $mysql->real_escape_string($_POST['dirName']);
+		//$cleaned_filename = preg_replace("/[^-\w]+/", "_", $_FILES['upload_file']['name']);
+		//print_r($cleaned_filename);
+		$cleaned_filename = str_replace(" ", "_", ($_FILES['upload_file']['name']));
+		$cleaned_filename = str_replace("'", "_", $cleaned_filename);
+		$cleaned_filename = str_replace('"', "_",$cleaned_filename);
 		
-		$cleaned_filename = str_replace(" ", "_", $_FILES['upload_file']['name']);
-		$cleaned_filename = str_replace("'", "_", $_FILES['upload_file']['name']);
 		
 
 //	 $ext = array('.jpg','.jpeg','.png','.gif','.tiff','.bmp','.html','.txt','.xml','.xls','.xlsx','.pdf','.doc','.docx','.zip','.tar','.flv','.mp4','.JPG','.JPEG','.PNG','.TIFF','.BMP','.HTML','.TXT','.XML','.XLS','.XLSX','.PDF','.DOC','.DOCX');
@@ -24,11 +27,20 @@
 		
 		die("Exdeed");
                  */
+		$mimitype_extension = ".".pathinfo($_FILES['upload_file']['name'], PATHINFO_EXTENSION);
+		if(!in_array($mimitype_extension,$ext)){
+			$cleaned_filename = '';
+			die ("You cannot upload in that format"); 
+				
+		}
+		
 		if(!in_array(strrchr($cleaned_filename,'.'),$ext)){
+			$cleaned_filename = '';
 			die ("You cannot upload in that format"); 
 		}	
 		
 		if ($_FILES['upload_file']['size']> MAX_UPLOAD_FILE_SIZE){
+			$cleaned_filename = '';
 		
 			die("The file size of the attachment is more than 10MB");
 		
@@ -39,26 +51,28 @@
 		} else {
 			$dirName = $defectIdClean ."/";
 		}
-
-		$select_file = "SELECT * FROM `qa_files` WHERE `directory`='" .str_replace("/", "", $dirName) ."' AND `file_name`='" .$cleaned_filename ."' LIMIT 1";
-		$result = $mysql->sqlordie($select_file);	
-
-		if (!copy($_FILES['upload_file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] .'/qafiles/' .$dirName .$cleaned_filename)) {
-			echo "fail";
-		} else {
-			chmod($_SERVER['DOCUMENT_ROOT'] .'/files/' .$dirName .$cleaned_filename, 0744);
-			if($result->num_rows == 1) {
-				$row = $result->fetch_assoc();
-				$update_row = "UPDATE `qa_files` SET `defect_id`='$defectId', `upload_date`=NOW() WHERE `id`='" .$row['id'] ."'";
-				$mysql->sqlordie($update_row);
+		if(!empty($cleaned_filename)){
+			$select_file = "SELECT * FROM `qa_files` WHERE `directory`=  ? AND `file_name`= ? LIMIT 1";
+			$result = $mysql->sqlprepare($select_file, array(str_replace("/", "", $dirName), $cleaned_filename ));	
+	
+			if (!copy($_FILES['upload_file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] .'/qafiles/' .$dirName .$cleaned_filename)) {
+				echo "fail";
 			} else {
-				$insert_image = "INSERT INTO `qa_files` "
-					."(`defect_id`,`directory`,`file_name`,`upload_date`,`deleted`) "
-					."VALUES "
-					."($defectId,'" .str_replace("/", "", $dirName) ."','" .$cleaned_filename ."',NOW(),'1')";
-				$mysql->sqlordie($insert_image);	
+				//echo $_SERVER['DOCUMENT_ROOT'] .'/qafiles/' .$dirName .$cleaned_filename;
+				chmod($_SERVER['DOCUMENT_ROOT'] .'/qafiles/' .$dirName .$cleaned_filename, 0744);
+				if($result->num_rows == 1) {
+					$row = $result->fetch_assoc();
+					$update_row = "UPDATE `qa_files` SET `defect_id`='$defectId', `upload_date`=NOW() WHERE `id`='" .$row['id'] ."'";
+					$mysql->sqlordie($update_row);
+				} else {
+					$insert_image = "INSERT INTO `qa_files` "
+						."(`defect_id`,`directory`,`file_name`,`upload_date`,`deleted`) "
+						."VALUES "
+						."($defectId,'" .str_replace("/", "", $dirName) ."','" .$cleaned_filename ."',NOW(),'1')";
+					$mysql->sqlordie($insert_image);	
+				}
+				echo "success";
 			}
-			echo "success";
 		}
 	}	
 

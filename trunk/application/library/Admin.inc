@@ -15,7 +15,7 @@
 	}
 	class AdminDisplay extends Admin {
 	
-		public function getQuery($query) {
+		public function getQuery($query, $arr = null) {
 		
 			/*Admin::setIniFile();
 			
@@ -31,12 +31,12 @@
 			$db->getConnection();*/
 			//get DB connection from registry LH#20736
 			$db = Zend_Registry::get('db');
-			$data = $db->fetchAll($query);
+			$data = $db->fetchAll($query, $arr);
 			
 			return $data;
 		}
 
-		public function executeQuery($query) {
+		public function executeQuery($query, $arr = null) {
 			/*Admin::setIniFile();
 			
 			$config = Admin::getIniFile();
@@ -51,7 +51,7 @@
 			$db->getConnection();*/
 			//get DB connection from registry LH#20736
 			$db = Zend_Registry::get('db');
-			$data = $db->query($query);
+			$data = $db->query($query,$arr);
 			
 			return $data;
 		}
@@ -72,6 +72,31 @@
 
 				if($users[$i]['id'] == $userid) {
 						$selected = " SELECTED";
+				}
+				else
+				{
+							$selected = "";
+				}
+				$html .= '<option value="' .$users[$i]['id'] .'"' .$selected .'>' 
+					.$userName.'</option>';
+			}			
+			return $html;
+		}
+		public function getAllUserOptionHTML($userid='') {
+			$users = self::getQuery("SELECT * FROM `users` WHERE `active`='1' AND `deleted`='0'  ORDER BY `last_name` ASC");
+			$html = '';			
+			$selected = '';
+			for($i = 0; $i < sizeof($users); $i++) {
+				$userName = '';
+				if(!empty($users[$i]['last_name']))
+				{
+					$userName = $users[$i]['last_name'].', '.$users[$i]['first_name'];
+				}else{
+					$userName = $users[$i]['first_name'];
+				}
+
+				if($users[$i]['id'] == $userid) {
+						$selected = " selected='selected'";
 				}
 				else
 				{
@@ -187,8 +212,8 @@
 		}
 
 		public function fetchUserbyID($selectedUserID) {
-			$users = self::getQuery("SELECT * FROM `users` WHERE `id` = '".$selectedUserID."'");			
-			$titlesArray = self::getQuery("SELECT * FROM `user_roles` WHERE `user_id` = '".$selectedUserID."'");
+			$users = self::getQuery("SELECT * FROM `users` WHERE `id` = ?",array($selectedUserID));			
+			$titlesArray = self::getQuery("SELECT * FROM `user_roles` WHERE `user_id` = ?",array($selectedUserID));
 			for($i=0;$i<count($titlesArray);$i++){
 				if($titlesArray[$i]['flag']=="subcategory"){
 					$titles[]="subcat_".$titlesArray[$i]['category_subcategory_id'];
@@ -206,13 +231,13 @@
 		}
 		
 		public function fetchProjectCCList($proj_id) {
-			$fetchProjectCCList = self::getQuery("SELECT * FROM `projects` WHERE `id` = '".$proj_id."'");			
+			$fetchProjectCCList = self::getQuery("SELECT * FROM `projects` WHERE `id` = ?",array($proj_id));			
 			return $fetchProjectCCList;
 		}
 
  //////18474//////
 			public function fetchQCProjectCCList($proj_id) {
-			$fetchProjectCCList = self::getQuery("SELECT * FROM `projects` WHERE `id` = '".$proj_id."'");			
+			$fetchProjectCCList = self::getQuery("SELECT * FROM `projects` WHERE `id` = ? ",array($proj_id));			
 			return $fetchProjectCCList;
 		}
 		////////////
@@ -625,12 +650,12 @@
  		public function upDateProjectQAPermission($projectIdArray){
  			$result = '';
  			$pid = explode(",",$projectIdArray);
- 			$sql  = "UPDATE projects set qa_permission ='0' ";
+ 			$sql  = "UPDATE projects set qa_permission = '0' ";
 			$result = self::executeQuery($sql);
  			foreach($pid as $id){
 	 			try{
-	 				$sql  = "UPDATE projects set qa_permission ='1' WHERE id = $id";
-					$result = self::executeQuery($sql);
+	 				$sql  = "UPDATE projects set qa_permission ='1' WHERE id = ? ";
+					$result = self::executeQuery($sql,array($id));
 					$result ='ok';
 	 			}catch(Exception $e){
 	 				$result = "fail";
@@ -713,7 +738,7 @@
 		
 			$db = Zend_Registry::get('db');
 			//check if LH or RALLY project not exist in Mapped table
-			$result = $db->query("SELECT id FROM rally_lh_project_mapping WHERE (lh_project_id = ".$mappedData['lh_project_id']." OR rally_project_id = ".$mappedData['rally_project_id'].") LIMIT 1");
+			$result = $db->query("SELECT id FROM rally_lh_project_mapping WHERE (lh_project_id = ? OR rally_project_id =  ? ) LIMIT 1", array($mappedData['lh_project_id'],$mappedData['rally_project_id']));
 			$affectedLHRows = $result->rowCount();
 			if($affectedLHRows == 0){
 				$db->insert("rally_lh_project_mapping", $mappedData);
@@ -752,7 +777,7 @@
 		public static function deleteMaapingLhRallyProject($id){
 			$db = Zend_Registry::get('db');
 			
-			$result = $db->query("DELETE FROM rally_lh_project_mapping WHERE id = ".$id." LIMIT 1");
+			$result = $db->query("DELETE FROM rally_lh_project_mapping WHERE id = ? LIMIT 1", array($id));
 			return $affectedRows = $result->rowCount();
 			//return $db->lastInsertId();
 		
@@ -790,6 +815,22 @@
 			$result = $db->fetchAll("SELECT  u.*,DATE_FORMAT(ll.last_logged_date , '%b %d %Y at %I:%i %p') as logged_time  FROM users u
 			LEFT JOIN users_login_log ll ON (ll.user_id = u.id) order by u.first_name ");
 			return $result;
+		}
+		
+	function safeSql($var){
+			$db = Zend_Registry::get('db');
+			
+			$replaceValiable = '';
+			//$var = trim($var);
+			if(!empty($var)){
+				$db->quote($var);
+				return strip_tags($var);
+				//return str_replace($sqlInjectionValiable,'',strip_tags($var));
+			}else{
+				return '';
+			
+			}
+		
 		}
 		
 	}

@@ -5,14 +5,14 @@
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
-	$woId = @$_GET['woId'];
+	$woId = (int)$mysql->real_escape_string($_GET['woId']);
 	
-	$update_wo = "UPDATE `workorders` SET `closed_date`=NOW(), `completed_date`=NOW(), `status`='1' WHERE `id`='$woId'";
-	@$mysql->sqlordie($update_wo);
+	$update_wo = "UPDATE `workorders` SET `closed_date`=NOW(), `completed_date`=NOW(), `status`='1' WHERE `id`= ?";
+	$mysql->sqlprepare($update_wo,array($woId));
 	
-	$select_wo = "SELECT `closed_date`, `assigned_to`, `requested_by`, `cclist`, `project_id`, `body`, `priority`, `title` FROM `workorders` WHERE `id`='$woId' LIMIT 1";
-	$result = @$mysql->sqlordie($select_wo);
-	$row = @$result->fetch_assoc();
+	$select_wo = "SELECT `closed_date`, `assigned_to`, `requested_by`, `cclist`, `project_id`, `body`, `priority`, `title` FROM `workorders` WHERE `id`= ? LIMIT 1";
+	$result = @$mysql->sqlprepare($select_wo,array($woId));
+	$row = $result->fetch_assoc();
 
 	
 	insertWorkorderAudit($mysql,$woId, '3', $_SESSION['user_id'],$row['assigned_to'],'1');

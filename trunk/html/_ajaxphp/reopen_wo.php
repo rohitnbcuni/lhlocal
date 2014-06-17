@@ -5,7 +5,7 @@
     $pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
-	$woId = @$_GET['woId'];
+	$woId =  $mysql->real_escape_string($_GET['woId']);
 	
 	$update_wo = "UPDATE `workorders` SET `closed_date`=NULL, `status`='6',`archived`='0' WHERE `id`= ?";
 	@$mysql->sqlprepare($update_wo, array($woId));

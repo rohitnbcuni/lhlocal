@@ -6,7 +6,7 @@
 	$riskID = $mysql->real_escape_string($_GET['riskId']);
 	$page = $mysql->real_escape_string($_GET['page']);
 	$divID = $mysql->real_escape_string($_GET['id']);
-	$commentPerPage = $_GET['perPage'];
+	$commentPerPage = $mysql->real_escape_string$_GET['perPage']);
 	$totalComments = 0;
 	$prev = '<div class="prev">&nbsp</div>';
 	$next = '<div class="next">&nbsp</div>';
