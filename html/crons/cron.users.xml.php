@@ -7,12 +7,14 @@ function getTime(){
 		return $mtime;
 	}
 	include "cron.config.php";
+	
+	die("File Not in use");
 	//Production
 	//$rootPath = '/var/www/lighthouse-uxd/qa';
 	//dev
 	//$rootPath = str_replace("/html",'',$_SERVER['DOCUMENT_ROOT']);
 
-	define('AJAX_CALL', '0');
+	/*define('AJAX_CALL', '0');
 	include($rootPath . '/html/_inc/config.inc');
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
@@ -139,8 +141,9 @@ function getTime(){
 				}
 			}
 		}*/
-	}
-	
+	/*}
+	*/
+	/*
 function getCompanyUsers($cid){
 	global $mysql;
 	$sql = "SELECT id, bc_id,user_name  FROM users WHERE company ='$cid' AND active = '1' AND deleted ='0'";
@@ -150,7 +153,7 @@ function getCompanyUsers($cid){
 		$user_array[$user_sql_row['id']."-".$user_sql_row['user_name']] = $user_sql_row['bc_id'];
 	}
 	return $user_array;
-}	
+}	*/
 	
 $mysql->close();
 

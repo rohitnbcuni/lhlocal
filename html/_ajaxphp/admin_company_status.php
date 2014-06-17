@@ -3,7 +3,7 @@
 	include("sessionHandler.php");
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
-    $companyID = $_GET['company_id'];
+    $companyID = $mysql->real_escape_string($_GET['company_id']);
 	if($companyID == '0'){
 		$sql = "";
 	}else{

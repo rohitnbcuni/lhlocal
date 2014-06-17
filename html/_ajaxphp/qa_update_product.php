@@ -4,7 +4,7 @@
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	//Defining Global mysql connection values
 	global $mysql;
-	$project_id= $_GET['project_id'] ;
+	$project_id= $mysql->real_escape_string($_GET['project_id']) ;
 
 	$QRY_MASTER_SELECT ="SELECT `id`,`project_id`,`product_name` FROM `qa_project_product` where `project_id` in ('".$project_id."','0') AND active ='1' AND deleted ='0' order by project_id ='0' DESC, product_name ASC ";
 

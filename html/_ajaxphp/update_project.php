@@ -23,7 +23,7 @@
 			}
 			
 			echo $return_code;
-			$mysql->close();
+			//$mysql->close();
 			
 			break;
 		}

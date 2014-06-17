@@ -40,25 +40,25 @@ if('2' == $_POST['status']){ //All wo
 	$archive_sql = " AND b.`archived`='1' and b.`active`='1'";
 	$project_archive = " AND b.`archived`='1'";
 	  if(isset($_REQUEST['client']) && $_REQUEST['client'] != '-1'){
-    $client_filter_sql = " AND a.`company` = ".$_REQUEST['client'];
+    $client_filter_sql = " AND a.`company` = ".$mysql->real_escape_string($_REQUEST['client']);
   }
   	if(isset($_REQUEST['proj_id']) && $_REQUEST['proj_id'] != '-1'){
-  	$project_filter_sql = " AND a.`id` = ".$_REQUEST['proj_id'];
+  	$project_filter_sql = " AND a.`id` = ".$mysql->real_escape_string($_REQUEST['proj_id']);
   } 
   	if(isset($_REQUEST['status_filter']) && $_REQUEST['status_filter'] != '-1'){  
     $status_table_sql = "select `id` from `lnk_workorder_status_types` where name = ?";
-  	$status_result = $mysql->sqlprepare($status_table_sql, array($_REQUEST['status_filter']));
+  	$status_result = $mysql->sqlprepare($status_table_sql, array($mysql->real_escape_string($_REQUEST['status_filter'])));
 	if($status_result->num_rows == 1){
        $status_row = $status_result->fetch_assoc();
     }	
     $status_filter_sql = " AND b.`status` = ".$status_row['id'];
   }
   	if(isset($_REQUEST['assigned_to']) && $_REQUEST['assigned_to'] != '-1'){  
-    $assigned_to_filter_sql = " AND b.`assigned_to` = ".$_REQUEST['assigned_to'];
+    $assigned_to_filter_sql = " AND b.`assigned_to` = ".$mysql->real_escape_string($_REQUEST['assigned_to']);
   }
   
   if(isset($_REQUEST['requested_by']) && $_REQUEST['requested_by'] != '-1'){  
-    $requestedby_filter_sql = " AND b.`requested_by` = ".$_REQUEST['requested_by'];
+    $requestedby_filter_sql = " AND b.`requested_by` = ".$mysql->real_escape_string($_REQUEST['requested_by']);
   }
     
   	if(isset($_REQUEST['column']) && isset($_REQUEST['order'])){     // for column and sorting order
@@ -107,12 +107,12 @@ if('2' == $_POST['status']){ //All wo
   }
   if(isset($_REQUEST['start_date']) && !empty($_REQUEST['start_date']) && isset($_REQUEST['end_date']) && !empty($_REQUEST['end_date'])){  
   //  $date_range_filter_sql = " AND b.`creation_date` > '".date('Y-m-d',strtotime($_REQUEST['start_date']))."' AND b.`creation_date` < '".date('Y-m-d',strtotime($_REQUEST['end_date']))."'";
-$date_range_filter_sql = " AND b.`closed_date` >= '".date('Y-m-d',strtotime($_REQUEST['start_date']))." 00:00:00"."' AND b.`closed_date` <= '".date('Y-m-d',strtotime($_REQUEST['end_date']))." 23:59:00"."'";
+$date_range_filter_sql = " AND b.`closed_date` >= '".date('Y-m-d',strtotime($mysql->real_escape_string($_REQUEST['start_date'])))." 00:00:00"."' AND b.`closed_date` <= '".date('Y-m-d',strtotime($mysql->real_escape_string($_REQUEST['end_date'])))." 23:59:00"."'";
   
 	}
   if(isset($_REQUEST['search']) && !empty($_REQUEST['search'])){
     $search_filter_table_sql = " LEFT JOIN workorder_comments wc ON wc.workorder_id = b.id";
-    $search_filter_sql = " AND (`title` like '%".$_REQUEST['search']."%' OR `body` like '%".$_REQUEST['search']."%' OR `example_url` like '%".$_REQUEST['search']."%' OR `comment` like '%".$_REQUEST['search']."%')";
+    $search_filter_sql = " AND (`title` like '%".$mysql->real_escape_string($_REQUEST['search'])."%' OR `body` like '%".$mysql->real_escape_string($_REQUEST['search'])."%' OR `example_url` like '%".$mysql->real_escape_string($_REQUEST['search'])."%' OR `comment` like '%".$mysql->real_escape_string($_REQUEST['search'])."%')";
   }
   if(isset($_REQUEST['page_num'])){
     $page_num = intval($_REQUEST['page_num']);

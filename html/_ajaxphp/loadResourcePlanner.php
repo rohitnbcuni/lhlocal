@@ -363,6 +363,6 @@
   
   
   
-  setcookie("lighthouse_rp_data", urlencode($selectedRole . '~' . $startDate . '~' . $character . '~' . $savedCompany . '~' . $week_start_day . '~' . $week_end_day . '~' . $savedProgram), time()+220752000, '/');    
+  setcookie("lighthouse_rp_data", urlencode($selectedRole . '~' . $startDate . '~' . $character . '~' . $savedCompany . '~' . $week_start_day . '~' . $week_end_day . '~' . $savedProgram), time()+220752000, '/',isset($_SERVER["HTTPS"]));    
   echo $html;
   ?>

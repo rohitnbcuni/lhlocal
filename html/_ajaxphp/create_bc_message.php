@@ -2,27 +2,28 @@
 	session_start();
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
-	if(isset($_SESSION['user_id'])) {
+	if((isset($_SESSION['user_id'])) &&(ISSET($_POST))) {
+		
 		
 		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 		global $mysql;
 		$user = $_SESSION['lh_username'];
 	    $password = $_SESSION['lh_password'];
 		
-		$getProjectQuery = "SELECT * FROM `projects` WHERE `id`='" .$mysql->real_escape_string($_POST['projectId']) ."' LIMIT 1";
-		$projResult = $mysql->sqlordie($getProjectQuery);
+		$getProjectQuery = "SELECT * FROM `projects` WHERE `id`= ? LIMIT 1";
+		$projResult = $mysql->sqlprepare($getProjectQuery,array($mysql->real_escape_string($_POST['projectId'])));
 		$projRow = $projResult->fetch_assoc();	
 		
-		$wo_query = "SELECT * FROM `workorders` WHERE `id`='" .$_POST['woId'] ."'";
-		$wo_res = $mysql->sqlordie($wo_query);
+		$wo_query = "SELECT * FROM `workorders` WHERE `id`= ?";
+		$wo_res = $mysql->sqlprepare($wo_query, array($mysql->real_escape_string($_POST['woId'])));
 		$wo_row = $wo_res->fetch_assoc();
 		
-		$re_query = "SELECT * FROM `users` WHERE `id`='" .$_POST['requestedId'] ."'";
-		$re_res = $mysql->sqlordie($re_query);
+		$re_query = "SELECT * FROM `users` WHERE `id`= ?";
+		$re_res = $mysql->sqlprepare($re_query, array($mysql->real_escape_string($_POST['requestedId'])));
 		$re_row = $re_res->fetch_assoc();
 		
-		$select_priority = "SELECT * FROM `lnk_workorder_priority_types` WHERE `id`='" .$_POST['priorityId'] ."'";
-		$pri_res = $mysql->sqlordie($select_priority);
+		$select_priority = "SELECT * FROM `lnk_workorder_priority_types` WHERE `id`='" .$mysql->real_escape_string($_POST['priorityId']) ."'";
+		$pri_res = $mysql->sqlprepare($select_priority);
 		$pri_row = $pri_res->fetch_assoc();
 		
 		function bcXML($file, $body) {		
@@ -71,12 +72,12 @@
 		<request>
 		<post>
 		<category-id type=\"integer\" nil=\"true\">$catNum</category-id>
-		<title nil=\"true\">WO: " .$_POST['woTitle'] ." [" .$pri_row['name'] ."-" .$pri_row['time'] ."] " ."</title>
+		<title nil=\"true\">WO: " .$mysql->real_escape_string($_POST['woTitle']) ." [" .$pri_row['name'] ."-" .$pri_row['time'] ."] " ."</title>
 		<body nil=\"true\">"
-			."Example URL: " . $_POST['woExampleURL']  ."\n"
-			."Desc: " .$_POST['woDesc'] ."\n"
-			."StartDate: " .$_POST['woStartDate'] ."\n"
-			."Estimated Completion Date: " .$_POST['woEstDate'] ."\n";
+			."Example URL: " . $mysql->real_escape_string($_POST['woExampleURL'])  ."\n"
+			."Desc: " .$mysql->real_escape_string($_POST['woDesc']) ."\n"
+			."StartDate: " .$mysql->real_escape_string($_POST['woStartDate']) ."\n"
+			."Estimated Completion Date: " .$mysql->real_escape_string($_POST['woEstDate']) ."\n";
 			
 			$getFilesQuery = "SELECT * FROM `workorder_files` WHERE `workorder_id`='" .$mysql->real_escape_string($_POST['woId']) ."'";
 			$fileResult = $mysql->sqlordie($getFilesQuery);

@@ -7,7 +7,7 @@
 		global $mysql;
 		//$wo_id = $mysql->real_escape_string($_GET['id']);
 
-		$workorderList =explode(",", @$_GET['id']);
+		$workorderList =explode(",", $mysql->real_escape_string($_GET['id']));
 
 		foreach($workorderList as $wo_id)
 		{ 

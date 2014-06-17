@@ -7,7 +7,7 @@
 	if(isset($_SESSION['user_id'])) {
 		//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 		global $mysql;
-		$workorderList =explode(",", @$_GET['id']);
+		$workorderList =explode(",", $mysql->real_escape_string($_GET['id']));
 		$woStr = '';
 		$flag = 0;
 		$woStatus = '6'; // Status - New 

@@ -3,13 +3,13 @@
 	include('../_inc/config.inc');
 	
 	ini_set("display_errors",1);
-	
+	exit;
 	
 	//include("sessionHandler.php");
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, 'lhdev_live2' , DB_PORT);	
 	$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	//global $mysql;
-	$project_all = "SELECT * FROM `projects` WHERE   YEAR = '2012'";
+	/*$project_all = "SELECT * FROM `projects` WHERE   YEAR = '2012'";
 	$project_list = $mysql->query($project_all) or writeLog($mysql,$project_all);
 	
 	$current_year = '2013';//'2010';//date("Y");
@@ -206,16 +206,16 @@
 			$deleteoldProject2010 = "update `projects` SET `deleted`='1' where `YEAR`='2010'";
 			$mysql->query($deleteoldProject2010);*/
 	
-			$mysql->query("UPDATE workorders SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' and status!='1'");
+			/*$mysql->query("UPDATE workorders SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."' and status!='1'");
 			$mysql->query("UPDATE workorders SET `archived`='1' WHERE `project_id` = '".$clone_project_id."' and status ='1'");
 			$mysql->query("UPDATE qa_defects SET `project_id`='".$newProjectID."' WHERE `project_id` = '".$clone_project_id."'");
-			
+			*/
 		}
 
 	}
 }
 	
-	function writeLog($mysql, $sql='', $rootPath=''){
+	/*function writeLog($mysql, $sql='', $rootPath=''){
 		$a = fopen("clone_20123.log", "a");
 		fwrite($a,  "\nError No: ". $mysql->errno . " - " . 
 					"\nCron: users " . 
@@ -225,6 +225,6 @@
 		fclose($a);
 	}
 	//
-	$mysql->query("update `projects` SET `deleted`='1' where `YEAR`='2011' AND `archived`='1'");
+	$mysql->query("update `projects` SET `deleted`='1' where `YEAR`='2011' AND `archived`='1'");*/
 ?>
 

@@ -66,31 +66,32 @@ $project_result = $mysql->sqlordie($project_query) or die("Mysql Error");
 
   $header = "Company\t Project\t Project Manager\t Engagement Lead\t Status\t Program\t Total Allocation\t Q1 Allocation\t Q2 Allocation\t Q3 Allocation\t Q4 Allocation\t Charge Code\n";
   $excel_body = '';
+if($project_result->num_rows > 0){
+	while($wo=$project_result->fetch_assoc()){ 
+	  
+			  $excel_body .=  $wo['Company'] . "\t " .
+			  $wo['Project'] . "\t " .
+			  $wo['Project Manager'] . "\t " .
+			  $wo['Engagement Lead'] . "\t " .
+			  $wo['Status'] . "\t " .
+			  $wo['Program'] . "\t " .
+			  $wo['Total Allocation'] . "\t " .
+			  $wo['Q1 Allocation'] . "\t " .
+			  $wo['Q2 Allocation'] . "\t " .
+			  $wo['Q3 Allocation'] . "\t " .
+			  $wo['Q4 Allocation'] . "\t".
+			  $wo['Charge Code'] . "\n";
+	  }
 
-while($wo=$project_result->fetch_assoc()){ 
-  
-          $excel_body .=  $wo['Company'] . "\t " .
-          $wo['Project'] . "\t " .
-          $wo['Project Manager'] . "\t " .
-          $wo['Engagement Lead'] . "\t " .
-          $wo['Status'] . "\t " .
-          $wo['Program'] . "\t " .
-          $wo['Total Allocation'] . "\t " .
-          $wo['Q1 Allocation'] . "\t " .
-          $wo['Q2 Allocation'] . "\t " .
-          $wo['Q3 Allocation'] . "\t " .
-          $wo['Q4 Allocation'] . "\t".
-          $wo['Charge Code'] . "\n";
-  }
-
-	header("Pragma: public");
-	header("Expires: 0");
-	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-	header("Content-Type: application/force-download");
-	header("Content-Type: application/octet-stream");
-	header("Content-Type: application/download");
-	header("Content-Disposition: attachment;filename=allocation_report.xls"); 
-	header("Content-Transfer-Encoding: binary ");
-	echo $header;
-	echo $excel_body;
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Content-Type: application/force-download");
+		header("Content-Type: application/octet-stream");
+		header("Content-Type: application/download");
+		header("Content-Disposition: attachment;filename=allocation_report.xls"); 
+		header("Content-Transfer-Encoding: binary ");
+		echo $header;
+		echo $excel_body;
+}
 ?>

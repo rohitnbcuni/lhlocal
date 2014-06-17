@@ -5,7 +5,8 @@
 	include('../_ajaxphp/rally_function.php');
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
-	$defectId = @$_GET['defectId'];
+	if(ISSET($_GET['defectId'])){
+	$defectId = (int)$mysql->real_escape_string($_GET['defectId']);
 	
 	$update_wo = "UPDATE `qa_defects` SET `closed_date`=NOW(), `completed_date`=NOW(), `status`='8' WHERE `id`='$defectId'";
 	@$mysql->sqlordie($update_wo);
@@ -83,6 +84,8 @@
 		}
 	}*/
 	echo $date .$defectId;
+	
+	}
 
 
 	function insertWorkorderAudit($mysql,$defect_id, $audit_id, $log_user_id,$assign_user_id,$status)

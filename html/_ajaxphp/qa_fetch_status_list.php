@@ -4,8 +4,8 @@
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	//Defining Global mysql connection values
 	global $mysql;
-	$defectID= $_GET['defectID'] ;
-	$qaStatus= $_GET['qaStatus'] ;
+	$defectID= $mysql->real_escape_string($_GET['defectID']) ;
+	$qaStatus= $mysql->real_escape_string($_GET['qaStatus']) ;
 
 	$QRY_STATUS_SELECT ="SELECT id, name FROM `lnk_qa_status_types` WHERE `active`='1' AND `deleted`='0' ORDER BY `sort_order` ASC";
 	$result = $mysql->sqlordie($QRY_STATUS_SELECT);	

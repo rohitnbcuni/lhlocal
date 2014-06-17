@@ -45,8 +45,8 @@ class Admin_IndexController extends LighthouseController {
 
 		public function  projectdefaultccAction()
 		{
-			$proj_id = $_REQUEST['proj_id'];
-			$ccList = $_REQUEST['ccList'];
+			$proj_id = (int)$this->_request->getParam('proj_id');
+			$ccList = strip_tags($this->_request->getParam('ccList'));
 			if(!empty($proj_id))
 			{
 				$fetchProjectCCList = AdminDisplay::fetchProjectCCList($proj_id);
@@ -54,7 +54,7 @@ class Admin_IndexController extends LighthouseController {
 			
 			echo '<!--=========== START: COLUMNS ===========-->		
 			<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="WO Default CC List">  
-			<input type="hidden" name="ccList" id="ccList" value="'.$ccList.'">  
+			<input type="hidden" name="ccList" id="ccList" value="'.$this->view->escape($ccList).'">  
 			<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';				
 				echo '<div class="adminSelect">
 						   <div >
@@ -155,8 +155,8 @@ class Admin_IndexController extends LighthouseController {
 ////////////////18474///////////////////
 		public function  qcprojectdefaultccAction()
 				{
-					$proj_id = $_REQUEST['proj_id'];
-					$ccList = $_REQUEST['ccList'];
+					$proj_id = (int)$this->_request->getParam('proj_id');
+					$ccList = strip_tags($this->_request->getParam('ccList'));
 					
 					if(!empty($proj_id))
 					{
@@ -165,7 +165,7 @@ class Admin_IndexController extends LighthouseController {
 					
 					echo '<!--=========== START: COLUMNS ===========-->		
 					<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Quality Default CC List">  
-					<input type="hidden" name="qcccList" id="qcccList" value="'.$ccList.'">  
+					<input type="hidden" name="qcccList" id="qcccList" value="'.$this->view->escape($ccList).'">  
 					<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';
 						echo '<div class="adminSelect">
 								   <div >
@@ -266,8 +266,8 @@ class Admin_IndexController extends LighthouseController {
 //////////////////////////////////
 		public function projectversionsAction(){
 
-			$proj_id = $_REQUEST['proj_id'];
-			$version_id = $_REQUEST['version_id'];
+			$proj_id = (int)$this->_request->getParam('proj_id');
+			$version_id = (int)$this->_request->getParam('version_id');
 			if(!empty($proj_id))
 			{
 				$proj_version_list = AdminDisplay::fetchProjectVersions($proj_id,$version_id);
@@ -335,8 +335,8 @@ class Admin_IndexController extends LighthouseController {
 		//LH#28522
 		public function projectproductAction(){
 
-			$proj_id = $_REQUEST['proj_id'];
-			$version_id = $_REQUEST['version_id'];
+			$proj_id = (int)$this->_request->getParam('proj_id');
+			$version_id = (int)$this->_request->getParam('version_id');
 			if(!empty($proj_id))
 			{
 				$proj_version_list = AdminDisplay::fetchProjectProduct($proj_id,$version_id);
@@ -402,8 +402,8 @@ class Admin_IndexController extends LighthouseController {
 
 		}
 		public function projectiterationAction(){
-			$proj_id = $_REQUEST['proj_id'];
-			$version_id = $_REQUEST['version_id'];
+			$proj_id = (int)$this->_request->getParam('proj_id');
+			$version_id = (int)$this->_request->getParam('version_id');
 			if(!empty($proj_id))
 			{
 				$proj_version_list = AdminDisplay::fetchProjectIteration($proj_id,$version_id);
@@ -673,9 +673,9 @@ class Admin_IndexController extends LighthouseController {
 
 		public function fetchuserAction() {  
 
-			$selectedUserID = $_REQUEST['selectedUserID'];
-			$userFirstName = trim($_REQUEST['userFirstName']);
-			$userLastName = trim($_REQUEST['userLastName']);
+			$selectedUserID = (int)$this->_request->getParam('selectedUserID');
+			$userFirstName = trim(strip_tags($this->_request->getParam('userFirstName')));
+			$userLastName = trim(strip_tags($this->_request->getParam('userLastName')));
 
 			if(!empty($selectedUserID))
 			{
@@ -699,11 +699,11 @@ class Admin_IndexController extends LighthouseController {
 							</div>
 							   <div class="row">
 									<p>First Name:</p>
-									<input type="text" name="firstName" id="firstName" value="'.$userFirstName.'" >
+									<input type="text" name="firstName" id="firstName" value="'.$this->view->escape($userFirstName).'" >
 								</div>
 								 <div class="row" >
 									<p>Last Name:</p>
-									<input type="text" name="lastName" id="lastName" value="'.$userLastName.'" >
+									<input type="text" name="lastName" id="lastName" value="'.$this->view->escape($userLastName).'" >
 								</div>
 								<div class="row2" >
 									 <div>
@@ -751,7 +751,7 @@ class Admin_IndexController extends LighthouseController {
 
 		public function workorderslaAction() {
 
-			$sla_report_month = $_REQUEST['sla_report_month'];
+			$sla_report_month = strip_tags($this->_request->getParam('sla_report_month'));
             $sla_report_year = date('Y');
 			if(empty($sla_report_month))
 			{
@@ -786,19 +786,32 @@ class Admin_IndexController extends LighthouseController {
 									echo AdminDisplay::to_getYears($sla_report_year);
 									echo '</select>
 								</div>
-								 <div style="position: absolute; top: 30px; right: 15px;">
+	
+								
+								 <div class="row2" style="float:left;">
+
 									<p> Assigned To:</p>';			
 									echo '<select class="field_medium" name="admin_assign_select" id="admin_assign_select" >';
 									echo AdminDisplay::getUserOptionHTML();
 									echo '</select>
 								</div>
+								
+								 <div class="row2" style="position: absolute; right: 196px; top: 64px;">
+									<p style="padding-left:68px;"> Requested By:</p>';			
+									echo '<select class="field_medium" name="admin_requested_select" id="admin_requested_select" multiple = "multiple" >';
+									echo AdminDisplay::getAllUserOptionHTML();
+									echo '</select>
+								</div>
+								
+								
 								<div class="row2" >
-									 <p>
+									 <p style="margin-top: 71px; margin-left: 109px;">
+
 									<button id="adminReportbtn" onclick="generateReport();"><span>Generate Report</span></button>
 									</p>
 								</div>
 							</div>';
-					echo '</div>					
+					echo '</div>						
 					<div style="clear: both;"></div>';
 			
 		}
@@ -856,20 +869,20 @@ class Admin_IndexController extends LighthouseController {
 				echo '<div class="admindisplayUserInfo">
 						 <div class="row">
 								<div class="label"><label>User ID:</label></div>
-									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$users['id'].'" >
+									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$this->view->escape($users['id']).'" >
 						</div>
 						<div class="row">
 							<div class="label"><label>First Name:</label></div>
-									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$users['first_name'].'" >
+									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$this->view->escape($users['first_name']).'" >
 						</div>
 						<div class="row">
 							<div class="label"><label>Last Name:</label></div>
-									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$users['last_name'].'" >
+									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$this->view->escape($users['last_name']).'" >
 						</div>
 
 						<div class="row">
 							<div class="label"><label>Email:</label></div>
-									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$users['email'].'" >
+									<input type="text" class="readonly" readonly name="userID" id="userID" value="'.$this->view->escape($users['email']).'" >
 						</div>
 						<div class="row">
 							<div class="label"><label>User Title:</label></div><div id="admin_UserTitle_fade" class="admin_UserTitle_fade"></div>
@@ -897,7 +910,7 @@ class Admin_IndexController extends LighthouseController {
 						<div class="row">
 							<div class="label"><label>Company:</label></div>
 									<input type="text" class="readonly" readonly name="userID" id="userID" value="'. AdminDisplay::getUserCompany($users['company']).'" >
-									<input type="hidden" id="user_company" value="'.$users['company'].'">
+									<input type="hidden" id="user_company" value="'.$this->view->escape($users['company']).'">
 						</div>					
 						<div class="row">
 							<div class="label"><label>Last Login Date:</label></div>
@@ -907,7 +920,7 @@ class Admin_IndexController extends LighthouseController {
 						
 						<div class="row">
 							<div class="label"><label>Basecamp ID:</label></div>
-								<input type="text" class="readonly" readonly name="userID" id="userID" value="'. $users['bc_id'].'" >
+								<input type="text" class="readonly" readonly name="userID" id="userID" value="'. $this->view->escape($users['bc_id']).'" >
 						</div>';
 
 						if($users['login_status']=='admin')
@@ -938,7 +951,7 @@ class Admin_IndexController extends LighthouseController {
 						<div class="row" >
 							<div class="label2"><label><u>User Project Permission:</u></label></div>
 							
-							<input type="hidden" name="userStatus" id="userStatus" value="'.$userStatus.'">
+							<input type="hidden" name="userStatus" id="userStatus" value="'.$this->view->escape($userStatus).'">
 							<div style="margin-left:-73px;">
 							<select class="field_medium" name="userProjectArray" id="userProjectArray" multiple="multiple">';
 								echo AdminDisplay::getAllCompaniesProjectOptionEditHTML($users['id'], $userStatus,$users['company'],$userProjectListArray);
@@ -984,8 +997,8 @@ class Admin_IndexController extends LighthouseController {
 		}
 
 		public function customfieldnameAction(){
-			$custom_name = $_REQUEST['custom_name'];
-			$field_id = $_REQUEST['field_id'];
+			$custom_name = $this->_request->getParam('custom_name');
+			$field_id = $this->_request->getParam('field_id');
 
 			$field_list = AdminDisplay::fetchFieldList($custom_name);
 			$field_names = array("REQ_TYPE" => "Required Type",
@@ -1012,7 +1025,7 @@ class Admin_IndexController extends LighthouseController {
 			echo '
   				<!--=========== START: CUSTOM FIELD NAMES ===========-->
 				<div class="message_required" style="width:3000px;height:1024px;position:fixed;background-color:#ffffff;z-index:1;margin-top:-500px;margin-left:-630px;opacity: 0.3; filter: alpha(opacity = 30); zoom:1;"></div>
-  				<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="' . $screen_name. '">
+  				<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="' . $this->view->escape($screen_name). '">
 					<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
 						<div class="label" style="min-height:20px;"></div>
 						<div id="customEditOrAdd">
@@ -1090,23 +1103,23 @@ class Admin_IndexController extends LighthouseController {
 				$editType = 'Update';
 			}
 			echo '
-						<div id="fieldnameInfo" class="admindisplayUserInfo"  style="'.$editstatus.'">
+						<div id="fieldnameInfo" class="admindisplayUserInfo"  style="'.$this->view->escape($editstatus).'">
 						<div class="row">
-								<div class="label"><label>'.$screen_name.'*:</label></div>
-								<input type="text" class="" name="fieldname" id="fieldname" value="'.$siteName.'" >
-								<input type="hidden" class="" name="fieldid" id="fieldid" value="'.$siteId.'" >
+								<div class="label"><label>'.$this->view->escape($screen_name).'*:</label></div>
+								<input type="text" class="" name="fieldname" id="fieldname" value="'.$this->view->escape($siteName).'" >
+								<input type="hidden" class="" name="fieldid" id="fieldid" value="'.$this->view->escape($siteId).'" >
 							</div>
 												
 							<div class="row">
 								<div class="label"><label>Active:</label></div>
-								<input type="checkBox" style="width:10px;" name="fieldActiveStatus" id="fieldActiveStatus" value="" '.$activeCheck.'>
+								<input type="checkBox" style="width:10px;" name="fieldActiveStatus" id="fieldActiveStatus" value="" '.$this->view->escape($activeCheck).'>
 							</div>
 							<div class="row">
 								<div class="label"><label>Deleted:</label></div>
-								<input type="checkBox" style="width:10px;" name="fieldDeleteStatus" id="fieldDeleteStatus" value="" '.$deleteCheck.'>
+								<input type="checkBox" style="width:10px;" name="fieldDeleteStatus" id="fieldDeleteStatus" value="" '.$this->view->escape($deleteCheck).'>
 							</div>
 							<div class="row" id="submitBTN">
-								<button onclick="updateFieldValue(\''.strtoupper($editType).'\');"><span >'.$editType.'</span></button>
+								<button onclick="updateFieldValue(\''.strtoupper($this->view->escape($editType)).'\');"><span >'.$this->view->escape($editType).'</span></button>
 							</div>
 						</div>
 			';
@@ -1116,7 +1129,7 @@ class Admin_IndexController extends LighthouseController {
 			echo '
 						<div class="admindisplayUserInfo">
 							<div class="row">
-								<div class="label" style="width:235px;"><label>List of '.$screen_name.' :</label></div>
+								<div class="label" style="width:235px;"><label>List of '.$this->view->escape($screen_name).' :</label></div>
 							</div>
 			';
 
@@ -1164,8 +1177,8 @@ class Admin_IndexController extends LighthouseController {
 					//}
 			}
 			$this->view->assign('rallyArray',$rallyArray);
-			
-			$proj_id=0;
+			define("PROJECT_ID",0);
+			$proj_id = PROJECT_ID;
 			//All LH project
 			$this->view->assign('LHProjectHtml',AdminDisplay::getLHProjectOption()); 
 			//All Mapped projects
@@ -1175,8 +1188,8 @@ class Admin_IndexController extends LighthouseController {
 		
 		function maprojectlistingAction(){
 			$lastInsertId = 0;
-			$lh_project = $this->_request->getParam('lh');
-			$rally_project = $this->_request->getParam('rally');
+			$lh_project = AdminDisplay::safeSql($this->_request->getParam('lh'));
+			$rally_project = AdminDisplay::safeSql($this->_request->getParam('rally'));
 			if(!empty($lh_project) && (!empty($rally_project))){
 				$mappedArray = array();
 				$mappedArray = array(
@@ -1198,7 +1211,7 @@ class Admin_IndexController extends LighthouseController {
 		
 		function deletemaprojectlistingAction(){
 			$affectedId = 0;
-			$id = $this->_request->getParam('id');
+			$id = (int) $this->_request->getParam('id');
 			
 			if(!empty($id)){
 				$affectedId = AdminDisplay::deleteMaapingLhRallyProject($id);

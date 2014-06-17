@@ -7,7 +7,7 @@
 
 	$todayDate = date("Y-m-d");
 //	$currentYear = @explode("-", $todayDate);
-	$quarterID = $_GET['quarterId'];
+	$quarterID = $mysql->real_escape_string($_GET['quarterId']);
 //	$quarter_select = "";
 //	if($quarterID == 1){
 //		$quarter_select = " and datestamp >= '".$currentYear[0]."-1-1' and datestamp <= '".$currentYear[0]."-3-31' ";
@@ -18,11 +18,11 @@
 //	}else if($quarterID == 4){
 //		$quarter_select = " and datestamp >= '".$currentYear[0]."-10-1' and datestamp >= '".$currentYear[0]."-12-31' ";
 //	}
-	
-	$phaseToDate = calculateToDate($_GET['projID'], $mysql, $quarterID);
+	$projId = (int)$mysql->real_escape_string($_GET['projID']);
+	$phaseToDate = calculateToDate($projId, $mysql, $quarterID);
 
-	$project_details_sql = "SELECT bc_id from `projects` WHERE id='" . $mysql->real_escape_string($_GET['projID']) . "'";
-	$project_details_result = $mysql->sqlordie($project_details_sql);
+	$project_details_sql = "SELECT bc_id from `projects` WHERE id= ?";
+	$project_details_result = $mysql->sqlprepare($project_details_sql, array($projId));
 	$project_details_row = $project_details_result->fetch_assoc();
 
 	//Do this but select the finace data and completeness
@@ -205,22 +205,22 @@
 	
 	$projectDetail .= '<!-- DATA -->
 					<ul class="details_actions">';
-		$projectDetail .= '<li><button class="secondary" onClick="window.location = \'/controltower/index/edit/?project_id=' .$_GET['projID'] .'\';"><span>view/edit project</span></button></form></li>';
+		$projectDetail .= '<li><button class="secondary" onClick="window.location = \'/controltower/index/edit/?project_id=' .$projId .'\';"><span>view/edit project</span></button></form></li>';
 	if($_SESSION['login_status'] != "client") {	
 		//defectID#3793
-		//$projectDetail .= '<li><button class="secondary" name="duplicate" onClick="duplicateProject(\'' .$_GET['projID'] .'\');"><span>duplicate project</span></button></li>';
+		//$projectDetail .= '<li><button class="secondary" name="duplicate" onClick="duplicateProject(\'' .$projId .'\');"><span>duplicate project</span></button></li>';
 		if ($_GET['archived'] == 0) {					
-			$projectDetail .= '<li><button class="secondary" name="archive" onClick="archiveConfirm(\'' .$_GET['projID'] .'\');"><span>archive project</span></button></li>';
+			$projectDetail .= '<li><button class="secondary" name="archive" onClick="archiveConfirm(\'' .$projId .'\');"><span>archive project</span></button></li>';
 		} else {
-			$projectDetail .= '<li><button class="secondary" name="archive" onClick="archiveProject(\'' .$_GET['projID'] .'\');"><span>un-archive project</span></button></li>';
+			$projectDetail .= '<li><button class="secondary" name="archive" onClick="archiveProject(\'' .$projId .'\');"><span>un-archive project</span></button></li>';
 		}
 		
-		$projectDetail .= '<li><button class="trash" onClick="deleteConfirm(\'' .$_GET['projID'] .'\')"><span>delete project</span></button></li>';
+		$projectDetail .= '<li><button class="trash" onClick="deleteConfirm(\'' .$projId .'\')"><span>delete project</span></button></li>';
 		
 	}
 		$projectDetail .=	'<li class="open_basecamp" onClick=""><button class="secondary" onClick="window.open(\''. BASECAMP_HOST .'/projects/' . $project_details_row['bc_id'] . '/log\', \'_blank\')"><span>Open this project in Basecamp</span></button></li>';
 	if ($_GET['archived'] == 0) {
-	$projectDetail .=	'<li class="work_order_button" onClick=""><button class="secondary" onClick="window.location = \'/workorders/index/create/?project=' .$_GET['projID'] .'\'"><span>create work order</span></button></li>';
+	$projectDetail .=	'<li class="work_order_button" onClick=""><button class="secondary" onClick="window.location = \'/workorders/index/create/?project=' .$projId .'\'"><span>create work order</span></button></li>';
 	}	
 		$projectDetail .= '</ul>
 					<!-- DATA -->';
