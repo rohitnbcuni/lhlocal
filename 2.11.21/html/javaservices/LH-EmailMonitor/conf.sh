@@ -4,10 +4,10 @@
 
 # set the varialbles
 # For Prod
-JAVA_HOME=/usr/java/jdk1.6.0_05
+JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre
 PATH=$JAVA_HOME/bin:/$PATH
-WORKDIR=/home/videonbc/cron/lighthouseEmailMonitor
-EMAIL_LIST="abhilash.kornalliose@nbcuni.com"
+WORKDIR=/var/www/lh_email_monitor
+EMAIL_LIST_T="ots-java-support@nbcuni.com"
 LOCKDIR=${WORKDIR}/locks
 export https_proxy=https://64.210.197.20:80
 
