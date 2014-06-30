@@ -770,7 +770,7 @@
 		
 		public function getLHProjectOption() {
 			$db = Zend_Registry::get('db');
-			$projectsSql = $db->fetchAll("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com  ON (a.`company`=com.`id`) WHERE  a.`active` = '1' AND a.`deleted` = '0' AND `archived`='0' AND a.`qa_permission` = '1'  ORDER BY com.`name`, a.`project_code` ASC");
+			$projectsSql = $db->fetchAll("SELECT a.`id` id, a.`company` company, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com  ON (a.`company`=com.`id`) WHERE  a.`active` = '1' AND a.`deleted` = '0' AND a.`archived`='0' AND a.`qa_permission` = '1'  ORDER BY com.`name`, a.`project_code` ASC");
 			return $projectsSql;
 		}
 		
@@ -778,6 +778,15 @@
 			$db = Zend_Registry::get('db');
 			
 			$result = $db->query("DELETE FROM rally_lh_project_mapping WHERE id = ? LIMIT 1", array($id));
+			return $affectedRows = $result->rowCount();
+			//return $db->lastInsertId();
+		
+		}
+		
+	public static function deleteMaapingLhBsProject($id){
+			$db = Zend_Registry::get('db');
+			
+			$result = $db->query("DELETE FROM `lh_basecamp_mapping` WHERE id = ? LIMIT 1", array($id));
 			return $affectedRows = $result->rowCount();
 			//return $db->lastInsertId();
 		
@@ -832,6 +841,39 @@
 			}
 		
 		}
+		
+		
+			
+	public function getBasecampProjectOption() {
+			$db = Zend_Registry::get('db');
+			$projectsSql = $db->fetchAll("SELECT a.`id` id, a.`company` company, a.bc_id, a.`project_code` project_code, a.`project_name` project_name, com.`name` company_name FROM `projects` a INNER JOIN `companies` com  ON (a.`company`=com.`id`) WHERE  a.`active` = '1' AND a.`deleted` = '0' AND a.`archived`='0' AND a.bc_id <> ''  ORDER BY com.`name`, a.`project_code` ASC");
+			return $projectsSql;
+		}
+		
+	public  static function getBasecampProjectOptionEditHTML($id = '') {
+			$db = Zend_Registry::get('db');
+			if($id != ''){
+				$projects = ("SELECT DISTINCT b.bc_id, b.id ,p.project_name AS lh_project,CONCAT_WS(' ',u.first_name,u.last_name) as full_name , b.assigned_to FROM lh_basecamp_mapping b
+				 INNER JOIN projects p on (b.bc_id = p.bc_id) INNER JOIN users u on(b.assigned_to = u.id) WHERE b.id =? ") ;
+				$rs = $db->fetchAll($projects, array($id));
+				
+			}else{
+			
+				$projects = ("SELECT DISTINCT b.bc_id, b.id ,p.project_name AS lh_project,CONCAT_WS(' ',u.first_name,u.last_name) as full_name , b.assigned_to FROM lh_basecamp_mapping b
+				 INNER JOIN projects p on (b.bc_id = p.bc_id) INNER JOIN users u on(b.assigned_to = u.id) ") ;
+				$rs = $db->fetchAll($projects);	
+			}
+			
+					
+			return $rs;
+		}
+		
+	public function getLHUsersObj() {
+			$db = Zend_Registry::get('db');
+			$userSql = $db->fetchAll("SELECT  CONCAT_WS(' ', first_name,last_name) as user_name , id from users WHERE active ='1' AND deleted ='0' ORDER BY first_name ");
+			return $userSql;
+		}
+		
 		
 	}
 ?>
