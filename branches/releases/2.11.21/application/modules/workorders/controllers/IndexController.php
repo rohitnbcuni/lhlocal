@@ -658,7 +658,7 @@
 									<div class="wo_dimmer" id="file_upload_dimmer" style="display: none;"></div>
 									<form id="file_upload_form" name="file_upload_form" accept-charset="utf-8" method="post" action="" enctype="multipart/form-data">
 									<input type="hidden" name="workorder_id" id="workorder_id" value="' .$wo_id .'" />
-									<input type="hidden" name="copyWO" id="copyWO" value="' .$new_wo_id .'" />
+									<input type="hidden" name="copyWO" id="copyWO" value="' .@$_REQUEST['copyWO'] .'" />
 									<input type="hidden" name="dirName" id="dirName" value="' .$wo_id .'" />
 									
 									<label id="upload_file_label">Attach files (each file should be under 10MB)
