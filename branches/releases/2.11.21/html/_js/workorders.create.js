@@ -973,13 +973,13 @@ function changeAssignedToUser(){
 		//if(wo_requested_by_array.indexOf(assigned_user) != '-1'){
 			$('#li_completed_by').slideDown('slow');
 		}else{
-			$('#completed_by').val('')
+			$('#completed_by').val('');
 			$('#li_completed_by').slideUp('slow');
 		
 		}
 			
 	}else{
-		$('#completed_by').val('')
+		$('#completed_by').val('');
 		$('#li_completed_by').slideUp('slow');
 	}
 }
@@ -996,7 +996,7 @@ $(document).ready(function() {
 		if($.inArray(assigned_user,wo_requested_by_array) != '-1'){
 			$('#li_completed_by').slideDown('slow');
 		}else{
-			$('#completed_by').val('')
+			$('#completed_by').val('');
 			$('#li_completed_by').slideUp('slow');
 			
 		
@@ -1004,7 +1004,7 @@ $(document).ready(function() {
 		
 	}else{
 	
-		$('#completed_by').val('')
+		$('#completed_by').val('');
 		$('#li_completed_by').slideUp('slow');
 	
 	}
@@ -1226,7 +1226,7 @@ function submitComment() {
 					$('.message_required p').html('The comment is saved successfully.');
 					$('.message_required').css({display:'block'});
 					updateComments();
-					//$('#comment_dimmer').css({display:"none"});	
+					$('#comment_dimmer').css({display:"none"});	
 					
 				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -1406,7 +1406,7 @@ function ajaxUploadFile(dirName, woId){
 				$('#file_upload_ajax').css({display:'none'});
 			}
 		}
-	)
+	);
 	return false;
 }
 function reOpenWorkOrder() {
