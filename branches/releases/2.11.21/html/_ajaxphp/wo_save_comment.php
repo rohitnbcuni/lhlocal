@@ -51,6 +51,10 @@
 
 			
 			insertWorkorderAudit($mysql,$woId, '4', $_SESSION['user_id'],$bc_id_row['assigned_to'],$bc_id_row['status']);
+		
+			
+				
+			
 		/*	$set_request_url = BASECAMP_HOST.'/'.'posts/'.$bc_id_row['bcid'].'/comments.xml';
 			
 			$session = curl_init();   
@@ -163,7 +167,10 @@
 
 			$woAssignedTo = $email_row['assigned_to'];
 			$requestedId = $email_row['requested_by'];
-
+			
+			//basecamp Comment on Milestone
+			checkBasecampComment($woId,$userId,$woAssignedTo,$comment);
+			
 			$requestor_qry = "SELECT * FROM `users` WHERE `id`='" .$requestedId ."'";
 			$requestor_user_res = $mysql->sqlordie($requestor_qry);
 			$requestor_user_row = $requestor_user_res->fetch_assoc();
@@ -261,6 +268,30 @@
 		$insert_custom_feild = "INSERT INTO  `workorder_audit` (`workorder_id`, `audit_id`,`log_user_id`,`assign_user_id`,`status`,`log_date`)  values ('".$wo_id."','".$audit_id."','".$log_user_id."','".$assign_user_id."','".$status."',NOW())";
 		@$mysql->sqlordie($insert_custom_feild);
 	}
+	
+	function checkBasecampComment($woId,$userId,$woAssignedTo,$comment){
+		global $mysql;
+		
+		if(defined('BASECAMP_MAPPING')){
+			if(BASECAMP_MAPPING == 'OPEN'){
+			
+				//Check WorkOrder ID Existing in Basecamp Mapping Table
+				$bs_mapping = "SELECT * FROM lh_basecamp_mapping WHERE assigned_to = '$woAssignedTo' LIMIT 1";
+				$us_bs = $mysql->sqlordie($bs_mapping);
+				//$us_bs->num_rows;
+				if($us_bs->num_rows > 0) {
+					$bsArray = array();
+					$bsArray['created_by'] = $userId;
+					$bsArray['workorder_id'] = $woId;
+					$bsArray['comment'] = $comment;
+					Util::UpdateMileStoneComment($bsArray);
+				
+				}
+		
+			}
+		}
+	}
+		
 	
 	
 ?>

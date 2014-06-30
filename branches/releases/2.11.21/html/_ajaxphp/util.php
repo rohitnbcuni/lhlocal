@@ -281,6 +281,156 @@ class Util {
 				return $dateDiff;
 						
 			}
+			
+			
+			
+		public static function UpdateMileStoneComment($arrayBasecamp){
+			global $mysql;
+			include_once('../../application/library/Basecamp.class.php');
+			$bc = new Basecamp(BASECAMP_HOST,BASECAMP_USERNAME,BASECAMP_PASSWORD,'xml');
+					//createMilteStone($woAssignedTo,$getWoId,$woTitle,$woDesc,$require_date);
+			if(count($arrayBasecamp) > 1){
+				$us_bs = $mysql->sqlprepare("SELECT bc_id,CONCAT_WS(' ', first_name,last_name) as user_name FROM users WHERE id = ?",array($arrayBasecamp['created_by']));
+				$us_bs_row = $us_bs->fetch_assoc();
+				$responsible_party_id = $us_bs_row['bc_id'];
+				$comment_msg = "<b>".ucfirst($us_bs_row['user_name']) ."</b> has commented ";
+				//$message_id = '44850944';
+				//echo "SELECT milestone_id FROM bs_milestone WHERE wid = '".$arrayBasecamp['workorder_id']."'"; die;
+				//Get Milestone ID from bs_mapping
+				
+				$bs_milestone = $mysql->sqlprepare("SELECT milestone_id FROM bs_milestone WHERE wid = ?",array($arrayBasecamp['workorder_id']));
+				//If workorder  Mapped with Basecam Milestone
+				if($bs_milestone->num_rows > 0){
+					$bs_milestone_row = $bs_milestone->fetch_assoc();
+					$bs_milestone_id = $bs_milestone_row['milestone_id'];
+					$body = $comment_msg."<br/>".nl2br($arrayBasecamp['comment']);
+					$result = $bc->createCommentForMilestone($bs_milestone_id,$body);
+				}
+			
+			}
+			
+			
+			
+			
+		}
+	//Create Milestone on basecamp
+	function createMileStone($woAssignedTo,$getWoId,$woTitle,$require_date){
+		global $mysql;
+		//Check if assigned to exist in LH BS mapping table
+		if(defined('BASECAMP_MAPPING')){
+			if(BASECAMP_MAPPING == 'OPEN'){
+				
+				
+				$bs_mapping = "SELECT * FROM lh_basecamp_mapping WHERE assigned_to = '$woAssignedTo' LIMIT 1";
+				$us_bs = $mysql->sqlordie($bs_mapping);
+				
+				if($us_bs->num_rows > 0) {
+					include_once('../../application/library/Basecamp.class.php');
+					$bc = new Basecamp(BASECAMP_HOST,BASECAMP_USERNAME,BASECAMP_PASSWORD,'xml');
+					$bs_mapping_row = $us_bs->fetch_assoc();
+					$us_bs = $mysql->sqlprepare("SELECT bc_id FROM users WHERE id = ?",array($woAssignedTo));
+					$us_bs_row = $us_bs->fetch_assoc();
+					
+					$project_bs_id = $bs_mapping_row['bc_id'];
+					//echo "<br/>";
+					$responsible_party_id = $us_bs_row['bc_id'];
+					//echo "<br/>";
+					$bc = new Basecamp(BASECAMP_HOST,BASECAMP_USERNAME,BASECAMP_PASSWORD,'xml');
+					//createMilteStone($woAssignedTo,$getWoId,$woTitle,$woDesc,$require_date);
+					$notify = false;
+					$responsible_party_type = 'person';
+					$woTitle = "LH[".$getWoId."] ".$woTitle;
+					$basecamp_result = array();
+	    			$basecamp_result = $bc->createMilestoneForProject($project_bs_id, $woTitle,$require_date, $responsible_party_type, $responsible_party_id,$notify);
+					//print_r($basecamp_result);
+	    			if(ISSET($basecamp_result['id'])){
+	    				if($basecamp_result['id'] != ''){
+	    				//echo "INSERT INTO `bs_milestone` SET milestone_id = '".$basecamp_result['id']."', wid = '".$getWoId."' , created_by = '".$woAssignedTo."', created_on ='now()'";
+							$insert_basecamp_sql = $mysql->sqlordie("INSERT INTO `bs_milestone` SET milestone_id = '".$basecamp_result['id']."', wid = '".$getWoId."' , created_by = '".$woAssignedTo."', created_on ='".date('Y-m-d')."'");
+	    				}
+						
+					}
+				}
+			
+				
+			}
+			
+		 
+		}
+	 
+	}
+	
+	function updateMileStone($woAssignedTo,$getWoId,$woTitle,$require_date,$st_status){
+		global $mysql;
+		//Check if assigned to exist in LH BS mapping table
+		if(defined('BASECAMP_MAPPING')){
+			if(BASECAMP_MAPPING == 'OPEN'){
+				
+				$bs_mapping = "SELECT * FROM lh_basecamp_mapping WHERE assigned_to = '$woAssignedTo' LIMIT 1";
+				$us_bs = $mysql->sqlordie($bs_mapping);
+				
+				if($us_bs->num_rows > 0) {
+					include_once('../../application/library/Basecamp.class.php');
+					$bc = new Basecamp(BASECAMP_HOST,BASECAMP_USERNAME,BASECAMP_PASSWORD,'xml');
+					$bs_mapping_row = $us_bs->fetch_assoc();
+					$us_bs = $mysql->sqlprepare("SELECT bc_id FROM users WHERE id = ?",array($woAssignedTo));
+					$us_bs_row = $us_bs->fetch_assoc();
+					
+					$project_bs_id = $bs_mapping_row['bc_id'];
+					//echo "<br/>";
+					$responsible_party_id = $us_bs_row['bc_id'];
+					//Check if Project Existing in BS_MAPPING
+					$bs_milestone = $mysql->sqlordie("SELECT milestone_id FROM bs_milestone WHERE wid = $getWoId");
+					//If workorder  Mapped with Basecam Milestone
+					$notify = false;
+					$responsible_party_type = 'person';
+					$basecamp_result = array();
+					if($bs_milestone->num_rows == 0){
+						
+						
+						$bc = new Basecamp(BASECAMP_HOST,BASECAMP_USERNAME,BASECAMP_PASSWORD,'xml');
+						//createMilteStone($woAssignedTo,$getWoId,$woTitle,$woDesc,$require_date);
+						
+						$woTitle = "LH[".$getWoId."] ".$woTitle;
+		    			$basecamp_result = $bc->createMilestoneForProject($project_bs_id, $woTitle,$require_date, $responsible_party_type, $responsible_party_id,$notify);
+						//print_r($basecamp_result);
+		    			if(ISSET($basecamp_result['id'])){
+		    				if($basecamp_result['id'] != ''){
+		    				//echo "INSERT INTO `bs_milestone` SET milestone_id = '".$basecamp_result['id']."', wid = '".$getWoId."' , created_by = '".$woAssignedTo."', created_on ='now()'";
+								$insert_basecamp_sql = $mysql->sqlordie("INSERT INTO `bs_milestone` SET milestone_id = '".$basecamp_result['id']."', wid = '".$getWoId."' , created_by = '".$woAssignedTo."', created_on ='".date('Y-m-d')."'");
+		    				}
+							
+						}
+					}else{
+						$bc = new Basecamp(BASECAMP_HOST,BASECAMP_USERNAME,BASECAMP_PASSWORD,'xml');
+						$woTitle = "LH[".$getWoId."] ".$woTitle;
+						$bs_milestone_row = $bs_milestone->fetch_assoc();
+						$bs_milestone_id = $bs_milestone_row['milestone_id'];
+						$bc->updateMilestone($bs_milestone_id,$woTitle, $require_date, $responsible_party_type, $responsible_party_id, $notify);
+						//echo "ss".$st_status;
+						//Complete status array
+						$complete_array = array('1','3');
+						if(in_array($st_status,$complete_array)){
+							
+							$r = $bc->completeMilestone($bs_milestone_id);
+							//print_r($r);
+						}else{
+						//if($st_status == '12'){
+							
+							$r = $bc->uncompleteMilestone($bs_milestone_id);
+							//print_r($r);
+						}						
+						
+					}
+				}
+			
+				
+			}
+			
+		 
+		}
+	 
+	}
        
        
 }
