@@ -77,6 +77,11 @@ $(document).ready(function(){
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #searchLHProjects').addClass('active');
 	}
+	else if(adminTitlemsg == 'Basecamp Lighthouse Mapping')
+	{
+		$('#create_sections li').removeClass('active');
+		$('#create_sections #lhBasecamp').addClass('active');
+	}
 	$('.title_lrg h4').html(adminTitlemsg);
 	
 	
@@ -863,6 +868,15 @@ function rallyProjects(field_id)
 	document.body.appendChild(form);   
 	form.submit();
 }
+function lhbasecamp(field_id)
+{
+
+	var form = document.createElement("form");
+	form.setAttribute("method", 'post');
+	form.setAttribute("action", '/admin/index/lhbasecampmapping/');	
+	document.body.appendChild(form);   
+	form.submit();
+}
 function solrSearchLog(field_id)
 {
 
@@ -954,6 +968,18 @@ function deleteRallyProject(id){
 
 }
 
+function deleteBsProject(id){
+	$.post("/admin/index/deletebsmaprojectlisting",{id:id},
+			function(data){
+					if(data != ''){
+						$('#tr_'+id).css('display','none');
+						$('.message_required p').html('The information has been delete successfully.');
+						$('.message_required').css({display:'block'});
+					}
+					
+			});
+}
+
 function generateUsers(){
 	
 	window.location.href = "/admin/index/exportusers";
@@ -966,4 +992,47 @@ function createExportUsersLog(){
 	//window.location.href = "/admin/index/exportusers";
 
 
+}
+
+function basecampUserMapping(){
+	var lh_users = $('#lh_users').val();
+	var lh_basecamp = $('#bs_project').val();
+	if(lh_basecamp == ''){
+		$('.message_required p').html('Please select Basecamp Project .');
+		$('.message_required').css({display:'block'});
+		return false;
+	
+	
+	}if(lh_users == ''){
+		$('.message_required p').html('Please select LH User .');
+		$('.message_required').css({display:'block'});
+		return false;
+	}
+	
+	if((lh_basecamp != '') && (lh_users != '')){
+		
+		$('#basecampReportbtn').attr("onclick","");
+		$.post("/admin/index/basecampmaprojectlisting",{lh_basecamp:lh_basecamp,lh_users:lh_users},
+				function(data){
+						
+						if($.trim(data) != ''){
+							var mappCounter =$('#mappCounter').val();
+							if(mappCounter != '' || mappCounter == 0){
+								$('.adminTh').after(data);
+								$('#mappCounter').val($('#mappCounter').val()+1);
+							}else{
+								$('.adminTr').before(data);
+							}
+							$('#basecampReportbtn').attr("onclick","return basecampUserMapping();");
+							$('#lh_users :selected').remove();
+							$('#bs_project :selected').remove();
+							$('.message_required p').html('The information has been updated successfully.');
+							$('.message_required').css({display:'block'});
+						}
+				});
+		
+		
+	}
+	
+	
 }
