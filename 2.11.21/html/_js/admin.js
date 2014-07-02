@@ -874,6 +874,11 @@ function lhbasecamp(field_id)
 	var form = document.createElement("form");
 	form.setAttribute("method", 'post');
 	form.setAttribute("action", '/admin/index/lhbasecampmapping/');	
+	var hiddenField1 = document.createElement("input");
+	hiddenField1.setAttribute("type", "hidden");
+	hiddenField1.setAttribute("name", 'test_value');
+	hiddenField1.setAttribute("value",'test_value');
+	 form.appendChild(hiddenField1);
 	document.body.appendChild(form);   
 	form.submit();
 }
@@ -1025,7 +1030,7 @@ function basecampUserMapping(){
 							}
 							$('#basecampReportbtn').attr("onclick","return basecampUserMapping();");
 							$('#lh_users :selected').remove();
-							$('#bs_project :selected').remove();
+							//$('#bs_project :selected').remove();
 							$('.message_required p').html('The information has been updated successfully.');
 							$('.message_required').css({display:'block'});
 						}
