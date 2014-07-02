@@ -31,12 +31,12 @@
 						if($projects[$i]['company'] != $companyId) { ?>
 						<optgroup label="<?php echo $projects[$i]['company_name']?>" >
 						<?php } ?>
-						<?php if(!in_array($projects[$i]['bc_id'],$bcIdArray)){ ?>
+						<?php //if(!in_array($projects[$i]['bc_id'],$bcIdArray)){ ?>
 						<option value="<?php echo $projects[$i]['bc_id'] ?>" > 
 						<?php	echo $projects[$i]['project_code'].' - '.$projects[$i]['project_name']; ?>
 						</option>
 						<?php 
-						}
+						//}
 						$companyId = $projects[$i]['company'];
 						$nxt = $i+1;
 						if($projects[$nxt]['company'] != $companyId) { ?>
