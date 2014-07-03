@@ -79,12 +79,17 @@ class commentServices {
 				//End
 		 		$update_wo_comment = "INSERT INTO `workorder_comments` (`workorder_id`,`user_id`,`comment`,`date`) "
 					."VALUES ('$wid','$uid','$comment','$curDateTime')";
-				$mysql->query($update_wo_comment);
-				$basecampArray = array(
-				"created_by" => $uid,
-				"workorder_id" => $wid,
-				"comment" => $comment );
-				$this->UpdateMileStoneComment($basecampArray);
+				if(defined('BASECAMP_MAPPING')){
+					if(BASECAMP_MAPPING == 'OPEN'){
+						$mysql->query($update_wo_comment);
+						$basecampArray = array(
+							"created_by" => $uid,
+							"workorder_id" => $wid,
+							"comment" => $comment 
+							);
+						$this->UpdateMileStoneComment($basecampArray);
+						}
+				}
 				
 				$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$wid' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
 				$req_type_res = $mysql->query($select_req_type_qry);
