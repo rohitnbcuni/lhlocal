@@ -80,6 +80,11 @@ class commentServices {
 		 		$update_wo_comment = "INSERT INTO `workorder_comments` (`workorder_id`,`user_id`,`comment`,`date`) "
 					."VALUES ('$wid','$uid','$comment','$curDateTime')";
 				$mysql->query($update_wo_comment);
+				$basecampArray = array(
+				"created_by" => $uid,
+				"workorder_id" => $wid,
+				"comment" => $comment );
+				$this->UpdateMileStoneComment($basecampArray);
 				
 				$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$wid' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
 				$req_type_res = $mysql->query($select_req_type_qry);
@@ -367,6 +372,37 @@ public static function escapewordquotes ($text) {
 			}
 		
 		
+		}
+		
+		
+		private function UpdateMileStoneComment($arrayBasecamp){
+			global $mysql;
+			include_once('../../application/library/Basecamp.class.php');
+			$bc = new Basecamp(BASECAMP_HOST,BASECAMP_USERNAME,BASECAMP_PASSWORD,'xml');
+					//createMilteStone($woAssignedTo,$getWoId,$woTitle,$woDesc,$require_date);
+			if(count($arrayBasecamp) > 1){
+				$us_bs = $mysql->sqlprepare("SELECT bc_id,CONCAT_WS(' ', first_name,last_name) as user_name FROM users WHERE id = ?",array($arrayBasecamp['created_by']));
+				$us_bs_row = $us_bs->fetch_assoc();
+				$responsible_party_id = $us_bs_row['bc_id'];
+				$comment_msg = "<b>".ucfirst($us_bs_row['user_name']) ."</b> has commented ";
+				//$message_id = '44850944';
+				//echo "SELECT milestone_id FROM bs_milestone WHERE wid = '".$arrayBasecamp['workorder_id']."'"; die;
+				//Get Milestone ID from bs_mapping
+				
+				$bs_milestone = $mysql->sqlprepare("SELECT milestone_id FROM bs_milestone WHERE wid = ?",array($arrayBasecamp['workorder_id']));
+				//If workorder  Mapped with Basecam Milestone
+				if($bs_milestone->num_rows > 0){
+					$bs_milestone_row = $bs_milestone->fetch_assoc();
+					$bs_milestone_id = $bs_milestone_row['milestone_id'];
+					$body = $comment_msg."<br/>".nl2br($arrayBasecamp['comment']);
+					$result = $bc->createCommentForMilestone($bs_milestone_id,$body);
+				}
+			
+			}
+			
+			
+			
+			
 		}
 		
 	}
