@@ -978,6 +978,8 @@ function deleteBsProject(id){
 			function(data){
 					if(data != ''){
 						$('#tr_'+id).css('display','none');
+						$('.message_required button').removeAttr("onclick");
+						$('.message_required button').attr("onclick","location.reload();");
 						$('.message_required p').html('The information has been delete successfully.');
 						$('.message_required').css({display:'block'});
 					}
