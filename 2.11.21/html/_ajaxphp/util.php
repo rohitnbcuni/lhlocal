@@ -303,7 +303,7 @@ class Util {
 				if($bs_milestone->num_rows > 0){
 					$bs_milestone_row = $bs_milestone->fetch_assoc();
 					$bs_milestone_id = $bs_milestone_row['milestone_id'];
-					$body = $comment_msg."<br/>".nl2br($arrayBasecamp['comment']);
+					$body = $comment_msg."<br/>".($arrayBasecamp['comment']);
 					$result = $bc->createCommentForMilestone($bs_milestone_id,$body);
 				}
 			
