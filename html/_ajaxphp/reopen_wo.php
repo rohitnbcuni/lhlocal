@@ -3,6 +3,7 @@
 	include('../_inc/config.inc');
 	include("sessionHandler.php");
     $pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+    include('../_ajaxphp/util.php');
 	//$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 	global $mysql;
 	$woId =  $mysql->real_escape_string($_GET['woId']);
@@ -27,6 +28,8 @@
 
 	$woAssignedTo = $wo_row['assigned_to'];
 	$requestedId = $wo_row['requested_by'];
+	//Update the mile stone status
+	Util::updateMileStone($woAssignedTo,$woId,$wo_row['title'],$wo_row['title'],$wo_row['launch_date'],$wo_row['status']);
 
 	$select_project = "SELECT * FROM `projects` WHERE `id`='" .$wo_row['project_id'] ."'";
 	$project_res = $mysql->sqlordie($select_project);

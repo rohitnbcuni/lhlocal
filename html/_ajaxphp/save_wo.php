@@ -3,6 +3,7 @@
 	include('../_inc/config.inc');
 	include('../_ajaxphp/sendEmail.php');
 	include('../_ajaxphp/util.php');
+	
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 	if(isset($_SESSION['user_id'])) {
 		$user = $_SESSION['lh_username'];
@@ -214,6 +215,11 @@
 			@$mysql->sqlordie($insert_wo);
 			$getWoId = $mysql->insert_id;
 			
+			//Create  a  Milestone 
+			//Update Milestone
+			Util::createMileStone($woAssignedTo,$getWoId,$woTitle,$sql_date);
+			
+			
 			if(!empty($getWoId))
 			{
 				if(!empty($woREQ_TYPE) && $woREQ_TYPE!='_blank' && $woREQ_TYPE!='disable')
@@ -381,7 +387,7 @@
 				."WHERE `id`='$woId'";
 			@$mysql->sqlordie($update_wo);
 			$getWoId = $woId;
-
+			Util::updateMileStone($woAssignedTo,$getWoId,$woTitle,$sql_date,$woStatus);
 			$select_wo_req_type = "SELECT field_id from workorder_custom_fields where field_id IN('1','2','3') and workorder_id IN('$woId')";
 			$old_req_type = $mysql->sqlordie($select_wo_req_type);
 			$old_req_type_row = $old_req_type->fetch_assoc();
@@ -697,6 +703,7 @@
 		// Format : wo_id~statusId~assignedTo~assignedToHtml (assignedToHtml : is applicable only for client updates)
 		echo $getWoId.'~'.$woStatus.'~'.$woAssignedTo.'~'.$assigned_option_html;
 	}
+
 
 	function sendEmail($to, $subject, $msg, $headers){
 		$msg = nl2br($msg);
