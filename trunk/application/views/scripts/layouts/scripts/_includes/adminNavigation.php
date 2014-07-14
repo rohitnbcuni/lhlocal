@@ -42,7 +42,10 @@
 							</li>
 							<li class="alt" id="searchLHProjects" onClick="solrSearchLog();">
 								<img src="/_images/yellow_status.gif">Solr Search Log
-							</li>	
+							</li>
+							<li class="alt" id="lhBasecamp" onClick="lhbasecamp();">
+								<img src="/_images/yellow_status.gif">LH Basecamp Mapping
+							</li>
 						</ul>
 					</div>
 			<? echo $this->layout()->content; ?>
