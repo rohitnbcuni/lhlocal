@@ -2,7 +2,8 @@
 include('Admin.inc');
 require_once('../html/_inc/config.inc');
 class Admin_IndexController extends LighthouseController { 
-		public function indexAction() {
+	public function indexAction() {
+			
 	echo '<!--=========== START: COLUMNS ===========-->		
 		<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="User Info">  					
 			<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';				
@@ -1223,6 +1224,20 @@ class Admin_IndexController extends LighthouseController {
 			
 		
 		}
+function deletebsmaprojectlistingAction(){
+			$affectedId = 0;
+			$id = (int) $this->_request->getParam('id');
+			
+			if(!empty($id)){
+				$affectedId = AdminDisplay::deleteMaapingLhBsProject($id);
+			}
+			if(count($affectedId) > 0){
+				echo $affectedId;
+			}
+			$this->_helper->layout->disableLayout();
+			
+		
+		}
 		
 		function solrsearchlogAction(){
 		
@@ -1265,7 +1280,44 @@ class Admin_IndexController extends LighthouseController {
 			
 		}
 		
+		public function lhbasecampmappingAction(){
+			$bsProject = AdminDisplay::getBasecampProjectOptionEditHTML();
+			//print_r($bsProject);
+			$this->view->assign('bsProjectMapping',$bsProject);
+			//All LH project
+			$this->view->assign('basecampProjectObj',AdminDisplay::getBasecampProjectOption()); 
+			//All Mapped projects
+			$this->view->assign('LHUsersHtml',AdminDisplay::getLHUsersObj());
+			
+		}
 		
+		
+		
+		
+		public function basecampmaprojectlistingAction(){
+			$db = Zend_Registry::get('db');
+			$bs_project_id = (int)$this->_request->getParam('lh_basecamp');
+			$assigned_to = (int)$this->_request->getParam('lh_users');
+			
+			if(($bs_project_id != '')&&($assigned_to != '')){
+				$inser_array = array(
+				'bc_id' => $bs_project_id,
+				'assigned_to' => $assigned_to,
+				'created_by'  => $_SESSION['user_id'],
+				'created_on'  => date("Y-m-d")
+				);
+			
+			
+				$db->insert('lh_basecamp_mapping',$inser_array);
+				$lastId = $db->lastInsertId()	;	
+				$bsProject = AdminDisplay::getBasecampProjectOptionEditHTML($lastId);
+				//$lastInsertRow = AdminDisplay::getLHRallyProjects($lastInsertId);
+				$this->view->assign('bsProjectMapping',$bsProject);
+				$this->_helper->layout->disableLayout();
+			}
+			//$this->_helper->viewRenderer->setNoRender(TRUE);
+			
+		}
 		
 		
 	}
