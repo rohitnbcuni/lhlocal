@@ -1,0 +1,56 @@
+<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="User Info"> 
+<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
+<div class="row2" style="float:right;margin-top:6px" >
+
+ <p>
+ 
+ 
+ <button id="adminReportbtn" onclick="createExportUsersLog();"><span>Generate Report</span></button>
+</p>
+</div>				
+<input type="hidden" id="mappCounter" value="<?php echo count($this->excelUsers) ?>">
+<div class="mappProj" >	
+
+	<table name="mapProjectData" width="100%"  class="adminTable">
+		<tr class="adminTh">
+		<th>Sr.No</th>
+		<th>User ID</th>
+		<th>First Name</th>
+		<th>Last Name</th>
+		<th>Email</th>
+		<th>Company</th>
+		
+		<th>Login Status</th>
+		<th>Deleted</th>
+		<th>User Access</th>
+		<th>Last Logged In</th>
+		
+		</tr>
+		<?php
+			if(count($this->excelUsers) >0){
+			$i = 1;
+			 foreach($this->excelUsers as $key => $LH_val){  
+				//print_r($LH_val);
+			 ?>
+			<tr id="tr_<?php echo $i ?>" class="adminTr">
+			<td width="10%" ><?php echo $i; ?></td>
+			<td width="10%" ><?php echo $LH_val['id']; ?></td>
+			<td width="10%" ><?php echo $LH_val['first_name']; ?></td>
+			<td width="10%" ><?php echo $LH_val['last_name']; ?></td>
+			<td width="10%" ><?php echo $LH_val['email']; ?></td>
+			<td width="10%" ><?php echo $LH_val['company']; ?></td>
+			<td width="10%" ><?php echo $LH_val['login_status']; ?></td>
+			<td width="10%" ><?php echo $LH_val['delete']; ?></td>
+			<td width="10%" ><?php echo $LH_val['user_access']; ?></td>
+			<td width="10%" ><?php echo $LH_val['last_logged_date']; ?></td>
+			
+			</tr>
+		
+		
+		<?php $i++; } ?>
+	<?php } ?>
+	</table>
+	
+</div>
+
+
