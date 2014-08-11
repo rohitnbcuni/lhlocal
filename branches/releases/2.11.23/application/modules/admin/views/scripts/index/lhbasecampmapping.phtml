@@ -1,0 +1,125 @@
+<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Basecamp Lighthouse Mapping">
+<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
+		<?php 
+		
+		//print_r($this->LhRallyProjects); 
+		$bcIdArray = array();
+		//$bsProjectArray = array();
+		if(count($this->bsProjectMapping) > 0){
+		
+			foreach($this->bsProjectMapping as $k => $v){
+				$bcIdArray[] = $v['bc_id'];
+				$assignedArray[] = $v['assigned_to'];
+			}
+		
+		}
+		
+		?>
+		
+		<div id='requestor_info'></div>
+		<table>
+		<tr>
+			<td>
+			<div class="adminSelect">
+				<p> Lighthouse Project:</p>
+				<select id="bs_project" name="bs_project" class="field_medium" >
+					<option value="">--Select Project--</option>
+					<?php //print $this->LHProjectHtml; 
+					$companyId = false;
+					$projects = $this->basecampProjectObj;
+					for($i = 0; $i < sizeof($projects); $i++) {
+						if($projects[$i]['company'] != $companyId) { ?>
+						<optgroup label="<?php echo $projects[$i]['company_name']?>" >
+						<?php } ?>
+						<?php //if(!in_array($projects[$i]['bc_id'],$bcIdArray)){ ?>
+						<option value="<?php echo $projects[$i]['bc_id'] ?>" > 
+						<?php	echo $projects[$i]['project_code'].' - '.$projects[$i]['project_name']; ?>
+						</option>
+						<?php 
+						//}
+						$companyId = $projects[$i]['company'];
+						$nxt = $i+1;
+						if($projects[$nxt]['company'] != $companyId) { ?>
+							</optgroup>
+						<?php }
+					}
+					
+					?>
+				</select>
+			</div>
+			</td>
+			<td>
+			<div class="adminSelect">
+			<p> LH Users:</p>
+			<?php
+			
+			
+			//print "<pre>";
+			//print_r($rallyArray);
+			?>
+			<select id="lh_users" name="lh_users" class="field_medium" >
+			<option value="">--Select User--</option>
+				<?php $LHUsersHtml = $this->LHUsersHtml; 
+				for($i = 0; $i < sizeof($LHUsersHtml); $i++) :
+					 if(!in_array($LHUsersHtml[$i]['id'],$assignedArray)): ?>
+				<option value="<?php echo $LHUsersHtml[$i]['id'] ?>" > 
+				<?php	echo $LHUsersHtml[$i]['user_name']; ?>
+				</option>
+				<?php endif;
+				
+				endfor; ?>
+			
+			
+				</select>
+			</div>
+			
+			</td>
+			
+		</tr>
+		
+	
+	</table>
+	
+	<div >
+<br/><br/>
+	<p >
+		<button style='margin-left:327px;' id="basecampReportbtn" onclick="return basecampUserMapping();"><span>Submit</span></button>
+	</p>
+	
+<br/><br/>
+<p></p>
+<div style="clear: both;"></div>
+<input type="hidden" id="mappCounter" value="<?php echo count($this->LhRallyProjects) ?>">
+<div class="mappProj" >	
+	<table name="mapProjectData" width="100%"  class="adminTable">
+		<tr class="adminTh">
+		<th>Basecamp Project</th>
+		<th>Assigned To</th>
+		<th>Delete</th>
+		</tr>
+		<?php
+			if(count($this->bsProjectMapping) >0){
+	
+			 foreach($this->bsProjectMapping as $key => $LH_val){   ?>
+			<tr id="tr_<?php echo trim($LH_val['id']); ?>" class="adminTr">
+			<td width="40%" ><?php echo $LH_val['lh_project']; ?></td>
+			<td width="40%"  ><?php echo $LH_val['full_name']; ?></td>
+			<td width="20%" style="text-align:center;"><img class="dropProject" src="/_images/b_drop.png" alt="drop" onclick="deleteBsProject(<?php echo $LH_val['id'] ?>);"></td>
+			</tr>
+		
+		
+		<?php } ?>
+	<?php } ?>
+	</table>
+</div>
+
+<div class="message_required">
+	<p></p>
+	<div style="clear: both;"></div>
+		<div class="duplicate_buttons">
+			<button onClick="$('.message_required').css({display:'none'}); return false;"><span>OK</span></button>
+			<div style="clear: both;"></div>
+		</div>					
+	<div style="clear: both;"></div>
+	
+</div>
