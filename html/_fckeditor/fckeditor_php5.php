@@ -57,6 +57,12 @@ function FCKeditor_IsCompatibleBrowser()
 		$iVersion = (int)substr($sAgent, strpos($sAgent, 'Gecko/') + 6, 8) ;
 		return ($iVersion >= 20030210) ;
 	}
+    else if ( strpos($sAgent, 'rv:') !== false )
+    {
+        // Internet Explorer 11
+        $iVersion = (int)substr($sAgent, strpos($sAgent, 'rv:') + 3, 2) ;
+        return ($iVersion >= 11) ;
+    }
 	else if ( strpos($sAgent, 'Opera/') !== false )
 	{
 		$fVersion = (float)substr($sAgent, strpos($sAgent, 'Opera/') + 6, 4) ;
