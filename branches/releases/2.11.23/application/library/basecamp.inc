@@ -1,13 +1,6 @@
 <?php
 //define('HTTP_PROXY','64.210.197.20:80');
-define('BC_URL',BASECAMP_HOST);
-define('BC_USER','resourceplanner@nbcuxd.com');
-define('BC_PASSWORD',"r3s0urc3");
-define('BC_DB_HOST','localhost');
-define('BC_DB_USER','nbclh');
-define('BC_DB_PASSWORD','nbclh634');
-define('BC_DB_NAME','tools');
-define('THIS_COMPANY','NBC UXD');
+
 define('RE_CAPTCH_PRIVATE_KEY','6Lf5B80SAAAAADF6LPCfaBtOYWBDFEwp-iumSgU8');
 //define('BC_DB_PORT');
 /*
@@ -306,7 +299,26 @@ class Basecamp{
 		
 		//echo "Ses Vars: (" .$this->_session->lh_username .")<br />";
 		//echo "Ses Vars: (" .$this->_session->lh_password .")<br />";
-		$out  = "GET $file HTTP/1.1\r\n";
+        
+        include_once("BasecampAPI.class.php");
+       
+        
+        if(!empty($user['lh_username']) && !empty($user['lh_password'])){
+            $bc = new BasecampAPI(BASECAMP_HOST,$user['lh_username'],$user['lh_password']);
+             
+            $status  = $bc->getMe();
+            if($status['status'] == '200 OK'){
+                return true;
+            
+            }else{
+                return  false;
+            
+            }
+            
+        }
+       
+        
+		/*$out  = "GET $file HTTP/1.1\r\n";
 		$out .= "Host: ".$this->config->basecamp->host."t\r\n";
 		$out .= "Connection: Close\r\n";
 		$out .= "Accept: application/xml\n";
@@ -338,7 +350,7 @@ class Basecamp{
 			}else{
 				return false;
 			}
-		}
+		}*/
 	}
 	
 	/*************************************
