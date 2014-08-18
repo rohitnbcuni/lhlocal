@@ -1,4 +1,5 @@
 <?PHP
+    ob_start();
 	include('WorkOrders.inc');
 	define('NBCDOTCOM' , 8);
 	include('_ajaxphp/util.php');
