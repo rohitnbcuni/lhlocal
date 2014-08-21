@@ -889,7 +889,12 @@ function buildWorkordersHTML() {
 						html_body += workorderList[i]['workorders'][e]['status'];
 						html_body += '</span><select id="status_select_' + workorderList[i]['workorders'][e]['id'] + '" style="display: none;" onChange="changeStatus(this.value, ' + workorderList[i]['workorders'][e]['id'] + ');">';
 						html_body += '</select></dd>';
-						html_body += '<dt class="requested">' + workorderList[i]['workorders'][e]['requested_by'] + '</dt>';
+						if(workorderList[i]['workorders'][e]['requested_by'].length > 22){
+							html_body += '<dt class="requested">' + jQuery.trim(workorderList[i]['workorders'][e]['requested_by']).substring(0, 22).split(" ").slice(0, 4).join(" ") + "..."+'</dt>';
+						}else{
+							html_body += '<dt class="requested">' + workorderList[i]['workorders'][e]['requested_by'] + '</dt>';
+						
+						}
 						//html_body += '<dd class="assigned"><!-- <a href="">Vorbeck, Garrett</a> --><select><option></option></select></dd>';
 						
 						
@@ -913,7 +918,12 @@ function buildWorkordersHTML() {
 						if(workorderList[i]['workorders'][e]['wo_last_comment_date']!='N/A' || workorderList[i]['workorders'][e]['wo_last_comment_user'] != 'N/A')
 						{					
 							html_body += '<dd class="lastcommentby" onmouseover="showComment('+wo_id  +',1);" onmouseout="hideComment('+wo_id  +');">';
-							html_body += workorderList[i]['workorders'][e]['wo_last_comment_user'];
+							if(workorderList[i]['workorders'][e]['wo_last_comment_user'].length > 22){
+								html_body += jQuery.trim(workorderList[i]['workorders'][e]['wo_last_comment_user']).substring(0, 22).split(" ").slice(0, 4).join(" ") + "...";
+							}else{
+								html_body += workorderList[i]['workorders'][e]['wo_last_comment_user'];
+							
+							}
 							html_body += '</dd>';			
 							html_body += '<dd class="commentdate" >';
 							html_body += workorderList[i]['workorders'][e]['wo_last_comment_date'];
@@ -922,7 +932,12 @@ function buildWorkordersHTML() {
 						else
 						{
 							html_body += '<dd class="lastcommentby" style="text-align:center;">';
-							html_body += workorderList[i]['workorders'][e]['wo_last_comment_user'];
+							if(workorderList[i]['workorders'][e]['wo_last_comment_user'].length > 22){
+								html_body += jQuery.trim(workorderList[i]['workorders'][e]['wo_last_comment_user']).substring(0, 22).split(" ").slice(0, 4).join(" ") + "...";
+							}else{
+								html_body += workorderList[i]['workorders'][e]['wo_last_comment_user'];
+							
+							}
 							html_body += '</dd>';			
 							html_body += '<dd class="commentdate" style="text-align:center;">';
 							html_body += workorderList[i]['workorders'][e]['wo_last_comment_date'];
