@@ -932,8 +932,8 @@ function buildWorkordersHTML() {
 						else
 						{
 							html_body += '<dd class="lastcommentby" style="text-align:center;">';
-							if(workorderList[i]['workorders'][e]['wo_last_comment_user'].length > 20){
-								html_body += jQuery.trim(workorderList[i]['workorders'][e]['wo_last_comment_user']).substring(0, 20).split(" ").slice(0, 4).join(" ") + "...";
+							if(workorderList[i]['workorders'][e]['wo_last_comment_user'].length > 12){
+								html_body += jQuery.trim(workorderList[i]['workorders'][e]['wo_last_comment_user']).substring(0, 12).split(" ").slice(0, 4).join(" ") + "...";
 							}else{
 								html_body += workorderList[i]['workorders'][e]['wo_last_comment_user'];
 							
