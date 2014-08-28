@@ -919,7 +919,7 @@ function buildWorkordersHTML() {
 						{					
 							html_body += '<dd class="lastcommentby" onmouseover="showComment('+wo_id  +',1);" onmouseout="hideComment('+wo_id  +');">';
 							if(workorderList[i]['workorders'][e]['wo_last_comment_user'].length > 15){
-								html_body += jQuery.trim(workorderList[i]['workorders'][e]['wo_last_comment_user']).substring(0, 25).split(" ").slice(0, 4).join(" ") + "...";
+								html_body += jQuery.trim(workorderList[i]['workorders'][e]['wo_last_comment_user']).substring(0, 15).split(" ").slice(0, 4).join(" ") + "...";
 							}else{
 								html_body += workorderList[i]['workorders'][e]['wo_last_comment_user'];
 							
