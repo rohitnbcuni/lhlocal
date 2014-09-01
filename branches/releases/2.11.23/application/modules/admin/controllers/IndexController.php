@@ -247,7 +247,7 @@ class Admin_IndexController extends LighthouseController {
 											<button class="secondary" onclick="$(\'#add_cc\').css({display:\'none\'});$(\'#select_cc\').css({display:\'block\'}); return false;"><span>+ Add Person to CC List</span></button>
 										</div>
 										<div class="cclist_actions" id="select_cc" style="display: none;">
-											<select name="qccc_user" id="qccc_user" style="margin-bottom:2px;">';
+											<select name="qccc_user" id="qccc_user" style="margin-bottom:2px;width:343px;">';
 												if(isset($proj_id)) {
 													echo AdminDisplay::getUserOptionEditHTML();
 												}
