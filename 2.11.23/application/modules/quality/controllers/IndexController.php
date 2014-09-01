@@ -714,7 +714,7 @@
 								echo '</li>';
 							if(isset($_GET['defect_id'])) {
 								echo '<li >';
-								$submittedBy = (int)QaDisplay::fetchUserName($wo_data[0]['requested_by']);
+								$submittedBy = QaDisplay::fetchUserName($wo_data[0]['requested_by']);
 							}else
 							{
 								echo '<li style="display:none;">'; 
