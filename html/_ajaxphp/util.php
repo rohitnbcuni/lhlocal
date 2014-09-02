@@ -1,4 +1,7 @@
 ﻿<?php
+
+ob_start();
+
 /**
  * Implemenation based on Cake's Sanitize logic
  * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
