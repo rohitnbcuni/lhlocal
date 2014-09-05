@@ -702,9 +702,9 @@
 									echo '</li>
 									<li>
 									<label for="QA_DETECTED_BY" id="QA_DETECTED_BY_label">Detected By:</label>';
-
+                                     
 									if(isset($_GET['defect_id'])) {
-										$detected_by =  (int)QaDisplay::fetchUserName($wo_data[0]['detected_by']);
+										$detected_by =  QaDisplay::fetchUserName($wo_data[0]['detected_by']);
 										echo '<input name="QA_DETECTED_BY" id="QA_DETECTED_BY" style="width:194px;" value="'.$detected_by.'" readonly="readonly" class="readonly" type="text">';
 									} else {
 										echo '<select class="field_medium" name="QA_DETECTED_BY" id="QA_DETECTED_BY" >';
@@ -714,7 +714,7 @@
 								echo '</li>';
 							if(isset($_GET['defect_id'])) {
 								echo '<li >';
-								$submittedBy = (int)QaDisplay::fetchUserName($wo_data[0]['requested_by']);
+								$submittedBy = QaDisplay::fetchUserName($wo_data[0]['requested_by']);
 							}else
 							{
 								echo '<li style="display:none;">'; 
