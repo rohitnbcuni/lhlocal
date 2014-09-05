@@ -776,7 +776,7 @@ function removeCcUser(userId) {
 	}
         document.getElementById('cclist').value = finalccList; 
         //End
-	if(defectId != "") {
+	//if(defectId != "") {
 		$.ajax({
 			type: "GET",
 			url: "/_ajaxphp/qa_save_cc.php",
@@ -785,8 +785,8 @@ function removeCcUser(userId) {
 				document.getElementById('cc_list').innerHTML = msg;
 			}
 		});
-	}
-	if(defectId == ''){
+	//}
+	/*if(defectId == ''){
 	var Project_id = $('#wo_project').val();
 		if(Project_id != ''){
 		$.ajax({
@@ -801,7 +801,7 @@ function removeCcUser(userId) {
 				}
 			});
 		}
-	}
+	}*/
 }
 
 function ajaxUploadFile(dirName, woId){

@@ -1,4 +1,5 @@
 <?PHP
+    ob_start();
 	include('WorkOrders.inc');
 	define('NBCDOTCOM' , 8);
 	include('_ajaxphp/util.php');
@@ -292,7 +293,7 @@
 				 * LH#21355
 				 */
 				if(!is_numeric($new_wo_id )){
-					$this->_redirect("workorders/index/");
+					$this->_redirect("workorders");
 				}
 				$wo_data = WoDisplay::getQuery("SELECT * FROM `workorders` WHERE `id`=? LIMIT 1",array($new_wo_id));
 				
@@ -300,7 +301,7 @@
 				 * LH#21355
 				 */
 				if(count($wo_data) == 0){
-					$this->_redirect("workorders/index/");
+					$this->_redirect("workorders");
 				}
       
 				if($wo_data[0]['active'] == 0) {
