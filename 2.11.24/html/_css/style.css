@@ -1867,3 +1867,5 @@ border-bottom-color: #CFCFCF;
 
 }
 #related_list li:hover { font-weight: bold; background: #e4f5fd; cursor: default; }
+
+.adminslaclass select { width:150px; }

@@ -100,6 +100,11 @@ $(document).ready(function(){
 	
 	}
 	
+	if($("#admin_requested_type")){
+		$("#admin_requested_type").multiselect({selectedText:"# Selected Items"},{create: function(){ $(this).next().width(200); }}).multiselectfilter();
+	
+	}
+	
 		
 	});
 
@@ -619,7 +624,59 @@ function workorderSLAReport()
 	 form.submit();
 }
 
-function generateReport(){
+function generateReport(type){
+    var admin_user_select = $('#admin_user_select').val();
+    var admin_year_select = $('#admin_year_select').val();
+	var admin_to_select = $('#admin_to_select').val();
+    var admin_to_year_select = $('#admin_to_year_select').val();
+	var admin_assign_select = $('#admin_assign_select').val();
+	var admin_requested_select = $('#admin_requested_select').val();
+	var admin_requested_type = $('#admin_requested_type').val();
+	
+	var from_date = new Date(admin_year_select,admin_user_select);
+	var to_date = new Date(admin_to_year_select,admin_to_select);
+	var diff= from_date- to_date;
+	var weeks = Math.floor(Math.abs(diff) / (1000 * 7 * 24 * 60 * 60));
+	
+	if(admin_to_select!='' && admin_to_year_select!=''){
+		if(parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) < parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select) || parseInt(admin_user_select) > parseInt(admin_to_select) && parseInt(admin_year_select) == parseInt(admin_to_year_select)|| parseInt(admin_user_select) == parseInt(admin_to_select) && parseInt(admin_year_select) > parseInt(admin_to_year_select))
+		{ 	
+
+			alert('From Date should not be greater than to date'); return false;
+
+		}
+		
+
+		if(weeks>54)
+		{
+			alert('Difference-in-Months exceeded the Max Limit of 12'); return false;
+		}
+		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select+'&report='+type+'&admin_requested_type='+admin_requested_type;
+	}else{
+		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select+'&report='+type+'&admin_requested_type='+admin_requested_type;
+			//window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select);
+	}
+	
+	if(type =='xls'){
+	jQuery.download('/_ajaxphp/admin_slareport.php',d);
+	
+	}else if(type =='chart'){
+		$('#sla_chart').html('');
+		$.ajax({
+		type: "POST",
+		url: "/_ajaxphp/admin_slareport.php",
+		data:d,
+		success: function(msg) {
+			$('#sla_chart').html(msg);
+			
+		}
+		});
+	
+	
+	}
+}
+
+function generateChart(){
     var admin_user_select = $('#admin_user_select').val();
     var admin_year_select = $('#admin_year_select').val();
 	var admin_to_select = $('#admin_to_select').val();
@@ -651,8 +708,18 @@ function generateReport(){
 			//window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select);
 	}
 	
+	$.ajax({
+		type: "POST",
+		url: "/admin/index/slachart",
+		data:d,
+		success: function(msg) {
+			$('#sla_chart').html(msg);
+			
+		}
+		});
 	
-	jQuery.download('/_ajaxphp/admin_slareport.php',d);
+	
+	
 }
 
 function fetchProjVersion(proj_id,version_id)

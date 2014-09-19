@@ -9,7 +9,10 @@ $year = $mysql->real_escape_string($_POST['year']);
 $to_month = $mysql->real_escape_string($_POST['to_month']);
 $to_year = $mysql->real_escape_string($_POST['to_year']);
 $to_assign = $mysql->real_escape_string($_POST['assign_to']);
+$report_type = $mysql->real_escape_string($_POST['report']);
 $admin_requested_select = $mysql->real_escape_string($_POST['admin_requested_select']);
+$admin_requested_type =  $mysql->real_escape_string($_POST['admin_requested_type']);
+
 $wo_user_list = array();
 $wo_status_array = array();
 $companyListArr = array();
@@ -69,117 +72,186 @@ if($to_month==12)
 	}
 	//echo $qry_sla_report_per_month;
 	$sla_report_result = $mysql->sqlordie($qry_sla_report_per_month);
+    if($report_type == 'xls'){
+        if($sla_report_result->num_rows > 0) {
 
- if($sla_report_result->num_rows > 0) {
+           $select_wo_status = "SELECT `id`, `name` FROM `lnk_workorder_status_types`";
+           $status_result = $mysql->sqlordie($select_wo_status);
+          if($status_result->num_rows > 0){
+            while($status_row = $status_result->fetch_assoc()){
+              $wo_status_array[$status_row['id']] = $status_row['name'];
+            }
+          }
+          header("Pragma: public");
+          header("Expires: 0");
+          header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+          header("Cache-Control: private",false);
+          header("Content-Type: application/octet-stream");
+          header("Content-Disposition: attachment;filename=SLA_Report.xls"); 
+          header("Content-Transfer-Encoding: binary");
 
-	   $select_wo_status = "SELECT `id`, `name` FROM `lnk_workorder_status_types`";
-	   $status_result = $mysql->sqlordie($select_wo_status);
-	  if($status_result->num_rows > 0){
-		while($status_row = $status_result->fetch_assoc()){
-		  $wo_status_array[$status_row['id']] = $status_row['name'];
-		}
-	  }
-	  header("Pragma: public");
-	  header("Expires: 0");
-	  header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-	  header("Cache-Control: private",false);
-	  header("Content-Type: application/octet-stream");
-	  header("Content-Disposition: attachment;filename=SLA_Report.xls"); 
-	  header("Content-Transfer-Encoding: binary");
+           echo "<table border=1>
+                    <tr>
+                        <td><b>Ticket No</b></td>
+                        <td width=100px><b>Brief Description</b></td>
+                        <td width=100px><b>Company</b></td>
+                        <td width=100px><b>Project</b></td>
+                        <td width=100px><b>Requested BY</b></td>
+                        <td width=100px><b>Assigned TO</b></td>
+                        <td width=100px><b>Request Completed By</b></td>
+                        <td width=100px><b>User Category</b></td>
+                        <td width=100px><b>REQUEST TYPE</b></td>
+                        <td width=100px><b>Status</b></td>					
+                        <td width=100px><b>SITE NAME</b></td>
+                        <td width=100px><b>INFRASTRUCTURE TYPE</b></td>
+                        <td width=100px><b>SEVERITY</b></td>
+                        <td width=100px><b>CRITICAL</b></td>					
+                        <td width=100px><b>Opened</b></td>
+                        <td width=100px><b>Estimated Completion Date</b></td>					
+                        <td width=100px><b>Acknowledgement Time</b></td>
+                        <td width=100px><b>Fixed</b></td>					
+                        <td width=100px><b>Closed</b></td>
+                        <td width=100px><b>Archived</b></td>
+                    </tr>";
 
-	   echo "<table border=1>
-				<tr>
-					<td><b>Ticket No</b></td>
-					<td width=100px><b>Brief Description</b></td>
-					<td width=100px><b>Company</b></td>
-					<td width=100px><b>Project</b></td>
-					<td width=100px><b>Requested BY</b></td>
-					<td width=100px><b>Assigned TO</b></td>
-					<td width=100px><b>Request Completed By</b></td>
-					<td width=100px><b>User Category</b></td>
-					<td width=100px><b>REQUEST TYPE</b></td>
-					<td width=100px><b>Status</b></td>					
-					<td width=100px><b>SITE NAME</b></td>
-					<td width=100px><b>INFRASTRUCTURE TYPE</b></td>
-					<td width=100px><b>SEVERITY</b></td>
-					<td width=100px><b>CRITICAL</b></td>					
-					<td width=100px><b>Opened</b></td>
-					<td width=100px><b>Estimated Completion Date</b></td>					
-					<td width=100px><b>Acknowledgement Time</b></td>
-					<td width=100px><b>Fixed</b></td>					
-					<td width=100px><b>Closed</b></td>
-					<td width=100px><b>Archived</b></td>
-				</tr>";
+           while($workorder = $sla_report_result->fetch_assoc()) {
+                $workorder_id = $workorder['id'];
+                $req_type = getCustomTypeName($workorder_id,'REQ_TYPE',$mysql);
+                if($req_type == 'Report a Problem'){
+                    $req_type_id = getCustomTypeID($workorder_id,'SEVERITY',$mysql);
+                }else{
+                    $req_type_id = getCustomTypeID($workorder_id,'REQ_TYPE',$mysql);
+                }
+                
+               if($admin_requested_type != 'null'){
+                   
+                     $admin_requested_type_array = explode(",",$admin_requested_type);
+                     
+                    if(!in_array($req_type_id,$admin_requested_type_array)){
+                       continue;
+                    
+                    }
+              
+               
+               }
+               
+                if($req_type == 'Report a Problem'){
+                    $severity = getCustomTypeName($workorder_id,'SEVERITY',$mysql);
+                } else {
+                    $severity = 'N/A';
+                }
+            echo "<tr>
+                    <td>".$workorder['id']."</td>
+                    <td>".$workorder['title']."</td>
+                    <td>".getCompanyName($workorder['company'],$companyListArr,$mysql)."</td>
+                    <td>".$workorder['project_code']." - ".$workorder['project_name']."</td>
+                    <td>".getUserName($workorder['requested_by'],$wo_user_list,$mysql)."</td>
+                    <td>".getUserName($workorder['assigned_to'],$wo_user_list,$mysql)."</td>
+                    <td>".getUserName($workorder['completed_by'],$wo_user_list,$mysql)."</td>
+                    <td>".getUserTitle($workorder['assigned_to'],$mysql)."</td>
+                    
+                    <td>".$request_type_arr[$req_type]."</td>
+                    <td>".$wo_status_array[$workorder['status']]."</td>
+                    <td>".getCustomTypeName($workorder_id,'SITE_NAME',$mysql)."</td>
+                    <td>".getCustomTypeName($workorder_id,'INFRA_TYPE',$mysql)."</td>
+                    <td>".$severity."</td>
+                    <td>".getCustomTypeName($workorder_id,'CRITICAL',$mysql)."</td>
+                    <td>".format_date($workorder['creation_date'])."</td>
+                    <td>".format_date($workorder['launch_date'])."</td>
+                    <td>".getAckTimefromAudit($workorder_id,$mysql)."</td>
+                    <td>".getFixedDatefromAudit($workorder_id,$mysql)."</td>
+                    <td>".format_date($workorder['closed_date'])."</td>
+                    <td>".$archived_type_arr[$workorder['archived']]."</td> 
+                  </tr>"; 
+           }
+           echo "</table>";
+     }else{
+        
+        
+          header("Pragma: public");
+          header("Expires: 0");
+          header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+          header("Cache-Control: private",false);
+          header("Content-Type: application/octet-stream");
+          header("Content-Disposition: attachment;filename=SLA_Report.xls"); 
+          header("Content-Transfer-Encoding: binary");
+          echo "<table border='1'>
+                    <tr>
+                        <td><b>Ticket No</b></td>
+                        <td width=100px><b>Brief Description</b></td>
+                        <td width=100px><b>Company</b></td>
+                        <td width=100px><b>Project</b></td>
+                        <td width=100px><b>Requested BY</b></td>
+                        <td width=100px><b>Assigned TO</b></td>
+                        <td width=100px><b>Request Completed By</b></td>
+                        <td width=100px><b>User Category</b></td>
+                        <td width=100px><b>REQUEST TYPE</b></td>
+                        <td width=100px><b>Status</b></td>					
+                        <td width=100px><b>SITE NAME</b></td>
+                        <td width=100px><b>INFRASTRUCTURE TYPE</b></td>
+                        <td width=100px><b>SEVERITY</b></td>
+                        <td width=100px><b>CRITICAL</b></td>					
+                        <td width=100px><b>Opened</b></td>
+                        <td width=100px><b>Estimated Completion Date</b></td>					
+                        <td width=100px><b>Acknowledgement Time</b></td>
+                        <td width=100px><b>Fixed</b></td>					
+                        <td width=100px><b>Closed</b></td>
+                        <td width=100px><b>Archived</b></td>
+                    </tr>";
+          echo "<tr><td colspan='20' align='center'>No Record Found</td></tr>";
+          exit;
+    }
+    }else if($report_type == 'chart'){
+    
+         if($sla_report_result->num_rows > 0) {
+           $array_total = array();
+           $i = 0;
+           while($workorder = $sla_report_result->fetch_assoc()) {
+                $workorder_id = $workorder['id'];
+                $req_type = getCustomTypeName($workorder_id,'REQ_TYPE',$mysql);
+                if($req_type == 'Report a Problem'){
+                    $req_type_id = getCustomTypeID($workorder_id,'SEVERITY',$mysql);
+                }else{
+                    $req_type_id = getCustomTypeID($workorder_id,'REQ_TYPE',$mysql);
+                }
+                
+               if($admin_requested_type != 'null'){
+                   
+                     $admin_requested_type_array = explode(",",$admin_requested_type);
+                     
+                    if(!in_array($req_type_id,$admin_requested_type_array)){
+                       continue;
+                    
+                    }
+              
+               
+               }
+               if($workorder['launch_date'] > $workorder['closed_date']){
+                    $array_total['missed'][$i++] = $workorder['id'];
+               
+               }else{
+                      $array_total['met'][$i++] = $workorder['id'];
+               
+               
+               }
+                
+                    
+            $i++;
+            }
+            $missed = ceil((count($array_total['missed'])*100)/$sla_report_result->num_rows);
+            //echo "<br/>";
+           // $met = ceil((count($array_total['met'])*100)/$sla_report_result->num_rows);
+            $met = 100 - $missed;
+             echo '<img alt="SLA PIE CHART" src="//chart.googleapis.com/chart?chtt=SLA Report&chts=000000,12&chs=755x200&chf=bg,s,ffffff&cht=p3&chd=t:'.$missed.','.$met.'&chl=SLA+Missed|SLA+Met&chdl='.$met.' % SLA+Met|'.$missed.' % SLA+Missed&chco=F2360C,0CF210">';
 
-	   while($workorder = $sla_report_result->fetch_assoc()) {
-			$workorder_id = $workorder['id'];
-		$req_type = getCustomTypeName($workorder_id,'REQ_TYPE',$mysql);
-		if($req_type == 'Report a Problem'){
-			$severity = getCustomTypeName($workorder_id,'SEVERITY',$mysql);
-		} else {
-			$severity = 'N/A';
-		}
-		echo "<tr>
-		        <td>".$workorder['id']."</td>
-		    	<td>".$workorder['title']."</td>
-				<td>".getCompanyName($workorder['company'],$companyListArr,$mysql)."</td>
-				<td>".$workorder['project_code']." - ".$workorder['project_name']."</td>
-				<td>".getUserName($workorder['requested_by'],$wo_user_list,$mysql)."</td>
-				<td>".getUserName($workorder['assigned_to'],$wo_user_list,$mysql)."</td>
-				<td>".getUserName($workorder['completed_by'],$wo_user_list,$mysql)."</td>
-				<td>".getUserTitle($workorder['assigned_to'],$mysql)."</td>
-				
-				<td>".$request_type_arr[$req_type]."</td>
-				<td>".$wo_status_array[$workorder['status']]."</td>
-				<td>".getCustomTypeName($workorder_id,'SITE_NAME',$mysql)."</td>
-				<td>".getCustomTypeName($workorder_id,'INFRA_TYPE',$mysql)."</td>
-				<td>".$severity."</td>
-				<td>".getCustomTypeName($workorder_id,'CRITICAL',$mysql)."</td>
-				<td>".format_date($workorder['creation_date'])."</td>
-				<td>".format_date($workorder['launch_date'])."</td>
-				<td>".getAckTimefromAudit($workorder_id,$mysql)."</td>
-				<td>".getFixedDatefromAudit($workorder_id,$mysql)."</td>
-				<td>".format_date($workorder['closed_date'])."</td>
-				<td>".$archived_type_arr[$workorder['archived']]."</td> 
-			  </tr>"; 
-	   }
-	   echo "</table>";
- }else{
-	
-	
-	  header("Pragma: public");
-	  header("Expires: 0");
-	  header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-	  header("Cache-Control: private",false);
-	  header("Content-Type: application/octet-stream");
-	  header("Content-Disposition: attachment;filename=SLA_Report.xls"); 
-	  header("Content-Transfer-Encoding: binary");
-	  echo "<table border='1'>
-				<tr>
-					<td><b>Ticket No</b></td>
-					<td width=100px><b>Brief Description</b></td>
-					<td width=100px><b>Company</b></td>
-					<td width=100px><b>Project</b></td>
-					<td width=100px><b>Requested BY</b></td>
-					<td width=100px><b>Assigned TO</b></td>
-					<td width=100px><b>Request Completed By</b></td>
-					<td width=100px><b>User Category</b></td>
-					<td width=100px><b>REQUEST TYPE</b></td>
-					<td width=100px><b>Status</b></td>					
-					<td width=100px><b>SITE NAME</b></td>
-					<td width=100px><b>INFRASTRUCTURE TYPE</b></td>
-					<td width=100px><b>SEVERITY</b></td>
-					<td width=100px><b>CRITICAL</b></td>					
-					<td width=100px><b>Opened</b></td>
-					<td width=100px><b>Estimated Completion Date</b></td>					
-					<td width=100px><b>Acknowledgement Time</b></td>
-					<td width=100px><b>Fixed</b></td>					
-					<td width=100px><b>Closed</b></td>
-					<td width=100px><b>Archived</b></td>
-				</tr>";
-	  echo "<tr><td colspan='20' align='center'>No Record Found</td></tr>";
-	  exit;
-}
+          
+         }
+      
+               die;
+    
+    
+    
+    }
 
  function getUserName($user_id,$wo_user_list,$mysql)
  {
@@ -242,6 +314,18 @@ function getCustomTypeName($workorder_id,$custom_type,$mysql)
 	  if($wo_custom_data->num_rows > 0){
 		  $row = $wo_custom_data->fetch_assoc();
 		 $field_name =  $row['field_name'];
+	  }
+   return $field_name;
+
+}
+
+function getCustomTypeID($workorder_id,$custom_type,$mysql)
+{
+  $wo_custom_data = $mysql->sqlordie("SELECT `workorder_id`,a.`field_key`,a.`field_id`,c.`field_name` FROM `workorder_custom_fields` a,`workorders` b,`lnk_custom_fields_value` c where a.`workorder_id`='".$workorder_id."' and a.`field_key`='".$custom_type."' and b.id = a.workorder_id and a.`field_id`= c.`field_id`");
+  $field_name = 'N/A';
+	  if($wo_custom_data->num_rows > 0){
+		  $row = $wo_custom_data->fetch_assoc();
+		 $field_name =  $row['field_id'];
 	  }
    return $field_name;
 
