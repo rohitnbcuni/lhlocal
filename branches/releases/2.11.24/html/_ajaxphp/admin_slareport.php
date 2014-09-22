@@ -242,7 +242,7 @@ if($to_month==12)
             //echo "<br/>";
            // $met = ceil((count($array_total['met'])*100)/$sla_report_result->num_rows);
             $met = 100 - $missed;
-             echo '<img alt="SLA PIE CHART" src="//chart.googleapis.com/chart?chtt=SLA Report&chts=000000,12&chs=755x200&chf=bg,s,ffffff&cht=p3&chd=t:'.$missed.','.$met.'&chl=SLA+Missed|SLA+Met&chdl='.$met.' % SLA+Met|'.$missed.' % SLA+Missed&chco=F2360C,0CF210">';
+             echo '<img alt="SLA PIE CHART" src="//chart.googleapis.com/chart?chtt=SLA Report&chts=000000,12&chs=755x200&chf=bg,s,ffffff&cht=p3&chd=t:'.$missed.','.$met.'&chl=SLA+Missed|SLA+Met&chdl='.$missed.' % SLA+Missed | '.$met.' % SLA+Met&chco=F2360C,0CF210">';
 
           
          }
