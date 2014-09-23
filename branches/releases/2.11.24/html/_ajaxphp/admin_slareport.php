@@ -207,44 +207,65 @@ if($to_month==12)
            $array_total = array();
            $i = 0;
            while($workorder = $sla_report_result->fetch_assoc()) {
-                $workorder_id = $workorder['id'];
-                $req_type = getCustomTypeName($workorder_id,'REQ_TYPE',$mysql);
-                if($req_type == 'Report a Problem'){
-                    $req_type_id = getCustomTypeID($workorder_id,'SEVERITY',$mysql);
-                }else{
-                    $req_type_id = getCustomTypeID($workorder_id,'REQ_TYPE',$mysql);
-                }
-                
-               if($admin_requested_type != 'null'){
+               // if(in_array($workorder['id'], array(1,3))){
+                    $workorder_id = $workorder['id'];
+                    $req_type = getCustomTypeName($workorder_id,'REQ_TYPE',$mysql);
+                    if($req_type == 'Report a Problem'){
+                        $req_type_id = getCustomTypeID($workorder_id,'SEVERITY',$mysql);
+                    }else{
+                        $req_type_id = getCustomTypeID($workorder_id,'REQ_TYPE',$mysql);
+                    }
+                    
+                   if($admin_requested_type != 'null'){
+                       
+                         $admin_requested_type_array = explode(",",$admin_requested_type);
+                         
+                        if(!in_array($req_type_id,$admin_requested_type_array)){
+                           continue;
+                        
+                        }
+                  
                    
-                     $admin_requested_type_array = explode(",",$admin_requested_type);
-                     
-                    if(!in_array($req_type_id,$admin_requested_type_array)){
-                       continue;
+                   }
+                  
+                   if(!is_null($workorder['completed_date'])){
+                        if(strtotime($workorder['launch_date']) < strtotime($workorder['completed_date'])){
+                            $array_total['missed'][$i] = $workorder['id'];
+                       
+                       }else{
+                            $array_total['met'][$i] = $workorder['id'];
+                       
+                       }
+                      $i++;  
+                    }else if(is_null($workorder['completed_date'])){
+                        if(strtotime($workorder['launch_date']) < time()){
+                          $array_total['missed'][$i] = $workorder['id'];
+                           $i++;  
+                        }
+                         
+                       
+                        
+                    
                     
                     }
-              
-               
-               }
-               if($workorder['launch_date'] > $workorder['closed_date']){
-                    $array_total['missed'][$i++] = $workorder['id'];
-               
-               }else{
-                      $array_total['met'][$i++] = $workorder['id'];
-               
-               
-               }
                 
-                    
-            $i++;
-            }
-            $missed = ceil((count($array_total['missed'])*100)/$sla_report_result->num_rows);
-            //echo "<br/>";
-           // $met = ceil((count($array_total['met'])*100)/$sla_report_result->num_rows);
-            $met = 100 - $missed;
-             echo '<img alt="SLA PIE CHART" src="//chart.googleapis.com/chart?chtt=SLA Report&chts=000000,12&chs=755x200&chf=bg,s,ffffff&cht=p3&chd=t:'.$missed.','.$met.'&chl=SLA+Missed|SLA+Met&chdl='.$missed.' % SLA+Missed | '.$met.' % SLA+Met&chco=F2360C,0CF210">';
-
+                
+                
+                
+                }
+                
+                if(count($array_total) == 0){
+                    echo "<center><b>No Record Found</b></center>";
+                
+                }else{
+                    $missed = ceil((count($array_total['missed'])*100)/$i);
+                    $met = 100 - $missed;
+                     echo '<img alt="SLA PIE CHART" src="//chart.googleapis.com/chart?chtt=SLA Report&chts=000000,12&chs=755x200&chf=bg,s,ffffff&cht=p3&chd=t:'.$missed.','.$met.'&chl=SLA+Missed|SLA+Met&chdl='.$missed.' % SLA+Missed |'.$met.' % SLA+Met&chco=F2360C,0CF210">';                }
+            
           
+         }else{
+         
+              echo "<center><b>No Record Found</b></center>";
          }
       
                die;
