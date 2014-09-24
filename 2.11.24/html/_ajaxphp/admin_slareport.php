@@ -227,9 +227,10 @@ if($to_month==12)
                   
                    
                    }
-                  
+                   $getFixedDatefromAudit = getFixedDatefromAudit($workorder_id,$mysql);
                    if(!is_null($workorder['completed_date'])){
-                       if(strtotime($workorder['launch_date']) < strtotime($workorder['completed_date'])){
+                   
+                       if(strtotime($workorder['launch_date']) < strtotime($getFixedDatefromAudit)){
                             $array_total['missed'][$i] = $workorder['id'];
                        
                        }else{
@@ -261,7 +262,8 @@ if($to_month==12)
                 
                 
                 }
-                
+                //print_r($array_total)."<br/>";
+                //echo $i;
                 if(count($array_total) == 0){
                     echo "<center><b>No Record Found</b></center>";
                 
