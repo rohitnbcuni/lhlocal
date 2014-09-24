@@ -229,7 +229,7 @@ if($to_month==12)
                    }
                   
                    if(!is_null($workorder['completed_date'])){
-                        if(strtotime($workorder['launch_date']) < strtotime($workorder['completed_date'])){
+                       if(strtotime($workorder['launch_date']) < strtotime($workorder['completed_date'])){
                             $array_total['missed'][$i] = $workorder['id'];
                        
                        }else{
@@ -237,17 +237,25 @@ if($to_month==12)
                        
                        }
                       $i++;  
-                    }else if(is_null($workorder['completed_date'])){
-                        if(strtotime($workorder['launch_date']) < time()){
+                    }else if(is_null($workorder['completed_date']) && (!is_null($workorder['closed_date']))){
+                        if(strtotime($workorder['launch_date']) < strtotime($workorder['closed_date'])){
+                            $array_total['missed'][$i] = $workorder['id'];
+                       
+                       }else{
+                            $array_total['met'][$i] = $workorder['id'];
+                       
+                       }
+                      $i++;                
+                        
+                    
+                    }else if(is_null($workorder['completed_date']) && (is_null($workorder['closed_date']))){
+                    
+                    if(strtotime($workorder['launch_date']) < time()){
                           $array_total['missed'][$i] = $workorder['id'];
                            $i++;  
                         }
-                         
-                       
                         
-                    
-                    
-                    }
+                     }
                 
                 
                 
