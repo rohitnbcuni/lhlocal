@@ -238,7 +238,7 @@ if($to_month==12)
                        
                        }
                       $i++;  
-                    }else if($getFixedDatefromAudit == 'N/A') && (!is_null($workorder['closed_date']))){
+                    }else if(($getFixedDatefromAudit == 'N/A') && (!is_null($workorder['closed_date']))){
                         if(strtotime($workorder['launch_date']) < strtotime($workorder['closed_date'])){
                             $array_total['missed'][$i] = $workorder['id'];
                        
@@ -249,7 +249,7 @@ if($to_month==12)
                       $i++;                
                         
                     
-                    }else if($getFixedDatefromAudit == 'N/A') && (is_null($workorder['closed_date']))){
+                    }else if(($getFixedDatefromAudit == 'N/A') && (is_null($workorder['closed_date']))){
                     
                     if(strtotime($workorder['launch_date']) < time()){
                           $array_total['missed'][$i] = $workorder['id'];
