@@ -762,60 +762,104 @@ class Admin_IndexController extends LighthouseController {
 			echo '<!--=========== START: COLUMNS ===========-->		
 				<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Work order SLA Report">
 					<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">';				
-							echo '<div class="adminSelect">
-								   <div >
+							echo '<div class="adminslaclass" style="padding:20px;" >
+                               <table width="100%">
+                                    <tr>
+                                    <td >
+                                        <p> Assigned To:</p>';			
+                                        echo '<select class="field_medium" name="admin_assign_select" id="admin_assign_select"  >';
+                                        echo AdminDisplay::getUserOptionHTML();
+                                        echo '</select>
+                                    </td>
+                                     <td>   
+                                     
+                                        <p> Requested By:</p>';			
+                                        echo '<select class="field_medium" name="admin_requested_select" id="admin_requested_select" multiple = "multiple" style="width:240px;">';
+                                        echo AdminDisplay::getAllUserOptionHTML();
+                                        echo '</select>
+                                    </td>
+                                    <td>
+                                        <p> Requested Type:</p>';			
+                                        echo '<select class="field_medium" name="admin_requested_type" id="admin_requested_type" multiple = "multiple" style="width:240px;" >
+                                        <option value="1">Report an Outage</option>
+                                        <option value="3">Submit a Request</option>
+                                         <optgroup label="Report a Problem">
+                                        <option value="4">Severity 1 (4 hours)</option>
+                                        <option value="5">Severity 2 (48 hours)</option>
+                                        <option value="6"> Severity 3 (Best Effort)</option>
+                                        </optgroup>';
+                                        echo '</select>
+                                    </td>
+                                    <td>
+                                    </td>
+								   </tr>
+                                   <tr>
+                                    <td  colspan="4">
+                                    &nbsp;
+                                    </td>
+                                </tr>
+                                   <tr>
+                                   <td>
 									<p>From Month:</p>';			
 									echo '<select class="customFields" name="admin_user_select" id="admin_user_select" >';
 									echo AdminDisplay::getMonths($sla_report_month);
 									echo '</select>
-								</div>
-                                  <div style="position: absolute; top: 30px; right: 380px;">
+                                    </td>
+                                    <td>
 									<p>From Year:</p>';			
 									echo '<select class="customFields" name="admin_year_select" id="admin_year_select" >';
 									echo AdminDisplay::getYears($sla_report_year);
 									echo '</select>
-								</div>
-								<div style="position: absolute; top: 30px; right: 275px;">
+                                    </td>
+                                    
+                                    
+                                    
+								<td >
 								<p>To Month:</p>';			
 									echo '<select class="customFields" name="admin_to_select" id="admin_to_select" >';
 									echo AdminDisplay::to_getMonths($sla_report_month);
 									echo '</select>
-								</div>
-                                  <div style="position: absolute; top: 30px; right: 150px;">
+								</td>
+                                <td>
 									<p>To Year:</p>';			
 									echo '<select class="customFields" name="admin_to_year_select" id="admin_to_year_select" >';
 									echo AdminDisplay::to_getYears($sla_report_year);
 									echo '</select>
-								</div>
-	
+								</td>
+                                <td>
+                                &nbsp;
+                                </td>
 								
-								 <div class="row2" style="float:left;">
+								 
+								
+								</tr>
+                                <tr>
+                                    <td  colspan="4">
+                                    &nbsp;
+                                    </td>
+                                </tr>
+								<tr>
+                                <td colspan="4">
+									 <div  style="float:left;width:30%">
 
-									<p> Assigned To:</p>';			
-									echo '<select class="field_medium" name="admin_assign_select" id="admin_assign_select" >';
-									echo AdminDisplay::getUserOptionHTML();
-									echo '</select>
-								</div>
-								
-								 <div class="row2" style="position: absolute; right: 196px; top: 64px;">
-									<p style="padding-left:68px;"> Requested By:</p>';			
-									echo '<select class="field_medium" name="admin_requested_select" id="admin_requested_select" multiple = "multiple" >';
-									echo AdminDisplay::getAllUserOptionHTML();
-									echo '</select>
-								</div>
-								
-								
-								<div class="row2" >
-									 <p style="margin-top: 71px; margin-left: 109px;">
+									<button id="adminReportbtn" onclick="generateReport(\'xls\');"><span>Generate Report</span></button>
+									</div>
+                                    <div style="float:right;width:30%">
 
-									<button id="adminReportbtn" onclick="generateReport();"><span>Generate Report</span></button>
-									</p>
-								</div>
+									<button id="adminReportbtn" onclick="generateReport(\'chart\');"><span>Generate Chart</span></button>
+									</div>
+								</td></tr>
+                                </table>
 							</div>';
+                            echo '<div  id="sla_chart">
+                            </div>';
 					echo '</div>						
 					<div style="clear: both;"></div>';
 			
 		}
+        
+        
+        
 
 		public function listUserHTML($users)
 		{
@@ -1318,6 +1362,12 @@ function deletebsmaprojectlistingAction(){
 			//$this->_helper->viewRenderer->setNoRender(TRUE);
 			
 		}
+        
+        function slachartAction(){
+        
+            $this->_helper->layout->disableLayout();
+        
+        }
 		
 		
 	}
