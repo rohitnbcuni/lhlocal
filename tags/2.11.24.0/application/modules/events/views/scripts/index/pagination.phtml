@@ -1,0 +1,63 @@
+			<?php if($this->lastpage>1):?>
+                  <div class="clearboth">
+                  <table class="textright" cellspacing=5px cellpadding=0> 
+                  <tr>
+                      <?php
+                      if($this->pagenum!=1):
+                      	echo "<td style='padding-top:-1px;'>";
+                           	echo "<a href=\"javascript:void(null)\" onClick=\"pageAjax('1')\" class='activePage'>First</a>&nbsp;&nbsp;&nbsp;";
+                        echo "</td>";
+                        echo "<td style='padding-top:-1px;'>";
+                        $prev = $this->pagenum-1;
+                           	echo "<span class='activePagePrev'><a href=\"javascript:void(null)\" onClick=\"pageAjax('$prev')\"></a></span>";
+                        echo "</td>";
+                      else:
+                        echo "<td style='padding-top:-1px;'>";
+                           	echo "<span class='inactivePage'>First&nbsp;&nbsp;&nbsp;</span>";
+                        echo "</td>";
+                      	echo "<td style='padding-top:-1px;'>";
+                           	echo "<span class='inactivePagePrev'><a href=\"javascript:void(null)\"></a></span>";
+                        echo "</td>";
+                      endif;
+
+                      echo "<td style='padding-top:-1px;'>";
+                      echo "Page $this->pagenum of $this->lastpage";
+                      echo "</td>";
+
+                      /*for($i=1;$i<=$this->lastpage;$i++):
+                      		if($i==$this->pagenum):
+                      			echo "<td style='padding-top:1px;'>";
+                          		echo $i;
+                          		echo "</td>";
+                          	else:
+                          		echo "<td style='padding-top:1px;'>";
+                          		echo "<a href=\"#l\" onClick=\"pageAjax($i)\" style='margin:2px;'>$i</a>";
+                          		echo "</td>";
+                          	endif;
+                      endfor;*/
+                      
+
+                      if($this->lastpage!=$this->pagenum):
+                      
+                        echo "<td style='padding-top:-1px;'>";
+                      	$next = $this->pagenum+1;
+                      	echo "<span class='activePageNext'><a href=\"javascript:void(null)\" onClick=\"pageAjax('$next')\"></a></span>";
+                      	echo "</td>";
+                      		echo "<td style='padding-top:-1px;'>";
+                           	echo "&nbsp;&nbsp;&nbsp;<a href=\"javascript:void(null)\" onClick=\"pageAjax('$this->lastpage')\" class='activePage'>Last</a>";
+                          echo "</td>";
+                      else:
+                      	 echo "<td style='padding-top:-1px;'>";
+                           	echo "<span class='inactivePageNext'><a href=\"javascript:void(null)\"></a></span>";
+                          echo "</td>";
+                      	echo "<td style='padding-top:-1px;'>";
+                           	echo "<span class='inactivePage'>&nbsp;&nbsp;&nbsp;Last</span>";
+                        echo "</td>";
+                      
+                      endif;  
+                      ?>
+                      </tr>
+                      </table>
+                      </div>              
+                      
+            <?php endif;?>
