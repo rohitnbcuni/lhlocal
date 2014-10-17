@@ -174,6 +174,12 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						echo '';
 						break;						
 					}//end 
+                    
+                    case 'graphview' :{
+                        echo "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>";
+                        break;
+                        
+                    }
 					default: {
 					echo	"<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n";
 					echo "<script src=\"/_js/workorders.filter.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
