@@ -125,7 +125,7 @@
                     <img src="/_images/cal_active.png" alt="Calendar View" width="23" height="23" /></a>
 						         
 					<img src="/_images/list_dis_05.png" alt="List View"  title="List View" width="23" height="23" />
-                    <a href="/workorders/index/graphview" title="Calendar View" style="padding-right: 6px;" >
+                    <a href="/workorders/index/graphview" title="Calendar View" style="padding-right: 6px;margin-left:5px;" >
                     <img src="/_images/graph_image.jpg" alt="Graph View"  title="Graph View" width="23" height="23" />
                     </a>
                     
@@ -1935,6 +1935,9 @@
 		          <div style="float: right; margin: 0pt; position: absolute; right: 12px; top: 85px;padding-right:11px;" id="list_view" >
 		         	<img src="/_images/cal_dis_03.png" alt="Calendar view" title="Calendar view" width="23" height="23" style="padding-right:6px;" />
                            <a href="/workorders/index" title="List View"><img src="/_images/list_active.png" alt="List View" width="23" height="23" ></a>
+                    <a href="/workorders/index/graphview" title="Calendar View" style="padding-right: 6px;margin-left:5px;" >
+                    <img src="/_images/graph_image.jpg" alt="Graph View"  title="Graph View" width="23" height="23" />
+                    </a>
 		         </div>
 		         <!-- ==| END: view type Botton Divison#7927 |== -->';
 
