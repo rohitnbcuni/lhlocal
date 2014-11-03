@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<?PHP	$randNum = "201409300353"; ?>
+<?PHP	$randNum = "201411030215"; ?>
 <title><?echo DEV_TEAM_NAME?>: Lighthouse</title>
 	<link rel="stylesheet" href="/_css/style.css?<?PHP echo $randNum; ?>" type="text/css" />
 	<link rel="stylesheet" href="/_css/ui.datepicker.css" type="text/css" />
@@ -174,6 +174,12 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						echo '';
 						break;						
 					}//end 
+                    
+                    case 'graphview' :{
+                        echo "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>";
+                        break;
+                        
+                    }
 					default: {
 					echo	"<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n";
 					echo "<script src=\"/_js/workorders.filter.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
