@@ -739,6 +739,12 @@
 		return $all;
 	
 	}
+    
+    public function getLHUsersObj($id) {
+			$db = Zend_Registry::get('db');
+			$userSql = $db->fetchRow("SELECT  CONCAT_WS(' ', first_name,last_name) as user_name , id from users WHERE id = '$id' ORDER BY first_name ");
+			return $userSql;
+		}
 	
 	}
 ?>

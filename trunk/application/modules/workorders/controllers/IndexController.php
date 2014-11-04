@@ -121,9 +121,14 @@
 				<!-- ==| START: view type Botton Divison#7927 |== -->
 
 		         <div style="float: right; margin: 0pt; position: absolute; right: 12px; top: 85px;padding-right: 11px" id="list_view" >
-		       		<a href="/workorders/index/calendarview" title="Calendar View" style="padding-right: 6px;" ><img src="/_images/cal_active.png" alt="Calendar View" width="23" height="23" /></a>
+		       		<a href="/workorders/index/calendarview" title="Calendar View" style="padding-right: 6px;" >
+                    <img src="/_images/cal_active.png" alt="Calendar View" width="23" height="23" /></a>
 						         
 					<img src="/_images/list_dis_05.png" alt="List View"  title="List View" width="23" height="23" />
+                    <a href="/workorders/index/graphview" title="Calendar View" style="padding-right: 6px;margin-left:5px;" >
+                    <img src="/_images/graph1.png" alt="Graph View"  title="Graph View" width="23" height="23" />
+                    </a>
+                    
 
 				</div>
 		         <!-- ==| END: view type Botton Divison#7927 |== -->
@@ -1930,6 +1935,9 @@
 		          <div style="float: right; margin: 0pt; position: absolute; right: 12px; top: 85px;padding-right:11px;" id="list_view" >
 		         	<img src="/_images/cal_dis_03.png" alt="Calendar view" title="Calendar view" width="23" height="23" style="padding-right:6px;" />
                            <a href="/workorders/index" title="List View"><img src="/_images/list_active.png" alt="List View" width="23" height="23" ></a>
+                    <a href="/workorders/index/graphview" title="Calendar View" style="padding-right: 6px;margin-left:5px;" >
+                    <img src="/_images/graph1.png" alt="Graph View"  title="Graph View" width="23" height="23" />
+                    </a>
 		         </div>
 		         <!-- ==| END: view type Botton Divison#7927 |== -->';
 
@@ -2254,6 +2262,70 @@
 			$this->_helper->layout->disableLayout();
 			$this->_helper->viewRenderer->setNoRender();
 		}
+        
+        
+        function graphviewAction(){
+            $db = Zend_Registry::get('db');
+            $db_tickets = $db->fetchAll("SELECT distinct b.id,  b.`status`,b.`assigned_to`  FROM `projects` a, `workorders` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND c.`user_id`='" .$_SESSION['user_id'] ."' AND b.`archived`='0' and b.`active`='1' ORDER BY a.`company`, a.`project_name`, b.`title` ASC");
+            $status_type = array();
+            $assigned_to = array();
+            if(count($db_tickets)){
+                $closed = 0;
+                $Fixed = 0;
+                $Hold = 0;
+                $Need = 0;
+                $New = 0;
+                $Progress = 0;
+                $Feedback = 0;
+                $rejected = 0;
+                $reopend = 0;
+                
+                foreach($db_tickets as  $ticket_values){
+                    $assigned_to[] = $ticket_values['assigned_to'];
+                    if($ticket_values['status'] == '1'){
+                         $status_type['closed'] = ++$closed;
+                    
+                    
+                    }else if($ticket_values['status']  == '3'){
+                         $status_type['Fixed'] = ++$Fixed;
+                    
+                    }else if($ticket_values['status']  == '4'){
+                         $status_type['Hold'] = ++$Hold;
+                    
+                    }else if($ticket_values['status']  == '5'){
+                         $status_type['Need'] = ++$Need;
+                    
+                    }else if($ticket_values['status']  == '6'){
+                         $status_type['New'] = ++$New;
+                    
+                    }else if($ticket_values['status']  == '7'){
+                         $status_type['Progress'] = ++$Progress;
+                    
+                    }else if($ticket_values['status']  == '10'){
+                         $status_type['Feedback'] = ++$Feedback;
+                    
+                    }else if($ticket_values['status']  == '11'){
+                         $status_type['rejected'] = ++$rejected;
+                    
+                    }else if($ticket_values['status']  == '12'){
+                         $status_type['reopend'] = ++$reopend;
+                    
+                    }
+                }
+
+           
+            }
+           // print_r(array_count_values($assigned_to));
+            if(count($assigned_to) > 0){
+                $assigned_to_count = array_count_values($assigned_to);
+                arsort($assigned_to_count);
+            
+            
+            }
+            //print_r( $assigned_to_count);
+            $this->view->assign("status_type", $status_type);
+            $this->view->assign("assigned_to", ($assigned_to_count));
+        }
 		
 		
 		
