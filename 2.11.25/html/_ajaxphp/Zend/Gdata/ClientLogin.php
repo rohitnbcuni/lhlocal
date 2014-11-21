@@ -173,8 +173,8 @@ class Zend_Gdata_ClientLogin
             }
             else {
                 require_once 'Zend/Gdata/App/AuthException.php';
-                throw new Zend_Gdata_App_AuthException('Authentication with Google failed. Reason: ' .
-                    (isset($goog_resp['Error']) ? $goog_resp['Error'] : 'Unspecified.'));
+                //throw new Zend_Gdata_App_AuthException('Authentication with Google failed. Reason: ' .
+                 //   (isset($goog_resp['Error']) ? $goog_resp['Error'] : 'Unspecified.'));
             }
         }
     }
