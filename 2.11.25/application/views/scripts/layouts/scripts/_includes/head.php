@@ -152,10 +152,12 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						echo	"<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n"
 							."\t<script src=\"/_js/ui/jquery.ui.all.js\" type=\"text/javascript\"></script>\n"
 							."\t<script src=\"/_js/workorders.create.js?" . $randNum . "\" type=\"text/javascript\"></script>\n"
+                            ."\t<link rel=\"stylesheet\" href=\"/_css/colorbox.css\" />\n"
 							."\t<script src=\"/_js/ajaxfileupload.js\" type=\"text/javascript\"></script>\n"
 							."\t<script src=\"/_js/jquery-ui-1.8.19.custom.min.js\" type=\"text/javascript\"></script>"
 							."\t<script src=\"/_js/jquery.ui.widget.js\" type=\"text/javascript\"></script>\n"
 							."\t<script src=\"/_js/jquery.notify.js\" type=\"text/javascript\"></script>\n"
+                            ."\t<script src=\"/_js/jquery.colorbox.js\"></script>\n"
 							. "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
 						echo  "<link href=\"/_css/ui.notify.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";	
 
