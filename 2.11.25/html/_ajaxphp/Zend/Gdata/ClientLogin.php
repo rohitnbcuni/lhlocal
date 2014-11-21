@@ -138,7 +138,8 @@ class Zend_Gdata_ClientLogin
             $response = $client->request('POST');
         } catch (Zend_Http_Client_Exception $e) {
             require_once 'Zend/Gdata/App/HttpException.php';
-            throw new Zend_Gdata_App_HttpException($e->getMessage(), $e);
+           // throw new Zend_Gdata_App_HttpException($e->getMessage(), $e);
+           // throw new Zend_Gdata_App_HttpException("Error", $e);
         }
         ob_end_clean();
 
