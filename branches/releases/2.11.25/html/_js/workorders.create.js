@@ -11,6 +11,8 @@ $(document).ready(function() {
         }    
 	}
 	
+	$("#checklist_iframe").colorbox({iframe:true, width:"80%", height:"80%"});
+	
 	if($('#wo_requested_by').val()!='')
 	{
 		changeImage($('#wo_requested_by').val());
@@ -1835,4 +1837,29 @@ function addReleatedIssue(){
 	
 	}
 
+//Checklist Code
+$(document).ready(function() {
+	var checklist_assigned_to_id = $('#checklist_assigned_to_id').val();
+	var checklist_deployement_id = $('#checklist_deployement_id').val(); 
+	$('#wo_assigned_user').change(function(){
+		if(($('#wo_assigned_user').val() == checklist_assigned_to_id) && ($("#INFRA_TYPE").val() == checklist_deployement_id )) {
+			$('#checklist_div').slideUp('slow');
+			//alert("ss");
+		}else{
+		
+			$('#checklist_div').slideUp('slow');
+		}
+		
+	});
+	$('#INFRA_TYPE').change(function(){
+		
+		if(($('#wo_assigned_user').val() == checklist_assigned_to_id) && ($("#INFRA_TYPE").val() == checklist_deployement_id )) {
+			$('#checklist_div').slideDown('slow');
+			//alert("pp");
+		}else{
+				$('#checklist_div').slideUp('slow');
+		}
+		
+	});
 
+});
