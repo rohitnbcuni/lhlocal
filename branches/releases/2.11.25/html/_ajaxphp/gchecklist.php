@@ -10,25 +10,25 @@ Zend_Loader::loadClass('Zend_Gdata_Spreadsheets');
 Zend_Loader::loadClass('Zend_Gdata_Docs');
             
  
-            //-------------------------------------------------------------------------------
-           
-            $wid = $_REQUEST['wid'];
-            $username = GOOGLE_ACCOUNT; // Your google account username
-            $password = GOOGLE_PASSWORD; // Your google account password
-             
-            //-------------------------------------------------------------------------------
-            // Document key - get it from browser addres bar query key for your open spreadsheet
-             
-            $spreadsheetKey = $key = GOOGLE_SPREADSHEETKEY;
-             
-            //---------------------------------------------------------------------------------
-            // Init Zend Gdata service
-             
-          /*  $service = Zend_Gdata_Spreadsheets::AUTH_SERVICE_NAME;
-            $client = Zend_Gdata_ClientLogin::getHttpClient($username, $password, $service);
-            $spreadsheetService = new Zend_Gdata_Spreadsheets($client);*/
-             
-         // connect to API
+        //-------------------------------------------------------------------------------
+       
+        $wid = $_REQUEST['wid'];
+        $username = GOOGLE_ACCOUNT; // Your google account username
+        $password = GOOGLE_PASSWORD; // Your google account password
+         
+        //-------------------------------------------------------------------------------
+        // Document key - get it from browser addres bar query key for your open spreadsheet
+         
+        $spreadsheetKey = $key = GOOGLE_SPREADSHEETKEY;
+         
+        //---------------------------------------------------------------------------------
+        // Init Zend Gdata service
+         
+      /*  $service = Zend_Gdata_Spreadsheets::AUTH_SERVICE_NAME;
+        $client = Zend_Gdata_ClientLogin::getHttpClient($username, $password, $service);
+        $spreadsheetService = new Zend_Gdata_Spreadsheets($client);*/
+         
+     // connect to API
         $service = Zend_Gdata_Spreadsheets::AUTH_SERVICE_NAME;
         $client = Zend_Gdata_ClientLogin::getHttpClient($username, $password, $service);
         $service = new Zend_Gdata_Spreadsheets($client);  
@@ -67,7 +67,7 @@ Zend_Loader::loadClass('Zend_Gdata_Docs');
         $query->setMaxRow(1);
         $cellFeed = $service->getCellFeed($query);
     } catch (Exception $e) {
-        die('ERROR: ' . $e->getMessage());
+        die('ERROR: ' );
     }
 
     $spreadSheetColumnName = array(); 
@@ -126,6 +126,7 @@ Zend_Loader::loadClass('Zend_Gdata_Docs');
     <?php
     
         $wid = $_GET['wid'];
+		if(!empty($wid)){
     
     ?>
     <form id="prechecklist">
@@ -134,16 +135,21 @@ Zend_Loader::loadClass('Zend_Gdata_Docs');
             <tbody>
                 
                  <?php
-                 
+					global $mysql;
+					$select_wo = "SELECT status FROM `workorders` WHERE `id`= ? LIMIT 1";
+					$result = @$mysql->sqlprepare($select_wo,array($wid));
+					$row = $result->fetch_assoc();
+					$wid_status = $row['status']; 
                     
                     foreach($spreadSheetColumnIndex as $gkey => $gVal) :?>
                     <?php    if($gkey != 'wid'): ?>
                      <tr class="adminTh">   
                         <th colspan="3"><?php echo $gVal ?></th>
                     </tr>
+					
                     <tr id="tr_<?php echo $gkey ?>" class="adminTr">
-                        <td width="30%">
-                        <?php 
+					<?php if($wid_status != '1') : ?>
+						<?php 
                             $yChecked = '';
                             $nChecked = '';
                             $oChecked = '';
@@ -166,6 +172,8 @@ Zend_Loader::loadClass('Zend_Gdata_Docs');
 
                             }
                         ?>
+                        <td width="30%">
+                        
                         <input type="radio" name="<?php echo $gkey ?>"  value="Yes" <?php echo $yChecked ?>> Yes
                         </td>
                         <td width="30%"><input type="radio" name="<?php echo $gkey ?>" value="No" <?php echo $nChecked ?> >No</td>
@@ -173,6 +181,17 @@ Zend_Loader::loadClass('Zend_Gdata_Docs');
                             <input type="radio" name="<?php echo $gkey ?>" value="Other" <?php echo $oChecked ?> onclick="removeReadOnly('<?php echo $gkey ?>_text');">Other
                             <input type="text" id="<?php echo $gkey ?>_text" name="<?php echo $gkey ?>_text" maxlength="100" readonly="readonly" value="<?php echo $others ?>" >
                         </td>
+						<?php else : ?>
+						<td width="30%">
+                        
+                         <?php echo $yChecked ?>
+                        </td>
+                        <td colspan="3">
+						<?php echo $allReadyExist[$gkey] ?>
+                        </td>
+						<?php endif ; ?>
+						
+						
                     </tr>
                     
                 <?php 
@@ -194,7 +213,7 @@ Zend_Loader::loadClass('Zend_Gdata_Docs');
         </table>
        </div>
     </form>
-    
+    <?php } ?>
     <script>
   function showValues() {
     var str = $( "#prechecklist" ).serialize();
