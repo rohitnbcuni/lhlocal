@@ -174,7 +174,7 @@ Zend_Loader::loadClass('Zend_Gdata_Docs');
                         ?>
 						<?php if($gkey == 'doneby') :?>
 							<td width="30%">
-								<input type="text" id="<?php echo $gkey ?>_text" name="<?php echo $gkey ?>_text" maxlength="100" value="<?php echo $others ?>" >
+								<input type="text" id="<?php echo $gkey ?>_text" name="<?php echo $gkey ?>" maxlength="100" value="<?php echo $others ?>" >
 							</td>
 
 						
