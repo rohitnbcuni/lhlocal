@@ -172,20 +172,26 @@ Zend_Loader::loadClass('Zend_Gdata_Docs');
 
                             }
                         ?>
-                        <td width="30%">
-                        
-                        <input type="radio" name="<?php echo $gkey ?>"  value="Yes" <?php echo $yChecked ?>> Yes
-                        </td>
-                        <td width="30%"><input type="radio" name="<?php echo $gkey ?>" value="No" <?php echo $nChecked ?> >No</td>
-                        <td width="30%">
-                            <input type="radio" name="<?php echo $gkey ?>" value="Other" <?php echo $oChecked ?> onclick="removeReadOnly('<?php echo $gkey ?>_text');">Other
-                            <input type="text" id="<?php echo $gkey ?>_text" name="<?php echo $gkey ?>_text" maxlength="100" readonly="readonly" value="<?php echo $others ?>" >
-                        </td>
+						<?php if($gkey == 'doneby') :?>
+							<td width="30%">
+								<input type="text" id="<?php echo $gkey ?>_text" name="<?php echo $gkey ?>_text" maxlength="100" value="<?php echo $others ?>" >
+							</td>
+
+						
+						
 						<?php else : ?>
-						<td width="30%">
-                        
-                         <?php echo $yChecked ?>
-                        </td>
+							<td width="30%">
+							
+							<input type="radio" name="<?php echo $gkey ?>"  value="Yes" <?php echo $yChecked ?>> Yes
+							</td>
+							<td width="30%"><input type="radio" name="<?php echo $gkey ?>" value="No" <?php echo $nChecked ?> >No</td>
+							<td width="30%">
+								<input type="radio" name="<?php echo $gkey ?>" value="Other" <?php echo $oChecked ?> onclick="removeReadOnly('<?php echo $gkey ?>_text');">Other
+								<input type="text" id="<?php echo $gkey ?>_text" name="<?php echo $gkey ?>_text" maxlength="100" readonly="readonly" value="<?php echo $others ?>" >
+							</td>
+						<?php endif; ?>
+						<?php else : ?>
+						
                         <td colspan="3">
 						<?php echo $allReadyExist[$gkey] ?>
                         </td>
