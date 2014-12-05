@@ -888,19 +888,35 @@
 						</div>
 						 <!-- Checklist Bucket -->';
                        if(isset($_REQUEST['wo_id'])):
-                       
-                            echo '<div class="side_bucket_container" id="checklist_div" style="display:none;" >
+							$rwid = $_REQUEST['wo_id'];
+							if(($wo_data[0]['assigned_to'] == CHECKLIST_ASSIGNED_ID) && ($custom_feild_arr['INFRA_TYPE'] == CHECKLIST_DEPLOYEMENT_ID)){
+							echo '<div class="side_bucket_container" id="checklist_div"  >
                             <input type="hidden" id="checklist_assigned_to_id" value="'.CHECKLIST_ASSIGNED_ID.'">
                             <input type="hidden" id="checklist_deployement_id" value="'.CHECKLIST_DEPLOYEMENT_ID.'">
                                 <div class="side_bucket_title">Check List</div>
                                 <div class="side_bucket_content" style="padding-left:0px;">
                                     <div style="margin:5px;">
-                                        <a id="checklist_iframe" href="'.BASE_URL.'/_ajaxphp/gchecklist.php?wid='.$_REQUEST['wo_id'].'">Depoyement Check List</a>
+                                        <a id="checklist_iframe" href="'.BASE_URL.'/_ajaxphp/gchecklist.php?wid='.$rwid.'">Depoyement Check List</a>
                                     </div>
                                 </div>
                            
                             </div>';
+							}else{
+							echo '<div class="side_bucket_container" id="checklist_div" style="display:none;" >
+                            <input type="hidden" id="checklist_assigned_to_id" value="'.CHECKLIST_ASSIGNED_ID.'">
+                            <input type="hidden" id="checklist_deployement_id" value="'.CHECKLIST_DEPLOYEMENT_ID.'">
+                                <div class="side_bucket_title">Check List</div>
+                                <div class="side_bucket_content" style="padding-left:0px;">
+                                    <div style="margin:5px;">
+                                        <a id="checklist_iframe" href="'.BASE_URL.'/_ajaxphp/gchecklist.php?wid='.$rwid.'">Depoyement Check List</a>
+                                    </div>
+                                </div>
+                           
+                            </div>';						
+							}
+                           
                          endif;
+						 $rwid = null;
                         echo '<!--End Bucket-->
 						<!--Side bucket-2-->
 						<div class="side_bucket_container bucket_container_last" >
