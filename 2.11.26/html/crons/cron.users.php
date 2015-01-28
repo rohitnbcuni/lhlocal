@@ -195,6 +195,7 @@
 							."', '" .$uData['im_service'] ."','".UNASSIGNED_PHASE."','".$avatar_img."','".$user_access_bits."')";
 						$uData['user_name'] = trim($uData['user_name']);
 						$uData['email'] = trim($uData['email']);
+						echo $insert_user_query;
 						if(!empty($uData['user_name']) && !empty($uData['email'])){
 							$mysql->sqlordie($insert_user_query);
 						}
