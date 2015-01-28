@@ -155,16 +155,15 @@
 				
 				if(!empty($uData['user_name']) && !empty($uData['email']) )
 				{	
-					$mysql->sqlordie($update_user_query);
+					$updated_result = $mysql->sqlordie($update_user_query);
 				}
 				
-				if ($mysql->error) {
-					writeLog($mysql, $update_user_query, $rootPath);
-				}else{
-					$strResult = explode("  ", $mysql->info);
+				if ($updated_result->num_rows == 0) {
+				
+					/*$strResult = explode("  ", $mysql->info);
 					$matched = explode(":", $strResult[0]);
-					$updatedRows = trim($matched[1]);
-					if($updatedRows == '0')
+					$updatedRows = trim($matched[1]);*/
+					if($updated_result->num_rows == 0)
 					{
 						$insert_user_query = "INSERT INTO `users` "
 							."(`bc_id`, `user_name`, `email`, `first_name`, `last_name`, `phone_office`, "
@@ -195,13 +194,13 @@
 							."', '" .$uData['im_service'] ."','".UNASSIGNED_PHASE."','".$avatar_img."','".$user_access_bits."')";
 						$uData['user_name'] = trim($uData['user_name']);
 						$uData['email'] = trim($uData['email']);
-						echo $insert_user_query;
+						//echo $insert_user_query;
 						if(!empty($uData['user_name']) && !empty($uData['email'])){
 							$mysql->sqlordie($insert_user_query);
 						}
-						if ($mysql->error) {
+						/*if ($mysql->error) {
 							writeLog($mysql, $insert_user_query, $rootPath);
-						}
+						}*/
 					}
 //					print("<br>\n Number of record :" . trim($matched[1]) . "\n");
 				}
@@ -213,5 +212,5 @@
 //$totaltime = ($endtime - $starttime);
 //echo "<br>\ntotaltime ::: $totaltime ";
 //print("<br>\nEnd of Users");
-$mysql->close();
+//$mysql->close();
 ?>
