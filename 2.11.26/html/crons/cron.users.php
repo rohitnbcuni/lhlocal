@@ -54,13 +54,13 @@
 	}
 
 	function writeLog($mysql, $sql='', $rootPath=''){
-		/*$a = fopen($rootPath . "/html/crons/cron_15.log", "a");
+		$a = fopen($rootPath . "/html/crons/cron_15.log", "a");
 		fwrite($a,  "\nError No: ". $mysql->errno . " - " . 
 					"\nCron: users " . 
 					"\nDate: " . date("Y-m-d : H:i:s") . 
 					"\nMySQL error: " . $mysql->error . 
 					"\nQuery: " . $sql . "\n");
-		fclose($a);*/
+		fclose($a);
 	}
 
 	function readXml($set_request_url){
@@ -98,8 +98,8 @@
 					$deleted = 1;
 				}
 				$uData['bc_id'] = $mysql->real_escape_string($user->id);
-				$uData['user_name'] = $mysql->real_escape_string(trim($user->{'user-name'}));
-				$uData['email'] = $mysql->real_escape_string(trim($user->{'email-address'}));
+				$uData['user_name'] = $mysql->real_escape_string($user->{'user-name'});
+				$uData['email'] = $mysql->real_escape_string($user->{'email-address'});
 				$uData['first_name'] = $mysql->real_escape_string($user->{'first-name'});
 				$uData['last_name'] = $mysql->real_escape_string($user->{'last-name'});
 				//$uData['address_1'] = $mysql->real_escape_string($user->);
@@ -155,15 +155,17 @@
 				
 				if(!empty($uData['user_name']) && !empty($uData['email']) )
 				{	
-					$updated_result = $mysql->sqlordie($update_user_query);
+					$mysql->sqlordie($update_user_query);
 				}
-				
-				if ($updated_result->num_rows == 0) {
-				
-					/*$strResult = explode("  ", $mysql->info);
+				print_r($mysql->info);
+				die;
+				if ($mysql->error) {
+					writeLog($mysql, $update_user_query, $rootPath);
+				}else{
+					$strResult = explode("  ", $mysql->info);
 					$matched = explode(":", $strResult[0]);
-					$updatedRows = trim($matched[1]);*/
-					if($updated_result->num_rows == 0)
+					$updatedRows = trim($matched[1]);
+					if($updatedRows == '0')
 					{
 						$insert_user_query = "INSERT INTO `users` "
 							."(`bc_id`, `user_name`, `email`, `first_name`, `last_name`, `phone_office`, "
@@ -192,16 +194,10 @@
 							}
 						$insert_user_query .= "'" .$uData['bc_uuid'] ."', '" .$uData['im_handle'] 
 							."', '" .$uData['im_service'] ."','".UNASSIGNED_PHASE."','".$avatar_img."','".$user_access_bits."')";
-						$uData['user_name'] = trim($uData['user_name']);
-						$uData['email'] = trim($uData['email']);
-						echo $insert_user_query;
-						if(!empty($uData['user_name']) && !empty($uData['email'])){
-						
-							$mysql->sqlordie($insert_user_query);
-						}
-						/*if ($mysql->error) {
+						$mysql->sqlordie($insert_user_query);
+						if ($mysql->error) {
 							writeLog($mysql, $insert_user_query, $rootPath);
-						}*/
+						}
 					}
 //					print("<br>\n Number of record :" . trim($matched[1]) . "\n");
 				}
@@ -213,5 +209,5 @@
 //$totaltime = ($endtime - $starttime);
 //echo "<br>\ntotaltime ::: $totaltime ";
 //print("<br>\nEnd of Users");
-//$mysql->close();
+$mysql->close();
 ?>
