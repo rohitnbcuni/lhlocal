@@ -92,7 +92,6 @@
 			$feed = simplexml_load_string("<?xml" .$xmlFix[1]);
 
 			foreach($feed->person as $user) {
-				$uData = array();
 				if($user->deleted == "false") {
 					$deleted = 0;
 				} else {
@@ -158,8 +157,7 @@
 				{	
 					$mysql->sqlordie($update_user_query);
 				}
-				print_r($mysql->info." ".$uData['user_name']."\n");
-				//die;
+				
 				if ($mysql->error) {
 					writeLog($mysql, $update_user_query, $rootPath);
 				}else{
@@ -195,10 +193,9 @@
 							}
 						$insert_user_query .= "'" .$uData['bc_uuid'] ."', '" .$uData['im_handle'] 
 							."', '" .$uData['im_service'] ."','".UNASSIGNED_PHASE."','".$avatar_img."','".$user_access_bits."')";
-						echo $insert_user_query;
 						$mysql->sqlordie($insert_user_query);
 						if ($mysql->error) {
-							//writeLog($mysql, $insert_user_query, $rootPath);
+							writeLog($mysql, $insert_user_query, $rootPath);
 						}
 					}
 //					print("<br>\n Number of record :" . trim($matched[1]) . "\n");
@@ -211,5 +208,5 @@
 //$totaltime = ($endtime - $starttime);
 //echo "<br>\ntotaltime ::: $totaltime ";
 //print("<br>\nEnd of Users");
-//$mysql->close();
+$mysql->close();
 ?>
