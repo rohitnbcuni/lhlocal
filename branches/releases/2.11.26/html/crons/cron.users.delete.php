@@ -85,6 +85,8 @@ function getTime(){
 		curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 //		curl_setopt($session, CURLOPT_POST, 1); 
 //		curl_setopt($session, CURLOPT_POSTFIELDS, $xml); 
+		$useragent = "Lighthouse Application (ots-tools-support@nbcuni.com)";
+		curl_setopt($session, CURLOPT_USERAGENT, $useragent);
 		curl_setopt($session, CURLOPT_HEADER, true);
 		curl_setopt($session, CURLOPT_HTTPHEADER, array('Accept: application/xml', 'Content-Type: application/xml'));
 		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
@@ -102,7 +104,7 @@ function getTime(){
 	
 	while($comp_row = $companies_res->fetch_assoc()) {
 		$baseCamp_user = array();
-		$xml = bcXML("/contacts/people/".$comp_row['bc_id'], "");
+		//$xml = bcXML("/contacts/people/".$comp_row['bc_id'], "");
 		//BASECAMP_HOST."/contacts/people/".$comp_row['bc_id'];
 		$xml = readXml(BASECAMP_HOST."/contacts/people/".$comp_row['bc_id']);
 		
@@ -153,6 +155,6 @@ function getCompanyUsers($cid){
 	return $user_array;
 }	
 	
-$mysql->close();
+//$mysql->close();
 
 ?>
