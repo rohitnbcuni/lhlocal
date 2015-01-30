@@ -17,7 +17,7 @@
 	define('AJAX_CALL', '0');
 	include($rootPath . '/html/_inc/config.inc');
 	include_once($rootPath."/application/library/BasecampAPI.class.php");
-	$bc = new BasecampAPI(BASECAMP_HOST,BASECAMP_USER,BASECAMP_PASS);
+	$bc = new BasecampAPI(BASECAMP_HOST,BASECAMP_USERNAME,BASECAMP_PASSWORD);
 	
 	global $mysql;
 	
