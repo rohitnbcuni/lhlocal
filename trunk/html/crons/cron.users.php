@@ -69,6 +69,8 @@
 		curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 //		curl_setopt($session, CURLOPT_POST, 1); 
 //		curl_setopt($session, CURLOPT_POSTFIELDS, $xml); 
+		$useragent = "Lighthouse Application (ots-tools-support@nbcuni.com)";
+		curl_setopt($session, CURLOPT_USERAGENT, $useragent);
 		curl_setopt($session, CURLOPT_HEADER, true);
 		curl_setopt($session, CURLOPT_HTTPHEADER, array('Accept: application/xml', 'Content-Type: application/xml'));
 		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
@@ -208,5 +210,5 @@
 //$totaltime = ($endtime - $starttime);
 //echo "<br>\ntotaltime ::: $totaltime ";
 //print("<br>\nEnd of Users");
-$mysql->close();
+//$mysql->close();
 ?>
