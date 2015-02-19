@@ -829,13 +829,29 @@ class Admin_IndexController extends LighthouseController {
                                 <td>
                                 &nbsp;
                                 </td>
-								
-								 
-								
+									
 								</tr>
+								<tr>
+                                    <td  colspan="4">
+                                   &nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td  colspan="1">
+                                    <p> Application Category:</p>			
+                                       
+                                    </td>
+									<td  colspan="3">';
+                                    			
+                                        echo '<select class="field_medium" name="admin_category_select" id="admin_category_select" multiple = "multiple" style="width:240px;">';
+                                     		echo AdminDisplay::getAllApplicationCategory();
+                                        echo '</select>
+                                    </td>
+                                </tr>
+								
                                 <tr>
                                     <td  colspan="4">
-                                    &nbsp;
+                                   &nbsp;
                                     </td>
                                 </tr>
 								<tr>
@@ -1368,7 +1384,109 @@ function deletebsmaprojectlistingAction(){
             $this->_helper->layout->disableLayout();
         
         }
+		function categorymappingAction(){
+			
+			$adminModel = new AdminDisplay();
+			$allItems = $adminModel->getSiteNames();
+			$this->view->assign("sitenames", $allItems);
+			$this->view->assign("categories", AdminDisplay::getApplicationCategory());
+        
+            //$this->_helper->layout->disableLayout();
+        
+        }
 		
+		function addapplicationcatAction(){
+			$app_cat_ids = array();
+			$cat_id = $this->_request->getParam('cat_id');
+			$app_cat_ids = $this->_request->getParam('app_cat_ids');
+			$adminModel = new AdminDisplay();
+			
+			if((count($app_cat_ids) > 0) AND (!empty($cat_id))){
+				
+				$adminModel->resetApplicationCatIds($cat_id,$app_cat_ids);
+				
+			
+			}
+			echo "Categories Item has been Updated";	
+			$this->_helper->layout->disableLayout();
+			$this->_helper->viewRenderer->setNoRender(TRUE);
+		
+		
+		
+		
+		}
+		
+		public function categorylistAction(){
+		
+			
+			$cat_id = $this->_request->getParam('cat_id');
+			$adminModel = new AdminDisplay();
+			$catItems = $adminModel->getApplicationSiteName($cat_id);
+			
+			
+			$this->view->assign("categories", $catItems);
+			$this->_helper->layout->disableLayout();
+			
+		
+		}
+		
+		public function getcategorydetailsAction(){
+			$cat_id = $this->_request->getParam('cat_id');
+			if(!empty($cat_id)){
+				$adminModel = new AdminDisplay();
+				$catItems = $adminModel->getcategoryDetails($cat_id);
+				echo json_encode($catItems);
+			}
+			
+			$this->_helper->layout->disableLayout();
+			$this->_helper->viewRenderer->setNoRender();
+		
+		
+		}
+		
+		public function addcategoryAction(){
+			$newCat = $this->_request->getParam('newCat');
+		
+			$adminModel = new AdminDisplay();
+			if($newCat != ''){
+				$checkNameCount = $adminModel->checkCategoryName($newCat);
+				if($checkNameCount == 0){
+					$dataArray = array("category_name" => $newCat, "active" => "1", "deleted" => "0");
+					$catItems = $adminModel->addCategory($dataArray);
+					echo trim(str_replace("\n",'',$catItems))."~##~".$newCat;
+					
+				}else{
+					echo "Exist";
+									
+				}
+			}
+			
+			$this->_helper->layout->disableLayout();
+			//$this->_helper->viewRenderer->setNoRender(TRUE);
+			
+			
+			
+		
+		
+		
+		}
+		
+		function updatecategoryAction(){
+		
+			$newCat = $this->_request->getParam('catId');
+			$deleted = $this->_request->getParam('deleted');
+			$adminModel = new AdminDisplay();
+			if($newCat != ''){
+					$dataArray = array( "deleted" => $deleted );
+					$catItems = $adminModel->updateCategory($dataArray,$newCat);
+					
+					
+			}
+			
+			$this->_helper->layout->disableLayout();
+			$this->_helper->viewRenderer->setNoRender(TRUE);
+		
+		}
 		
 	}
 	
