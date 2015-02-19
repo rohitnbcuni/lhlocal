@@ -258,7 +258,7 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						."\t<script src=\"/_js/ui/jquery.multiselect.filter.js\" type=\"text/javascript\"></script>\n";
 						echo "\t<script src=\"/_js/admin.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
 						echo "\t<script src=\"/_js/search_box.js?" . $randNum . "\" type=\"text/javascript\"></script>";
-						echo "\t<script src=\"/_js/fieldChooser.js?" . $randNum . "\" type=\"text/javascript\"></script>";
+						
 					
 						
 						
