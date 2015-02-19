@@ -245,7 +245,26 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 						
 						break;
 						
-					}				
+					}	
+				
+				case 'categorymapping': {
+						echo "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
+						echo "<script src=\"/_js/jquery-1.7.2.min.js\" type=\"text/javascript\"></script>\n";
+						echo "\t<script src=\"/_js/ui/jquery-ui-1.8.13.custom.min.js\" type=\"text/javascript\"></script>\n"
+						."\t<link href=\"/_css/jquery.multiselect.filter.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
+						."\t<link href=\"/_css/jquery.ui.multiselect.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>\n"
+						."\t<script src=\"/_js/ui/jquery.multiselect_new.js\" type=\"text/javascript\"></script>\n"
+						//."\t<script src=\"/_js/ui/jquery.multiselect.js\" type=\"text/javascript\"></script>\n"
+						."\t<script src=\"/_js/ui/jquery.multiselect.filter.js\" type=\"text/javascript\"></script>\n";
+						echo "\t<script src=\"/_js/admin.js?" . $randNum . "\" type=\"text/javascript\"></script>\n";
+						echo "\t<script src=\"/_js/search_box.js?" . $randNum . "\" type=\"text/javascript\"></script>";
+						echo "\t<script src=\"/_js/fieldChooser.js?" . $randNum . "\" type=\"text/javascript\"></script>";
+					
+						
+						
+						break;
+						
+					}	
 		
 				default: {
 					echo "<script src=\"/_js/ui/jquery.ui.all.js\" type=\"text/javascript\"></script>\n"
