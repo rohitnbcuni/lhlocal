@@ -46,6 +46,10 @@
 							<li class="alt" id="lhBasecamp" onClick="lhbasecamp();">
 								<img src="/_images/yellow_status.gif">LH Basecamp Mapping
 							</li>
+							<li class="alt" id="categoryMapping" onClick="categorymapping();">
+								<img src="/_images/yellow_status.gif">Category Mapping
+							</li>
+
 						</ul>
 					</div>
 			<? echo $this->layout()->content; ?>
