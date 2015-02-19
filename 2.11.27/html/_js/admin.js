@@ -82,6 +82,11 @@ $(document).ready(function(){
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #lhBasecamp').addClass('active');
 	}
+	else if(adminTitlemsg == 'Application Category Mapping')
+	{
+		$('#create_sections li').removeClass('active');
+		$('#create_sections #categoryMapping').addClass('active');
+	}
 	$('.title_lrg h4').html(adminTitlemsg);
 	
 	
@@ -104,7 +109,10 @@ $(document).ready(function(){
 		$("#admin_requested_type").multiselect({selectedText:"# Selected Items"},{create: function(){ $(this).next().width(200); }}).multiselectfilter();
 	
 	}
+	if($("#admin_category_select")){
+		$("#admin_category_select").multiselect({selectedText:"# Selected Items"},{create: function(){ $(this).next().width(200); }}).multiselectfilter();
 	
+	}
 		
 	});
 
@@ -632,6 +640,7 @@ function generateReport(type){
 	var admin_assign_select = $('#admin_assign_select').val();
 	var admin_requested_select = $('#admin_requested_select').val();
 	var admin_requested_type = $('#admin_requested_type').val();
+	var admin_category_select = $('#admin_category_select').val();
 	
 	var from_date = new Date(admin_year_select,admin_user_select);
 	var to_date = new Date(admin_to_year_select,admin_to_select);
@@ -651,9 +660,9 @@ function generateReport(type){
 		{
 			alert('Difference-in-Months exceeded the Max Limit of 12'); return false;
 		}
-		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select+'&report='+type+'&admin_requested_type='+admin_requested_type;
+		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select+'&report='+type+'&admin_requested_type='+admin_requested_type+'&admin_category_select='+admin_category_select;
 	}else{
-		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select+'&report='+type+'&admin_requested_type='+admin_requested_type;
+		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select+'&report='+type+'&admin_requested_type='+admin_requested_type+'&admin_category_select='+admin_category_select;
 			//window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select);
 	}
 	
@@ -949,6 +958,23 @@ function lhbasecamp(field_id)
 	document.body.appendChild(form);   
 	form.submit();
 }
+
+function categorymapping(field_id){
+	var form = document.createElement("form");
+	form.setAttribute("method", 'post');
+	form.setAttribute("action", '/admin/index/categorymapping/');	
+	var hiddenField1 = document.createElement("input");
+	hiddenField1.setAttribute("type", "hidden");
+	hiddenField1.setAttribute("name", 'test_value');
+	hiddenField1.setAttribute("value",'test_value');
+	 form.appendChild(hiddenField1);
+	document.body.appendChild(form);   
+	form.submit();
+
+
+
+
+}
 function solrSearchLog(field_id)
 {
 
@@ -1110,3 +1136,5 @@ function basecampUserMapping(){
 	
 	
 }
+
+
