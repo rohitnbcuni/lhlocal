@@ -3,6 +3,8 @@ $().ready(function() {
 	$('#category_select').change(function(){
 		if($('#category_select').val() != ''){
 			$('#save_cat').css("display","block");
+			$('#sitename_tbl').slideDown("slow");
+			
 			$('#addnew_btn').css("display","none");
 			$('#update_category').slideDown('slow');
 			categoryDetails();
@@ -19,6 +21,7 @@ $().ready(function() {
 			$('#addnew_btn').css("display","block");
 			$('#update_category').slideUp('slow');
 			$('#save_cat').css("display","none");
+			$('#sitename_tbl').slideUp("slow");
 		
 		}
 		$('#add_new').css("display","none");
@@ -246,7 +249,7 @@ table {
 	<hr >
 	</div>
 	
-	<table width="100%" style="padding:20px;" >
+	<table width="100%" style="padding:20px;display:none;"  id="sitename_tbl">
 	<tr> 
 		<th ><div style="float:left;">Site Names</div></th>
 		<th  ><div style="float:left;">Category Site Names</div></th>
