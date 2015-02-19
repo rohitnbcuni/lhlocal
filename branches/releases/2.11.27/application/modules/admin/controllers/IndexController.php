@@ -1407,7 +1407,7 @@ function deletebsmaprojectlistingAction(){
 				
 			
 			}
-			echo "Categories Item has been Updated";	
+			echo "Category Items has been Updated";	
 			$this->_helper->layout->disableLayout();
 			$this->_helper->viewRenderer->setNoRender(TRUE);
 		
