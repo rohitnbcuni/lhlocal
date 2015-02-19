@@ -12,6 +12,19 @@ $to_assign = $mysql->real_escape_string($_POST['assign_to']);
 $report_type = $mysql->real_escape_string($_POST['report']);
 $admin_requested_select = $mysql->real_escape_string($_POST['admin_requested_select']);
 $admin_requested_type =  $mysql->real_escape_string($_POST['admin_requested_type']);
+$admin_category_select = $mysql->real_escape_string(trim($_POST['admin_category_select']));
+if(!empty($admin_category_select)){
+	$cat_wo_ids = array();
+	$cat_wo_ids = getSiteWoId($admin_category_select,$mysql);
+	
+
+	$admin_category_select_sql = '';
+	/*if(count($cat_wo_ids) > 0){
+		$cat_wo_ids_str = implode(" , " ,$cat_wo_ids);
+		$admin_category_select_sql = " AND w.id IN ($cat_wo_ids_str) ";	
+	
+	}*/
+}
 
 $wo_user_list = array();
 $wo_status_array = array();
@@ -49,9 +62,6 @@ if($to_month==12)
 	$admin_requested_select_sql = '';
 	if((!empty($admin_requested_select))&&($admin_requested_select != 'null')){
 		$admin_requested_select_sql = " AND w.requested_by IN (".$admin_requested_select.")";
-	
-	
-	
 	}
 
 	if($to_month =='' &&  $to_year==''  && $to_assign =='' && $month!=''  && $year!=''){
@@ -70,7 +80,7 @@ if($to_month==12)
 
 	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$to_endDate."'  and  assigned_to='".$to_assign."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' and assigned_to='".$to_assign."' END AND p.id=w.project_id ".$admin_requested_select_sql;
 	}
-	//echo $qry_sla_report_per_month;
+	
 	$sla_report_result = $mysql->sqlordie($qry_sla_report_per_month);
     if($report_type == 'xls'){
         if($sla_report_result->num_rows > 0) {
@@ -115,8 +125,17 @@ if($to_month==12)
                     </tr>";
 
            while($workorder = $sla_report_result->fetch_assoc()) {
+		   
+		  
                 $workorder_id = $workorder['id'];
                 $req_type = getCustomTypeName($workorder_id,'REQ_TYPE',$mysql);
+				$site_name_id = getCustomTypeID($workorder_id,'SITE_NAME',$mysql);
+				//print_r($cat_wo_id);
+				if(count($cat_wo_ids) > 0){
+					if(in_array($site_name_id,$cat_wo_ids) == false){
+						continue;
+					}
+				}
                 if($req_type == 'Report a Problem'){
                     $req_type_id = getCustomTypeID($workorder_id,'SEVERITY',$mysql);
                 }else{
@@ -210,11 +229,19 @@ if($to_month==12)
                // if(in_array($workorder['id'], array(1,3))){
                     $workorder_id = $workorder['id'];
                     $req_type = getCustomTypeName($workorder_id,'REQ_TYPE',$mysql);
+					$site_name_id = getCustomTypeID($workorder_id,'SITE_NAME',$mysql);
                     if($req_type == 'Report a Problem'){
                         $req_type_id = getCustomTypeID($workorder_id,'SEVERITY',$mysql);
                     }else{
                         $req_type_id = getCustomTypeID($workorder_id,'REQ_TYPE',$mysql);
                     }
+					$site_name_id = getCustomTypeID($workorder_id,'SITE_NAME',$mysql);
+					//print_r($cat_wo_id);
+					if(count($cat_wo_ids) > 0){
+						if(in_array($site_name_id,$cat_wo_ids) == false){
+							continue;
+						}
+				}
                     
                    if($admin_requested_type != 'null'){
                        
@@ -337,6 +364,19 @@ function getCompanyName($company_id,$companyListArr,$mysql)
 	  }
 	return $companyListArr[$company_id];
  }
+ 
+ function getSiteWoId($cateGoryStr,$mysql)
+ {
+	$field_id = array();
+	//echo "SELECT wcf.workorder_id FROM `site_categories_mapping`  scm INNER JOIN workorder_custom_fields wcf ON (scm.field_id = wcf.field_id) WHERE scm.category_id IN ($cateGoryStr) AND wcf.field_key = 'SITE_NAME'";
+	$wo_custom_data = $mysql->sqlordie("SELECT scm.field_id FROM `site_categories_mapping`  scm  WHERE scm.category_id IN ($cateGoryStr) ");
+	while($row = $wo_custom_data->fetch_assoc()){
+		$field_id[] = $row['field_id'];
+	}
+	return $field_id;
+
+ }
+
 
 function getCustomTypeName($workorder_id,$custom_type,$mysql)
 {
