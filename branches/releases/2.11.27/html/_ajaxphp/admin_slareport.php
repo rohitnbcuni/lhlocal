@@ -13,7 +13,7 @@ $report_type = $mysql->real_escape_string($_POST['report']);
 $admin_requested_select = $mysql->real_escape_string($_POST['admin_requested_select']);
 $admin_requested_type =  $mysql->real_escape_string($_POST['admin_requested_type']);
 $admin_category_select = $mysql->real_escape_string(trim($_POST['admin_category_select']));
-if(!empty($admin_category_select)){
+if(!empty($admin_category_select) AND $admin_category_select != 'null'){
 	$cat_wo_ids = array();
 	$cat_wo_ids = getSiteWoId($admin_category_select,$mysql);
 	
@@ -110,12 +110,15 @@ if($to_month==12)
                         <td width=100px><b>Assigned TO</b></td>
                         <td width=100px><b>Request Completed By</b></td>
                         <td width=100px><b>User Category</b></td>
-                        <td width=100px><b>REQUEST TYPE</b></td>
+                        <td width=100px><b>Request Type</b></td>
                         <td width=100px><b>Status</b></td>					
-                        <td width=100px><b>SITE NAME</b></td>
-                        <td width=100px><b>INFRASTRUCTURE TYPE</b></td>
-                        <td width=100px><b>SEVERITY</b></td>
-                        <td width=100px><b>CRITICAL</b></td>					
+                        <td width=100px><b>Site Name</b></td>";
+						//if(!empty($admin_category_select) AND $admin_category_select != 'null'){
+						echo "<td width=100px><b>Site Category</b></td>";	
+						//	}
+					echo "<td width=100px><b>Infrastructure Type</b></td>
+                        <td width=100px><b>Severity</b></td>
+                        <td width=100px><b>Critical</b></td>					
                         <td width=100px><b>Opened</b></td>
                         <td width=100px><b>Estimated Completion Date</b></td>					
                         <td width=100px><b>Acknowledgement Time</b></td>
@@ -171,8 +174,11 @@ if($to_month==12)
                     
                     <td>".$request_type_arr[$req_type]."</td>
                     <td>".$wo_status_array[$workorder['status']]."</td>
-                    <td>".getCustomTypeName($workorder_id,'SITE_NAME',$mysql)."</td>
-                    <td>".getCustomTypeName($workorder_id,'INFRA_TYPE',$mysql)."</td>
+                    <td>".getCustomTypeName($workorder_id,'SITE_NAME',$mysql)."</td>";
+					//if(!empty($admin_category_select) AND $admin_category_select != 'null'){
+						echo "<td>".getCatogeryName($site_name_id,$mysql)."</td>";	
+					//}
+              echo "<td>".getCustomTypeName($workorder_id,'INFRA_TYPE',$mysql)."</td>
                     <td>".$severity."</td>
                     <td>".getCustomTypeName($workorder_id,'CRITICAL',$mysql)."</td>
                     <td>".format_date($workorder['creation_date'])."</td>
@@ -376,7 +382,19 @@ function getCompanyName($company_id,$companyListArr,$mysql)
 	return $field_id;
 
  }
+function getCatogeryName($site_id,$mysql)
+ {
+	$category_name = "N/A";
+	//echo "SELECT s.category_name  FROM `site_categories` INNER JOIN  site_categories_mapping scm ON (s.id = scm.category_id) WHERE scm.field_id =  $site_id";
+	$wo_custom_data = $mysql->sqlprepare("SELECT s.category_name  FROM `site_categories` s INNER JOIN  site_categories_mapping scm ON (s.id = scm.category_id) WHERE scm.field_id =  ?",array($site_id));
+	if($wo_custom_data->num_rows > 0){
+		$row = $wo_custom_data->fetch_assoc();
+		$category_name = $row['category_name'];
+	}
+	
+	return $category_name;
 
+ }
 
 function getCustomTypeName($workorder_id,$custom_type,$mysql)
 {
