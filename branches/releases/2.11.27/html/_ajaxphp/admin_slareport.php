@@ -97,7 +97,7 @@ if($to_month==12)
           header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
           header("Cache-Control: private",false);
           header("Content-Type: application/octet-stream");
-          header("Content-Disposition: attachment;filename=SLA_Report.xls"); 
+          header("Content-Disposition: attachment;filename=SLA_Report".date("ymd").".xls"); 
           header("Content-Transfer-Encoding: binary");
 
            echo "<table border=1>
