@@ -837,17 +837,14 @@ class Admin_IndexController extends LighthouseController {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td  colspan="1">
+                                    <td  colspan="4">
                                     <p> Application Category:</p>';	
-										echo '<select class="field_medium" name="admin_category_select" id="admin_category_select" multiple = "multiple" style="width:240px;">';
+										echo '<select class="field_medium" name="admin_category_select" id="admin_category_select" multiple = "multiple" style="width:200px;">';
                                      		echo AdminDisplay::getAllApplicationCategory();
                                         echo '</select>
                                        
                                     </td>
-									<td  colspan="3">
-                                    	&nbsp;		
-                                        
-                                    </td>
+									
                                 </tr>
 								
                                 <tr>
@@ -857,7 +854,7 @@ class Admin_IndexController extends LighthouseController {
                                 </tr>
 								<tr>
                                 <td colspan="4">
-									 <div  style="float:left;width:30%">
+									 <div  style="float:right;width:30%">
 
 									<button id="adminReportbtn" onclick="generateReport(\'xls\');"><span>Generate Report</span></button>
 									</div>
