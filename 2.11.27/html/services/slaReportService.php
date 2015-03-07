@@ -40,7 +40,7 @@ class slaReportServices {
 		ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."'  END AND  cf.`field_id` IN ( 1, 5,6,7 ) ";
 	 	$qryResult = $mysql->query($qrySLA);
 		
-		
+		$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
 		$final_row = array();
 	 	while($workorder = $qryResult->fetch_assoc()){
 				$output = array();
