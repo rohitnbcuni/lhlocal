@@ -31,46 +31,80 @@ class slaReportServices {
 		
 		
 		$mysql = self::singleton();
+		
+		$wo_user_list = array();
+		$wo_status_array = array();
+		$companyListArr = array();
 		$startDate = $mysql->real_escape_string($d->startdate);
 		$endDate = $mysql->real_escape_string($d->enddate);
 		$format = $mysql->real_escape_string($d->format);
-		$qrySLA = "SELECT w.*,cf.field_key, cf.field_id, p.project_name,p.project_code,p.company FROM `workorders` w INNER JOIN
-		projects p ON (w.project_id = p.id) INNER JOIN workorder_custom_fields cf ON (w.id = cf.workorder_id) 
-		WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."'  
-		ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."'  END AND  cf.`field_id` IN ( 1, 5,6,7 ) ";
+		 $qrySLA = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN
+		`creation_date` >='".$startDate." 00:00:00' AND `creation_date` <= '".$endDate." 59:59:59'   ELSE `draft_date` >='".$startDate." 00:00:00' AND `draft_date` <= '".$endDate." 59:59:59'  END AND p.id=w.project_id ";
 	 	$qryResult = $mysql->query($qrySLA);
 		
+		
 		$request_type_arr = array("Submit a Request" => "Request", "Report a Problem" => "Problem","Report an Outage" => "Outage");
+		$archived_type_arr = array("0" => "FALSE", "1" => "TRUE");
+
 		$final_row = array();
+		
+		//Get Collect ALL Status type
+		$select_wo_status = "SELECT `id`, `name` FROM `lnk_workorder_status_types`";
+		$status_result = $mysql->query($select_wo_status);
+		if($status_result->num_rows > 0){
+			while($status_row = $status_result->fetch_assoc()){
+				$wo_status_array[$status_row['id']] = $status_row['name'];
+			}
+		}
 	 	while($workorder = $qryResult->fetch_assoc()){
-				$output = array();
-				$wo_user_list = array();
-				$wo_status_array = array();
-				$companyListArr = array();
-				$output[] = $workorder['creation_date'];
-				$output[] = $workorder['id'];
-                $output[] = $workorder['title'];
-                $output[] = $this->getCompanyName($workorder['company']);
-                $output[] = $workorder['project_code']." - ".$workorder['project_name'];
-				$output[] = $this->getUserName($workorder['requested_by'],$wo_user_list);
-				$output[] = $this->getUserName($workorder['assigned_to'],$wo_user_list);
-				$output[] = $this->getUserName($workorder['completed_by'],$wo_user_list);
-				$output[] = $this->getUserTitle($workorder['assigned_to']);
-				
-				$output[] = $request_type_arr[$req_type];
-				$output[] = $wo_status_array[$workorder['status']];
-				$output[] = $this->getCustomTypeName($workorder_id,'SITE_NAME');
-				
-				$output[] = $this->getCustomTypeName($workorder_id,'INFRA_TYPE');
-				$output[] = $severity;
-				$output[] = $this->getCustomTypeName($workorder_id,'CRITICAL');
-				$output[] = $this->format_date($workorder['creation_date']);
-				$output[] = $this->format_date($workorder['launch_date']);
-				$output[] = $this->getAckTimefromAudit($workorder_id);
-				$output[] = $this->getFixedDatefromAudit($workorder_id);
-				$output[] = $this->format_date($workorder['closed_date']);
-				$output[] = $archived_type_arr[$workorder['archived']]; 
-				$final_row[] = $output;
+			$output = array();
+		$workorder_id = $workorder['id'];
+		$req_type = $this->getCustomTypeName($workorder_id,'REQ_TYPE');
+		$site_name_id = $this->getCustomTypeID($workorder_id,'SITE_NAME');
+		if($req_type ==  'Submit a Request'){
+			continue;
+		}
+		//print_r($cat_wo_id);
+		/*if(count($cat_wo_ids) > 0){
+			if(in_array($site_name_id,$cat_wo_ids) == false){
+				continue;
+			}
+		}*/
+		if($req_type == 'Report a Problem'){
+		    $req_type_id = $this->getCustomTypeID($workorder_id,'SEVERITY');
+		}else{
+		    $req_type_id = $this->getCustomTypeID($workorder_id,'REQ_TYPE');
+		}
+		if($req_type == 'Report a Problem'){
+		    $severity = $this->getCustomTypeName($workorder_id,'SEVERITY');
+		} else {
+		    $severity = 'N/A';
+		}
+		
+		$output[] = $workorder['creation_date'];
+		$output[] = $workorder['id'];
+		$output[] = $workorder['title'];
+		$output[] = $this->getCompanyName($workorder['company']);
+		$output[] = $workorder['project_code']." - ".$workorder['project_name'];
+		$output[] = $this->getUserName($workorder['requested_by'],$wo_user_list);
+		$output[] = $this->getUserName($workorder['assigned_to'],$wo_user_list);
+		$output[] = $this->getUserName($workorder['completed_by'],$wo_user_list);
+		$output[] = $this->getUserTitle($workorder['assigned_to']);
+		
+		$output[] = $request_type_arr[$req_type];
+		$output[] = $wo_status_array[$workorder['status']];
+		$output[] = $this->getCustomTypeName($workorder_id,'SITE_NAME');
+		
+		$output[] = $this->getCustomTypeName($workorder_id,'INFRA_TYPE');
+		$output[] = $severity;
+		$output[] = $this->getCustomTypeName($workorder_id,'CRITICAL');
+		//$output[] = $this->format_date($workorder['creation_date']);
+		$output[] = $this->format_date($workorder['launch_date']);
+		$output[] = $this->getAckTimefromAudit($workorder_id);
+		$output[] = $this->getFixedDatefromAudit($workorder_id);
+		$output[] = $this->format_date($workorder['closed_date']);
+		$output[] = $archived_type_arr[$workorder['archived']]; 
+		$final_row[] = $output;
 		
 		
 		
