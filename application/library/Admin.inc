@@ -874,6 +874,127 @@
 			return $userSql;
 		}
 		
+	public static function getAllApplicationCategory(){
+		$db = Zend_Registry::get('db');
+		$userSql = $db->fetchAll("SELECT * FROM `site_categories` WHERE active='1' AND deleted='0'");
+		
+		foreach($userSql as $key => $value){
+			
+			$html.= '<option value="'.$value['id'].'">'.$value['category_name'].'</option>';
+				
+		
+		}
+		return $html;
+	
+	
+	}
+	
+	public static function getApplicationCategory(){
+		$db = Zend_Registry::get('db');
+		$userSql = $db->fetchAll("SELECT * FROM `site_categories`");
+		
+		foreach($userSql as $key => $value){
+			
+			$html.= '<option value="'.$value['id'].'">'.$value['category_name'].'</option>';
+				
+		
+		}
+		return $html;
+	
+	
+	}
+
+	
+	public function getApplicationSiteName($cat_id){
+		$db = Zend_Registry::get('db');
+		$userSql = $db->fetchAll("SELECT f.`field_name` , f.`field_id` FROM `lnk_custom_fields_value` f
+						INNER JOIN `site_categories_mapping` c ON ( c.`field_id` = f.`field_id` )
+						WHERE c.category_id =?
+						AND f.`field_key` = 'SITE_NAME' ORDER BY f.`field_name`",$cat_id );
+		return $userSql;
+	
+	
+	
+	}
+	
+	public function getSiteNames(){
+		$db = Zend_Registry::get('db');
+		$userSql = $db->fetchAll("SELECT f.`field_name` , f.`field_id` FROM `lnk_custom_fields_value` f	WHERE  f.`field_key` = 'SITE_NAME' AND f.`field_id`
+		NOT IN (SELECT field_id FROM site_categories_mapping ) ORDER BY f.`field_name`");
+		return $userSql;
+	
+	
+	}
+	
+	public function resetApplicationCatIds($cat_id , $application_arr = array()){
+		$db = Zend_Registry::get('db');
+		
+		if($cat_id != ''){
+			$result = $db->query("DELETE FROM `site_categories_mapping` WHERE `category_id` = ? ", array($cat_id));
+			//print_r($application_arr);
+			if((ISSET($application_arr)) && ($application_arr != 'null')){
+				foreach( $application_arr as $application_key =>  $application_val){
+					if($application_val != ''){
+						$db->query("INSERT INTO `site_categories_mapping` SET `category_id` = ? , field_id = ?", array($cat_id,$application_val));
+					}
+				
+				
+				}
+			}
+		
+		
+		}
+		
+	
+	
+	}
+	
+	
+	public function addCategory($dataArray){
+		$db = Zend_Registry::get('db');
+		
+		
+		$db->insert("site_categories", $dataArray);
+		return $db->lastInsertId();
+		
 		
 	}
+	
+	public function updateCategory($dataArray,$id){
+		$db = Zend_Registry::get('db');
+		
+		$where[] = 'id =  '.$id;
+		
+		$db->update("site_categories", $dataArray, $where);
+		//return $db->lastInsertId();
+		
+		
+	}
+	
+	public function checkCategoryName($catName){
+		$db = Zend_Registry::get('db');
+		$catName = trim($catName);
+		if($catName != ''){
+			$userSql = $db->query("SELECT category_name FROM `site_categories` WHERE category_name = ?  ",array($catName));
+			return $userSql->rowCount();
+		}
+		
+		
+		
+	}
+	public function getcategoryDetails($catID){
+		$db = Zend_Registry::get('db');
+		$catID = trim($catID);
+		if($catID != ''){
+			
+			$userSql = $db->fetchRow("SELECT * FROM `site_categories` WHERE id = ?  ",array($catID));
+			return $userSql;
+			
+		}
+		
+		
+		
+	}	
+		
+}
 ?>

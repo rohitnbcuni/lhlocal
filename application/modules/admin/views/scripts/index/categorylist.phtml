@@ -1,0 +1,8 @@
+<?php
+
+if(count($this->categories) > 0){
+	foreach($this->categories as $k => $v){ ?>
+		 <option value="<?php echo $v['field_id'] ?>"><?php echo $v['field_name'] ?></option>
+	<?php }
+	}
+?>	
