@@ -61,9 +61,9 @@ class slaReportServices {
 		$workorder_id = $workorder['id'];
 		$req_type = $this->getCustomTypeName($workorder_id,'REQ_TYPE');
 		$site_name_id = $this->getCustomTypeID($workorder_id,'SITE_NAME');
-		if($req_type ==  'Submit a Request'){
+		/*if($req_type ==  'Submit a Request'){
 			continue;
-		}
+		}*/
 		//print_r($cat_wo_id);
 		/*if(count($cat_wo_ids) > 0){
 			if(in_array($site_name_id,$cat_wo_ids) == false){
