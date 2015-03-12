@@ -222,7 +222,7 @@ class slaReportServices {
 		if(!empty($date) and $date!='N/A')
 		{
 			$str_date = strtotime($date);
-			return Date('Y-m-d H:i A', $str_date);
+			return Date('Y-m-d H:i:s', $str_date);
 		}
 		return 'N/A';
 	}
