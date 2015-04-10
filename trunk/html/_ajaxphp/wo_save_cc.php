@@ -301,6 +301,8 @@
 	function sendEmail($to, $subject, $msg, $headers){
 				$msg = nl2br($msg);
 				$subject='=?UTF-8?B?'.base64_encode($subject).'?=';
+				$headers .= "\r\n" .
+    					"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";
 				mail($to, $subject, $msg, $headers);
 	}
 ?>

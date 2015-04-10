@@ -12,6 +12,19 @@ $to_assign = $mysql->real_escape_string($_POST['assign_to']);
 $report_type = $mysql->real_escape_string($_POST['report']);
 $admin_requested_select = $mysql->real_escape_string($_POST['admin_requested_select']);
 $admin_requested_type =  $mysql->real_escape_string($_POST['admin_requested_type']);
+$admin_category_select = $mysql->real_escape_string(trim($_POST['admin_category_select']));
+if(!empty($admin_category_select) AND $admin_category_select != 'null'){
+	$cat_wo_ids = array();
+	$cat_wo_ids = getSiteWoId($admin_category_select,$mysql);
+	
+
+	$admin_category_select_sql = '';
+	/*if(count($cat_wo_ids) > 0){
+		$cat_wo_ids_str = implode(" , " ,$cat_wo_ids);
+		$admin_category_select_sql = " AND w.id IN ($cat_wo_ids_str) ";	
+	
+	}*/
+}
 
 $wo_user_list = array();
 $wo_status_array = array();
@@ -49,9 +62,6 @@ if($to_month==12)
 	$admin_requested_select_sql = '';
 	if((!empty($admin_requested_select))&&($admin_requested_select != 'null')){
 		$admin_requested_select_sql = " AND w.requested_by IN (".$admin_requested_select.")";
-	
-	
-	
 	}
 
 	if($to_month =='' &&  $to_year==''  && $to_assign =='' && $month!=''  && $year!=''){
@@ -70,7 +80,7 @@ if($to_month==12)
 
 	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$to_endDate."'  and  assigned_to='".$to_assign."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' and assigned_to='".$to_assign."' END AND p.id=w.project_id ".$admin_requested_select_sql;
 	}
-	//echo $qry_sla_report_per_month;
+	
 	$sla_report_result = $mysql->sqlordie($qry_sla_report_per_month);
     if($report_type == 'xls'){
         if($sla_report_result->num_rows > 0) {
@@ -87,7 +97,7 @@ if($to_month==12)
           header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
           header("Cache-Control: private",false);
           header("Content-Type: application/octet-stream");
-          header("Content-Disposition: attachment;filename=SLA_Report.xls"); 
+          header("Content-Disposition: attachment;filename=SLA_Report".date("ymd").".xls"); 
           header("Content-Transfer-Encoding: binary");
 
            echo "<table border=1>
@@ -100,12 +110,15 @@ if($to_month==12)
                         <td width=100px><b>Assigned TO</b></td>
                         <td width=100px><b>Request Completed By</b></td>
                         <td width=100px><b>User Category</b></td>
-                        <td width=100px><b>REQUEST TYPE</b></td>
+                        <td width=100px><b>Request Type</b></td>
                         <td width=100px><b>Status</b></td>					
-                        <td width=100px><b>SITE NAME</b></td>
-                        <td width=100px><b>INFRASTRUCTURE TYPE</b></td>
-                        <td width=100px><b>SEVERITY</b></td>
-                        <td width=100px><b>CRITICAL</b></td>					
+                        <td width=100px><b>Site Name</b></td>";
+						//if(!empty($admin_category_select) AND $admin_category_select != 'null'){
+						echo "<td width=100px><b>Site Category</b></td>";	
+						//	}
+					echo "<td width=100px><b>Infrastructure Type</b></td>
+                        <td width=100px><b>Severity</b></td>
+                        <td width=100px><b>Critical</b></td>					
                         <td width=100px><b>Opened</b></td>
                         <td width=100px><b>Estimated Completion Date</b></td>					
                         <td width=100px><b>Acknowledgement Time</b></td>
@@ -115,8 +128,17 @@ if($to_month==12)
                     </tr>";
 
            while($workorder = $sla_report_result->fetch_assoc()) {
+		   
+		  
                 $workorder_id = $workorder['id'];
                 $req_type = getCustomTypeName($workorder_id,'REQ_TYPE',$mysql);
+				$site_name_id = getCustomTypeID($workorder_id,'SITE_NAME',$mysql);
+				//print_r($cat_wo_id);
+				if(count($cat_wo_ids) > 0){
+					if(in_array($site_name_id,$cat_wo_ids) == false){
+						continue;
+					}
+				}
                 if($req_type == 'Report a Problem'){
                     $req_type_id = getCustomTypeID($workorder_id,'SEVERITY',$mysql);
                 }else{
@@ -152,8 +174,11 @@ if($to_month==12)
                     
                     <td>".$request_type_arr[$req_type]."</td>
                     <td>".$wo_status_array[$workorder['status']]."</td>
-                    <td>".getCustomTypeName($workorder_id,'SITE_NAME',$mysql)."</td>
-                    <td>".getCustomTypeName($workorder_id,'INFRA_TYPE',$mysql)."</td>
+                    <td>".getCustomTypeName($workorder_id,'SITE_NAME',$mysql)."</td>";
+					//if(!empty($admin_category_select) AND $admin_category_select != 'null'){
+						echo "<td>".getCatogeryName($site_name_id,$mysql)."</td>";	
+					//}
+              echo "<td>".getCustomTypeName($workorder_id,'INFRA_TYPE',$mysql)."</td>
                     <td>".$severity."</td>
                     <td>".getCustomTypeName($workorder_id,'CRITICAL',$mysql)."</td>
                     <td>".format_date($workorder['creation_date'])."</td>
@@ -210,11 +235,19 @@ if($to_month==12)
                // if(in_array($workorder['id'], array(1,3))){
                     $workorder_id = $workorder['id'];
                     $req_type = getCustomTypeName($workorder_id,'REQ_TYPE',$mysql);
+					$site_name_id = getCustomTypeID($workorder_id,'SITE_NAME',$mysql);
                     if($req_type == 'Report a Problem'){
                         $req_type_id = getCustomTypeID($workorder_id,'SEVERITY',$mysql);
                     }else{
                         $req_type_id = getCustomTypeID($workorder_id,'REQ_TYPE',$mysql);
                     }
+					$site_name_id = getCustomTypeID($workorder_id,'SITE_NAME',$mysql);
+					//print_r($cat_wo_id);
+					if(count($cat_wo_ids) > 0){
+						if(in_array($site_name_id,$cat_wo_ids) == false){
+							continue;
+						}
+				}
                     
                    if($admin_requested_type != 'null'){
                        
@@ -336,6 +369,31 @@ function getCompanyName($company_id,$companyListArr,$mysql)
 		  }
 	  }
 	return $companyListArr[$company_id];
+ }
+ 
+ function getSiteWoId($cateGoryStr,$mysql)
+ {
+	$field_id = array();
+	//echo "SELECT wcf.workorder_id FROM `site_categories_mapping`  scm INNER JOIN workorder_custom_fields wcf ON (scm.field_id = wcf.field_id) WHERE scm.category_id IN ($cateGoryStr) AND wcf.field_key = 'SITE_NAME'";
+	$wo_custom_data = $mysql->sqlordie("SELECT scm.field_id FROM `site_categories_mapping`  scm  WHERE scm.category_id IN ($cateGoryStr) ");
+	while($row = $wo_custom_data->fetch_assoc()){
+		$field_id[] = $row['field_id'];
+	}
+	return $field_id;
+
+ }
+function getCatogeryName($site_id,$mysql)
+ {
+	$category_name = "N/A";
+	//echo "SELECT s.category_name  FROM `site_categories` INNER JOIN  site_categories_mapping scm ON (s.id = scm.category_id) WHERE scm.field_id =  $site_id";
+	$wo_custom_data = $mysql->sqlprepare("SELECT s.category_name  FROM `site_categories` s INNER JOIN  site_categories_mapping scm ON (s.id = scm.category_id) WHERE scm.field_id =  ?",array($site_id));
+	if($wo_custom_data->num_rows > 0){
+		$row = $wo_custom_data->fetch_assoc();
+		$category_name = $row['category_name'];
+	}
+	
+	return $category_name;
+
  }
 
 function getCustomTypeName($workorder_id,$custom_type,$mysql)
