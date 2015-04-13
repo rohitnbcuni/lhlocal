@@ -42,13 +42,14 @@
 		$addNewDefaultCc = array("video","mpx","anvato","episode");
 		$ccCounter = 0;
 		foreach($addNewDefaultCc as $newCC){
-			if(strpos("the ".$woTitle." ".$woDesc, $newCC) === true){
+			if(strpos(strtolower("the ".$woTitle." ".$woDesc), $newCC) == true){
 			
 				$ccCounter++;
 			
 			}
 		
 		}
+		
         /**
 		 * Ticket #16857
 		 * change escapewordquotes func
