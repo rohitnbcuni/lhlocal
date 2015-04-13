@@ -42,7 +42,8 @@
 		$addNewDefaultCc = array("video","mpx","anvato","episode");
 		$ccCounter = 0;
 		foreach($addNewDefaultCc as $newCC){
-			if (preg_match("/\b$newCC\b/", $woTitle." ".$woDesc)) {
+			if(strpos("the ".$woTitle." ".$woDesc, $newCC) === true){
+			
 				$ccCounter++;
 			
 			}
