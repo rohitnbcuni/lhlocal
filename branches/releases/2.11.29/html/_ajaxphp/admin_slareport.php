@@ -123,8 +123,8 @@ if($to_month==12)
                         <td width=100px><b>Estimated Completion Date</b></td>					
                         <td width=100px><b>Acknowledgement Time</b></td>
                         <td width=100px><b>Fixed</b></td>
-						<td width=100px><b>Last Comment By</b></td>
-						<td width=100px><b>Last Commented Date</b></td>						
+						<td width=100px><b>Updated by</b></td>
+						<td width=100px><b>Last Updated Date</b></td>					
                         <td width=100px><b>Closed</b></td>
                         <td width=100px><b>Archived</b></td>
                     </tr>";
@@ -228,8 +228,8 @@ if($to_month==12)
                         <td width=100px><b>Estimated Completion Date</b></td>					
                         <td width=100px><b>Acknowledgement Time</b></td>
                         <td width=100px><b>Fixed</b></td>	
-						<td width=100px><b>Last Comment By</b></td>
-						<td width=100px><b>Last Commented Date</b></td>	
+						<td width=100px><b>Updated by</b></td>
+						<td width=100px><b>Last Updated Date</b></td>	
                         <td width=100px><b>Closed</b></td>
                         <td width=100px><b>Archived</b></td>
                     </tr>";
