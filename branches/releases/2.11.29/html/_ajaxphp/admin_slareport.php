@@ -122,7 +122,9 @@ if($to_month==12)
                         <td width=100px><b>Opened</b></td>
                         <td width=100px><b>Estimated Completion Date</b></td>					
                         <td width=100px><b>Acknowledgement Time</b></td>
-                        <td width=100px><b>Fixed</b></td>					
+                        <td width=100px><b>Fixed</b></td>
+						<td width=100px><b>Last Comment By</b></td>
+						<td width=100px><b>Last Commented Date</b></td>						
                         <td width=100px><b>Closed</b></td>
                         <td width=100px><b>Archived</b></td>
                     </tr>";
@@ -162,6 +164,10 @@ if($to_month==12)
                 } else {
                     $severity = 'N/A';
                 }
+				$lastComment = array();
+				$lastComment['full_name'] = 'N/A';
+				$lastComment['last_date'] = 'N/A';
+				$lastComment = getLastCommentInfo($workorder_id);
             echo "<tr>
                     <td>".$workorder['id']."</td>
                     <td>".$workorder['title']."</td>
@@ -185,6 +191,8 @@ if($to_month==12)
                     <td>".format_date($workorder['launch_date'])."</td>
                     <td>".getAckTimefromAudit($workorder_id,$mysql)."</td>
                     <td>".getFixedDatefromAudit($workorder_id,$mysql)."</td>
+					<td>".$lastComment['full_name']."</td>
+					<td>".$lastComment['last_date']."</td>
                     <td>".format_date($workorder['closed_date'])."</td>
                     <td>".$archived_type_arr[$workorder['archived']]."</td> 
                   </tr>"; 
@@ -219,7 +227,9 @@ if($to_month==12)
                         <td width=100px><b>Opened</b></td>
                         <td width=100px><b>Estimated Completion Date</b></td>					
                         <td width=100px><b>Acknowledgement Time</b></td>
-                        <td width=100px><b>Fixed</b></td>					
+                        <td width=100px><b>Fixed</b></td>	
+						<td width=100px><b>Last Comment By</b></td>
+						<td width=100px><b>Last Commented Date</b></td>	
                         <td width=100px><b>Closed</b></td>
                         <td width=100px><b>Archived</b></td>
                     </tr>";
@@ -449,6 +459,26 @@ function getFixedDatefromAudit($workorder_id,$mysql)
 	  $log_date =  $row['log_date'];
   }
    return format_date($log_date);
+
+}
+
+function getLastCommentInfo($workorder_id){
+
+	global $mysql;
+	$wo_comment_data = $mysql->sqlordie("SELECT CONCAT_WS(' ',first_name,last_name) as full_name ,c.user_id,c.date FROM `workorder_comments` c INNER JOIN users u ON (u.id=c.user_id) WHERE c.`workorder_id` ='$workorder_id' AND c.active ='1' AND c.deleted ='0' ORDER BY c.`date` DESC limit 1");
+	$comment_array = array();
+	if($wo_comment_data->num_rows > 0){
+		  $row = $wo_comment_data->fetch_assoc();
+		  $comment_array['full_name'] =  $row['full_name'];
+		  $comment_array['last_date'] =  format_date($row['date']);
+	}
+	
+	return  $comment_array;
+
+	
+
+
+
 
 }
 
