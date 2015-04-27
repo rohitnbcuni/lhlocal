@@ -34,8 +34,23 @@
 		$woExampleURL = $mysql->real_escape_string(Util::escapewordquotes(@$_POST['woExampleURL']));
 		$woDesc = $mysql->real_escape_string(Util::escapewordquotes(@$_POST['woDesc']));
 		$completed_by = $mysql->real_escape_string(@$_POST['completed_by']);
+		/**
+		*Ticket #60723
+		* Match the word from  addNewDefaultCc array
+		*
+		*/
+		$addNewDefaultCc = array("video","mpx","anvato","episode");
+		$ccCounter = 0;
+		foreach($addNewDefaultCc as $newCC){
+			if(strpos(strtolower("the ".$woTitle." ".$woDesc), $newCC) == true){
+			
+				$ccCounter++;
+			
+			}
 		
-               /**
+		}
+		
+        /**
 		 * Ticket #16857
 		 * change escapewordquotes func
 		 * with nonPritable func
@@ -186,6 +201,11 @@
 				{
 					$woCCList = $woCCList.$companyDefaultCC;
 				}
+			}
+			if($ccCounter > 0){
+				//Add digitaltransmission@nbcuni.com in CC
+				$woCCList = $woCCList.NEW_DEFAUTL_CC;
+			
 			}
 
 			$ccArray =  array();
