@@ -1,0 +1,302 @@
+<script type="text/javascript"><!--
+$().ready(function() { 
+	$('#category_select').change(function(){
+		if($('#category_select').val() != ''){
+			$('#save_cat').css("display","block");
+			$('#sitename_tbl').slideDown("slow");
+			
+			$('#addnew_btn').css("display","none");
+			$('#update_category').slideDown('slow');
+			categoryDetails();
+			
+			$.post("/admin/index/categorylist",{cat_id:$('#category_select').val()},
+				function(data){
+					$("#app_cat_ids option").remove();
+					$('#app_cat_ids').append(data);
+						
+				});
+		
+		}else{
+		
+			$('#addnew_btn').css("display","block");
+			$('#update_category').slideUp('slow');
+			$('#save_cat').css("display","none");
+			$('#sitename_tbl').slideUp("slow");
+		
+		}
+		$('#add_new').css("display","none");
+		
+	});
+	$('#add').click(function() {  
+		return !$('#allSites option:selected').remove().appendTo('#app_cat_ids');  
+	});  
+	$('#remove').click(function() {  
+		return !$('#app_cat_ids option:selected').remove().appendTo('#allSites');  
+	});  
+	
+	$('#addnew_btn').click(function(){
+		$('#add_new').toggle();
+		
+	});
+	
+	
+	
+	$('#save_addnew_btn').click(function(){
+		
+		var newCat = $.trim($('#add_category').val());
+		if( newCat != ''){
+		
+			$.post("/admin/index/addcategory",{newCat:newCat},
+				function(data){
+					data = $.trim(data);
+					if(data != 'Exist'){
+						var arr = data.split('~##~');
+						
+						$('#category_select').append("<option value="+ arr[0] +">" + arr[1] + "</option>");
+						$('#add_category').val('');
+						$('.message_required p').html(newCat+" is Added in Application Category");
+						$('.message_required').css({display:'block'});
+						return false;
+					
+					}else{
+					
+							$('.message_required p').html(newCat+" is already Exist");
+							$('.message_required').css({display:'block'});
+							return false;
+
+					
+					}
+					//$("#app_cat_ids option").remove();
+					//$('#app_cat_ids').append(data);
+						
+				});
+			
+		
+		}else{
+			$('.message_required p').html("Please enter Application name");
+			$('.message_required').css({display:'block'});
+			return false;
+		
+		}
+	
+	
+	});
+	
+	$('#update_addnew_btn').click(function(){
+		
+		var catId = $.trim($('#category_select').val());
+		var deleted = '';
+		if($("#app_deleted").is(":checked") ==  true){
+			deleted = '1'
+		
+		}else{
+			deleted = '0';
+		
+		
+		}
+		if( catId != ''){
+		
+			$.post("/admin/index/updatecategory",{catId:catId,deleted:deleted},
+				function(data){
+					data = $.trim(data);
+					
+						
+						/*$('#category_select').append("<option value="+ arr[0] +">" + arr[1] + "</option>");
+						$('#add_category').val('');*/
+						$('.message_required p').html("Category has been updated");
+						$('.message_required').css({display:'block'});
+						return false;
+					
+					
+					//$("#app_cat_ids option").remove();
+					//$('#app_cat_ids').append(data);
+						
+				});
+			
+		
+		}else{
+			$('.message_required p').html("Please enter Application name");
+			$('.message_required').css({display:'block'});
+			return false;
+		
+		}
+	
+	
+	});
+	
+	
+	
+	
+});
+
+
+function categoryDetails(){
+		$.post("/admin/index/getcategorydetails",{cat_id:$('#category_select').val()},
+			function(data){
+			if(data != ''){
+			var jsonData = $.parseJSON(data);
+			
+				$('#up_category').val(jsonData.category_name);
+				//alert("jsonData.deleted"+jsonData.deleted);
+				
+				if(jsonData.deleted == 1){
+					
+					$('#app_deleted').attr("checked","checked");
+				
+				}else{
+					$('#app_deleted').removeAttr("checked");
+				
+				}
+				//$("#app_cat_ids option").remove();
+				//$('#app_cat_ids').append(data);
+			}
+				
+			});
+		
+		//$('#update_category').toggle();
+		
+	}
+
+function categorySiteMapping(){
+	
+		var category_select = $('#category_select').val();
+		if(category_select != ''){
+			$('#app_cat_ids option').prop('selected', true);
+			//var allSites = $("#allSites").val();
+			var app_cat_ids = $('#app_cat_ids').val();
+			$.post("/admin/index/addapplicationcat",{cat_id:category_select,app_cat_ids:app_cat_ids},
+				function(data){
+					$('.message_required p').html(data);
+					$('.message_required').css({display:'block'});
+					return false;
+						
+				});
+			
+		
+		}
+		
+		
+	
+	
+	}
+	
+--></script>
+<style>
+table {
+ margin: 0px auto; 
+ }
+</style>
+
+<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Application Category Mapping">
+<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
+		
+		
+		
+		<div id='requestor_info'></div>
+		<table >
+		
+		<th>
+			<td>
+			
+				 Lighthouse Category:
+				 <select class="field_medium" name="category_select" id="category_select"  style="width:240px;">
+					<option value="">--Please Select -- </option>
+                   <?php echo $this->categories; ?>                  		
+                 </select>
+				
+			
+			</td>
+		</th>
+		<th>
+			<td>
+				<button  id="addnew_btn" ><span>Add New</span></button>
+				
+			</td>	
+		</th>
+		
+	</table>
+	<hr>
+	<div id="add_new" style="display:none;">
+	<table>
+		<tr>
+			<td> Add New Category Name:
+				<input type="text" name="add_category" id="add_category" maxlength="50">
+			
+			</td>
+			<td>
+				<button  id="save_addnew_btn"><span>Save</span></button>
+			</td>
+		</tr>
+	</table>
+	<hr >
+	</div>
+	<div id="update_category" style="display:none;">
+	<table>
+		<tr>
+			<td> Update Category:
+				<input type="text" name="up_category" id="up_category" maxlength="50" readonly="readonly">
+			
+			</td>
+			<td style="cursor: help;" title="The delete option doesn't remove the selected category from the Category Mapping">
+			Deleted
+			<input type="checkbox" name="app_deleted" id="app_deleted"  value="1" >
+			</td>
+			<td>
+				<button  id="update_addnew_btn"><span>Update</span></button>
+			</td>
+		</tr>
+	</table>
+	<hr >
+	</div>
+	
+	<table width="100%" style="padding:20px;display:none;"  id="sitename_tbl">
+	<tr> 
+		<th ><div style="float:left;">Site Names</div></th>
+		<th  ><div style="float:left;">Category Site Names</div></th>
+	</tr>
+	<tr>
+		<td width="50%">
+			<div style="width:250px;">
+				<select multiple id="allSites" name="allSites"  style="width:250px;height:300px;">  
+				<?php if(count($this->sitenames) > 0) : ?>
+					<?php foreach($this->sitenames as $s => $v) : ?>
+						<option value="<?php echo $v['field_id'] ?>"><?php echo $v['field_name'] ?></option>
+					<?php endforeach; ?>
+				<?php endif; ?>
+				  </select>  
+				
+			</div> 
+		</td>
+		<td>
+			<div id="cat_sitenames">  
+			  <select multiple="multiple" id="app_cat_ids" name="app_cat_ids" style="width:250px;height:300px;"></select>  
+			  
+			</div>  
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<button  id="add" ><span>Add &gt;&gt;</span></button>
+			
+		</td>
+		<td>
+			<button  id="remove" ><span>&lt;&lt; remove</span></button>
+			 
+		</td>
+	</tr>
+	</table>		
+	<div id="save_cat" style='margin-left:290px;display:none;'>
+		<button  id="save_cat_btn" onclick="return categorySiteMapping();"><span>Submit</span></button>
+	</div>
+
+	<div class="message_required">
+		<p></p>
+		<div style="clear: both;"></div>
+			<div class="duplicate_buttons">
+				<button onClick="$('.message_required').css({display:'none'}); return false;"><span>OK</span></button>
+				<div style="clear: both;"></div>
+			</div>					
+		<div style="clear: both;"></div>
+		
+	</div>
+</div>
