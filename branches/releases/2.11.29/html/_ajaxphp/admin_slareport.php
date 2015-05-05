@@ -9,8 +9,16 @@ $year = $mysql->real_escape_string($_POST['year']);
 $to_month = $mysql->real_escape_string($_POST['to_month']);
 $to_year = $mysql->real_escape_string($_POST['to_year']);
 $to_assign = $mysql->real_escape_string($_POST['assign_to']);
+if($to_assign == 'null'){
+	$to_assign = '';
+
+}
+
+
+
 $report_type = $mysql->real_escape_string($_POST['report']);
 $admin_requested_select = $mysql->real_escape_string($_POST['admin_requested_select']);
+$request_completed_by = $mysql->real_escape_string($_POST['request_completed_by']);
 $admin_requested_type =  $mysql->real_escape_string($_POST['admin_requested_type']);
 $admin_category_select = $mysql->real_escape_string(trim($_POST['admin_category_select']));
 if(!empty($admin_category_select) AND $admin_category_select != 'null'){
@@ -63,24 +71,28 @@ if($to_month==12)
 	if((!empty($admin_requested_select))&&($admin_requested_select != 'null')){
 		$admin_requested_select_sql = " AND w.requested_by IN (".$admin_requested_select.")";
 	}
-
+	
+	$admin_request_completed_by_sql = '';
+	if((!empty($request_completed_by))&&($request_completed_by != 'null')){
+		$admin_request_completed_by_sql = " AND w.completed_by IN (".$admin_requested_select.")";
+	}
 	if($to_month =='' &&  $to_year==''  && $to_assign =='' && $month!=''  && $year!=''){
 	//LH#27424
 	//$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' AND p.id=w.project_id";
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."' END AND p.id=w.project_id ".$admin_requested_select_sql;
+		$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."' END AND p.id=w.project_id ".$admin_requested_select_sql.$admin_request_completed_by_sql;
 
 	}
 	elseif($to_month =='' &&  $to_year==''  && $to_assign!='' && $month!=''  && $year!=''){
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' and  assigned_to='".$to_assign."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."'  and  assigned_to='".$to_assign."' END AND p.id=w.project_id ".$admin_requested_select_sql;
+		$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' and  assigned_to IN (".$to_assign.") ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."'  and  assigned_to IN (".$to_assign.") END AND p.id=w.project_id ".$admin_requested_select_sql.$admin_request_completed_by_sql;
 	}
 	elseif($to_month !='' &&  $to_year!=''  && $to_assign=='' && $month!=''  && $year!=''){
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' and `creation_date` < '".$to_endDate."'  ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' END AND p.id=w.project_id ".$admin_requested_select_sql;
+		$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' and `creation_date` < '".$to_endDate."'  ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' END AND p.id=w.project_id ".$admin_requested_select_sql.$admin_request_completed_by_sql;
 	}
 	else{
 
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$to_endDate."'  and  assigned_to='".$to_assign."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' and assigned_to='".$to_assign."' END AND p.id=w.project_id ".$admin_requested_select_sql;
+		$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$to_endDate."'  and  assigned_to IN (".$to_assign.") ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' and assigned_to IN (".$to_assign.") END AND p.id=w.project_id ".$admin_requested_select_sql.$admin_request_completed_by_sql;
 	}
-	
+	//echo $qry_sla_report_per_month; die;
 	$sla_report_result = $mysql->sqlordie($qry_sla_report_per_month);
     if($report_type == 'xls'){
         if($sla_report_result->num_rows > 0) {
