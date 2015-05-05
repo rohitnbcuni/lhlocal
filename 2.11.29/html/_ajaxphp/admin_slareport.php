@@ -74,7 +74,7 @@ if($to_month==12)
 	
 	$admin_request_completed_by_sql = '';
 	if((!empty($request_completed_by))&&($request_completed_by != 'null')){
-		$admin_request_completed_by_sql = " AND w.completed_by IN (".$admin_requested_select.")";
+		$admin_request_completed_by_sql = " AND w.completed_by IN (".$request_completed_by.")";
 	}
 	if($to_month =='' &&  $to_year==''  && $to_assign =='' && $month!=''  && $year!=''){
 	//LH#27424
@@ -92,7 +92,7 @@ if($to_month==12)
 
 		$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$to_endDate."'  and  assigned_to IN (".$to_assign.") ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' and assigned_to IN (".$to_assign.") END AND p.id=w.project_id ".$admin_requested_select_sql.$admin_request_completed_by_sql;
 	}
-	//echo $qry_sla_report_per_month; die;
+	
 	$sla_report_result = $mysql->sqlordie($qry_sla_report_per_month);
     if($report_type == 'xls'){
         if($sla_report_result->num_rows > 0) {
