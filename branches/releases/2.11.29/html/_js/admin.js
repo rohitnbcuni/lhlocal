@@ -113,7 +113,15 @@ $(document).ready(function(){
 		$("#admin_category_select").multiselect({selectedText:"# Selected Items"},{create: function(){ $(this).next().width(200); }}).multiselectfilter();
 	
 	}
-		
+	if($("#admin_assign_select")){
+		$("#admin_assign_select").multiselect({selectedText:"# Selected Items"},{create: function(){ $(this).next().width(200); }}).multiselectfilter();
+	
+	}
+	if($("#request_completed_by")){
+		$("#request_completed_by").multiselect({selectedText:"# Selected Items"},{create: function(){ $(this).next().width(200); }}).multiselectfilter();
+	
+	}
+	
 	});
 
 //http://filamentgroup.com/lab/jquery_plugin_for_requesting_ajax_like_file_downloads/
@@ -639,6 +647,8 @@ function generateReport(type){
     var admin_to_year_select = $('#admin_to_year_select').val();
 	var admin_assign_select = $('#admin_assign_select').val();
 	var admin_requested_select = $('#admin_requested_select').val();
+	var request_completed_by = $('#request_completed_by').val();
+	
 	var admin_requested_type = $('#admin_requested_type').val();
 	var admin_category_select = $('#admin_category_select').val();
 	
@@ -660,9 +670,9 @@ function generateReport(type){
 		{
 			alert('Difference-in-Months exceeded the Max Limit of 12'); return false;
 		}
-		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select+'&report='+type+'&admin_requested_type='+admin_requested_type+'&admin_category_select='+admin_category_select;
+		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select+'&report='+type+'&admin_requested_type='+admin_requested_type+'&admin_category_select='+admin_category_select+'&request_completed_by='+request_completed_by;
 	}else{
-		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select+'&report='+type+'&admin_requested_type='+admin_requested_type+'&admin_category_select='+admin_category_select;
+		var d = 'month='+admin_user_select+'&year='+admin_year_select+'&to_month='+admin_to_select+'&to_year='+admin_to_year_select+'&assign_to='+admin_assign_select+'&admin_requested_select='+admin_requested_select+'&report='+type+'&admin_requested_type='+admin_requested_type+'&admin_category_select='+admin_category_select+'&request_completed_by='+request_completed_by;
 			//window.open('/_ajaxphp/admin_slareport.php?month='+admin_user_select+'&year='+admin_year_select);
 	}
 	
