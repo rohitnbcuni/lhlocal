@@ -767,8 +767,8 @@ class Admin_IndexController extends LighthouseController {
                                     <tr>
                                     <td >
                                         <p> Assigned To:</p>';			
-                                        echo '<select class="field_medium" name="admin_assign_select" id="admin_assign_select"  >';
-                                        echo AdminDisplay::getUserOptionHTML();
+                                        echo '<select class="field_medium" name="admin_assign_select" id="admin_assign_select"  multiple = "multiple"  style="width:240px;">';
+                                        echo AdminDisplay::getAllUserOptionHTML();
                                         echo '</select>
                                     </td>
                                      <td>   
@@ -778,7 +778,7 @@ class Admin_IndexController extends LighthouseController {
                                         echo AdminDisplay::getAllUserOptionHTML();
                                         echo '</select>
                                     </td>
-                                    <td>
+                                    <td colspan="2">
                                         <p> Requested Type:</p>';			
                                         echo '<select class="field_medium" name="admin_requested_type" id="admin_requested_type" multiple = "multiple" style="width:240px;" >
                                         <option value="1">Report an Outage</option>
@@ -790,8 +790,7 @@ class Admin_IndexController extends LighthouseController {
                                         </optgroup>';
                                         echo '</select>
                                     </td>
-                                    <td>
-                                    </td>
+                                    
 								   </tr>
                                    <tr>
                                     <td  colspan="4">
@@ -837,14 +836,20 @@ class Admin_IndexController extends LighthouseController {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td  colspan="4">
+                                    <td  >
                                     <p> Application Category:</p>';	
 										echo '<select class="field_medium" name="admin_category_select" id="admin_category_select" multiple = "multiple" style="width:200px;">';
                                      		echo AdminDisplay::getAllApplicationCategory();
                                         echo '</select>
                                        
                                     </td>
-									
+									 <td  colspan="3">
+                                    <p> Request Completed By:</p>';	
+										echo '<select class="field_medium" name="request_completed_by" id="request_completed_by" multiple = "multiple" style="width:200px;">';
+                                     		echo AdminDisplay::getAllUserOptionHTML();
+                                        echo '</select>
+                                       
+                                    </td>
                                 </tr>
 								
                                 <tr>
