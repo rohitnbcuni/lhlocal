@@ -9,8 +9,16 @@ $year = $mysql->real_escape_string($_POST['year']);
 $to_month = $mysql->real_escape_string($_POST['to_month']);
 $to_year = $mysql->real_escape_string($_POST['to_year']);
 $to_assign = $mysql->real_escape_string($_POST['assign_to']);
+if($to_assign == 'null'){
+	$to_assign = '';
+
+}
+
+
+
 $report_type = $mysql->real_escape_string($_POST['report']);
 $admin_requested_select = $mysql->real_escape_string($_POST['admin_requested_select']);
+$request_completed_by = $mysql->real_escape_string($_POST['request_completed_by']);
 $admin_requested_type =  $mysql->real_escape_string($_POST['admin_requested_type']);
 $admin_category_select = $mysql->real_escape_string(trim($_POST['admin_category_select']));
 if(!empty($admin_category_select) AND $admin_category_select != 'null'){
@@ -63,22 +71,26 @@ if($to_month==12)
 	if((!empty($admin_requested_select))&&($admin_requested_select != 'null')){
 		$admin_requested_select_sql = " AND w.requested_by IN (".$admin_requested_select.")";
 	}
-
+	
+	$admin_request_completed_by_sql = '';
+	if((!empty($request_completed_by))&&($request_completed_by != 'null')){
+		$admin_request_completed_by_sql = " AND w.completed_by IN (".$request_completed_by.")";
+	}
 	if($to_month =='' &&  $to_year==''  && $to_assign =='' && $month!=''  && $year!=''){
 	//LH#27424
 	//$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' AND p.id=w.project_id";
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."' END AND p.id=w.project_id ".$admin_requested_select_sql;
+		$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."' END AND p.id=w.project_id ".$admin_requested_select_sql.$admin_request_completed_by_sql;
 
 	}
 	elseif($to_month =='' &&  $to_year==''  && $to_assign!='' && $month!=''  && $year!=''){
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' and  assigned_to='".$to_assign."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."'  and  assigned_to='".$to_assign."' END AND p.id=w.project_id ".$admin_requested_select_sql;
+		$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$endDate."' and  assigned_to IN (".$to_assign.") ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$endDate."'  and  assigned_to IN (".$to_assign.") END AND p.id=w.project_id ".$admin_requested_select_sql.$admin_request_completed_by_sql;
 	}
 	elseif($to_month !='' &&  $to_year!=''  && $to_assign=='' && $month!=''  && $year!=''){
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' and `creation_date` < '".$to_endDate."'  ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' END AND p.id=w.project_id ".$admin_requested_select_sql;
+		$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' and `creation_date` < '".$to_endDate."'  ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' END AND p.id=w.project_id ".$admin_requested_select_sql.$admin_request_completed_by_sql;
 	}
 	else{
 
-	$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$to_endDate."'  and  assigned_to='".$to_assign."' ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' and assigned_to='".$to_assign."' END AND p.id=w.project_id ".$admin_requested_select_sql;
+		$qry_sla_report_per_month = "SELECT w.*,p.project_name,p.project_code,p.company FROM `workorders` w,projects p WHERE CASE WHEN draft_date = '0000-00-00 00:00:00' THEN `creation_date` >='".$startDate."' AND `creation_date` < '".$to_endDate."'  and  assigned_to IN (".$to_assign.") ELSE `draft_date` >='".$startDate."' AND `draft_date` < '".$to_endDate."' and assigned_to IN (".$to_assign.") END AND p.id=w.project_id ".$admin_requested_select_sql.$admin_request_completed_by_sql;
 	}
 	
 	$sla_report_result = $mysql->sqlordie($qry_sla_report_per_month);
@@ -122,7 +134,9 @@ if($to_month==12)
                         <td width=100px><b>Opened</b></td>
                         <td width=100px><b>Estimated Completion Date</b></td>					
                         <td width=100px><b>Acknowledgement Time</b></td>
-                        <td width=100px><b>Fixed</b></td>					
+                        <td width=100px><b>Fixed</b></td>
+						<td width=100px><b>Updated by</b></td>
+						<td width=100px><b>Last Updated Date</b></td>					
                         <td width=100px><b>Closed</b></td>
                         <td width=100px><b>Archived</b></td>
                     </tr>";
@@ -162,6 +176,10 @@ if($to_month==12)
                 } else {
                     $severity = 'N/A';
                 }
+				$lastComment = array();
+				$lastComment['full_name'] = 'N/A';
+				$lastComment['last_date'] = 'N/A';
+				$lastComment = getLastCommentInfo($workorder_id);
             echo "<tr>
                     <td>".$workorder['id']."</td>
                     <td>".$workorder['title']."</td>
@@ -185,6 +203,8 @@ if($to_month==12)
                     <td>".format_date($workorder['launch_date'])."</td>
                     <td>".getAckTimefromAudit($workorder_id,$mysql)."</td>
                     <td>".getFixedDatefromAudit($workorder_id,$mysql)."</td>
+					<td>".$lastComment['full_name']."</td>
+					<td>".$lastComment['last_date']."</td>
                     <td>".format_date($workorder['closed_date'])."</td>
                     <td>".$archived_type_arr[$workorder['archived']]."</td> 
                   </tr>"; 
@@ -219,7 +239,9 @@ if($to_month==12)
                         <td width=100px><b>Opened</b></td>
                         <td width=100px><b>Estimated Completion Date</b></td>					
                         <td width=100px><b>Acknowledgement Time</b></td>
-                        <td width=100px><b>Fixed</b></td>					
+                        <td width=100px><b>Fixed</b></td>	
+						<td width=100px><b>Updated by</b></td>
+						<td width=100px><b>Last Updated Date</b></td>	
                         <td width=100px><b>Closed</b></td>
                         <td width=100px><b>Archived</b></td>
                     </tr>";
@@ -449,6 +471,26 @@ function getFixedDatefromAudit($workorder_id,$mysql)
 	  $log_date =  $row['log_date'];
   }
    return format_date($log_date);
+
+}
+
+function getLastCommentInfo($workorder_id){
+
+	global $mysql;
+	$wo_comment_data = $mysql->sqlordie("SELECT CONCAT_WS(' ',first_name,last_name) as full_name ,c.user_id,c.date FROM `workorder_comments` c INNER JOIN users u ON (u.id=c.user_id) WHERE c.`workorder_id` ='$workorder_id' AND c.active ='1' AND c.deleted ='0' ORDER BY c.`date` DESC limit 1");
+	$comment_array = array();
+	if($wo_comment_data->num_rows > 0){
+		  $row = $wo_comment_data->fetch_assoc();
+		  $comment_array['full_name'] =  $row['full_name'];
+		  $comment_array['last_date'] =  format_date($row['date']);
+	}
+	
+	return  $comment_array;
+
+	
+
+
+
 
 }
 
