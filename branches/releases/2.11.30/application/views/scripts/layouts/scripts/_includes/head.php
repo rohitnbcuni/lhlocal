@@ -156,9 +156,10 @@ if(isset($_SESSION['login_status']) && $_SESSION['login_status'] == "client"){
 							."\t<script src=\"/_js/jquery-ui-1.8.19.custom.min.js\" type=\"text/javascript\"></script>"
 							."\t<script src=\"/_js/jquery.ui.widget.js\" type=\"text/javascript\"></script>\n"
 							."\t<script src=\"/_js/jquery.notify.js\" type=\"text/javascript\"></script>\n"
-							. "\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
-						echo  "<link href=\"/_css/ui.notify.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";	
-
+							."\t<link href=\"/_css/jquery-ui.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";
+						echo  "\t<link href=\"/_css/ui.notify.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";	
+						echo  "\t<link href=\"/_css/chosen.css?" . $randNum ."\" rel=\"stylesheet\" type=\"text/css\"/>";	
+						echo "\t<script src=\"/_js/chosen.js\" type=\"text/javascript\"></script>\n";
 							
 						break;
 					}//Ticket #7927 Add new js file for calender view :wo_calender_view.js
