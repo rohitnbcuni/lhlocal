@@ -648,7 +648,7 @@
 							</li>
 							<li>
 								<label for="wo_site_name" id="wo_site_name_label">Please Choose Your Site:</label>
-								<select "'.$closed_wo_style.'" class="field_medium" name="SITE_NAME" id="SITE_NAME">
+								<select "'.$closed_wo_style.'" class="field_medium chosen-select-deselect" name="SITE_NAME" id="SITE_NAME">
 									<option value="_blank"></option>	
 								';
 								echo WoDisplay::getcustomDropDown("SITE_NAME",$custom_feild_arr['SITE_NAME']);
@@ -1173,8 +1173,10 @@
 											echo WoDisplay::getUserOptionEditHTML();
 										}
 									echo '</select>
+									<div style="padding-top:10px;" >
 									<button class="secondary" style="clear:left; margin-left:10px;" onclick="addCcUser(); $(\'#select_cc\').css({display:\'none\'});$(\'#add_cc\').css({display:\'block\'}); return false;"><span>Add</span></button>
 									<button class="cancel" onclick="$(\'#add_cc\').css({display:\'block\'}); $(\'#select_cc\').css({display:\'none\'}); return false;"><span>Cancel</span></button>
+									</div>
 								</div>
 								<div class="clearer"></div>
 							</div>
