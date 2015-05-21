@@ -359,7 +359,7 @@ function buildAssignedToList(jsonString){
 			option += '<option value="' +json[i]['id']+ '" ' +json[i]['selected']+ '>' +json[i]['name']+ '</option>';
 		}
 		$('#wo_assigned_user').html(option);
-		//$("#wo_assigned_user").trigger("chosen:updated");
+		$("#wo_assigned_user").trigger("chosen:updated");
 		/*$('#wo_assigned_user').chosen({width:"176px"});
 		$('#wo_assigned_user_chosen').css("left","10px");*/
 	}
@@ -1844,8 +1844,8 @@ function addReleatedIssue(){
 $(document).ready(function() {
 	$('#SITE_NAME').chosen({width:"200px"});
 	$('#SITE_NAME_chosen').css("left","10px");
-	//$('#wo_assigned_user').chosen({width:"176px"});
-	//$('#wo_assigned_user_chosen').css("left","10px");
+	$('#wo_assigned_user').chosen({width:"176px"});
+	$('#wo_assigned_user_chosen').css("left","10px");
 	$('#INFRA_TYPE').chosen({width:"176px"});
 	$('#INFRA_TYPE_chosen').css("left","10px");
 	$('#completed_by').chosen({width:"176px"});
