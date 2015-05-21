@@ -1844,8 +1844,8 @@ function addReleatedIssue(){
 $(document).ready(function() {
 	$('#SITE_NAME').chosen({width:"200px"});
 	$('#SITE_NAME_chosen').css("left","10px");
-	$('#wo_assigned_user').chosen({width:"176px"});
-	$('#wo_assigned_user_chosen').css("left","10px");
+	//$('#wo_assigned_user').chosen({width:"176px"});
+	//$('#wo_assigned_user_chosen').css("left","10px");
 	$('#INFRA_TYPE').chosen({width:"176px"});
 	$('#INFRA_TYPE_chosen').css("left","10px");
 	$('#completed_by').chosen({width:"176px"});
