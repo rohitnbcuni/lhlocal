@@ -359,8 +359,9 @@ function buildAssignedToList(jsonString){
 			option += '<option value="' +json[i]['id']+ '" ' +json[i]['selected']+ '>' +json[i]['name']+ '</option>';
 		}
 		$('#wo_assigned_user').html(option);
-		$('#wo_assigned_user').chosen({width:"176px"});
-		$('#wo_assigned_user_chosen').css("left","10px");
+		$("#wo_assigned_user").trigger("chosen:updated");
+		/*$('#wo_assigned_user').chosen({width:"176px"});
+		$('#wo_assigned_user_chosen').css("left","10px");*/
 	}
 }
 
