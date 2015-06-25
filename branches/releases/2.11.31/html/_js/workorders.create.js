@@ -250,7 +250,7 @@ function getRequestType(reqType) {
 			$('#wo_time_fade').css({display:'none'});
 			$('#li_REQ_DATE').css({display:'block'});
 			$('#li_INFRA_TYPE').css({display:'block'});
-			$('#li_CRITICAL').css({display:'block'});
+			$('#li_CRITICAL').css({display:'none'});
 			$('#li_DRAFT').css({display:'block'});
 			$('#currentMinute').val('00');
 //			document.getElementById("wo_assigned_user").options[0].value = MAINTENANCE_TEAM_ID; 
@@ -335,7 +335,7 @@ function getRequestTypeNew(reqType) {
 			$('#wo_time_fade').css({display:'none'});
 			$('#li_REQ_DATE').css({display:'block'});
 			$('#li_INFRA_TYPE').css({display:'block'});
-			$('#li_CRITICAL').css({display:'block'});
+			$('#li_CRITICAL').css({display:'none'});
 			$('#li_DRAFT').css({display:'block'});
 			$('#currentMinute').val('00');
 //			document.getElementById("wo_assigned_user").options[0].value = MAINTENANCE_TEAM_ID; 
