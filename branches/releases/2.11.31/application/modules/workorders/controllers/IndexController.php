@@ -365,7 +365,7 @@
 					$li_SEVERITY = 'style="display:none;"';
 					$li_REQ_DATE = 'style="display:block;"';
 					$li_INFRA_TYPE = 'style="display:block;"';
-					$li_CRITICAL = 'style="display:block;"';
+					$li_CRITICAL = 'style="display:none;"';
 					$li_DRAFT = 'style="display:block;"';
 					$fade_REQ_DATE = 'style="display:none;"';
 					$option_SEVERITY ='disable';
