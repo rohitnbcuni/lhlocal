@@ -365,7 +365,7 @@
 					$li_SEVERITY = 'style="display:none;"';
 					$li_REQ_DATE = 'style="display:block;"';
 					$li_INFRA_TYPE = 'style="display:block;"';
-					$li_CRITICAL = 'style="display:block;"';
+					$li_CRITICAL = 'style="display:none;"';
 					$li_DRAFT = 'style="display:block;"';
 					$fade_REQ_DATE = 'style="display:none;"';
 					$option_SEVERITY ='disable';
@@ -558,7 +558,7 @@
 								echo '</select>
 								</div>
 							</li>
-							<li id="li_CRITICAL" '.$li_CRITICAL.' >
+							<li id="li_CRITICAL" '.$li_CRITICAL.'  style="display:none;" >
 								<label for="wo_critical" id="wo_critical_label">Critical:</label>
 								<input "'.$closed_wo_style.'" type="checkbox" name="CRITICAL" value="TRUE" id="CRITICAL"  '.WoDisplay::getcustomCheckbox("CRITICAL",$custom_feild_arr['CRITICAL']).' >';
 								echo '								
