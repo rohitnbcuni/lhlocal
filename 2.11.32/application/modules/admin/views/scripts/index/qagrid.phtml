@@ -1,0 +1,45 @@
+<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Quality Grid Display ">
+<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
+	<div class="adminSelect">
+		
+			<b>The following is a list of all Project Names that have at least one defect reported against it.<br/>
+			If you would like the project to appear within the defect grid, please check the box next to it and press submit.</b>
+		</div>
+		<hr style="clear:both;margin-top:30px;">
+		<div id='requestor_info'></div>
+		<table>
+		
+		<?php if(count($this->qaGridData) > 0) :?>
+		<?php $count = 1; ?>
+		<tr>
+		<?php foreach($this->qaGridData  as $val) :?>
+		
+			<td  style="width:350px;">
+					<input type="checkbox" <?php echo ($val['qa_permission'] == '1')?"checked='checked'":''; ?>name="qaGrid[]" value="<?php echo $val['id']?>" title="<?php echo $val['project_code']."-".$val['project_name']?>" alt="<?php echo $val['project_code']."-".$val['project_name']?>"> <span title="<?php echo $val['project_code']."-".$val['project_name']?>"><?php echo $val['project_code']."-".$val['project_name'];?></span>
+			</td>
+			<?php if($count%2 == 0):?>
+			</tr>
+			<tr>
+			<?php endif;?>
+		<?php $count++; ?>	
+		
+		<?php endforeach;?>
+		</tr>
+		<?php endif;?>
+	
+	</table>
+	<div >
+<br/><br/>
+	<p >
+		<button style='margin-left:224px;' pid="adminReportbtn" onclick="setQadataGrid();"><span>Submit</span></button>
+	</p>
+
+<div style="clear: both;"></div>
+<div class="message_required">
+	<p></p>
+	<div style="clear: both;"></div>
+		<div class="duplicate_buttons">
+		<button onClick="$('.message_required').css({display:'none'}); return false;"><span>OK</span></button>
+	<div style="clear: both;"></div>
+</div>					
+<div style="clear: both;"></div>
