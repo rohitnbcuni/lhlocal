@@ -31,8 +31,8 @@
 	$LOGINURL = BASECAMP_HOST."/login/authenticate";
 	$GETURL   = BASECAMP_HOST."/projects/" .$bcRow['bc_id'] ."/involvements/" .$bcCompRow['bc_id']
 		."?return_to=/projects/" .$bcRow['bc_id'] ."/participants";
-	$LOGINFIELDS = "user_name=resourceplanner@nbcuxd.com&password=r3s0urc3";
-	$POSTFIELDS = "_method=delete";
+	//$LOGINFIELDS = "user_name=resourceplanner@nbcuxd.com&password=r3s0urc3";
+	//$POSTFIELDS = "_method=delete";
 	//."&company[grant_access_to_all_employees]=1&return_to=/projects/" 
 	//.$bcRow['bc_id'] ."/participants&commit=Add company";
 	

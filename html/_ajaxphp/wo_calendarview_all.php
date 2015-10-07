@@ -305,7 +305,7 @@
 		try{
 			
 			if(!$workorder_result = $mysql->sqlordie($workorder_list_query)){
-				throw new Exception("MYsql Error:".mysqli_error($mysql));
+				//throw new Exception("MYsql Error:".mysqli_error($mysql));
 			}
 			$i = 0;
 			//echo $workorder_result->num_rows;
