@@ -1,4 +1,7 @@
 <?php
+
+//Allocate some extra memory to execute search feature.
+ini_set('memory_limit', '512M');
 session_start();
 if(!(isset($from_action) && $from_action))
 include('../_inc/config.inc');
