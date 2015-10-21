@@ -1,0 +1,13 @@
+<?php
+	if(count($this->LhRallyProjects) >0){
+	
+	   foreach($this->LhRallyProjects as $key => $LH_val){   ?>
+			<tr id="tr_<?php echo trim($LH_val['id']); ?>" class="adminTr">
+			<td width="40%" ><?php echo $LH_val['lh_project']; ?></td>
+			<td width="40%"  ><?php echo $LH_val['ra_project']; ?></td>
+			<td width="20%" style="text-align:center;"><img class="dropProject" src="/_images/b_drop.png" alt="drop" onclick="deleteRallyProject(<?php echo $LH_val['id'] ?>);"></td>
+			</tr>
+		
+		
+		<?php } 
+	} ?>
