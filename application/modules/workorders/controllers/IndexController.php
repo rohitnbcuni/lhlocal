@@ -29,7 +29,7 @@
 					<INPUT TYPE="hidden" ID="current_page_set" VALUE="1"/>
 					<INPUT TYPE="hidden" ID="current_page" VALUE="1"/>
 					<button onClick="return generateWOReport();" style="float:right;"><span>Generate Report</span></button>
-					<button id="archiveBTN" onClick="archiveWO_CheckList();" style="float:right;"><span>Archive</span></button>
+					<button id="archiveBTN" onClick="archiveWO_CheckList();" style="float:right;display:none;"><span>Archive</span></button>
 				</div>
 						
 				<!--==| END: Bucket |==-->
@@ -1857,7 +1857,7 @@
 					<INPUT TYPE="hidden" ID="current_page_set" VALUE="1"/>
 					<INPUT TYPE="hidden" ID="current_page" VALUE="1"/>
 					<button onClick="return generateWOReport();" style="float:right;"><span>Generate Report</span></button>
-					<button id="archiveBTN" onClick="archiveWO_CheckList();" style="float:right;"><span>Archive</span></button>
+					<button id="archiveBTN" onClick="archiveWO_CheckList();" style="float:right;display:none;"><span>Archive</span></button>
 				</div>
 						
 				<!--==| END: Bucket |==-->
