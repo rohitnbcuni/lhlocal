@@ -189,7 +189,7 @@ class createNewWoService{
 			$wo_row = $wo_res->fetch_assoc();
 			include_once("../_ajaxphp/sendEmail.php");
 			sendEmail_newRequest($mysql, $wo_row);
-			return true;
+			return $getWoId;
 			}else{
 				return false;
 			}
@@ -516,7 +516,7 @@ class createNewWoService{
 		die;*/
 		//calculte time difference
 		$timeDiffernce = round(abs($phpTime-$javaTime)/60,2);
-		
+		$result = 0;
 		if( $cs_token == $lh_token){
 			if($timeDiffernce <= 15){
 				$result = $wo->saveWorkorder($workOrderObj);
@@ -526,8 +526,8 @@ class createNewWoService{
 		}else{
 			die("TOKEN MISS-MATCH");
 		}
-		if($result == TRUE){
-			die("SCC001");
+		if($result>0){
+			die("SCC001,WO:".$result);
 		}else{
 			die("FAILED");
 		}
