@@ -41,13 +41,15 @@ class getWoDetailsService{
 		$requestTypeArray = array(1=>'OUTAGE', 2=>'PROBLEM', 3=>'REQUEST');
 		$severityTypeArray = array(5=>'PROB_S1', 6=>'PROB_S2', 7=>'PROB_S3');
 
-		$responseFields["wo_id"] = -1;
+		$responseFields["wo_id"] = "-1";
 		if (is_numeric($workorderId)) {
-			$woQuery = "SELECT wo.`id` woId, wo.`title` wosubject, usr.`email` worequestor, wcfType.`field_id` woType"
-					."  FROM `workorders` wo, `users` usr, `workorder_custom_fields` wcfType" 
+			$woQuery = "SELECT wo.`id` woId, wo.`title` wosubject, UPPER(stType.`name`) woStatus, usr.`email` worequestor, wcfType.`field_id` woType"
+					."  FROM `workorders` wo, `users` usr, `workorder_custom_fields` wcfType, lnk_workorder_status_types stType " 
 					." WHERE wo.`requested_by`= usr.`id`"
 					."   AND wo.`id`= wcfType.`workorder_id`"
+					."   AND wo.`status` = stType.`id`"
 					."   AND wcfType.`field_key`='REQ_TYPE'"
+					."   AND stType.`name` NOT IN ('Closed','Fixed')"
 					."   AND wo.`id`='" .$workorderId ."'";
 
 			$woCheck = $mysql->query($woQuery);
@@ -57,13 +59,14 @@ class getWoDetailsService{
 				$responseFields["wo_id"]=$woDetails["woId"];
 				$responseFields["req_email"]=$woDetails["worequestor"];
 				$responseFields["subject"]=$woDetails["wosubject"];
+				$responseFields["status"]=$woDetails["woStatus"];
 				
 				if($requestTypeArray[$woDetails["woType"]] == 'PROBLEM'){
 					$probTypeQuery = "SELECT `field_id` woSeverity FROM `workorder_custom_fields` WHERE `workorder_id` ='" .$workorderId."' AND `field_key` = 'SEVERITY'";
 					$probTypeCheck = $mysql->query($probTypeQuery);
 					if($probTypeCheck->num_rows > 0){
-						$probTypeResults = $woCheck->fetch_assoc();
-						$responseFields["type"]=$severityTypeArray[$woDetails["woSeverity"]];
+						$probTypeResults = $probTypeCheck->fetch_assoc();
+						$responseFields["type"]=$severityTypeArray[$probTypeResults["woSeverity"]];
 					}
 				}
 				else{
