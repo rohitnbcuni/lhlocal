@@ -784,9 +784,9 @@ class Admin_IndexController extends LighthouseController {
                                         <option value="1">Report an Outage</option>
                                         <option value="3">Submit a Request</option>
                                          <optgroup label="Report a Problem">
-                                        <option value="4">Severity 1 (4 hours)</option>
-                                        <option value="5">Severity 2 (48 hours)</option>
-                                        <option value="6"> Severity 3 (Best Effort)</option>
+                                        <option value="5">Severity 1 (4 hours)</option>
+                                        <option value="6">Severity 2 (48 hours)</option>
+                                        <option value="7"> Severity 3 (Best Effort)</option>
                                         </optgroup>';
                                         echo '</select>
                                     </td>
