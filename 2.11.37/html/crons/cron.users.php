@@ -102,7 +102,7 @@
 				$uData['bc_id'] = $mysql->real_escape_string($user->id);
 				$uData['user_name'] = $mysql->real_escape_string($user->{'user-name'});
 				$uData['email'] = $mysql->real_escape_string($user->{'email-address'});
-				$uData['first_name'] = $mysql->real_escape_string($user->{'first-name'});
+				$uData['first_name'] = $mysql->real_escape_string(str_replace("-"," ",$user->{'first-name'}));
 				$uData['last_name'] = $mysql->real_escape_string($user->{'last-name'});
 				//$uData['address_1'] = $mysql->real_escape_string($user->);
 				//$uData['address_2'] = $mysql->real_escape_string($user->);
