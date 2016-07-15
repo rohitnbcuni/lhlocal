@@ -913,10 +913,10 @@ function saveWorkOrder(from) {
 			url: "/_ajaxphp/wo_modified_date.php",
 			data: {woId:woId,page_modified_date:page_modified_date},
 			success: function(lmsg) {
-					alert(lmsg);
+					//alert(lmsg);
 			
 			if(lmsg	 == 'error'){
-				$('.message_required p').html('Workorder information has chnaged by other user.Please refresh your.');
+				$('.message_required p').html('Workorder information has been changed by other users. Please refresh your page.');
 				$('.message_required').css({display:'block'});
 				$('#wo_dimmer').css({display:'none'});
 				$('#wo_dimmer_ajax').css({display:'none'});
