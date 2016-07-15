@@ -877,8 +877,11 @@ function saveWorkOrder(from) {
 		}
 	}
 	
+	
+	
 		
 	if(valid) {
+		
 		data = {woId:woId,dirName:dirName,requestedId:requestedId,projectId:projectId,woTypeId:woTypeId,priorityId:priorityId,timeSens:timeSens,timeSensDate:timeSensDate,timeSensTime:timeSensTime,ampm:ampm,wo_draft:wo_draft,timeSensDate_draft:timeSensDate_draft,timeSensTime_draft:timeSensTime_draft,ampm_draft:ampm_draft,woTitle:woTitle,woExampleURL:woExampleURL,woDesc:woDesc,woStatus:woStatus,woAssignedTo:woAssignedTo,woStartDate:woStartDate,woEstDate:woEstDate,rallyType:rallyType,rallyProject:rallyProject,rallyFlag:rallyFlag,woREQ_TYPE:woREQ_TYPE,woSEVERITY:woSEVERITY,woSITE_NAME:woSITE_NAME,woINFRA_TYPE:woINFRA_TYPE,woCRITICAL:woCRITICAL,woCCList:woCCList,launchDate:launchDate,currmin:currmin,draftDate:draftDate,commentSubmit:from,woStatusIdHidden:woStatusIdHidden,completed_by:completed_by,wo_related_ids:wo_related_ids,df_related_ids:df_related_ids};
 		//LH34096 if request type is request then estimate time will same launch date
 		if(woREQ_TYPE == '3'){
@@ -902,7 +905,25 @@ function saveWorkOrder(from) {
 		}else{
 			var redirect_status_val = 1;
 		}
-		$.ajax({
+		
+		var page_modified_date = $('#lastModifiedDate').val();
+	
+	$.ajax({
+			type: "POST",
+			url: "/_ajaxphp/wo_modified_date.php",
+			data: {woId:woId,page_modified_date:page_modified_date},
+			success: function(lmsg) {
+					alert(lmsg);
+			
+			if(lmsg	 == 'error'){
+				$('.message_required p').html('Workorder information has chnaged by other user.Please refresh your.');
+				$('.message_required').css({display:'block'});
+				$('#wo_dimmer').css({display:'none'});
+				$('#wo_dimmer_ajax').css({display:'none'});
+			
+			
+			}else{
+			$.ajax({
 			type: "POST",
 			url: "/_ajaxphp/save_wo.php",
 			data: data,
@@ -914,11 +935,13 @@ function saveWorkOrder(from) {
 				var res_woStatusID = responseValue[1];
 				var res_woAssignedID = responseValue[2];
 				var res_woAssignedList = responseValue[3];
-				
+				var res_lastModifiedDate = responseValue[4];
+				//alert(res_lastModifiedDate);
 				if(parseInt(res_woID)) {
 
 					$('#workorder_id').val(res_woID);
-					$('#dirName').val(res_woID+"/");				
+					$('#dirName').val(res_woID+"/");	
+					$('#lastModifiedDate').val(res_lastModifiedDate);
 
 					if($('#workorder_id').val() != "") {
 						$('#comment_dimmer').css({display:"none"});
@@ -954,6 +977,10 @@ function saveWorkOrder(from) {
 						alert("Error:" + textStatus + msg2 );
 				}		
 		}); 
+		
+		}
+		}	
+		});
 		updateAssignedDate();
 		//updateEstimatedDate();
              
@@ -964,6 +991,8 @@ function saveWorkOrder(from) {
 		return false;
 	} 
 }
+
+
 
 function changeAssignedToUser(){
 	if($('#wo_status').val() == '5' || $('#wo_status').val() == '10'){
@@ -1216,7 +1245,8 @@ function submitComment() {
 		$('#comment_dimmer').css({display:"block"});	
 		//LH#23699
 		//if(comment != "" && userId != "" && woId != "") {
-		var status = saveWorkOrder('comment');		
+		//var status = saveWorkOrder('comment');
+		var status = true;
 		if(status != false){
 		statusChangeNotifiction();
 			$.ajax({
