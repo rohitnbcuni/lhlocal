@@ -657,8 +657,15 @@
 
 							<li><label for="wo_title" id="wo_title_label">Brief Description:</label><input "'.$closed_wo_style.'" name="wo_title" id="wo_title" class="field_large" type="text" value="' . htmlspecialchars(@$wo_data[0]['title']) .'" /></li>
 							<li><label for="wo_example_url" id="wo_example_url_label">Example URL:</label><input "'.$closed_wo_style.'" name="wo_example_url" id="wo_example_url" class="field_large" type="text" value="' . htmlspecialchars(@$wo_data[0]['example_url']) .'"/></li>
-<!--=========== Ticket# 16857  wrap description body by html_entity_decode ===========-->						
-	<li><label for="wo_desc" id="wo_desc_label">Description:</label><textarea "'.$closed_wo_style.'" name="wo_desc" id="wo_desc" class="field_large">' .htmlentities(@$wo_data[0]['body'],ENT_NOQUOTES,'UTF-8').'</textarea></li>
+							<!--=========== Ticket# 16857  wrap description body by html_entity_decode ===========-->						
+							<li><label for="wo_desc" id="wo_desc_label">Description:</label><textarea "'.$closed_wo_style.'" name="wo_desc" id="wo_desc" class="field_large">' .htmlentities(@$wo_data[0]['body'],ENT_NOQUOTES,'UTF-8').'</textarea>';
+							if(isset($_REQUEST['wo_id'])) {
+								$lastModifiedDateArray  = WoDisplay::getQuery("SELECT modified_date FROM `workorders` WHERE `id`='" .$wo_id ."'");
+								$lastModifiedDate = $lastModifiedDateArray[0]['modified_date'];			
+								echo '<input type="hidden" name="lastModifiedDate" id="lastModifiedDate" value="'.strtotime($lastModifiedDate).'" />';
+							
+							}
+							echo '</li>
 							<li>
 								<div class="no_label_side">
 									<div class="wo_dimmer" id="file_upload_dimmer" style="display: none;"></div>
