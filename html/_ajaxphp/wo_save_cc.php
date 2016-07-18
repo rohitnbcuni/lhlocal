@@ -27,7 +27,7 @@
 			
 
 			
-			function bcXML($file, $body) {
+			/*function bcXML($file, $body) {
 				//echo "Ses Vars: (" .$this->_session->lh_username .")<br />";
 				//echo "Ses Vars: (" .$this->_session->lh_password .")<br />";
 				
@@ -75,9 +75,9 @@
 				$response = curl_exec($session);
 				curl_close($session);
 				return $response;
-			}
+			}*/
 			
-			$xml = readXml(BASECAMP_HOST."/projects/".$projRow['bc_id']."/categories.xml");
+			/*$xml = readXml(BASECAMP_HOST."/projects/".$projRow['bc_id']."/categories.xml");
 	//		$xml = bcXML("/projects/".$projRow['bc_id']."/categories.xml", "");
 
 
@@ -94,7 +94,7 @@
 						break;
 					}
 				}
-			}
+			}*/
 			
 			
 			//print_r($list);
@@ -111,13 +111,28 @@
 			for($z = 0; $z < sizeof($listKeys); $z++) {
 				$arrayData .= $listKeys[$z] .",";
 			}
+			if(ISSET($_GET['addCC'])){
+			$addCCNew =  $addCC.",";
 			
-			$update_cc = "UPDATE `workorders` SET `cclist`='$arrayData' WHERE `id`='$woId'";
+			$update_cc = "UPDATE `workorders` SET `cclist`= CONCAT(cclist,'$addCCNew') WHERE `id`='$woId'";
 			@$mysql->sqlordie($update_cc);
+			}
+			if(ISSET($_GET['remove'])){
+			$removeCCNew =  $_GET['remove'].",";
+			
+			$update_cc = "UPDATE `workorders` SET `cclist`= REPLACE(`cclist`,'$removeCCNew','') WHERE `id`='$woId'";
+			@$mysql->sqlordie($update_cc);
+			
+			
+			
+			}
+			
+			//$update_cc = "UPDATE `workorders` SET `cclist`='$arrayData' WHERE `id`='$woId'";
+			//@$mysql->sqlordie($update_cc);
 				
 				
 
-				if(!empty($catNum))
+				/*if(!empty($catNum))
 				{
 					$xml = '<request>
 					<post>
@@ -169,7 +184,7 @@
 					
 					$comment_id = $newNumPart2[0];
 					curl_close($session);
-				}
+				}*/
 			$select_cc = "SELECT * FROM `workorders` WHERE `id`='$woId' LIMIT 1";
 			$result = @$mysql->sqlordie($select_cc);
 			$row = @$result->fetch_assoc();

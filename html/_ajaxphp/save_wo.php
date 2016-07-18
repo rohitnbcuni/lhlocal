@@ -401,9 +401,10 @@
 				."`launch_date`='$sql_date', "
 				."`rally_type`='$rallyType', "
 				."`rally_project_id`='$rallyProject', "
-				."`cclist`='$woCCList', "
+				//."`cclist`='$woCCList', "
 				.$updatesql_draft_date
-				."`active`='$isActive' "
+				."`active`='$isActive', "
+				."`modified_date`=now() "
 				."WHERE `id`='$woId'";
 			@$mysql->sqlordie($update_wo);
 			$getWoId = $woId;
@@ -475,6 +476,8 @@
 		}else{
 			$assigned_option_html = '';
 		}
+		
+		$wo_last_modifed_date = strtotime($wo_row['modified_date']);
 		
 		if($wo_row['launch_date'] != $wo_old_row['launch_date'] && ($wo_old_row['launch_date']) != ''){
 				//echo $wo_row['launch_date'];
@@ -721,7 +724,7 @@
 		}
 */
 		// Format : wo_id~statusId~assignedTo~assignedToHtml (assignedToHtml : is applicable only for client updates)
-		echo $getWoId.'~'.$woStatus.'~'.$woAssignedTo.'~'.$assigned_option_html;
+		echo $getWoId.'~'.$woStatus.'~'.$woAssignedTo.'~'.$assigned_option_html.'~'.$wo_last_modifed_date;
 	}
 
 
