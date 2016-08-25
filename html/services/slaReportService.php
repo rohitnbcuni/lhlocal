@@ -83,7 +83,7 @@ class slaReportServices {
 		
 		$output[] = $workorder['creation_date'];
 		$output[] = $workorder['id'];
-		$output[] = $workorder['title'];
+		$output[] = $mysql->real_escape_string($this->escapewordquotes($workorder['title']));
 		$output[] = $this->getCompanyName($workorder['company']);
 		$output[] = $workorder['project_code']." - ".$workorder['project_name'];
 		$output[] = $this->getUserName($workorder['requested_by'],$wo_user_list);
@@ -115,6 +115,38 @@ class slaReportServices {
 	 return $final_row;
 	 
 	 }
+	 
+	 public static function escapewordquotes ($text) {
+		$pre = chr(226).chr(128);
+		$badwordchars=array('?','?','?','apos;',"#039;","?","?",'&#233;','&#8216;','&#8217;',
+		'&#8230;',
+		'&#8217;',
+		'&#8220;',
+		'&#8221;',
+		'&#8212;',
+		'#8212;',
+		'#&8211;',
+		'#8211;',
+		'amp;',
+		'&#160;',
+		'#160;'
+			
+		);
+		$fixedwordchars = array('','"','"',"'","'",",","'", "e","'","'",'~','~','','','_','-','-','-','','');
+	    $text = str_replace($badwordchars,$fixedwordchars,$text);                         
+		$text=str_replace('?',"'",$text); 
+	    $text=str_replace('?',"'",$text); 
+	    $text=str_replace('&amp;rsquo;',"'",$text); 
+//    $text = preg_replace('/[^(\x20-\x7F)]*/','', $text );  
+		$text = str_replace("&#8216;","",$text);
+		//LH#    20679
+		$text = str_replace(array("“","’","”"),array('"',"'",'"'),$text);
+//		$text = str_replace("&","",$text);
+//		$text = preg_replace('/[^\x00-\x7f]/','',$text);
+		return $text;
+
+
+	}
 	 
 	 
 	private function getCompanyName($company_id)
