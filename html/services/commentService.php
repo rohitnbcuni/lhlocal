@@ -81,7 +81,7 @@ class commentServices {
 					."VALUES ('$wid','$uid','$comment','$curDateTime')";
 				if(defined('BASECAMP_MAPPING')){
 					if(BASECAMP_MAPPING == 'OPEN'){
-						$mysql->query($update_wo_comment);
+						
 						$basecampArray = array(
 							"created_by" => $uid,
 							"workorder_id" => $wid,
@@ -90,7 +90,7 @@ class commentServices {
 						$this->UpdateMileStoneComment($basecampArray);
 						}
 				}
-				
+				$mysql->query($update_wo_comment);
 				$select_req_type_qry = "SELECT a.field_key,a.field_id,b.field_name,a.field_key FROM `workorder_custom_fields` a,`lnk_custom_fields_value` b WHERE `workorder_id`='$wid' and a.field_key='REQ_TYPE' and a.field_id = b.field_id";
 				$req_type_res = $mysql->query($select_req_type_qry);
 				$req_type_row = $req_type_res->fetch_assoc();
