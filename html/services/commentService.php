@@ -194,7 +194,8 @@ class commentServices {
 						$to_sql_res = $mysql->query($to_sql);
 						$to_sql_result = $to_sql_res->fetch_assoc();
 		 				$toEmails = $to_sql_result['email'];
-		 				$from = $userName;
+		 				//$from = $userName;
+						$from = ucfirst($commenter_row['first_name']) ." " .ucfirst($commenter_row['last_name'])."<".WO_EMAIL_FROM.">"."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 		 				if($toEmails != '')
 	 					$this->lh_sendEmail($toEmails,$subject,$msg,$from);
 	 				}
