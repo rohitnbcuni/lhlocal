@@ -218,7 +218,8 @@
 
 				//LH#20679
 				$subject = "WO ".$woId.": Comment - ".$req_type_row['field_name']." - " . html_entity_decode($bc_id_row['title'],ENT_NOQUOTES,'UTF-8'). "";
-				$headers = "From: ".$commenter_row['email']."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
+				//$headers = "From: ".$commenter_row['email']."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
+				$headers = "From: ".ucfirst($commenter_row['first_name']) ." " .ucfirst($commenter_row['last_name'])."<".WO_EMAIL_FROM.">"."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 				//$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 
 				$link = "<a href='".BASE_URL ."/workorders/index/edit/?wo_id=" .$woId."'>".$woId."</a>";

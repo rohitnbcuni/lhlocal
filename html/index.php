@@ -1,4 +1,6 @@
 <?PHP
+error_reporting(0);
+
 if($_SERVER['REQUEST_URI'] == '/favicon.ico'){
 	// To stop any process for this request.
 	die();
