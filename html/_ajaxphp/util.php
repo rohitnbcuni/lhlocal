@@ -434,6 +434,28 @@ class Util {
 		}
 	 
 	}
+	
+	function static victorOpsAlertIntegration($data_array){
+		$url = 'https://alert.victorops.com/integrations/generic/20131114/alert/84b503b5-0b45-4dda-975e-60977ee2b9c0/nbcu-sandbox';
+		$data_string = json_encode($data_array);
+		$ch=curl_init($url);
+
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'Content-Type: application/json',
+			'Content-Length: ' . strlen($data_string))
+		);
+	
+		curl_setopt($ch, CURLOPT_BINARYTRANSFER, TRUE);
+		$result = curl_exec($ch);
+
+		curl_close($ch);
+		
+		return $result;
+		
+		
+	}
        
        
 }

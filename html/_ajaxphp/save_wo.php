@@ -235,6 +235,27 @@
 			@$mysql->sqlordie($insert_wo);
 			$getWoId = $mysql->insert_id;
 			
+			######New Alert VictorOps Integration Started###############
+			###Enabled only for Outage and Problem####
+			if($woREQ_TYPE == '1' or $woREQ_TYPE =='2'){
+				$victor_ops_array = array(
+					"message_type" => "critical",
+					"entity_id" => $getWoId,
+					"timestamp"	=> time(),
+					"state_message" => $woTitle,
+					"monitoring_tool" => "LH",				
+				
+				);
+				
+				
+				Util::victorOpsAlertIntegration($victor_ops_array);
+			}
+			
+			
+			
+			
+			#################END VictorOps Integration#########
+			
 			//Create  a  Milestone 
 			//Update Milestone
 			Util::createMileStone($woAssignedTo,$getWoId,$woTitle,$sql_date);
@@ -409,6 +430,40 @@
 			@$mysql->sqlordie($update_wo);
 			$getWoId = $woId;
 			Util::updateMileStone($woAssignedTo,$getWoId,$woTitle,$sql_date,$woStatus);
+			
+			######Update Alert VictorOps Integration Started###############
+			if($woREQ_TYPE == '1' or $woREQ_TYPE =='2'){
+				if($woStatus == '7'){
+					$victor_ops_array = array(
+						"message_type" => "ACKNOWLEDGEMENT",
+						"entity_id" => $getWoId,
+						"timestamp"	=> time(),
+						"state_message" => $woTitle,
+						"monitoring_tool" => "LH",				
+				
+					);
+					Util::victorOpsAlertIntegration($victor_ops_array);
+				}else if($woStatus == '3' || ($woStatus == '1')){
+					
+					$victor_ops_array = array(
+						"message_type" => "RECOVERY",
+						"entity_id" => $getWoId,
+						"timestamp"	=> time(),
+						"state_message" => $woTitle,
+						"monitoring_tool" => "LH",				
+				
+					);
+					Util::victorOpsAlertIntegration($victor_ops_array);
+					
+				}
+			}	
+			
+			
+			
+			
+			#################END VictorOps Integration#########
+			
+			
 			$select_wo_req_type = "SELECT field_id from workorder_custom_fields where field_id IN('1','2','3') and workorder_id IN('$woId')";
 			$old_req_type = $mysql->sqlordie($select_wo_req_type);
 			$old_req_type_row = $old_req_type->fetch_assoc();
