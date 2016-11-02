@@ -237,10 +237,11 @@
 			
 			######New Alert VictorOps Integration Started###############
 			###Enabled only for Outage and Problem####
+			
 			if($woREQ_TYPE == '1' or $woREQ_TYPE =='2'){
 				$victor_ops_array = array(
-					"message_type" => "critical",
-					"entity_id" => $getWoId,
+					"message_type" => "CRITICAL",
+					"entity_id" => "LH".$getWoId,
 					"timestamp"	=> time(),
 					"state_message" => $woTitle,
 					"monitoring_tool" => "LH",				
@@ -436,7 +437,7 @@
 				if($woStatus == '7'){
 					$victor_ops_array = array(
 						"message_type" => "ACKNOWLEDGEMENT",
-						"entity_id" => $getWoId,
+						"entity_id" => "LH".$getWoId,
 						"timestamp"	=> time(),
 						"state_message" => $woTitle,
 						"monitoring_tool" => "LH",				
@@ -447,7 +448,7 @@
 					
 					$victor_ops_array = array(
 						"message_type" => "RECOVERY",
-						"entity_id" => $getWoId,
+						"entity_id" => "LH".$getWoId,
 						"timestamp"	=> time(),
 						"state_message" => $woTitle,
 						"monitoring_tool" => "LH",				
