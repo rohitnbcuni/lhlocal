@@ -237,7 +237,7 @@
 			
 			######New Alert VictorOps Integration Started###############
 			###Enabled only for Outage and Problem####
-			$problem_ids_array = json_decode(WO_CREATE_PROBLEM);
+			$problem_ids_array = unserialize(VICTOR_OPS_ACCOUNTS);
 			if(in_array($woAssignedTo,$problem_ids_array)){
 				if($woREQ_TYPE == '1' or $woREQ_TYPE =='2'){
 					$victor_ops_array = array(
@@ -436,7 +436,7 @@
 			Util::updateMileStone($woAssignedTo,$getWoId,$woTitle,$sql_date,$woStatus);
 			
 			######Update Alert VictorOps Integration Started###############
-			$problem_ids_array = json_decode(WO_CREATE_PROBLEM);
+			$problem_ids_array = unserialize(VICTOR_OPS_ACCOUNTS);
 			if(in_array($woAssignedTo,$problem_ids_array)){
 				$routingKey = voRoutingKey($woAssignedTo);
 				if($woREQ_TYPE == '1' or $woREQ_TYPE =='2'){

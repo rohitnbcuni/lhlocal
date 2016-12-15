@@ -436,7 +436,7 @@ class Util {
 	}
 	
 	static function  victorOpsAlertIntegration($data_array,$routingKey){
-		$url = VICTOR_OPS.'/'.$routingKey;
+		$url = VICTOR_OPS_URL.'/'.$routingKey;
 		
 		$data_string = json_encode($data_array);
 		$ch=curl_init($url);
