@@ -435,8 +435,8 @@ class Util {
 	 
 	}
 	
-	static function  victorOpsAlertIntegration($data_array){
-		$url = 'https://alert.victorops.com/integrations/generic/20131114/alert/84b503b5-0b45-4dda-975e-60977ee2b9c0/nbcu-sandbox';
+	static function  victorOpsAlertIntegration($data_array,$routingKey){
+		$url = VICTOR_OPS.'/'.$routingKey;
 		$data_string = json_encode($data_array);
 		$ch=curl_init($url);
 
