@@ -985,6 +985,23 @@ function categorymapping(field_id){
 
 
 }
+
+function resourcemapping(field_id){
+	var form = document.createElement("form");
+	form.setAttribute("method", 'post');
+	form.setAttribute("action", '/admin/index/resourcemapping/');	
+	var hiddenField1 = document.createElement("input");
+	hiddenField1.setAttribute("type", "hidden");
+	hiddenField1.setAttribute("name", 'test_value');
+	hiddenField1.setAttribute("value",'test_value');
+	 form.appendChild(hiddenField1);
+	document.body.appendChild(form);   
+	form.submit();
+
+
+
+
+}
 function solrSearchLog(field_id)
 {
 
