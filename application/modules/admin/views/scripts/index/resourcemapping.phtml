@@ -1,0 +1,162 @@
+<script type="text/javascript"><!--
+$().ready(function() { 
+	$('#manager_select').change(function(){
+		if($('#manager_select').val() != ''){
+			alert($('#manager_select').val());
+			$('#save_cat').css("display","block");
+			$('#resources_tbl').slideDown("slow");
+			
+			$('#addnew_btn').css("display","none");
+			
+			
+			
+		$.post("/admin/index/mangerresourceslist",{man_id:$('#manager_select').val()},
+				function(data){
+					$("#assignedResources option").remove();
+					$('#assignedResources').append(data);
+						
+				});
+		
+	
+		}
+		
+	});
+	$('#add').click(function() {  
+		return !$('#allResources option:selected').remove().appendTo('#assignedResources');  
+	});  
+	$('#remove').click(function() {  
+		return !$('#assignedResources option:selected').remove().appendTo('#allResources');  
+	});  
+	
+	$('#addnew_btn').click(function(){
+		$('#add_new').toggle();
+		
+	});
+	
+	
+	
+	
+	
+	
+	
+	
+});
+
+
+
+
+function categorySiteMapping(){
+	
+		var manager_select = $('#manager_select').val();
+		if(manager_select != ''){
+			$('#assignedResources option').prop('selected', true);
+			//var allSites = $("#allSites").val();
+			var assignedResources = $('#assignedResources').val();
+			$.post("/admin/index/addmanagerresources",{manager_id:manager_select,assignedResources:assignedResources},
+				function(data){
+					$('.message_required p').html(data);
+					$('.message_required').css({display:'block'});
+					return false;
+						
+				});
+			
+		
+		}
+		
+		
+	
+	
+	}
+	
+--></script>
+<style>
+table {
+ margin: 0px auto; 
+ }
+</style>
+
+<input type="hidden" name="adminTitlemsg" id="adminTitlemsg" value="Resource Manager Mapping">
+<div class="rightCol" id="form_sec_1" style="display: block;min-height:400px;">
+		
+		
+		
+		<div id='requestor_info'></div>
+		<table >
+		
+		<th>
+			<td>
+			
+				 Managers:
+				 <select class="field_medium" name="manager_select" id="manager_select"  style="width:240px;">
+					<option value="">--Please Select -- </option>
+                   <?php echo $this->users; ?>                  		
+                 </select>
+				
+			
+			</td>
+		</th>
+		
+		
+	</table>
+	<hr></hr >
+	
+	
+	
+	<table width="100%" style="padding:20px;display:none;"  id="resources_tbl">
+	<tr> 
+		<th ><div style="float:left;">Resources</div></th>
+		<th  ><div style="float:left;">Assigned Resources</div></th>
+	</tr>
+	<tr>
+		<td width="50%">
+			<div style="width:250px;">
+				<select multiple id="allResources" name="allResources"  style="width:250px;height:300px;">  
+				<?php if(count($this->resources) > 0) : ?>
+					<?php foreach($this->resources as $s => $v) : ?>
+					<?php if(!empty($v['last_name']))
+							{
+								$userName = $v['last_name'].', '.$v['first_name'];
+							}else{
+								$userName = $v['first_name'];
+							}
+					?>
+						<option value="<?php echo $v['id'] ?>"><?php echo $userName ?></option>
+					<?php endforeach; ?>
+				<?php endif; ?>
+				  </select>  
+				
+			</div> 
+		</td>
+		<td>
+			<div id="cat_sitenames">  
+			  <select multiple="multiple" id="assignedResources" name="assignedResources" style="width:250px;height:300px;"></select>  
+			  
+			</div>  
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<button  id="add" ><span>Add &gt;&gt;</span></button>
+			
+		</td>
+		<td>
+			<button  id="remove" ><span>&lt;&lt; remove</span></button>
+			 
+		</td>
+	</tr>
+	</table>		
+	<div id="save_cat" style='margin-left:290px;display:none;'>
+		<button  id="save_cat_btn" onclick="return categorySiteMapping();"><span>Submit</span></button>
+	</div>
+
+	<div class="message_required">
+		<p></p>
+		<div style="clear: both;"></div>
+			<div class="duplicate_buttons">
+				<button onClick="$('.message_required').css({display:'none'}); return false;"><span>OK</span></button>
+				<div style="clear: both;"></div>
+			</div>					
+		<div style="clear: both;"></div>
+		
+	</div>
+</div>

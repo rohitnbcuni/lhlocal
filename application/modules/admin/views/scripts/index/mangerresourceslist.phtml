@@ -1,0 +1,14 @@
+<?php
+
+if(count($this->managerResources) > 0): ?>
+<?php foreach($this->managerResources as $s => $v) : ?>
+		<?php if(!empty($v['last_name']))
+				{
+					$userName = $v['last_name'].', '.$v['first_name'];
+				}else{
+					$userName = $v['first_name'];
+				}
+		?>
+			<option value="<?php echo $v['id'] ?>"><?php echo $userName ?></option>
+		<?php endforeach; ?>
+	<?php endif; ?>

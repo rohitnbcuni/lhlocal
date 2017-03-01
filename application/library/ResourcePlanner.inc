@@ -664,6 +664,10 @@ exit;*/
 										$status = "convert";
 										break;
 									}
+									case 5: {
+										$status = "approved";
+										break;
+									}
 									default: {
 										$status = "";
 										break;

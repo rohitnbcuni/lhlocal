@@ -131,8 +131,11 @@
 								<li class="key_overhead" ' . $display_style . '>Overhead / Internal</li>
 								<li class="key_outoffice" ' . $display_style . '>Out of Office</li>
 								<li class="key_blank">Unassigned</li>
-								<li class="key_convertbillable" ' . $display_style . '>Convert hours to Actual</li>
-							</ul>
+								<li class="key_convertbillable" ' . $display_style . '>Convert hours to Actual</li>';
+								if($_SESSION['login_status'] == "admin"){
+									echo '<li class="key_approved" ' . $display_style . '>Approved</li>';
+								}
+							echo '</ul>
 						</div>
 						<!--==| END: Bucket |==-->
 
@@ -192,10 +195,15 @@
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<button id="saveBtn" style="float: right;"><span>save</span></button>
+							<td>';
+							if($_SESSION['login_status'] == "admin"){
+							
+								echo '<button id="aprBtn" style="float: right;"><span>Approved</span></button>';
+							}
+								echo '<button id="saveBtn" style="float: right;"><span>save</span></button>
 								<button class="cancel cancel_ot" style="float: right;"><span>Cancel</span></button>
 								<button class="clear_ot" style="float: right;"><span>Clear</span></button>
+							
 							</td>
 						</tr>
 						</table>

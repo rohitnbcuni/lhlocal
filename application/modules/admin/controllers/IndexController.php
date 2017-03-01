@@ -1491,6 +1491,50 @@ function deletebsmaprojectlistingAction(){
 		
 		}
 		
+		function resourcemappingAction(){
+			$adminModel = new AdminDisplay();
+			$usersHtml = $adminModel->getAllUserOptionHTML();
+			$this->view->assign("users", $usersHtml);
+			$this->view->assign("resources", $adminModel->getUsersList());
+			
+			
+			
+		}
+		
+		function addmanagerresourcesAction(){
+			
+			
+			//$resource_ids = array();
+			$managerId = $this->_request->getParam('manager_id');
+			$assignedResources = $this->_request->getParam('assignedResources');
+			$adminModel = new AdminDisplay();
+			
+			if((count($assignedResources) > 0) AND (!empty($managerId))){
+				
+				$adminModel->resetManagerResources($managerId,$assignedResources);
+				
+			
+			}
+			echo "Manager's resources has been Updated";	
+			$this->_helper->layout->disableLayout();
+			$this->_helper->viewRenderer->setNoRender(TRUE);
+			
+		}
+		
+		
+		function mangerresourceslistAction(){
+			
+			$man_id = $this->_request->getParam('man_id');
+			$adminModel = new AdminDisplay();
+			$resourceItems = $adminModel->getManagerResourceName($man_id);
+			
+			
+			$this->view->assign("managerResources", $resourceItems);
+			$this->_helper->layout->disableLayout();
+			//$this->_helper->viewRenderer->setNoRender(TRUE);
+			
+		}
+		
 	}
 	
 ?>

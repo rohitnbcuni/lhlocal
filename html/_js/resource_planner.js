@@ -16,7 +16,7 @@ var ctrlDown;
 var offY = -200;
 var offX = 20;
 var otId;
-var status_types = {overhead: 1, outofoffice: 2, allocated: 3, convert: 4};
+var status_types = {overhead: 1, outofoffice: 2, allocated: 3, convert: 4, approved:5};
 var fromArrow = false;
 var basicValue = true;
 
@@ -302,6 +302,35 @@ $(document).ready(function(){
 			type: "POST",
 			url: "/_ajaxphp/resource_planner_save.php",
 			data: "overtime=true&projectid="+project+"&hours="+hours+"&notes="+notes+"&userid="+otId+"&date="+useDate,
+			success: function(msg){
+				$(otTarget).removeClass();
+				if(project != "" && hours > 0) {
+					$(otTarget).addClass("cancel");
+				} else {
+					$(otTarget).addClass("overtime");
+				}
+			}
+		});
+	});
+	
+	$('#popHours #aprBtn').click(function(){
+		$('.popHours').css('display', 'none');
+		$('#blur').css({display: 'none'});
+		$('#dimmer_rp').css({display:'none'});
+
+		var project = $('#popHours #overtime_project').val()
+		var hours = $('#popHours #overtime_hours').val()
+		var notes = $('#popHours #overtime_notes').val();
+		var userid = otId;
+
+		if(weekDate){ var useDate = weekDate; } else { var useDate = startWeek; }
+		if(theId.length > 2) { var otTarget = "#" + theId[0] + "_" + theId[1] + "_" + theId[2]; } else { var otTarget = "#" + theId[0] + "_" + theId[1]; }
+		//alert("overtime=true&projectid="+project+"&hours="+hours+"&notes="+notes+"&userid="+otId+"&date="+startWeek);
+
+		$.ajax({
+			type: "POST",
+			url: "/_ajaxphp/resource_planner_save.php",
+			data: "overtime=true&approve=approved&projectid="+project+"&hours="+hours+"&notes="+notes+"&userid="+otId+"&date="+useDate,
 			success: function(msg){
 				$(otTarget).removeClass();
 				if(project != "" && hours > 0) {
@@ -919,6 +948,8 @@ return dateString;
 //
 ************************************/
 function saveSelected(op, pid){
+	
+	
 	var selBlocks = Array();
 	$('.ui-selected').each(function(i,el){
     	var ops = "";
@@ -1004,8 +1035,16 @@ function selectionOptions(){
 		});
 	
 		$('.key_convertbillable').click(function(){
+			
 	    	saveSelected(status_types.convert, $(this).attr('id'));
 			$('.ui-selected').removeClass('allocated overhead outofoffice convert overtime unavailable ui-selected').addClass('convert ui-selectee');
+			$('context_menu').remove();
+		});
+		
+		$('.key_approved').click(function(){
+			
+	    	saveSelected(status_types.approved, $(this).attr('id'));
+			$('.ui-selected').removeClass('allocated overhead outofoffice convert overtime unavailable ui-selected').addClass('approved ui-selectee');
 			$('context_menu').remove();
 		});
 	

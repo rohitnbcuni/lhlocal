@@ -944,10 +944,33 @@
 		
 		
 		}
+	}
+		
+		
+		public function resetManagerResources($man_id , $resources_arr = array()){
+		$db = Zend_Registry::get('db');
+		
+		if($man_id != ''){
+			$result = $db->query("DELETE FROM `resource_manager_mapping` WHERE `manager_id` = ? ", array($man_id));
+			//print_r($application_arr);
+			if((ISSET($resources_arr)) && ($resources_arr != 'null')){
+				$resources_arr_unique = array_unique($resources_arr);
+				foreach($resources_arr_unique as $resource_key =>  $resource_val){
+					if($resource_val != '' && $man_id !=  $resource_val){
+					
+						$db->query("INSERT INTO `resource_manager_mapping` SET `manager_id` = ? , resource_id = ?", array($man_id,$resource_val));
+					}
+				
+				
+				}
+			}
+		
+		
+		}
 		
 	
-	
 	}
+	
 	
 	
 	public function addCategory($dataArray){
@@ -994,7 +1017,26 @@
 		
 		
 		
+	}
+
+	function getUsersList(){
+		$db = Zend_Registry::get('db');
+		$userSql = $db->fetchAll("SELECT u.* FROM `users` u  WHERE u.`active`='1' AND u.`deleted`='0'  AND u.`id`  NOT IN (SELECT resource_id FROM resource_manager_mapping ) ORDER BY u.last_name ASC ");
+		return $userSql;
+	
 	}	
+	
+	
+	public function getManagerResourceName($man_id){
+		$db = Zend_Registry::get('db');
+		$userSql = $db->fetchAll("SELECT u.*, c.resource_id from users u
+						INNER JOIN `resource_manager_mapping` c ON ( u.`id` = c.`resource_id` )
+						WHERE c.manager_id =? ",$man_id );
+		return $userSql;
+	
+	
+	
+	}
 		
 }
 ?>
