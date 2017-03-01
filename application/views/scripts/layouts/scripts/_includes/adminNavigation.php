@@ -49,6 +49,9 @@
 							<li class="alt" id="categoryMapping" onClick="categorymapping();">
 								<img src="/_images/yellow_status.gif">Category Mapping
 							</li>
+							<li class="alt" id="resourceMapping" onClick="resourcemapping();">
+								<img src="/_images/yellow_status.gif">Resource Manager Mapping
+							</li>
 
 						</ul>
 					</div>
