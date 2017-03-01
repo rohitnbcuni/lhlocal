@@ -237,26 +237,27 @@
 			
 			######New Alert VictorOps Integration Started###############
 			###Enabled only for Outage and Problem####
-			$problem_ids_array = unserialize(VICTOR_OPS_ACCOUNTS);
-			if(in_array($woAssignedTo,$problem_ids_array)){
-				if($woREQ_TYPE == '1' or $woREQ_TYPE =='2'){
-					$victor_ops_array = array(
-						"message_type" => "CRITICAL",
-						"entity_id" => "LH".$getWoId,
-						"timestamp"	=> time(),
-						"state_message" => $woTitle,
-						"monitoring_tool" => "LH",
+			if(defined(VICTOR_OPS_ACCOUNTS)){
+				$problem_ids_array = unserialize(VICTOR_OPS_ACCOUNTS);
+				if(in_array($woAssignedTo,$problem_ids_array)){
+					if($woREQ_TYPE == '1' or $woREQ_TYPE =='2'){
+						$victor_ops_array = array(
+							"message_type" => "CRITICAL",
+							"entity_id" => "LH".$getWoId,
+							"timestamp"	=> time(),
+							"state_message" => $woTitle,
+							"monitoring_tool" => "LH",
+							
 						
-					
-					);
-					$routingKey = voRoutingKey($woAssignedTo);
-					
-					Util::victorOpsAlertIntegration($victor_ops_array, $routingKey);
+						);
+						$routingKey = voRoutingKey($woAssignedTo);
+						
+						Util::victorOpsAlertIntegration($victor_ops_array, $routingKey);
+					}
 				}
+			
+			
 			}
-			
-			
-			
 			
 			#################END VictorOps Integration#########
 			
@@ -436,39 +437,40 @@
 			Util::updateMileStone($woAssignedTo,$getWoId,$woTitle,$sql_date,$woStatus);
 			
 			######Update Alert VictorOps Integration Started###############
-			$problem_ids_array = unserialize(VICTOR_OPS_ACCOUNTS);
-			if(in_array($woAssignedTo,$problem_ids_array)){
-				$routingKey = voRoutingKey($woAssignedTo);
-				if($woREQ_TYPE == '1' or $woREQ_TYPE =='2'){
-					if($woStatus == '7'){
-						$victor_ops_array = array(
-							"message_type" => "ACKNOWLEDGEMENT",
-							"entity_id" => "LH".$getWoId,
-							"timestamp"	=> time(),
-							"state_message" => $woTitle,
-							"monitoring_tool" => "LH",				
-					
-						);
-						Util::victorOpsAlertIntegration($victor_ops_array,$routingKey);
-					}else if($woStatus == '3' || ($woStatus == '1')){
+			if(defined(VICTOR_OPS_ACCOUNTS)){
+				$problem_ids_array = unserialize(VICTOR_OPS_ACCOUNTS);
+				if(in_array($woAssignedTo,$problem_ids_array)){
+					$routingKey = voRoutingKey($woAssignedTo);
+					if($woREQ_TYPE == '1' or $woREQ_TYPE =='2'){
+						if($woStatus == '7'){
+							$victor_ops_array = array(
+								"message_type" => "ACKNOWLEDGEMENT",
+								"entity_id" => "LH".$getWoId,
+								"timestamp"	=> time(),
+								"state_message" => $woTitle,
+								"monitoring_tool" => "LH",				
 						
-						$victor_ops_array = array(
-							"message_type" => "RECOVERY",
-							"entity_id" => "LH".$getWoId,
-							"timestamp"	=> time(),
-							"state_message" => $woTitle,
-							"monitoring_tool" => "LH",				
-					
-						);
-						//Util::victorOpsAlertIntegration($victor_ops_array);
+							);
+							Util::victorOpsAlertIntegration($victor_ops_array,$routingKey);
+						}else if($woStatus == '3' || ($woStatus == '1')){
+							
+							$victor_ops_array = array(
+								"message_type" => "RECOVERY",
+								"entity_id" => "LH".$getWoId,
+								"timestamp"	=> time(),
+								"state_message" => $woTitle,
+								"monitoring_tool" => "LH",				
 						
-					
-						Util::victorOpsAlertIntegration($victor_ops_array, $routingKey);
+							);
+							//Util::victorOpsAlertIntegration($victor_ops_array);
+							
+						
+							Util::victorOpsAlertIntegration($victor_ops_array, $routingKey);
+						}
 					}
 				}
+			
 			}
-			
-			
 			
 			
 			#################END VictorOps Integration#########

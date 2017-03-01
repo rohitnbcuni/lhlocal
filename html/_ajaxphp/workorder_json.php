@@ -179,7 +179,7 @@ if('0' == $_GET['status']){
 } else {
   $workorder_list_query = "SELECT distinct b.`id` ,a.`id` AS project_id, a.`project_name` AS project_name, a.`project_code` AS project_code, a.`company` AS project_company , b.`title` , b.`assigned_to` , b.`status` , b.`example_url` , b.`body` , b.`requested_by` , b.`assigned_date` ,b.`estimated_date`, b.`completed_date` , b.`creation_date` , b.`launch_date` , b.`draft_date`,b.`closed_date` FROM `projects` a, `workorders` b, `user_project_permissions` c WHERE a.`id`=b.`project_id` AND a.`id`=c.`project_id` AND c.`user_id`='" .$_SESSION['user_id'] ."'  " . $archive_sql . " ORDER BY a.`company`, a.`project_name`, b.`title` ASC";
 }	
-//echo "qry".$workorder_list_query;
+echo "qry".$workorder_list_query;
 $workorder_result = $mysql->sqlordie($workorder_list_query);
 $i=-1;
 

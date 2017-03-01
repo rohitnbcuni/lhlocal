@@ -502,6 +502,46 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 				}
 			}
 	}
+	
+	// to send email
+	function sendEmail_rp($mysql, $rp_row)
+	{	
+
+			$resourceId = $wo_row['user_id'];
+			$managerId = getUserManager($resourceId);
+			$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+
+		    $manager_sql = "SELECT manager_id  FROM `resource_manager_mapping` WHERE `resource_id`='" . $resourceId . "'";
+			$man_res = $mysql->sqlordie($manager_sql);
+			$man_row = $man_res->fetch_assoc();
+
+			$managerId = $wo_row['manager_id'];
+			$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
+			$select_user = "SELECT concat_ws(' ',last_name,first_name) as full_name, email ,id  FROM `users` WHERE `id`='" . $resourceId . "'";
+			$user_res = $mysql->sqlordie($select_user);
+			$user_row = $user_res->fetch_assoc();
+			
+			$select_email_addr = "SELECT email FROM `users` WHERE `id`='" . $managerId ."' LIMIT 1";
+			$email_addr_res = $mysql->sqlordie($select_email_addr);
+			$email_addr_row = $email_addr_res->fetch_assoc();
+			$ManagerEmail = $email_addr_row['email'];
+			$link = "<a href='".BASE_URL ."resourceplanner/?userid=" .$resourceId."'>".$resourceId."</a>";
+  
+			$msg =  "<b>Requestor: </b>" . $user_row['full_name']. "<br><br>";
+			$msg .="<b>Hours Type: </b>".$rp_row['type']."<br><br>";
+			$msg .="<b>Date : </b>" .$rp_row['dateFormat'] ."<br><br>";
+			$msg .="<b>Hours: </b>" .$rp_row['hours'] ."<br><br>";
+			$msg .="<b>Note: </b>" .$rp_row['notes'] ."<br><br>";
+			
+			
+			$msg .="<b>".$user_row['full_name']." [" . $link . "] </b> has added/updated his hours. Please review the request and take appropriate action.<br><br>";
+			
+			$subject = $user_row['full_name']." has added/updated his hours for " ;
+			if(!empty($ManagerEmail)){ 
+				lh_sendEmail($ManagerEmail, $subject, $msg, $headers); 		
+			}
+			
+	}
 	function lh_sendEmail($to, $subject, $msg, $headers){
 		$msg = nl2br($msg);
 		$subject='=?UTF-8?B?'.base64_encode($subject).'?=';
@@ -509,4 +549,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
     					"Reply-To: ".COMMENT_REPLY_TO_EMAIL. "\r\n";
 		mail($to, $subject, $msg, $headers);
 	}
+	
+	
+	
 ?>

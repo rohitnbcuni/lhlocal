@@ -2,6 +2,8 @@
 session_start();
 include('../_inc/config.inc');
 include("sessionHandler.php");
+include('../_ajaxphp/sendEmail.php');
+include('../_ajaxphp/util.php');
 //$mysql = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 global $mysql;
 $postingList = Array();
@@ -13,7 +15,7 @@ if($_SESSION['login_status'] == "client") {
 } 
 
 
-if (@$_POST["overtime"]) {
+if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 //if (@$_GET["overtime"]) {
 	$projectId = $mysql->real_escape_string($_POST['projectid']);
 	$hours = $mysql->real_escape_string($_POST['hours']);
@@ -50,13 +52,64 @@ if (@$_POST["overtime"]) {
 		//echo $sql;
 		$mysql->sqlordie($sql);
 	}
-} else {
+	
+	$rpRow = array();
+	$rpRow['userid'] = $userId;
+	$rpRow['dateFormat'] = $dateFormat;
+	$rpRow['hours'] = $hours;
+	$rpRow['notes'] = $notes;
+	$rpRow['type'] = "overtime";
+	sendEmail_rp($mysql,$rpRow);
+	
+	
+} else if(ISSET($_POST["overtime"]) && ISSET($_POST['approve'])) {
+	
+	if($_POST['approve'] == 'approved'){
+		$projectId = $mysql->real_escape_string($_POST['projectid']);
+		$hours = $mysql->real_escape_string($_POST['hours']);
+		$notes = $mysql->real_escape_string($_POST['notes']);
+		$userId = $mysql->real_escape_string($_POST['userid']);
+		$date = $mysql->real_escape_string($_POST['date']);
+		$date_part = explode("-", $date);
+		$dateFormat = $date_part[2] ."/" .$date_part[0] ."/" .$date_part[1];
+		
+		if(empty($projectId)) {
+			$projectId = "null";
+		} else {
+			$projectId = "'$projectId'";
+		}
+		
+	
+
+		$sql = "SELECT * FROM resource_blocks WHERE userid='$userId' AND daypart='9' AND datestamp='$dateFormat'";
+		$res = $mysql->sqlordie($sql);
+		if ($res->num_rows > 0) {
+			$rb = $res ->fetch_assoc();
+			$id = $rb['id'];
+			$adminId = $_SESSION['user_id'];
+			$sql = "UPDATE resource_blocks SET projectid=$projectId,notes='$notes',hours='$hours', status='5', approval_status = 'approved' , approved_by = '$adminId' WHERE id='$id'";
+			//echo $sql;
+			$mysql->sqlordie($sql);
+		} else {
+			$sql = "INSERT INTO resource_blocks (userid,projectid,daypart,datestamp,hours,notes,status,approval_status,approved_by) VALUES ('$userId',$projectId,'9','$dateFormat','$hours','$notes','5','approved','$adminId')";
+			//echo $sql;
+			$mysql->sqlordie($sql);
+		}
+	
+	
+	
+	
+	
+	}
+	
+	
+}else{
 	$newData = str_replace("\\", "", $_POST['data']);
 	//print("new data ".$newData);
 	$data = unserialize($newData);
 	$projectID = substr(strstr($data["projectID"], '_'), 1);
 	$status = $data["status"];
-	$blocks = $data["blocks"];
+	$blocks = @$data["blocks"];
 	//echo $projectID." - ".$status."<br /><br /><br /><br />";
 	//print_r($data);
 	//echo "<br /><br /><br /><br />";
@@ -89,7 +142,17 @@ if (@$_POST["overtime"]) {
 					}
 					$sql .= " WHERE id='$id'";
 					$mysql->sqlordie($sql);
-				} else {
+				} else if($status == 5) {
+						$rb = $res ->fetch_assoc();
+						$id = $rb['id'];
+						$approval_id = $_SESSION['user_id'];
+						if ($rb['projectid']) {
+							$sql = "UPDATE resource_blocks SET status='5' , approval_status ='approved' , approved_by = '$approval_id' WHERE id='$id'";
+							$mysql->sqlordie($sql);
+						}
+						
+					
+					}else{
 					$rb = $res ->fetch_assoc();
 					$id = $rb['id'];
 					if ($rb['projectid']) {
