@@ -59,6 +59,7 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 	$rpRow['hours'] = $hours;
 	$rpRow['notes'] = $notes;
 	$rpRow['type'] = "overtime";
+	//print_r($rpRow);
 	sendEmail_rp($mysql,$rpRow);
 	
 	
@@ -79,14 +80,14 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 			$projectId = "'$projectId'";
 		}
 		
-	
+		$adminId = $_SESSION['user_id'];
 
 		$sql = "SELECT * FROM resource_blocks WHERE userid='$userId' AND daypart='9' AND datestamp='$dateFormat'";
 		$res = $mysql->sqlordie($sql);
 		if ($res->num_rows > 0) {
 			$rb = $res ->fetch_assoc();
 			$id = $rb['id'];
-			$adminId = $_SESSION['user_id'];
+			
 			$sql = "UPDATE resource_blocks SET projectid=$projectId,notes='$notes',hours='$hours', status='5', approval_status = 'approved' , approved_by = '$adminId' WHERE id='$id'";
 			//echo $sql;
 			$mysql->sqlordie($sql);
@@ -96,9 +97,15 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 			$mysql->sqlordie($sql);
 		}
 	
-	
-	
-	
+		$rpRow = array();
+		$rpRow['userid'] = $userId;
+		$rpRow['dateFormat'] = $dateFormat;
+		$rpRow['hours'] = $hours;
+		$rpRow['notes'] = $notes;
+		$rpRow['type'] = "overtime";
+		$rpRow['type'] = "overtime";
+		$rpRow['manager_id'] = $adminId;
+		sendEmail_rp_approved($mysql,$rpRow);
 	
 	}
 	
