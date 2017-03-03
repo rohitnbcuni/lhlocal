@@ -507,7 +507,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 	function sendEmail_rp($mysql, $rp_row)
 	{	
 
-			$resourceId = $wo_row['userid'];
+			$resourceId = $rp_row['userid'];
 			
 			$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
@@ -546,7 +546,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 	
 	function sendEmail_rp_approved($mysql, $rp_row){
 		
-			$resourceId = $wo_row['userid'];
+			$resourceId = $rp_row['userid'];
 			$managerId = $rp_row['manager_id'];
 			$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
@@ -560,7 +560,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			$user_res = $mysql->sqlordie($select_user);
 			$user_row = $user_res->fetch_assoc();
 			
-			$select_email_addr = "SELECT email FROM `users`, concat_ws(' ',last_name,first_name) as full_name WHERE `id`='" . $managerId ."' LIMIT 1";
+			$select_email_addr = "SELECT email,concat_ws(' ',last_name,first_name) as full_name FROM `users` WHERE `id`='" . $managerId ."' LIMIT 1";
 			$email_addr_res = $mysql->sqlordie($select_email_addr);
 			$email_addr_row = $email_addr_res->fetch_assoc();
 			$ManagerEmail = $email_addr_row['email'];
@@ -574,7 +574,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			$msg .="<b>Note: </b>" .$rp_row['notes'] ."<br><br>";
 			$msg .="<b>Approved By: </b>" .$ManagerName ."<br><br>";
 			
-			echo $msg .="<b>".$ManagerName." [" . $link . "] </b> has has apporved your resource planner. Please review it.<br><br>";
+			$msg .="<b>".$ManagerName." [" . $link . "] </b> has has apporved your resource planner. Please review it.<br><br>";
 			
 			$subject = "Manager has approved your resource planner hours " ;
 			if(!empty($user_row['email'])){ 
@@ -582,6 +582,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			}
 	}
 	function lh_sendEmail($to, $subject, $msg, $headers){
+		
 		$msg = nl2br($msg);
 		$subject='=?UTF-8?B?'.base64_encode($subject).'?=';
 		$headers .= "\r\n" .
