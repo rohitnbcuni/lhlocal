@@ -55,7 +55,7 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 	
 	$rpRow = array();
 	$rpRow['userid'] = $userId;
-	$rpRow['dateFormat'] = $dateFormat;
+	$rpRow['date'] = $date;
 	$rpRow['hours'] = $hours;
 	$rpRow['notes'] = $notes;
 	$rpRow['type'] = "overtime";
@@ -99,7 +99,7 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 	
 		$rpRow = array();
 		$rpRow['userid'] = $userId;
-		$rpRow['dateFormat'] = $dateFormat;
+		$rpRow['date'] = $dateFormat;
 		$rpRow['hours'] = $hours;
 		$rpRow['notes'] = $notes;
 		$rpRow['type'] = "overtime";
@@ -123,6 +123,8 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 	//print_r($blocks);
 	//echo "<br /><br /><br /><br />";
 	//echo $blocks[0]['id'];/**/
+	
+	
 
 	for($i=0;$i<count($blocks);$i++) {
 		$user=$blocks[$i]['user'];
@@ -149,6 +151,8 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 					}
 					$sql .= " WHERE id='$id'";
 					$mysql->sqlordie($sql);
+					
+					
 				} else if($status == 5) {
 						$rb = $res ->fetch_assoc();
 						$id = $rb['id'];
@@ -182,6 +186,35 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 			}
 		}
 
+	}
+	
+	if(count($blocks) > 0){
+		if($status < 5 ){
+			$rpRow = array();
+			$rpRow['userid'] = $blocks[0]['user'];
+			$rpRow['date'] =$blocks[0]['date'];
+			
+			
+			$rpRow['type'] = "Day Hours";
+			//print_r($rpRow);
+			sendEmail_rp($mysql,$rpRow);
+		}else if($status < 5){
+			
+			$rpRow = array();
+			$adminId = $_SESSION['user_id'];
+			$rpRow['userid'] = $blocks[0]['user'];
+			$rpRow['dateFormat'] = $blocks[0]['date']
+			//$rpRow['hours'] = $hours;
+			//$rpRow['notes'] = $notes;
+			//$rpRow['type'] = "overtime";
+			$rpRow['type'] = "Day Hours";
+			$rpRow['manager_id'] = $adminId;
+			sendEmail_rp_approved($mysql,$rpRow);
+	
+			
+			
+		}
+		
 	}
 
 }

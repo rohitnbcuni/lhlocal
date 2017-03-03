@@ -529,9 +529,13 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
   
 			$msg =  "<b>Requestor: </b>" . $user_row['full_name']. "<br><br>";
 			$msg .="<b>Hours Type: </b>".$rp_row['type']."<br><br>";
-			$msg .="<b>Date : </b>" .$rp_row['dateFormat'] ."<br><br>";
-			$msg .="<b>Hours: </b>" .$rp_row['hours'] ."<br><br>";
-			$msg .="<b>Note: </b>" .$rp_row['notes'] ."<br><br>";
+			$msg .="<b>Date : </b>" .$rp_row['date'] ."<br><br>";
+			if(ISSET($rp_row['hours'])){
+				$msg .="<b>Hours: </b>" .$rp_row['hours'] ."<br><br>";
+			}
+			if(ISSET($rp_row['notes'])){
+				$msg .="<b>Note: </b>" .$rp_row['notes'] ."<br><br>";
+			}
 			
 			
 			 $msg .="<b>".$user_row['full_name']." [" . $link . "] </b> has added/updated his hours. Please review the request and take appropriate action.<br><br>";
@@ -569,9 +573,13 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
   
 			$msg = "<b>Requestor: </b>" . $user_row['full_name']. "<br><br>";
 			$msg .="<b>Hours Type: </b>".$rp_row['type']."<br><br>";
-			$msg .="<b>Date : </b>" .$rp_row['dateFormat'] ."<br><br>";
-			$msg .="<b>Hours: </b>" .$rp_row['hours'] ."<br><br>";
-			$msg .="<b>Note: </b>" .$rp_row['notes'] ."<br><br>";
+			$msg .="<b>Date : </b>" .$rp_row['date'] ."<br><br>";
+			if(ISSET($rp_row)){
+				$msg .="<b>Hours: </b>" .$rp_row['hours'] ."<br><br>";
+			}
+			if(ISSET($rp_row['notes'])){
+				$msg .="<b>Note: </b>" .$rp_row['notes'] ."<br><br>";
+			}
 			$msg .="<b>Approved By: </b>" .$ManagerName ."<br><br>";
 			
 			$msg .="<b>".$ManagerName." [" . $link . "] </b> has has apporved your resource planner. Please review it.<br><br>";
