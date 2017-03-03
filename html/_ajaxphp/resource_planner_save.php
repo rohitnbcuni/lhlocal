@@ -203,7 +203,7 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 			$rpRow = array();
 			$adminId = $_SESSION['user_id'];
 			$rpRow['userid'] = $blocks[0]['user'];
-			$rpRow['dateFormat'] = $blocks[0]['date']
+			$rpRow['dateFormat'] = $blocks[0]['date'];
 			//$rpRow['hours'] = $hours;
 			//$rpRow['notes'] = $notes;
 			//$rpRow['type'] = "overtime";
