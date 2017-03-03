@@ -515,7 +515,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			$man_res = $mysql->sqlordie($manager_sql);
 			$man_row = $man_res->fetch_assoc();
 
-			$managerId = $wo_row['manager_id'];
+			$managerId = $rp_row['manager_id'];
 			$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 			$select_user = "SELECT concat_ws(' ',last_name,first_name) as full_name, email ,id  FROM `users` WHERE `id`='" . $resourceId . "'";
 			$user_res = $mysql->sqlordie($select_user);
