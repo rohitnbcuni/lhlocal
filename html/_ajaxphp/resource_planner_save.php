@@ -130,58 +130,62 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 		$user=$blocks[$i]['user'];
 		$dayblock=$blocks[$i]['block'];
 		$datestamp = $blocks[$i]['date'] . " 00:00:00";
-
-		if ($status==0) {
-			$sql = "DELETE FROM resource_blocks WHERE userid='$user' AND daypart='" .$dayblock['block'] ."' AND datestamp='$datestamp'";
-			$res = $mysql->sqlordie($sql);
-		} else {
-			$sql = "SELECT * FROM resource_blocks WHERE userid='$user' AND daypart='" .$dayblock['block'] ."' AND datestamp='$datestamp'";
-			$res = $mysql->sqlordie($sql);
-			if ($res->num_rows > 0) {
-				if ($status<5) {
-					$rb = $res ->fetch_assoc();
-					$id = $rb['id'];
-					$sql = "UPDATE resource_blocks SET status='$status'";
-					if ($projectID==0 && $status==4) {
-						//$sql .= ", projectid=NULL";
-					} else if ($projectID==0) {
-						$sql .= ", projectid=NULL";
-					} else {
-						$sql .= ", projectid='".$projectID."'";
-					}
-					$sql .= " WHERE id='$id'";
-					$mysql->sqlordie($sql);
-					
-					
-				} else if($status == 5) {
+		if(ISSET($dayblock['block'])){
+			if ($status==0) {
+				$sql = "DELETE FROM resource_blocks WHERE userid='$user' AND daypart='" .$dayblock['block'] ."' AND datestamp='$datestamp'";
+				$res = $mysql->sqlordie($sql);
+			} else {
+			
+				$sql = "SELECT * FROM resource_blocks WHERE userid='$user' AND daypart='" .$dayblock['block'] ."' AND datestamp='$datestamp'";
+				$res = $mysql->sqlordie($sql);
+				if ($res->num_rows > 0) {
+					if ($status<5) {
 						$rb = $res ->fetch_assoc();
 						$id = $rb['id'];
-						$approval_id = $_SESSION['user_id'];
+						$sql = "UPDATE resource_blocks SET status='$status'";
+						if ($projectID==0 && $status==4) {
+							//$sql .= ", projectid=NULL";
+						} else if ($projectID==0) {
+							$sql .= ", projectid=NULL";
+						} else {
+							$sql .= ", projectid='".$projectID."'";
+						}
+						$sql .= " WHERE id='$id'";
+						$mysql->sqlordie($sql);
+						
+						
+					} else if($status == 5) {
+							$rb = $res ->fetch_assoc();
+							$id = $rb['id'];
+							$approval_id = $_SESSION['user_id'];
+							if ($rb['projectid']) {
+								$sql = "UPDATE resource_blocks SET status='5' , approval_status ='approved' , approved_by = '$approval_id' WHERE id='$id'";
+								$mysql->sqlordie($sql);
+							}
+							
+						
+						}else{
+						$rb = $res ->fetch_assoc();
+						$id = $rb['id'];
 						if ($rb['projectid']) {
-							$sql = "UPDATE resource_blocks SET status='5' , approval_status ='approved' , approved_by = '$approval_id' WHERE id='$id'";
+							$sql = "UPDATE resource_blocks SET status='4' WHERE id='$id'";
 							$mysql->sqlordie($sql);
 						}
-						
-					
-					}else{
-					$rb = $res ->fetch_assoc();
-					$id = $rb['id'];
-					if ($rb['projectid']) {
-						$sql = "UPDATE resource_blocks SET status='4' WHERE id='$id'";
-						$mysql->sqlordie($sql);
-					}
 
-				}
-			} else {
-				if ($status<5) {
-					$sql = "INSERT INTO resource_blocks (userid,projectid,daypart,status,datestamp) VALUES ('$user',";
-					if ($projectID==0) {
-						$sql .= "NULL";
-					} else {
-						$sql .= "'".$projectID."'";
 					}
-					$sql .=",'" .$dayblock['block'] ."','$status','$datestamp')";
-					$mysql->sqlordie($sql);
+				} else {
+					if ($status<5) {
+						if(ISSET($dayblock['block'])){
+							$sql = "INSERT INTO resource_blocks (userid,projectid,daypart,status,datestamp) VALUES ('$user',";
+							if ($projectID==0) {
+								$sql .= "NULL";
+							} else {
+								$sql .= "'".$projectID."'";
+							}
+							$sql .=",'" .$dayblock['block'] ."','$status','$datestamp')";
+							$mysql->sqlordie($sql);
+						}
+					}
 				}
 			}
 		}
@@ -194,7 +198,7 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 			$rpRow['userid'] = $blocks[0]['user'];
 			$rpRow['date'] =$blocks[0]['date'];
 			
-			
+			$rpRow['current_userid'] = $_SESSION['user_id'];
 			$rpRow['type'] = "Day Hours";
 			//print_r($rpRow);
 			sendEmail_rp($mysql,$rpRow);

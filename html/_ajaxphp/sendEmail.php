@@ -514,8 +514,8 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 		    $manager_sql = "SELECT manager_id  FROM `resource_manager_mapping` WHERE `resource_id`='" . $resourceId . "'";
 			$man_res = $mysql->sqlordie($manager_sql);
 			$man_row = $man_res->fetch_assoc();
-
-			$managerId = $rp_row['manager_id'];
+			
+			$managerId = $man_row['manager_id'];
 			$headers = "From: ".WO_EMAIL_FROM."\nMIME-Version: 1.0\nContent-type: text/html; charset=UTF-8";
 			$select_user = "SELECT concat_ws(' ',last_name,first_name) as full_name, email ,id  FROM `users` WHERE `id`='" . $resourceId . "'";
 			$user_res = $mysql->sqlordie($select_user);
@@ -536,10 +536,23 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			if(ISSET($rp_row['notes'])){
 				$msg .="<b>Note: </b>" .$rp_row['notes'] ."<br><br>";
 			}
-			
-			
-			 $msg .="<b>".$user_row['full_name']." [" . $link . "] </b> has added/updated his hours. Please review the request and take appropriate action.<br><br>";
-			
+			//If looged in user and resource planner 
+			if($rp_row['current_userid'] == $resourceId){
+				$msg .="<b>".$user_row['full_name']." [" . $link . "] </b> has added/updated his hours. Please review the request and take appropriate action.<br><br>";
+			}else{
+				if($rp_row['current_userid'] != $resourceId){
+				
+					$select_user2 = "SELECT concat_ws(' ',last_name,first_name) as full_name, email ,id  FROM `users` WHERE `id`='" .$rp_row['current_userid'] . "'";
+					$user_res2 = $mysql->sqlordie($select_user2);
+					$user_row2 = $user_res2->fetch_assoc();
+					$msg .="<b>".$user_row2['full_name']." [" . $link . "] </b> has added/updated ".$user_row['full_name']." hours. Please review the request and take appropriate action.<br><br>";
+					$subject = $user_row2." has added/updated your resource planner hours " ;
+					if(!empty($user_row['full_name'])){ 
+						lh_sendEmail($user_row['full_name'], $subject, $msg, $headers); 		
+					}
+				}
+			}
+			//echo $ManagerEmail;
 			$subject = "Resource has added/updated resource planner hours " ;
 			if(!empty($ManagerEmail)){ 
 				lh_sendEmail($ManagerEmail, $subject, $msg, $headers); 		
