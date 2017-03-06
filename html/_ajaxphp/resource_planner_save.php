@@ -202,7 +202,7 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 			$rpRow['type'] = "Day Hours";
 			//print_r($rpRow);
 			sendEmail_rp($mysql,$rpRow);
-		}else if($status < 5){
+		}else if($status == 5){
 			
 			$rpRow = array();
 			$adminId = $_SESSION['user_id'];
