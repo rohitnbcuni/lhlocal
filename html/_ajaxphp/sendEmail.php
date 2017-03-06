@@ -586,8 +586,8 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
   
 			$msg = "<b>Resource Name: </b>" . $user_row['full_name']. "<br><br>";
 			$msg .="<b>Hours Type: </b>".$rp_row['type']."<br><br>";
-			$msg .="<b>Date : </b>" .$rp_row['date'] ."<br><br>";
-			if(ISSET($rp_row)){
+			$msg .="<b>Date : </b>" .$rp_row['dateFormat'] ."<br><br>";
+			if(ISSET($rp_row['hours'])){
 				$msg .="<b>Hours: </b>" .$rp_row['hours'] ."<br><br>";
 			}
 			if(ISSET($rp_row['notes'])){
@@ -595,7 +595,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			}
 			$msg .="<b>Approved By: </b>" .$ManagerName ."<br><br>";
 			
-			$msg .="<b>".$ManagerName." [" . $link . "] </b> has has apporved your resource planner. Please review it.<br><br>";
+			$msg .="<b>".$ManagerName." [" . $link . "] </b> has apporved your resource planner. Please review it.<br><br>";
 			
 			$subject = "Manager has approved your resource planner hours " ;
 			if(!empty($user_row['email'])){ 
