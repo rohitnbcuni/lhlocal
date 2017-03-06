@@ -130,7 +130,7 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 		$user=$blocks[$i]['user'];
 		$dayblock=$blocks[$i]['block'];
 		$datestamp = $blocks[$i]['date'] . " 00:00:00";
-		if(ISSET($dayblock['block'])){
+		//if(ISSET($dayblock['block'])){
 			if ($status==0) {
 				$sql = "DELETE FROM resource_blocks WHERE userid='$user' AND daypart='" .$dayblock['block'] ."' AND datestamp='$datestamp'";
 				$res = $mysql->sqlordie($sql);
@@ -175,7 +175,7 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 					}
 				} else {
 					if ($status<5) {
-						if(ISSET($dayblock['block'])){
+						//if(ISSET($dayblock['block'])){
 							$sql = "INSERT INTO resource_blocks (userid,projectid,daypart,status,datestamp) VALUES ('$user',";
 							if ($projectID==0) {
 								$sql .= "NULL";
@@ -184,11 +184,11 @@ if (ISSET($_POST["overtime"]) && (!ISSET($_POST['approve']))) {
 							}
 							$sql .=",'" .$dayblock['block'] ."','$status','$datestamp')";
 							$mysql->sqlordie($sql);
-						}
+						//}
 					}
 				}
 			}
-		}
+		//}
 
 	}
 	

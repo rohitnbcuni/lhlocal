@@ -527,7 +527,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			$ManagerEmail = $email_addr_row['email'];
 			$link = "<a href='".BASE_URL ."resourceplanner/?userid=" .$resourceId."'>".$resourceId."</a>";
   
-			$msg =  "<b>Requestor: </b>" . $user_row['full_name']. "<br><br>";
+			$msg =  "<b>Resource Name: </b>" . $user_row['full_name']. "<br><br>";
 			$msg .="<b>Hours Type: </b>".$rp_row['type']."<br><br>";
 			$msg .="<b>Date : </b>" .$rp_row['date'] ."<br><br>";
 			if(ISSET($rp_row['hours'])){
@@ -584,7 +584,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			$ManagerName = $email_addr_row['full_name'];
 			$link = "<a href='".BASE_URL ."resourceplanner/?userid=" .$resourceId."'>".$resourceId."</a>";
   
-			$msg = "<b>Requestor: </b>" . $user_row['full_name']. "<br><br>";
+			$msg = "<b>Resource Name: </b>" . $user_row['full_name']. "<br><br>";
 			$msg .="<b>Hours Type: </b>".$rp_row['type']."<br><br>";
 			$msg .="<b>Date : </b>" .$rp_row['date'] ."<br><br>";
 			if(ISSET($rp_row)){
