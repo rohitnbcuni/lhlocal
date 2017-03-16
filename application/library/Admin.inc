@@ -1037,7 +1037,7 @@
 	
 	
 	}
-	
+
 	public function getTechLinkManagers($userid='') {
 			$users = self::getQuery(QRY_TECHLINK_MANAGERS);
 			$html = '';			

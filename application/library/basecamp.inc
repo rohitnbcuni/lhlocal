@@ -258,7 +258,7 @@ class Basecamp{
 				}
 				return true;
 			} else {
-				return false;
+				return true;
 			}
 		}
 	}
