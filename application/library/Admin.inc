@@ -1037,6 +1037,32 @@
 	
 	
 	}
+
+	public function getTechLinkManagers($userid='') {
+			$users = self::getQuery(QRY_TECHLINK_MANAGERS);
+			$html = '';			
+			$selected = '';
+			for($i = 0; $i < sizeof($users); $i++) {
+				$userName = '';
+				if(!empty($users[$i]['last_name']))
+				{
+					$userName = $users[$i]['last_name'].', '.$users[$i]['first_name'];
+				}else{
+					$userName = $users[$i]['first_name'];
+				}
+
+				if($users[$i]['id'] == $userid) {
+						$selected = " selected='selected'";
+				}
+				else
+				{
+							$selected = "";
+				}
+				$html .= '<option value="' .$users[$i]['id'] .'"' .$selected .'>' 
+					.$userName.'</option>';
+			}			
+			return $html;
+		}
 		
 }
 ?>
