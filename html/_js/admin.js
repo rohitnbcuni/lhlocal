@@ -86,6 +86,10 @@ $(document).ready(function(){
 	{
 		$('#create_sections li').removeClass('active');
 		$('#create_sections #categoryMapping').addClass('active');
+	}else if(adminTitlemsg == 'Resource Manager Mapping')
+	{
+		$('#create_sections li').removeClass('active');
+		$('#create_sections #resourceMapping').addClass('active');
 	}
 	$('.title_lrg h4').html(adminTitlemsg);
 	
