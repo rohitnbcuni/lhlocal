@@ -69,8 +69,8 @@
 			$effort_logged_user_ids[$row['id']] = $row['id'];
 		}
 		$userArray[$row['id']][$row['Date']] = $row['Hours'];
-		$userArray[$row['id']][$row['approval_status']] = $row['approval_status'];
-		$userArray[$row['id']][$row['approval_by']] = $row['approval_by'];
+		//$userArray[$row['id']][$row['approval_status']] = $row['approval_status'];
+		//$userArray[$row['id']][$row['approval_by']] = $row['approval_by'];
 		$userID = $row['id'];
 	}
 
@@ -113,18 +113,25 @@
 	}
 
 	foreach($userList as $key=>$id){
-		$html .= $userArray[$id]['name']. ',';
-		$html .= $userArray[$id]['vendor']. ',';
+		if(count($userArray[$id]) > 2){
+			$html .= $userArray[$id]['name']. ',';
+			$html .= $userArray[$id]['vendor']. ',';
+			
+			
+		
 		$totalHours = 0;
-		for($date=1; $date <=$numOfDays; $date++){
-			if(array_key_exists($date, $userArray[$id])){
-				$html .= $userArray[$id][$date] . ',';
-				$totalHours += $userArray[$id][$date];
-			}else{
-				$html .= ',';
+		//if(count($userArray[$id] > 2)){
+			
+			for($date=1; $date <=$numOfDays; $date++){
+				if(array_key_exists($date, $userArray[$id])){
+					$html .= $userArray[$id][$date] . ',';
+					$totalHours += $userArray[$id][$date];
+				}else{
+					$html .= ',';
+				}
 			}
+			$html .= $totalHours . "\n";
 		}
-		$html .= $totalHours . "\n";
 	} 
 	$contents = strip_tags($contents); // remove html and php tags etc.
 //	echo "<pre>";
