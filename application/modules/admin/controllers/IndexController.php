@@ -1495,6 +1495,7 @@ function deletebsmaprojectlistingAction(){
 			$adminModel = new AdminDisplay();
 			$usersHtml = $adminModel->getTechLinkManagers();
 			$this->view->assign("users", $usersHtml);
+			//print_r($adminModel->getUsersList());
 			$this->view->assign("resources", $adminModel->getUsersList());
 			
 			

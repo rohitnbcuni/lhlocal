@@ -1357,7 +1357,7 @@ a:hover { text-decoration: underline; }
 						li.schedule_day ul li.outofoffice { background-position: 0 -90px; color: #fff; }
 						li.schedule_day ul li.convert { background-position: 0 -30px; color: #fff; }
 						li.schedule_day ul li.overtime { background-position: 0 -150px; }
-						li.schedule_day ul li.approved { background-position: 0 -150px;color: black; }
+						li.schedule_day ul li.approved { background-position: 0 -119px;color: wheat; }
 						li.schedule_day ul li.unavailable { background-position: 0 -180px; color: #fff; cursor:default;}
 						li.schedule_day ul li.selected { background-position: 0 -150px; }
 
@@ -1414,7 +1414,7 @@ a:hover { text-decoration: underline; }
 
 			.allocation_type ul { list-style-type: none; }
 
-				.allocation_type li { height: 31px; padding: 0 0 0 75px; margin-bottom: 7px; background: url(../_images/resource_cell_key.gif) no-repeat; line-height: 32px; cursor: pointer; font-weight: bold; }
+				.allocation_type li { height: 31px; padding: 0 0 0 75px; margin-bottom: 7px; background: url(../_images/img1.png) no-repeat; line-height: 32px; cursor: pointer; font-weight: bold; }
 				.allocation_type li:hover { opacity:0.8; filter:alpha(opacity=80); }
 
 				li.key_overhead { background-position: 0 -31px; }
@@ -1425,7 +1425,7 @@ a:hover { text-decoration: underline; }
 
 				li.key_convertbillable { background-position: 0 -124px; }
 				
-				li.key_approved { background-position: 0 -31px; }
+				li.key_approved {  background-position: 0 -157px; }
 
 			.hours { position: relative; width: 280px; min-height: 679px; background-color: #ffffff; }
 				.hours ul { list-style-type: none; }
