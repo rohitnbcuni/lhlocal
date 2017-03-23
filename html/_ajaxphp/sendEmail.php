@@ -595,7 +595,7 @@ $severity_name_qry = "select field_name from lnk_custom_fields_value ln,workorde
 			}
 			$msg .="<b>Approved By: </b>" .$ManagerName ."<br><br>";
 			
-			$msg .="<b>".$ManagerName." [" . $link . "] </b> has apporved your resource planner. Please review it.<br><br>";
+			$msg .="<b>".$ManagerName." [" . $link . "] </b> has approved your resource planner. Please review it.<br><br>";
 			
 			$subject = "Manager has approved your resource planner hours " ;
 			if(!empty($user_row['email'])){ 
