@@ -34,6 +34,12 @@
 				."VALUES "
 				."('$woId','$userId','$comment',NOW())";
 			@$mysql->sqlordie($update_wo_comment);
+			//pagerduty Alert
+            $data['user_id'] = $userId;
+            $data['comment'] = $comment;
+            $data['woid'] = $woId;
+            $pagerduty = new pagerduty();
+            $comment_id = $pagerduty->postPagerDutyComment($data);			
 			
 			$xml = '<comment>
 					  <body>' . $_POST['comment'] .'</body>
