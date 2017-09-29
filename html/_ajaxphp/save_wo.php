@@ -3,6 +3,7 @@
 	include('../_inc/config.inc');
 	include('../_ajaxphp/sendEmail.php');
 	include('../_ajaxphp/util.php');
+    include('../pagerduty/pagerduty.php');
 	
 	$pattern = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 	if(isset($_SESSION['user_id'])) {
@@ -234,6 +235,7 @@
 				."NOW(), '$rallyType','$rallyProject','$sql_date','$cc_arrayData','$insertsql_draft_date','$isActive')";
 			@$mysql->sqlordie($insert_wo);
 			$getWoId = $mysql->insert_id;
+
 			
 			######New Alert VictorOps Integration Started###############
 			###Enabled only for Outage and Problem####
@@ -261,6 +263,14 @@
 			
 			#################END VictorOps Integration#########
 			
+            //Pagerduty Trigger
+            $data['title'] = $woTitle;
+            $data['id'] = $getWoId;
+            $data['description'] = $woDesc;
+            $data['links'] = array($woExampleURL);
+            $data['type'] = $woStatus;
+            $pagerduty = new pagerduty();
+            $incident_id = $pagerduty->createPagerdutyIncident($data);			
 			//Create  a  Milestone 
 			//Update Milestone
 			Util::createMileStone($woAssignedTo,$getWoId,$woTitle,$sql_date);
