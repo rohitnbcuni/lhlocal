@@ -1674,7 +1674,7 @@
 			$vars['closed_date'] = $close_date;
 			$vars['readonly'] = $readonly;
 
-			$comment_data = WoDisplay::getQuery("SELECT * FROM `workorder_comments` WHERE `workorder_id`= ? order by date",array($wo_id));
+			$comment_data = WoDisplay::getQuery("SELECT * FROM `workorder_comments` WHERE `workorder_id`= ? AND active ='1' AND deleted ='0' order by date",array($wo_id));
 										
 			for($cx = 0; $cx < sizeof($comment_data); $cx++) {
 				$comment_date_time_part = explode(" ", $comment_data[$cx]['date']);
