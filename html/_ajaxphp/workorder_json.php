@@ -198,7 +198,7 @@ if($workorder_result->num_rows > 0) {
 	}
 	//LH#70116
 	//$wo_last_comment = "SELECT wc.`id`,wc.`workorder_id`,wc.`user_id`,wc.`comment`,wc.`date` FROM `workorder_comments` wc, (select max(id) id from `workorder_comments` WHERE deleted ='0' group by workorder_id ) tab1,workorders b where wc.id=tab1.id and b.id = wc.workorder_id  AND b.deleted ='0' $project_archive";
-	$wo_last_comment = "SELECT wc.`id`,wc.`workorder_id`,wc.`user_id`,wc.`comment`,wc.`date` FROM `workorder_comments` wc,workorders b   where b.id = wc.workorder_id AND b.deleted ='0'  $project_archive  and not exists(select null from workorder_comments mm where mm.id>wc.id and mm.workorder_id=wc.workorder_id)";
+	$wo_last_comment = "SELECT wc.`id`,wc.`workorder_id`,wc.`user_id`,wc.`comment`,wc.`date` FROM `workorder_comments` wc,workorders b   where b.id = wc.workorder_id AND b.deleted ='0' AND wc.active ='1' AND wc.deleted = '0'  $project_archive  and not exists(select null from workorder_comments mm where mm.id>wc.id and mm.workorder_id=wc.workorder_id AND mm.active ='1' AND mm.deleted = '0')";
 
 
 	$wo_last_comment_result = $mysql->sqlordie($wo_last_comment);
