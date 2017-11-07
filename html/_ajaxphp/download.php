@@ -1,11 +1,13 @@
 <?php
 include('../_inc/config.inc');
+include('sessionHandler.php');	
+/*
 	@session_start();
 
 	if(!ISSET($_SESSION['user_id'])){
 		header("Location:../login/");
 	}
-	
+*/
 	$root_path = $_SERVER['DOCUMENT_ROOT'];
 	$file_path = $root_path."/".($_GET['path']);
 	$filename = basename($file_path);	
